@@ -26,6 +26,27 @@ interface AirportCountryGroup {
   airports: CheckedAirport[];
 }
 
+interface MapCoordinate {
+  lat: number;
+  lng: number;
+}
+
+interface MapLandmass {
+  name: string;
+  points: MapCoordinate[];
+}
+
+interface MapRegionLabel {
+  name: string;
+  coordinate: MapCoordinate;
+}
+
+interface MapRoute {
+  name: string;
+  start: MapCoordinate;
+  end: MapCoordinate;
+}
+
 // 当前个人档案中的机场打卡数据，后续可迁移到独立数据文件或后端接口。
 const CHECKED_AIRPORTS: CheckedAirport[] = [
   {
@@ -226,23 +247,126 @@ const CHECKED_AIRPORTS: CheckedAirport[] = [
   },
 ];
 
-// 计算机场坐标边界，用于把经纬度投射到页面中的足迹图。
-const getAirportBounds = (airports: CheckedAirport[]): AirportBounds => {
-  return airports.reduce(
-    (bounds: AirportBounds, airport: CheckedAirport): AirportBounds => ({
-      minLat: Math.min(bounds.minLat, airport.lat),
-      maxLat: Math.max(bounds.maxLat, airport.lat),
-      minLng: Math.min(bounds.minLng, airport.lng),
-      maxLng: Math.max(bounds.maxLng, airport.lng),
-    }),
-    {
-      minLat: airports[0].lat,
-      maxLat: airports[0].lat,
-      minLng: airports[0].lng,
-      maxLng: airports[0].lng,
-    },
-  );
+// 足迹图使用固定地理范围，覆盖欧洲、北非、东亚和东南亚，避免按点位自动缩放后缺少地图语境。
+const AIRPORT_MAP_BOUNDS: AirportBounds = {
+  minLat: 4,
+  maxLat: 52,
+  minLng: -12,
+  maxLng: 145,
 };
+
+// 简化陆地区块只承担示意功能，不替代真实地图底图。
+const MAP_LANDMASSES: MapLandmass[] = [
+  {
+    name: '欧洲',
+    points: [
+      { lat: 36, lng: -10 },
+      { lat: 43, lng: 2 },
+      { lat: 45, lng: 12 },
+      { lat: 42, lng: 23 },
+      { lat: 47, lng: 32 },
+      { lat: 52, lng: 28 },
+      { lat: 52, lng: -6 },
+    ],
+  },
+  {
+    name: '北非',
+    points: [
+      { lat: 28, lng: -12 },
+      { lat: 36, lng: -6 },
+      { lat: 36, lng: 14 },
+      { lat: 32, lng: 31 },
+      { lat: 20, lng: 34 },
+      { lat: 14, lng: 18 },
+      { lat: 19, lng: -2 },
+    ],
+  },
+  {
+    name: '西亚',
+    points: [
+      { lat: 13, lng: 30 },
+      { lat: 17, lng: 46 },
+      { lat: 27, lng: 64 },
+      { lat: 39, lng: 68 },
+      { lat: 45, lng: 52 },
+      { lat: 38, lng: 34 },
+    ],
+  },
+  {
+    name: '南亚与东南亚',
+    points: [
+      { lat: 7, lng: 70 },
+      { lat: 25, lng: 82 },
+      { lat: 30, lng: 96 },
+      { lat: 24, lng: 110 },
+      { lat: 8, lng: 108 },
+      { lat: 5, lng: 98 },
+      { lat: 12, lng: 88 },
+    ],
+  },
+  {
+    name: '东亚大陆',
+    points: [
+      { lat: 20, lng: 96 },
+      { lat: 25, lng: 108 },
+      { lat: 22, lng: 118 },
+      { lat: 31, lng: 124 },
+      { lat: 39, lng: 130 },
+      { lat: 48, lng: 120 },
+      { lat: 50, lng: 106 },
+      { lat: 40, lng: 98 },
+    ],
+  },
+  {
+    name: '日韩',
+    points: [
+      { lat: 32, lng: 126 },
+      { lat: 36, lng: 132 },
+      { lat: 42, lng: 142 },
+      { lat: 35, lng: 144 },
+      { lat: 31, lng: 135 },
+    ],
+  },
+];
+
+// 区域标签帮助用户快速建立机场点位所处的大致地理位置。
+const MAP_REGION_LABELS: MapRegionLabel[] = [
+  { name: '欧洲', coordinate: { lat: 45, lng: 10 } },
+  { name: '北非', coordinate: { lat: 25, lng: 9 } },
+  { name: '中国', coordinate: { lat: 34, lng: 112 } },
+  { name: '日本', coordinate: { lat: 38, lng: 139 } },
+  { name: '东南亚', coordinate: { lat: 14, lng: 101 } },
+  { name: '韩国', coordinate: { lat: 38, lng: 127 } },
+];
+
+// 航迹弧线连接主要打卡区域，帮助地图从点位分布变成更有旅程感的示意图。
+const MAP_ROUTES: MapRoute[] = [
+  {
+    name: '欧洲至东亚',
+    start: { lat: 41.297445, lng: 2.083294 },
+    end: { lat: 39.509945, lng: 116.41092 },
+  },
+  {
+    name: '北非至欧洲',
+    start: { lat: 33.367467, lng: -7.58997 },
+    end: { lat: 48.726243, lng: 2.365247 },
+  },
+  {
+    name: '中国至日本',
+    start: { lat: 31.144344, lng: 121.808273 },
+    end: { lat: 35.549393, lng: 139.779839 },
+  },
+  {
+    name: '中国至东南亚',
+    start: { lat: 23.392436, lng: 113.298786 },
+    end: { lat: 13.690017, lng: 100.750112 },
+  },
+  {
+    name: '韩国至日本',
+    start: { lat: 37.460191, lng: 126.440696 },
+    end: { lat: 35.771986, lng: 140.39285 },
+  },
+];
 
 // 根据描述中的国家前缀提取分组名称，让机场列表保持地理层级。
 const getAirportCountryName = (airport: CheckedAirport): string => {
@@ -280,8 +404,8 @@ const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup
 };
 
 // 将经纬度换算成足迹图上的百分比位置，加入边距避免标记贴边。
-const getAirportMarkerPosition = (
-  airport: CheckedAirport,
+const getMapCoordinatePosition = (
+  coordinate: MapCoordinate,
   bounds: AirportBounds,
 ): AirportMarkerPosition => {
   const mapPaddingPercentage = 7;
@@ -290,12 +414,32 @@ const getAirportMarkerPosition = (
   const lngRange = bounds.maxLng - bounds.minLng;
 
   return {
-    left: mapPaddingPercentage + ((airport.lng - bounds.minLng) / lngRange) * usableMapPercentage,
-    top: mapPaddingPercentage + ((bounds.maxLat - airport.lat) / latRange) * usableMapPercentage,
+    left: mapPaddingPercentage + ((coordinate.lng - bounds.minLng) / lngRange) * usableMapPercentage,
+    top: mapPaddingPercentage + ((bounds.maxLat - coordinate.lat) / latRange) * usableMapPercentage,
   };
 };
 
-const airportBounds = getAirportBounds(CHECKED_AIRPORTS);
+// 将一组经纬度点转换成 SVG polygon 的点位字符串。
+const getMapPolygonPoints = (points: MapCoordinate[], bounds: AirportBounds): string => {
+  return points
+    .map((point: MapCoordinate): string => {
+      const pointPosition = getMapCoordinatePosition(point, bounds);
+
+      return `${pointPosition.left},${pointPosition.top}`;
+    })
+    .join(' ');
+};
+
+// 根据两个经纬度端点生成二次贝塞尔航线，让跨区域连线保持轻微弧度。
+const getMapRoutePath = (route: MapRoute, bounds: AirportBounds): string => {
+  const startPosition = getMapCoordinatePosition(route.start, bounds);
+  const endPosition = getMapCoordinatePosition(route.end, bounds);
+  const controlPointX = (startPosition.left + endPosition.left) / 2;
+  const controlPointY = Math.min(startPosition.top, endPosition.top) - 8;
+
+  return `M ${startPosition.left} ${startPosition.top} Q ${controlPointX} ${controlPointY} ${endPosition.left} ${endPosition.top}`;
+};
+
 const airportCountryGroups = groupAirportsByCountry(CHECKED_AIRPORTS);
 const checkedCountryCount = airportCountryGroups.length;
 
@@ -341,8 +485,46 @@ const PersonalPage = (): ReactElement => {
         </div>
         <div className="airport-footprint" aria-label="机场打卡足迹示意图">
           <div className="airport-footprint__grid" aria-hidden="true" />
+          <svg
+            className="airport-footprint__map"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {MAP_LANDMASSES.map((landmass: MapLandmass): ReactElement => (
+              <polygon
+                className="airport-footprint__landmass"
+                key={landmass.name}
+                points={getMapPolygonPoints(landmass.points, AIRPORT_MAP_BOUNDS)}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+            {MAP_ROUTES.map((route: MapRoute): ReactElement => (
+              <path
+                className="airport-footprint__route"
+                d={getMapRoutePath(route, AIRPORT_MAP_BOUNDS)}
+                key={route.name}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </svg>
+          <div className="airport-footprint__labels" aria-hidden="true">
+            {MAP_REGION_LABELS.map((regionLabel: MapRegionLabel): ReactElement => {
+              const labelPosition = getMapCoordinatePosition(regionLabel.coordinate, AIRPORT_MAP_BOUNDS);
+              const labelStyle: CSSProperties = {
+                left: `${labelPosition.left}%`,
+                top: `${labelPosition.top}%`,
+              };
+
+              return (
+                <span className="airport-footprint__label" key={regionLabel.name} style={labelStyle}>
+                  {regionLabel.name}
+                </span>
+              );
+            })}
+          </div>
           {CHECKED_AIRPORTS.map((airport: CheckedAirport): ReactElement => {
-            const markerPosition = getAirportMarkerPosition(airport, airportBounds);
+            const markerPosition = getMapCoordinatePosition(airport, AIRPORT_MAP_BOUNDS);
             const markerStyle: CSSProperties = {
               left: `${markerPosition.left}%`,
               top: `${markerPosition.top}%`,
@@ -358,6 +540,10 @@ const PersonalPage = (): ReactElement => {
               />
             );
           })}
+          <div className="airport-footprint__legend" aria-hidden="true">
+            <span>打卡机场</span>
+            <span>主要航迹</span>
+          </div>
         </div>
       </section>
 
