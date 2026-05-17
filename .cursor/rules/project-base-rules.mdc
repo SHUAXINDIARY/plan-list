@@ -18,10 +18,16 @@ alwaysApply: true
   - `.agents/skills/`：项目级 Agent Skills；新增或维护 skill 时，每个 skill 必须独立成目录并包含 `SKILL.md`。
   - `.agents/skills/impeccable/`：前端设计、审查、打磨、适配、动效、可访问性和体验优化相关 skill。
   - `.agents/skills/rsbuild-best-practices/`：Rsbuild 配置、构建、资源、性能、CLI 和调试相关 skill。
+  - `.agents/skills/vercel-react-native-skills/`：React Native / Expo / 移动端 UI、状态、动画、列表性能和导航相关 skill；仅在移动端或 React Native 任务中使用。
   - `.cursor/rules/`：Cursor 项目规则；新增规则文件必须使用 `.mdc` 格式。
   - `public/`：静态公共资源，例如 favicon、无需打包处理且需要按原路径访问的资源。
+  - `public/data/`：公开可访问的静态数据文件目录，适合存放前端运行时直接读取的 JSON 数据。
+  - `public/data/airplan.json`：航司与机型映射数据，供航司机型 wiki 和个人乘坐记录功能读取。
   - `src/`：应用源码目录，业务组件、样式、工具函数、类型声明和应用入口都应放在这里。
   - `src/assets/`：源码内引用并参与构建处理的图片、字体、图标等资源。
+  - `src/pages/`：页面级模块目录，按业务页面拆分子目录，承载页面组件、页面样式和页面内局部逻辑。
+  - `src/pages/home/`：航司机型 wiki、首页内容展示、资料浏览和入口相关页面模块。
+  - `src/pages/personal/`：个人乘坐记录、已乘机型清单和个人记录相关页面模块。
   - `src/types/`：项目共享类型声明、接口、枚举和类型工具。
   - `src/utils/`：可复用纯工具函数、格式化函数、数据转换函数和无 UI 的辅助逻辑。
   - `src/App.tsx`：应用根组件。
@@ -33,6 +39,7 @@ alwaysApply: true
   - `DESIGN.md`：项目 UI 基调、视觉系统、颜色、字体、组件和设计禁忌。
   - `taskRecord.md`：项目任务执行记录；每次任务完成后按固定格式追加记录。
   - `README.md`：项目说明文档。
+  - `.gitignore`：Git 忽略规则，记录不应提交的依赖、构建产物、缓存和本地文件。
   - `package.json`：包信息、脚本和依赖声明。
   - `pnpm-lock.yaml`：pnpm 锁文件。
   - `rsbuild.config.ts`：Rsbuild 配置。

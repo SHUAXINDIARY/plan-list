@@ -89,3 +89,59 @@
 
 - `taskRecord.md`
   - 追加本次规则变更的任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+更新 `.cursor/rules/project-base-rules.mdc` 中的当前目录说明，使项目规则与最新目录结构保持一致。
+
+## 完成过程
+
+1. 阅读 `create-rule` skill，确认修改 Cursor 项目规则应遵循 `.mdc` 文件格式。
+2. 读取 `.cursor/rules/project-base-rules.mdc` 和 `taskRecord.md`，确认当前规则内容与任务记录格式。
+3. 扫描项目目录，发现新增的 `public/data/airplan.json` 和 `.agents/skills/vercel-react-native-skills/`。
+4. 读取 `public/data/airplan.json` 前部内容，确认其为航司与机型映射数据。
+5. 更新 `.cursor/rules/project-base-rules.mdc` 的 `当前目录` 小节，补充新增目录和文件职责。
+6. 按项目规则将本次执行内容追加到 `taskRecord.md`。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 新增 `.agents/skills/vercel-react-native-skills/` 的目录职责说明。
+  - 新增 `public/data/` 和 `public/data/airplan.json` 的目录与数据职责说明。
+  - 新增 `.gitignore` 的文件职责说明。
+
+- `taskRecord.md`
+  - 追加本次目录更新任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+修正上一次目录扫描遗漏的问题，补充 `src` 下新增页面目录到项目规则中。
+
+## 完成过程
+
+1. 根据用户反馈重新检查 `src` 目录，确认上一次使用 `Glob("src/**/*")` 只返回文件，未体现空目录。
+2. 使用目录列表重新核对 `src`，发现新增 `src/pages/` 目录。
+3. 继续检查 `src/pages/`，确认其中包含 `home/` 和 `personal/` 两个页面子目录。
+4. 更新 `.cursor/rules/project-base-rules.mdc` 的 `当前目录` 小节，补充 `src/pages/`、`src/pages/home/` 和 `src/pages/personal/` 的职责说明。
+5. 按项目规则将本次修正追加到 `taskRecord.md`。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 新增 `src/pages/` 页面级模块目录说明。
+  - 新增 `src/pages/home/` 和 `src/pages/personal/` 页面子目录职责说明。
+
+- `taskRecord.md`
+  - 追加本次目录扫描修正记录。
