@@ -1700,3 +1700,38 @@
 
 - `taskRecord.md`
   - 追加本次首页模块拆分记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+移除首页航司机型资料的图片入口与弹窗逻辑；从 `airplan.json` 与类型中删除 `imgs` 字段。
+
+## 完成过程
+
+1. 更新 `src/pages/home/type.d.ts` 与 `createAirlineFleets` 映射，去掉 `imgs`。
+2. 删除 `index.tsx` 中图片弹窗状态、Escape 监听、按钮与弹窗 JSX。
+3. 清理 `index.css` 中「查看图片」与 image-dialog 相关样式，并简化 `airline-entry__header` 布局。
+4. 自 `public/data/airplan.json` 各航司条目中移除 `imgs` 行，保持其余 JSON 排版不变。
+5. 使用 `ReadLints` 检查本次修改的 `src/pages/home/*` 与 `taskRecord.md`。
+
+## 修改具体文件
+
+- `src/pages/home/type.d.ts`
+  - `AirlineFleet`、`AirplaneDataItem` 不再包含 `imgs`。
+
+- `src/pages/home/index.tsx`
+  - 移除图片按钮、弹窗及相关 effect 与 state。
+
+- `src/pages/home/index.css`
+  - 移除图片按钮与弹窗样式；微调航司卡片 header。
+
+- `public/data/airplan.json`
+  - 删除全部 `imgs` 属性。
+
+- `taskRecord.md`
+  - 追加本次任务记录。

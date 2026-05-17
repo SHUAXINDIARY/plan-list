@@ -199,7 +199,6 @@
 .airline-entry__header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(164, 188, 201, 0.12);
@@ -221,35 +220,6 @@
   color: #8ea7b5;
   font-size: 0.86rem;
   white-space: nowrap;
-}
-
-.airline-entry__image-button,
-.image-dialog__close {
-  flex: 0 0 auto;
-  min-height: 2.15rem;
-  padding: 0 0.75rem;
-  color: #dff4ff;
-  font-weight: 700;
-  background-color: rgba(55, 126, 160, 0.18);
-  border: 1px solid rgba(124, 200, 235, 0.24);
-  border-radius: 999px;
-  cursor: pointer;
-  transition:
-    color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
-}
-
-.airline-entry__image-button:hover,
-.airline-entry__image-button:focus-visible,
-.image-dialog__close:hover,
-.image-dialog__close:focus-visible {
-  color: #f4f8fb;
-  background-color: rgba(55, 126, 160, 0.28);
-  border-color: rgba(124, 200, 235, 0.46);
-  outline: none;
-  transform: translate3d(0, -1px, 0);
 }
 
 .manufacturer-list {
@@ -292,78 +262,6 @@
   color: #f4f8fb;
   border-color: rgba(124, 200, 235, 0.34);
   transform: translate3d(0, -1px, 0);
-}
-
-.image-dialog-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: grid;
-  place-items: center;
-  padding: clamp(1rem, 4vw, 2rem);
-  background-color: rgba(2, 9, 23, 0.72);
-  animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
-}
-
-.image-dialog {
-  width: min(100%, 48rem);
-  max-height: min(42rem, 86vh);
-  padding: clamp(1rem, 3vw, 1.5rem);
-  overflow-y: auto;
-  background-color: #0a1521;
-  border: 1px solid rgba(164, 188, 201, 0.2);
-  border-radius: 1.15rem;
-}
-
-.image-dialog__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(164, 188, 201, 0.12);
-}
-
-.image-dialog__eyebrow {
-  margin: 0 0 0.35rem;
-  color: #7cc8eb;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.image-dialog h2 {
-  margin: 0;
-  color: #f4f8fb;
-  font-size: 1.25rem;
-}
-
-.image-dialog__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 0.85rem;
-  margin-top: 1rem;
-}
-
-.image-dialog__grid img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background-color: rgba(15, 31, 48, 0.78);
-  border: 1px solid rgba(164, 188, 201, 0.14);
-  border-radius: 0.85rem;
-}
-
-.image-dialog__empty {
-  padding: 2rem 1rem;
-  margin: 1rem 0 0;
-  color: #b5c6d1;
-  text-align: center;
-  background-color: rgba(15, 31, 48, 0.62);
-  border: 1px solid rgba(164, 188, 201, 0.14);
-  border-radius: 0.9rem;
 }
 
 .reference-sources {
@@ -507,10 +405,6 @@
 
   .airline-entry__header span {
     white-space: normal;
-  }
-
-  .image-dialog__header {
-    flex-direction: column;
   }
 
   .reference-sources__summary {

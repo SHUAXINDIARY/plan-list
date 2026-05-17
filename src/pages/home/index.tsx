@@ -47,7 +47,6 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
       return {
         airlineName: airplaneDataItem.airline,
         passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
-        imgs: airplaneDataItem.imgs,
         manufacturerCount: formattedManufacturers.length,
         aircraftCount,
         manufacturers: formattedManufacturers,
@@ -141,7 +140,6 @@ const HomePage = (): ReactElement => {
   const [selectedSortOrder, setSelectedSortOrder] = useState<PassengerAircraftSortOrder>(
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
   );
-  const [selectedImageFleet, setSelectedImageFleet] = useState<AirlineFleet | null>(null);
   const fleetResultsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect((): (() => void) => {
@@ -236,33 +234,6 @@ const HomePage = (): ReactElement => {
     }
   };
 
-  // 打开当前航司的图片弹窗，弹窗内部根据 imgs 数组渲染图片或空状态。
-  const handleImageDialogOpen = (airlineFleet: AirlineFleet): void => {
-    setSelectedImageFleet(airlineFleet);
-  };
-
-  // 关闭图片弹窗并清理当前选中的航司。
-  const handleImageDialogClose = (): void => {
-    setSelectedImageFleet(null);
-  };
-
-  useEffect((): (() => void) => {
-    // 弹窗打开时允许用户使用 Escape 快速关闭，保持键盘操作可用。
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        setSelectedImageFleet(null);
-      }
-    };
-
-    if (selectedImageFleet) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-
-    return (): void => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [selectedImageFleet]);
-
   return (
     <section className="page-panel aircraft-wiki" aria-labelledby="home-page-title">
       <p className="page-eyebrow">Aircraft Wiki</p>
@@ -339,13 +310,6 @@ const HomePage = (): ReactElement => {
                         个制造商 / {airlineFleet.aircraftCount} 个机型
                       </span>
                     </div>
-                    <button
-                      className="airline-entry__image-button"
-                      type="button"
-                      onClick={(): void => handleImageDialogOpen(airlineFleet)}
-                    >
-                      查看图片
-                    </button>
                   </header>
 
                   <div className="manufacturer-list">
@@ -398,47 +362,6 @@ const HomePage = (): ReactElement => {
           )}
         </div>
       </details>
-
-      {selectedImageFleet ? (
-        <div className="image-dialog-backdrop" role="presentation">
-          <section
-            className="image-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="image-dialog-title"
-          >
-            <header className="image-dialog__header">
-              <div>
-                <p className="image-dialog__eyebrow">Airline Images</p>
-                <h2 id="image-dialog-title">{selectedImageFleet.airlineName} 图片</h2>
-              </div>
-              <button
-                className="image-dialog__close"
-                type="button"
-                onClick={handleImageDialogClose}
-                aria-label="关闭图片弹窗"
-              >
-                关闭
-              </button>
-            </header>
-
-            {selectedImageFleet.imgs.length > 0 ? (
-              <div className="image-dialog__grid">
-                {selectedImageFleet.imgs.map((imageUrl: string, imageIndex: number): ReactElement => (
-                  <img
-                    key={`${selectedImageFleet.airlineName}-image-${imageUrl}`}
-                    src={imageUrl}
-                    alt={`${selectedImageFleet.airlineName} 图片 ${imageIndex + 1}`}
-                    loading="lazy"
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="image-dialog__empty">当前航司暂未录入图片。</p>
-            )}
-          </section>
-        </div>
-      ) : null}
     </section>
   );
 };

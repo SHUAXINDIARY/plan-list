@@ -6,7 +6,6 @@ export interface ManufacturerFleet {
 export interface AirlineFleet {
   airlineName: string;
   passengerAircraftCount: number;
-  imgs: string[];
   manufacturerCount: number;
   aircraftCount: number;
   manufacturers: ManufacturerFleet[];
@@ -15,7 +14,6 @@ export interface AirlineFleet {
 export interface AirplaneDataItem {
   airline: string;
   passengerAircraftCount: number;
-  imgs: string[];
   models: Record<string, string[]>;
 }
 
