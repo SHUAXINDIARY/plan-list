@@ -1,23 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CSSProperties, MouseEvent, ReactElement } from 'react';
+import type { MouseEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
+import WorldMap from '../../components/map/map.svg?react';
 import {
-  AIRPORT_MAP_BOUNDS,
   CHECKED_AIRPORTS,
-  MAP_LANDMASSES,
-  MAP_REGION_LABELS,
   MAP_ROUTES,
   aircraftPhotos,
 } from './constant';
 import type {
   AircraftPhoto,
-  AirportBounds,
   AirportCountryGroup,
   AirportMarkerPosition,
   CheckedAirport,
   MapCoordinate,
-  MapLandmass,
-  MapRegionLabel,
   MapRoute,
 } from './type';
 import './index.css';
@@ -57,39 +52,27 @@ const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup
     });
 };
 
-// 将经纬度换算成足迹图上的百分比位置，加入边距避免标记贴边。
-const getMapCoordinatePosition = (
-  coordinate: MapCoordinate,
-  bounds: AirportBounds,
-): AirportMarkerPosition => {
-  const mapPaddingPercentage = 7;
-  const usableMapPercentage = 100 - mapPaddingPercentage * 2;
-  const latRange = bounds.maxLat - bounds.minLat;
-  const lngRange = bounds.maxLng - bounds.minLng;
+const WORLD_MAP_WIDTH = 1200;
+const WORLD_MAP_HEIGHT = 650;
+const WORLD_MAP_MARGIN_X = 42;
+const WORLD_MAP_MARGIN_Y = 42;
+const WORLD_MAP_CONTENT_WIDTH = WORLD_MAP_WIDTH - WORLD_MAP_MARGIN_X * 2;
+const WORLD_MAP_CONTENT_HEIGHT = WORLD_MAP_HEIGHT - WORLD_MAP_MARGIN_Y * 2;
 
+// 将经纬度换算成 Natural Earth 地图 SVG 的画布坐标。
+const projectMapCoordinate = (coordinate: MapCoordinate): AirportMarkerPosition => {
   return {
-    left: mapPaddingPercentage + ((coordinate.lng - bounds.minLng) / lngRange) * usableMapPercentage,
-    top: mapPaddingPercentage + ((bounds.maxLat - coordinate.lat) / latRange) * usableMapPercentage,
+    left: WORLD_MAP_MARGIN_X + ((coordinate.lng + 180) / 360) * WORLD_MAP_CONTENT_WIDTH,
+    top: WORLD_MAP_MARGIN_Y + ((90 - coordinate.lat) / 180) * WORLD_MAP_CONTENT_HEIGHT,
   };
 };
 
-// 将一组经纬度点转换成 SVG polygon 的点位字符串。
-const getMapPolygonPoints = (points: MapCoordinate[], bounds: AirportBounds): string => {
-  return points
-    .map((point: MapCoordinate): string => {
-      const pointPosition = getMapCoordinatePosition(point, bounds);
-
-      return `${pointPosition.left},${pointPosition.top}`;
-    })
-    .join(' ');
-};
-
 // 根据两个经纬度端点生成二次贝塞尔航线，让跨区域连线保持轻微弧度。
-const getMapRoutePath = (route: MapRoute, bounds: AirportBounds): string => {
-  const startPosition = getMapCoordinatePosition(route.start, bounds);
-  const endPosition = getMapCoordinatePosition(route.end, bounds);
+const getMapRoutePath = (route: MapRoute): string => {
+  const startPosition = projectMapCoordinate(route.start);
+  const endPosition = projectMapCoordinate(route.end);
   const controlPointX = (startPosition.left + endPosition.left) / 2;
-  const controlPointY = Math.min(startPosition.top, endPosition.top) - 8;
+  const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
 
   return `M ${startPosition.left} ${startPosition.top} Q ${controlPointX} ${controlPointY} ${endPosition.left} ${endPosition.top}`;
 };
@@ -279,62 +262,44 @@ const PersonalPage = (): ReactElement => {
           <h2 id="airport-map-title">打卡过的机场</h2>
         </div>
         <div className="airport-footprint" aria-label="机场打卡足迹示意图">
-          <div className="airport-footprint__grid" aria-hidden="true" />
-          <svg
+          <WorldMap
             className="airport-footprint__map"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
+            preserveAspectRatio="xMidYMid meet"
             aria-hidden="true"
+            focusable="false"
+          />
+          <svg
+            className="airport-footprint__routes"
+            viewBox={`0 0 ${WORLD_MAP_WIDTH} ${WORLD_MAP_HEIGHT}`}
+            preserveAspectRatio="xMidYMid meet"
+            aria-hidden="true"
+            focusable="false"
           >
-            {MAP_LANDMASSES.map((landmass: MapLandmass): ReactElement => (
-              <polygon
-                className="airport-footprint__landmass"
-                key={landmass.name}
-                points={getMapPolygonPoints(landmass.points, AIRPORT_MAP_BOUNDS)}
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
             {MAP_ROUTES.map((route: MapRoute): ReactElement => (
               <path
                 className="airport-footprint__route"
-                d={getMapRoutePath(route, AIRPORT_MAP_BOUNDS)}
+                d={getMapRoutePath(route)}
                 key={route.name}
                 vectorEffect="non-scaling-stroke"
               />
             ))}
-          </svg>
-          <div className="airport-footprint__labels" aria-hidden="true">
-            {MAP_REGION_LABELS.map((regionLabel: MapRegionLabel): ReactElement => {
-              const labelPosition = getMapCoordinatePosition(regionLabel.coordinate, AIRPORT_MAP_BOUNDS);
-              const labelStyle: CSSProperties = {
-                left: `${labelPosition.left}%`,
-                top: `${labelPosition.top}%`,
-              };
+            {CHECKED_AIRPORTS.map((airport: CheckedAirport): ReactElement => {
+              const markerPosition = projectMapCoordinate(airport);
 
               return (
-                <span className="airport-footprint__label" key={regionLabel.name} style={labelStyle}>
-                  {regionLabel.name}
-                </span>
+                <circle
+                  className="airport-footprint__marker"
+                  key={airport.name}
+                  cx={markerPosition.left}
+                  cy={markerPosition.top}
+                  r="5.6"
+                  vectorEffect="non-scaling-stroke"
+                >
+                  <title>{`${airport.name}，${airport.description}`}</title>
+                </circle>
               );
             })}
-          </div>
-          {CHECKED_AIRPORTS.map((airport: CheckedAirport): ReactElement => {
-            const markerPosition = getMapCoordinatePosition(airport, AIRPORT_MAP_BOUNDS);
-            const markerStyle: CSSProperties = {
-              left: `${markerPosition.left}%`,
-              top: `${markerPosition.top}%`,
-            };
-
-            return (
-              <span
-                className="airport-footprint__marker"
-                key={airport.name}
-                style={markerStyle}
-                aria-label={`${airport.name}，${airport.description}`}
-                title={airport.name}
-              />
-            );
-          })}
+          </svg>
           <div className="airport-footprint__legend" aria-hidden="true">
             <span>打卡机场</span>
             <span>主要航迹</span>

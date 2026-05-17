@@ -299,7 +299,7 @@
 
 .airport-footprint {
   position: relative;
-  min-height: 20rem;
+  aspect-ratio: 1200 / 650;
   margin-top: 1rem;
   overflow: hidden;
   background:
@@ -330,82 +330,49 @@
   content: '';
 }
 
-.airport-footprint__grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(164, 188, 201, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(164, 188, 201, 0.055) 1px, transparent 1px);
-  background-size: 4.2rem 4.2rem;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.34));
-}
-
 .airport-footprint__map {
   position: absolute;
   inset: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
-.airport-footprint__landmass {
-  fill: oklch(0.34 0.035 205 / 0.58);
-  stroke: oklch(0.68 0.08 222 / 0.22);
-  stroke-width: 0.42;
+.airport-footprint__routes {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .airport-footprint__route {
   fill: none;
-  stroke: oklch(0.78 0.105 222 / 0.34);
-  stroke-dasharray: 3 4;
+  stroke: oklch(0.78 0.105 222 / 0.52);
+  stroke-dasharray: 8 10;
   stroke-linecap: round;
-  stroke-width: 0.55;
-}
-
-.airport-footprint__labels {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.airport-footprint__label {
-  position: absolute;
-  padding: 0.18rem 0.46rem;
-  color: rgba(217, 231, 238, 0.76);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  background-color: rgba(7, 17, 29, 0.68);
-  border: 1px solid rgba(164, 188, 201, 0.12);
-  border-radius: 999px;
-  transform: translate3d(-50%, -50%, 0);
+  stroke-width: 1.4;
 }
 
 .airport-footprint__marker {
-  position: absolute;
-  z-index: 4;
-  width: 0.58rem;
-  height: 0.58rem;
-  background-color: oklch(0.84 0.08 225);
-  border: 2px solid rgba(244, 248, 251, 0.9);
-  border-radius: 999px;
-  box-shadow:
-    0 0 0 0.28rem rgba(124, 200, 235, 0.13),
-    0 0 1.25rem rgba(158, 216, 242, 0.28);
-  transform: translate3d(-50%, -50%, 0);
+  fill: oklch(0.84 0.08 225);
+  cursor: help;
+  pointer-events: visiblePainted;
+  stroke: rgba(244, 248, 251, 0.9);
+  stroke-width: 2.4;
   transition:
-    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+    fill var(--motion-duration-fast) var(--motion-ease-out-quart),
+    stroke-width var(--motion-duration-fast) var(--motion-ease-out-quart),
+    filter var(--motion-duration-fast) var(--motion-ease-out-quart);
+  filter: drop-shadow(0 0 0.38rem rgba(158, 216, 242, 0.52));
 }
 
 .airport-footprint__marker:hover {
-  background-color: oklch(0.94 0.04 220);
-  box-shadow:
-    0 0 0 0.46rem rgba(124, 200, 235, 0.2),
-    0 0 1.55rem rgba(158, 216, 242, 0.4);
-  transform: translate3d(-50%, -50%, 0) scale(1.18);
+  fill: oklch(0.94 0.04 220);
+  stroke-width: 3.2;
+  filter: drop-shadow(0 0 0.58rem rgba(158, 216, 242, 0.72));
 }
 
 .airport-footprint__legend {
@@ -512,10 +479,6 @@
   .airport-country__header {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .airport-footprint {
-    min-height: 16rem;
   }
 
   .aircraft-photo-preview {

@@ -1,5 +1,6 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
+import { pluginSvgr } from "@rsbuild/plugin-svgr";
 import { pluginAircraftPhotoPreviews } from "./rsbuild_plugins/pluginAircraftPhotoPreviews";
 
 // Docs: https://rsbuild.rs/config/
@@ -16,5 +17,5 @@ export default defineConfig({
             viewport: "width=device-width, initial-scale=1.0",
         },
     },
-    plugins: [pluginReact(), pluginAircraftPhotoPreviews()],
+    plugins: [pluginReact(), pluginSvgr(), pluginAircraftPhotoPreviews()],
 });

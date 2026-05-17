@@ -1330,3 +1330,75 @@
 
 - `taskRecord.md`
   - 追加本次地图生成脚本 TypeScript 化任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将个人航空档案中的机场打卡足迹图改为使用 `src/components/map/map.svg` 作为 React 组件渲染。
+
+## 完成过程
+
+1. 读取 `src/pages/personal/index.tsx`、`index.css`、`map.svg`、`rsbuild.config.ts` 与环境类型声明，确认项目已有 `*.svg?react` 类型但尚未接入 SVGR 插件。
+2. 新增 `@rsbuild/plugin-svgr` 开发依赖，并在 `rsbuild.config.ts` 中启用 `pluginSvgr()`。
+3. 在个人页引入 `map.svg?react`，用 `WorldMap` 组件替换原有手写地块 polygon 和地区标签渲染。
+4. 将机场 marker 与航线叠加坐标改为基于地图 SVG 的 1200x650 世界投影坐标，保留打卡机场点位和主要航迹展示。
+5. 清理不再使用的地图网格、地块和地区标签样式，新增航线叠层样式。
+6. 运行诊断和生产构建验证通过；由于 SVG 地图作为组件内联进个人页异步包，个人页包体积会相应增加。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - 接入 `@rsbuild/plugin-svgr`，支持 `*.svg?react` 组件导入。
+
+- `package.json`
+  - 新增 `@rsbuild/plugin-svgr` 开发依赖。
+
+- `pnpm-lock.yaml`
+  - 更新 SVG React 组件插件依赖锁定信息。
+
+- `src/pages/personal/index.tsx`
+  - 使用 `WorldMap` 组件渲染机场足迹底图，并改用世界地图 SVG 坐标叠加航线与机场点。
+
+- `src/pages/personal/index.css`
+  - 调整地图底图、航线叠层和清理旧地块/标签样式。
+
+- `taskRecord.md`
+  - 追加本次 SVG 地图组件渲染任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+让个人航空档案中的世界地图适配当前页面组件尺寸，并将带经纬度的机场数据点准确渲染到地图内对应国家坐标位置。
+
+## 完成过程
+
+1. 读取个人页组件、样式、机场坐标常量、地图 SVG 与地图生成脚本，确认底图和数据投影都使用 `1200x650` 世界经纬度线性投影。
+2. 将航线叠层从拉伸填充改为与底图一致的 `xMidYMid meet` 等比视窗，避免页面尺寸变化时航线偏离国家边界。
+3. 将机场点位从 HTML 百分比绝对定位改为 SVG `circle`，直接使用地图画布坐标渲染，保证点位随地图等比缩放。
+4. 将地图容器设置为 `1200 / 650` 宽高比，并调整点位样式为 SVG 可缩放样式。
+5. 使用 `ReadLints` 与构建命令检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/personal/index.tsx`
+  - 将机场经纬度数据点渲染进 SVG 叠层，并统一地图、航线与点位的坐标系。
+
+- `src/pages/personal/index.css`
+  - 设置地图容器宽高比，并将机场点位样式改为 SVG circle 样式。
+
+- `taskRecord.md`
+  - 追加本次地图尺寸适配与坐标点渲染任务记录。
