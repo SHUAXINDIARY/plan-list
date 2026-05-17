@@ -145,3 +145,125 @@
 
 - `taskRecord.md`
   - 追加本次目录扫描修正记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+为项目新增 `react-router` 路由能力，在 `src/pages/*` 页面目录下创建占位页面，并在 `src/App.tsx` 中增加页面路由和跳转导航。
+
+## 完成过程
+
+1. 读取 `src/App.tsx`、`src/App.css`、`src/index.tsx` 和 `package.json`，确认当前应用仍是 Rsbuild React 初始页面。
+2. 检查 `src/pages/home` 和 `src/pages/personal`，确认两个页面目录存在但尚未创建页面入口文件。
+3. 使用 `pnpm add react-router` 安装 `react-router` 依赖。
+4. 新增 `src/pages/home/index.tsx`，作为航司机型资料库页面占位组件。
+5. 新增 `src/pages/personal/index.tsx`，作为个人乘坐记录页面占位组件。
+6. 更新 `src/App.tsx`，引入 `BrowserRouter`、`Routes`、`Route` 和 `NavLink`，配置 `/` 与 `/personal` 两个路由。
+7. 在 `src/App.tsx` 中新增主导航配置和导航渲染逻辑，支持跳转到机型资料库与我的乘坐记录。
+8. 更新 `src/App.css`，补充应用壳、顶部导航、激活态链接、页面面板和响应式布局样式。
+9. 使用 `ReadLints` 检查新增和修改的源码文件，未发现 linter 问题。
+10. 运行 `pnpm run build` 验证生产构建通过。
+
+## 修改具体文件
+
+- `package.json`
+  - 新增 `react-router` 依赖。
+
+- `pnpm-lock.yaml`
+  - 因安装 `react-router` 自动更新锁文件。
+
+- `src/App.tsx`
+  - 新增 React Router 路由配置。
+  - 新增主导航和 `NavLink` 跳转入口。
+  - 接入 `HomePage` 与 `PersonalPage` 页面组件。
+
+- `src/App.css`
+  - 替换初始页样式。
+  - 新增应用壳、导航、页面面板和移动端适配样式。
+
+- `src/pages/home/index.tsx`
+  - 新增航司机型资料库页面占位组件。
+
+- `src/pages/personal/index.tsx`
+  - 新增个人乘坐记录页面占位组件。
+
+- `taskRecord.md`
+  - 追加本次新增路由与页面占位任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将 `public/data/airplan.json` 中的航司与机型数据渲染到首页 `src/pages/home/index.tsx`。
+
+## 完成过程
+
+1. 读取 `impeccable` skill 相关说明，确认本次首页数据展示仍需遵守项目 UI 基调。
+2. 读取 `public/data/airplan.json`，确认数据结构为“航司 -> 制造商 -> 机型数组”。
+3. 读取 `src/pages/home/index.tsx` 和 `src/App.css`，确认首页仍是占位内容。
+4. 在 `src/pages/home/index.tsx` 中新增数据类型声明、数据加载逻辑和数据格式化函数。
+5. 使用 `fetch('/data/airplan.json')` 加载静态 JSON，并补充加载、错误和空数据状态。
+6. 按航司渲染制造商与机型列表，并展示航司数量和机型记录总数。
+7. 在 `src/App.css` 中新增首页数据列表、统计摘要、状态提示、航司条目、制造商分组和机型标签样式。
+8. 使用 `ReadLints` 检查 `src/pages/home/index.tsx` 和 `src/App.css`，未发现 linter 问题。
+9. 运行 `pnpm run build` 验证生产构建通过。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增读取和渲染 `public/data/airplan.json` 的逻辑。
+  - 新增加载、错误、空数据和数据摘要状态。
+  - 按航司、制造商、机型层级渲染数据。
+
+- `src/App.css`
+  - 新增首页数据渲染相关样式。
+  - 新增航司条目、制造商分组、机型标签、统计摘要和状态提示样式。
+
+- `taskRecord.md`
+  - 追加本次首页数据渲染任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+在首页机型数据概览同一行增加航司搜索和机型制造商下拉筛选，用于过滤展示航司与机型数据。
+
+## 完成过程
+
+1. 读取 `impeccable` skill 并刷新 Impeccable 项目上下文，确认本次筛选交互需要遵守当前产品与 UI 基调。
+2. 读取 `src/pages/home/index.tsx`、`src/App.css` 和现有任务记录，确认首页数据渲染与样式结构。
+3. 在 `src/pages/home/index.tsx` 中新增航司搜索状态和制造商筛选状态。
+4. 新增制造商选项提取逻辑，从已加载的航司机型数据中生成下拉选项。
+5. 新增数据过滤逻辑，按航司名称和选中制造商过滤航司、制造商与机型展示。
+6. 将机型数据概览调整为同一行工具栏，左侧展示过滤后的统计，右侧展示航司搜索和制造商下拉筛选。
+7. 补充无匹配结果状态，当前筛选条件无数据时展示提示。
+8. 在 `src/App.css` 中新增筛选工具栏、搜索输入、下拉框和响应式布局样式。
+9. 使用 `ReadLints` 检查 `src/pages/home/index.tsx` 和 `src/App.css`，未发现 linter 问题。
+10. 运行 `pnpm run build` 验证生产构建通过。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增航司搜索输入和机型制造商下拉筛选。
+  - 新增制造商选项提取和数据过滤逻辑。
+  - 将统计摘要改为基于过滤结果展示。
+  - 新增筛选无结果提示。
+
+- `src/App.css`
+  - 新增筛选工具栏、输入框、下拉框和小屏适配样式。
+
+- `taskRecord.md`
+  - 追加本次筛选功能任务记录。
