@@ -1612,3 +1612,60 @@
 
 - `taskRecord.md`
   - 追加本次项目规则维护任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+为通用地图组件新增基于鼠标局部位置的缩放能力，并支持放大后拖拽平移地图。
+
+## 完成过程
+
+1. 读取 `src/components/map/index.tsx` 和 `src/components/map/index.css`，确认地图底图、航线、标记点和 tooltip 已封装在通用组件内。
+2. 新增地图视口缩放和平移状态，滚轮缩放时以鼠标在地图容器内的位置为锚点重新计算位移。
+3. 将底图、航线、标记点和 tooltip 放入同一个可变换视口层，确保缩放和拖拽时保持同步。
+4. 新增 pointer 拖拽逻辑，只有地图放大后才允许拖拽，并限制平移范围避免地图被拖出可视区域。
+5. 调整地图样式，补充可缩放视口层、放大拖拽光标和触控拖拽行为。
+6. 使用 `ReadLints` 与构建命令检查本次修改文件。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 新增地图缩放、局部锚点计算、边界收束和放大后拖拽平移逻辑。
+
+- `src/components/map/index.css`
+  - 新增地图视口层样式、放大/拖拽光标状态和触控拖拽配置。
+
+- `taskRecord.md`
+  - 追加本次地图缩放拖拽交互任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+避免地图内滚轮缩放影响外层页面滚动，并修正放大后机场名称气泡相对标记点的定位错位。
+
+## 完成过程
+
+1. 确认 React 合成事件对 `wheel` 的 passive 默认行为会导致 `preventDefault` 无法阻止页面滚动。
+2. 使用 `ref` 在地图容器上以 `{ passive: false }` 注册原生 `wheel` 监听，在缩放逻辑中同时 `preventDefault` 与 `stopPropagation`，并移除 JSX 上的 `onWheel` 避免重复处理。
+3. 放大状态下 tooltip 使用 `scale(1/scale)` 抵消父级缩放时，为气泡设置 `transform-origin: 50% 100%`，使底部中心对准标记点，避免默认中心原点导致的水平偏移。
+4. 使用 `ReadLints` 检查 `taskRecord.md` 与本次修改过的 `src/components/map/index.tsx`。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 原生非 passive `wheel` 监听、`stopPropagation`、tooltip 的 `transformOrigin` 与相关 hooks 调整。
+
+- `taskRecord.md`
+  - 追加本次地图滚轮与 tooltip 修正记录。
