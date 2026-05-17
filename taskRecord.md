@@ -1669,3 +1669,34 @@
 
 - `taskRecord.md`
   - 追加本次地图滚轮与 tooltip 修正记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将首页航司机型资料页的常量与 TypeScript 类型从 `index.tsx` 拆出，分别放入同级 `constant.ts` 与 `type.d.ts`。
+
+## 完成过程
+
+1. 新建 `src/pages/home/type.d.ts`，导出制造商/航司/JSON 数据结构、参考来源与客机排序联合类型。
+2. 新建 `src/pages/home/constant.ts`，迁移静态数据 URL、制造商筛选占位值、默认排序与参考来源列表，并从 `./type` 引入所需类型。
+3. 调整 `src/pages/home/index.tsx`：从 `./constant` 与 `./type` 导入，保留类型守卫与数据转换、过滤、排序等页面逻辑。
+4. 使用 `ReadLints` 检查 `taskRecord.md` 与本次变更的 `src/pages/home/*` 文件。
+
+## 修改具体文件
+
+- `src/pages/home/type.d.ts`（新建）
+  - 页面相关接口与类型别名。
+
+- `src/pages/home/constant.ts`（新建）
+  - `AIRPLANE_DATA_URL`、`ALL_MANUFACTURERS_VALUE`、`DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER`、`AIRLINE_REFERENCE_SOURCES`。
+
+- `src/pages/home/index.tsx`
+  - 移除内联类型与常量，改为从上述模块导入。
+
+- `taskRecord.md`
+  - 追加本次首页模块拆分记录。
