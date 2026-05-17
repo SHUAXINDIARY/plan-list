@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   type ReactElement,
 } from 'react';
+import './index.css';
 
 interface ManufacturerFleet {
   manufacturerName: string;

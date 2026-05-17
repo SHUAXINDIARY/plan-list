@@ -387,3 +387,35 @@
 
 - `taskRecord.md`
   - 追加本次 `/animate` 数据切换过渡任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将首页专属样式从全局 `App.css` 拆分到 `src/pages/home/` 目录下，便于首页模块单独维护样式。
+
+## 完成过程
+
+1. 读取 `src/App.tsx`、`src/pages/home/index.tsx` 和 `src/App.css`，确认当前样式入口和首页样式选择器分布。
+2. 使用搜索确认 `aircraft-wiki`、`data-state`、`fleet-*`、`airline-*`、`manufacturer-*` 和 `aircraft-model-*` 等样式只被首页使用。
+3. 新建 `src/pages/home/index.css`，迁移首页专属样式、首页数据切换动画和首页小屏适配规则。
+4. 在 `src/pages/home/index.tsx` 中引入 `./index.css`，让首页模块自行加载样式。
+5. 从 `src/App.css` 删除首页专属选择器，仅保留全局布局、导航、通用面板和全局减少动态规则。
+
+## 修改具体文件
+
+- `src/pages/home/index.css`
+  - 新增首页专属样式文件，承载首页筛选、列表、数据状态、机型标签和相关动画样式。
+
+- `src/pages/home/index.tsx`
+  - 引入首页专属 `index.css`。
+
+- `src/App.css`
+  - 移除首页专属样式，保留应用级全局样式。
+
+- `taskRecord.md`
+  - 追加本次首页样式拆分任务记录。
