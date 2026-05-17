@@ -23,6 +23,11 @@ export interface AirportCountryGroup {
   airports: CheckedAirport[];
 }
 
+export interface AircraftPhoto {
+  originalUrl: string;
+  previewUrl: string;
+}
+
 export interface MapCoordinate {
   lat: number;
   lng: number;

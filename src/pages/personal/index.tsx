@@ -7,9 +7,10 @@ import {
   MAP_LANDMASSES,
   MAP_REGION_LABELS,
   MAP_ROUTES,
-  imgs as aircraftPhotoUrls,
+  aircraftPhotos,
 } from './constant';
 import type {
+  AircraftPhoto,
   AirportBounds,
   AirportCountryGroup,
   AirportMarkerPosition,
@@ -103,7 +104,7 @@ const PersonalPage = (): ReactElement => {
   const [isPhotoPreviewClosing, setIsPhotoPreviewClosing] = useState<boolean>(false);
   const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
   const photoPreviewCloseTimerRef = useRef<number | null>(null);
-  const previewPhotoUrl = previewPhotoIndex === null ? null : aircraftPhotoUrls[previewPhotoIndex];
+  const previewPhotoUrl = previewPhotoIndex === null ? null : aircraftPhotos[previewPhotoIndex]?.originalUrl ?? null;
 
   // 清理延迟卸载计时器，避免快速开关图片时保留过期关闭任务。
   const clearPhotoPreviewCloseTimer = useCallback((): void => {
@@ -217,7 +218,7 @@ const PersonalPage = (): ReactElement => {
 
       <div className="personal-summary" aria-label="个人航空档案概览">
         <span>
-          <strong>{aircraftPhotoUrls.length}</strong>
+          <strong>{aircraftPhotos.length}</strong>
           拍摄飞机
         </span>
         <span>
@@ -236,8 +237,8 @@ const PersonalPage = (): ReactElement => {
           <h2 id="photo-aircraft-title">拍摄的飞机</h2>
         </div>
         <ul className="aircraft-photo-gallery" aria-label="拍摄的飞机照片列表">
-          {aircraftPhotoUrls.map((aircraftPhotoUrl: string, aircraftPhotoIndex: number): ReactElement => (
-            <li key={aircraftPhotoUrl}>
+          {aircraftPhotos.map((aircraftPhoto: AircraftPhoto, aircraftPhotoIndex: number): ReactElement => (
+            <li key={aircraftPhoto.originalUrl}>
               <button
                 className="aircraft-photo-gallery__button"
                 type="button"
@@ -245,7 +246,7 @@ const PersonalPage = (): ReactElement => {
                 aria-label={`全屏查看拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
               >
                 <img
-                  src={aircraftPhotoUrl}
+                  src={aircraftPhoto.previewUrl}
                   alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                   loading="lazy"
                 />

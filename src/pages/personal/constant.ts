@@ -1,4 +1,5 @@
-import type { AirportBounds, CheckedAirport, MapLandmass, MapRegionLabel, MapRoute } from './type';
+import { aircraftPhotoPreviewUrls } from './photoPreviews.generated';
+import type { AircraftPhoto, AirportBounds, CheckedAirport, MapLandmass, MapRegionLabel, MapRoute } from './type';
 
 export const imgs: string[] = [
   'https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/IMG_0304.JPG',
@@ -37,6 +38,14 @@ export const imgs: string[] = [
     'https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/dblack%202026-03-30%201852465D953797B18F.JPG',
   ],
 ];
+
+// 列表使用构建期生成的小体积预览图，未生成时回退到原图以保证开发环境可用。
+export const aircraftPhotos: AircraftPhoto[] = imgs.map(
+  (originalUrl: string): AircraftPhoto => ({
+    originalUrl,
+    previewUrl: aircraftPhotoPreviewUrls[originalUrl] ?? originalUrl,
+  }),
+);
 
 // 当前个人档案中的机场打卡数据，后续可迁移到独立数据文件或后端接口。
 export const CHECKED_AIRPORTS: CheckedAirport[] = [
