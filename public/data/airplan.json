@@ -4,23 +4,23 @@
         "passengerAircraftCount": 662,
         "models": {
             "Airbus": {
-                "A319-100": "https://www.jetphotos.com/photo/11939693",
-                "A320-200": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines,_A320-200,_B-6559_(19218729078).jpg",
-                "A320neo": "https://www.jetphotos.com/photo/10694529",
-                "A321-200": "https://www.jetphotos.com/photo/10981364",
-                "A321neo": "https://www.jetphotos.com/photo/11915893",
-                "A330-200": "https://www.jetphotos.com/photo/11090873",
-                "A330-300": "https://www.jetphotos.com/photo/11619586",
-                "A350-900": "https://commons.wikimedia.org/wiki/File:(CHN-Fujian)_China_Eastern_Airlines_Airbus_A350-941_B-304N_@_ZSAM_2025-03-19.jpg"
+                "A319-100": "https://commons.wikimedia.org/wiki/File:China_Eastern_A319-100_(4175978528).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-1836@PEK_(20190630170006).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-301Z@PEK_(20190520165602).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:Harbin_Taiping_International_Airport_-_B-8559,_Airbus_A321_of_China_Eastern.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-32KC@PEK_(20250215090855).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Eastern_Airlines)_B-6121_LHR_(5992973564).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-6095@PEK_(20201203152732).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:B-308E@PEK_(20190623175611).jpg"
             },
             "Boeing": {
-                "B737-700": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines_Boeing_737-79P(WL)_(Purple_Peacock_Livery)_B-5295_(8825907280).jpg",
-                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-800_%E2%80%98B-1308%E2%80%99_China_Eastern_Airlines_(55222626534).jpg",
-                "B737 MAX 8": "https://www.jetphotos.com/photo/11198706",
-                "B777-300ER": "https://www.jetphotos.com/photo/11130331"
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-5095_-_China_Eastern_Airlines_-_Boeing_737-79P(WL)_-_SHA_(12611513805).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1981@PEK_(20180108153148).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1385@PKX_(20250620180002).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-7883@PEK_(20180407095358).jpg"
             },
             "COMAC": {
-                "C919": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines_COMAC_C919_Airplane_B-919A.jpg"
+                "C919": "https://commons.wikimedia.org/wiki/File:B-919A@PEK_(20221226151724).jpg"
             }
         }
     },
@@ -29,29 +29,29 @@
         "passengerAircraftCount": 662,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": "",
-                "A350-900": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:China_Southern_A319-100(B-6042)_(3503952387).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines,_A320-200,_B-9912_(19165804378).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-301A@CAN_(20180929155809).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Airbus_A321-211_B-6622_(8781568860).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-8368@CAN_(20180929171152).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Southern_AL)_B-6528_LHR_(7658950806).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:China_Southern_A330_(7188423513).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:B-309W@PEK_(20191029135845).jpg"
             },
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B777-300ER": "",
-                "B787-8": "",
-                "B787-9": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-2698_-_China_Southern_Airlines_-_Boeing_737-76N_-_CKG_(9575135789).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1241@PEK_(20200305134300).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1122@URC_(20230922123436).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Boeing_777-300ER_(B-2009)_at_LAX_(22517456988).jpg",
+                "B787-8": "https://commons.wikimedia.org/wiki/File:Boeing_787-8_B-2725_China_Southern_(10497279394).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-1243_31032019LHR_(47537921911).jpg"
             },
             "COMAC": {
-                "C909": "",
-                "C919": ""
+                "C909": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Comac_Arj21-700_B651W_at_CAN.jpg",
+                "C919": "https://commons.wikimedia.org/wiki/File:China_Southern_Airline_C919_at_CAN.jpg"
             },
             "Embraer": {
-                "E190": ""
+                "E190": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_ERJ-190LR_B-3205_(8757127004).jpg"
             }
         }
     },
@@ -60,27 +60,27 @@
         "passengerAircraftCount": 528,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A319neo": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": "",
-                "A350-900": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:Landing_at_Lhasa_airport.jpg",
+                "A319neo": "https://commons.wikimedia.org/wiki/File:B-32NJ@PEK_(20260331165233).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:CCA_A320_B-1873_25sep14_LFBO-1.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-309F@PEK_(20190726182906).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-6382_in_Incheon.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-301E@PEK_(20181227134738).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:B-6093@PEK_(20200301141100).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Beijing_Air_China_B-6512_1240264.jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:B-322Y@PEK_(20210603145509).jpg"
             },
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B747-400": "",
-                "B747-8I": "",
-                "B777-300ER": "",
-                "B787-9": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-5214_-_Air_China_-_Boeing_737-79L(WL)_-_Brown_Peony_Livery_-_CKG_(14920474757).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1529@PEK_(20180820143945).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:Boeing_737_MAX_8_%E2%80%98B-1225%E2%80%99_Air_China_(47456821542).jpg",
+                "B747-400": "https://commons.wikimedia.org/wiki/File:B-2445@PEK_(20191211155026).jpg",
+                "B747-8I": "https://commons.wikimedia.org/wiki/File:Air_China_Boeing_747-8_B-2487_IAD_MD1.jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-2039@PEK_(20190723090407).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-7877@PEK_(20160526110356).jpg"
             },
             "COMAC": {
-                "C919": ""
+                "C919": "https://commons.wikimedia.org/wiki/File:B-919X@PEK_(20240829112235).jpg"
             }
         }
     },
@@ -89,17 +89,17 @@
         "passengerAircraftCount": 220,
         "models": {
             "Airbus": {
-                "A320neo": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": "",
-                "A330-900": ""
+                "A320neo": "https://commons.wikimedia.org/wiki/File:20250502_Airbus_A320-251N_of_Hainan_Airlines_(B-32K5)_taxiing_at_CGO_02.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Airbus_A321-251NX_(c-n_12898,_D-AZAK)_2026-04-02_Andre_Gerwing_Collection_ID_028180.jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:B-5963@PEK_(20160809120206).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-5935@PEK_(20180329153149).jpg",
+                "A330-900": "https://commons.wikimedia.org/wiki/File:B-32MU@PEK_(20251117163226).jpg"
             },
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B787-8": "",
-                "B787-9": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5713_-_Hainan_Airlines_-_Boeing_737-84P(WL)_-_PEK_(14896123557).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1389@PEK_(20241202163230).jpg",
+                "B787-8": "https://commons.wikimedia.org/wiki/File:Hainan_Airlines_B787-8(B-2729)_(12709266195).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-6998@PEK_(20190629155647).jpg"
             }
         }
     },
@@ -108,15 +108,15 @@
         "passengerAircraftCount": 202,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A330-300": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:B-6165_-_Shenzhen_Airlines_-_Airbus_A319-112_-_PVG_(9594534921).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6358_-_Shenzhen_Airlines_-_Airbus_A320-214_-_CAN_(9286058458).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-30CK@PEK_(20200108123415).jpg",
+                "A321-200": "https://www.jetphotos.com/showphotos.php?airline=Shenzhen%20Airlines&aircraft=Airbus%20A321-200&width=1920&height=1080",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-8865@PEK_(20171103122039).jpg"
             },
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Shenzhen_Airlines_B737-800_(B-5400)_at_Shenzhen_Bao%27an_International_Airport.jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-20DN@TYN_(20241121114204).jpg"
             }
         }
     },
@@ -125,14 +125,14 @@
         "passengerAircraftCount": 202,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": "",
-                "A350-900": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:B-6419_-_Sichuan_Airlines_-_Airbus_A319-133_-_CAN_(16164721443).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6778_-_Sichuan_Airlines_-_Airbus_A320-232_-_CKG_(9622012206).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-8680@PEK_(20180708154729).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-6551_-_Sichuan_Airlines_-_Airbus_A321-231_-_PEK_(15147635805).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-8682@PEK_(20180707134217).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:Sichuan_Airlines_A330-200(B-6517)_(6823379701).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-8690@PEK_(20180108153851).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:B-325J@PEK_(20240123140133).jpg"
             }
         }
     },
@@ -141,15 +141,15 @@
         "passengerAircraftCount": 171,
         "models": {
             "Airbus": {
-                "A320neo": "",
-                "A321neo": ""
+                "A320neo": "https://www.jetphotos.com/showphotos.php?airline=XiamenAir&aircraft=Airbus%20A320-251N&width=1920&height=1080",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Xiamenair_A321neo.jpg"
             },
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B787-8": "",
-                "B787-9": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:(CHN-Fujian)_XiamenAir_Boeing_737-75C_B-5279_@_ZSAM_2025-03-19.jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Xiamen_Airlines_B737-800(B-5386)_(4996094350).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(CHN-Fujian)_XiamenAir_Boeing_737_MAX_8_B-226U_@_ZSAM_2025-03-19.jpg",
+                "B787-8": "https://commons.wikimedia.org/wiki/File:Xiamen_Airlines,_Boeing_787-8_B-2761_NRT_(20229992129).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-1566@FOC_(20170123163403).jpg"
             }
         }
     },
@@ -158,14 +158,14 @@
         "passengerAircraftCount": 159,
         "models": {
             "Airbus": {
-                "A321neo": "",
-                "A330-300": "",
-                "A350-900": "",
-                "A350-1000": ""
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Hamburg-Finkenwerder_Airport_Cathay_Pacific_Airbus_A321-251NX_B-HPJ_(DSC00251).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-HLN@HKG_(20180903121447).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:B-LRM@HKG_(20180918112059).jpg",
+                "A350-1000": "https://commons.wikimedia.org/wiki/File:Cathay_Pacific_A350-1000_(B-LXA)_@_HKG,_March_2019.jpg"
             },
             "Boeing": {
-                "B777-300": "",
-                "B777-300ER": ""
+                "B777-300": "https://commons.wikimedia.org/wiki/File:Cathay_Pacific_Boeing_777-300;_B-HNG@HKG;04.08.2011_615ku_(6207861928).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-KQL@PEK_(20200113151353).jpg"
             }
         }
     },
@@ -174,9 +174,9 @@
         "passengerAircraftCount": 135,
         "models": {
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-5205_-_Shandong_Airlines_-_Boeing_737-75N(WL)_-_TAO_(11836096285).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5651_-_Shandong_Airlines_-_Boeing_737-85N(WL)_-_PEK_(16963813486).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(CHN-Fujian)_Shandong_Airlines_Boeing_737_MAX_8_B-207F_@_ZSAM_2025-03-21.jpg"
             }
         }
     },
@@ -185,9 +185,9 @@
         "passengerAircraftCount": 132,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6971_-_Spring_Airlines_-_Airbus_A320-214_-_SHA_(12437572033).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-306P_(8_Sept_2019).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_Spring_Airlines_Airbus_A321-253NX_B-30FZ_@_ZSPD_2025-12-23.jpg"
             }
         }
     },
@@ -196,15 +196,15 @@
         "passengerAircraftCount": 103,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:320.SHK_TIANJIN_AIRLINES_F-WWIU_6449_TO_B-1658_09_02_15_TLS_(16629894877).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Tianjin_Airlines_A320neo_(B-8952)_@_HGH,_July_2019.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:Tianjin_Airlines_A321_(B-302X)_@_CAN,_Sept_2018.jpg",
+                "A321neo": "https://www.jetphotos.com/showphotos.php?airline=Tianjin%20Airlines&aircraft=Airbus%20A321-251NX&width=1920&height=1080",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:Tianjin_Airlines_A330-200_(B-8959)_@_SVO,_June_2017.jpg"
             },
             "Embraer": {
-                "E190": "",
-                "E195": ""
+                "E190": "https://commons.wikimedia.org/wiki/File:Tianjin_Airlines_Embraer_ERJ190;_B-3166@HKG;03.08.3012_669dr_(7755822442).jpg",
+                "E195": "https://commons.wikimedia.org/wiki/File:B-3108_at_CGO_20190406_01.jpg"
             }
         }
     },
@@ -213,13 +213,13 @@
         "passengerAircraftCount": 102,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6962_-_Juneyao_Airlines_-_Airbus_A320-214_-_SHA_(12306560244).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_Juneyao_Air_Airbus_A320-271N_B-32EY_@_ZSPD_2025-12-23.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-1857_(20_Jan_2023).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-32EG_NGO_(001)_2024-07-27.jpg"
             },
             "Boeing": {
-                "B787-9": ""
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-20D1@PKX_(20191111125702).jpg"
             }
         }
     },
@@ -228,10 +228,10 @@
         "passengerAircraftCount": 86,
         "models": {
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B787-9": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-2913_Boeing_B73G_Shanghai_Airlines_(12187797345).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Shanghai_Airlines_Boeing_737-8Q8_B-5131_(8702562120).jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-208M_@_Shanghai_Hongqiao_(2).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:Shanghai_Airlines_B787-9_(B-208X)_@_HKG,_March_2019.jpg"
             }
         }
     },
@@ -240,11 +240,11 @@
         "passengerAircraftCount": 82,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:201712_B-6730_at_CSX.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:20251130_Airbus_A320-251N_of_Chengdu_Airlines_(B-32FA)_taxiing_at_CGO.jpg"
             },
             "COMAC": {
-                "C909": ""
+                "C909": "https://commons.wikimedia.org/wiki/File:ARJ21_B-3321_of_Chengdu_Airlines_at_Changsha_Huanghua_Airport_20190729.jpg"
             }
         }
     },
@@ -253,13 +253,13 @@
         "passengerAircraftCount": 81,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:%E4%B8%80%E6%9E%B6%E9%A6%96%E9%83%BD%E8%88%AA%E7%A9%BA%E7%8F%AD%E6%A9%9F.JPG",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6727_-_Capital_Airlines_-_Airbus_A320-232_-_DLC_(9541313735).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:20240127_Airbus_A320-251N_of_Capital_Airlines_(B-1245)_landing_at_HGH_01.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-8107_at_CGO_20190406_01.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-30F1@TYN_(20241121133448).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:201701_B-8019_at_HGH.jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:201806_B-8679_at_HGH.jpg"
             }
         }
     },
@@ -268,13 +268,13 @@
         "passengerAircraftCount": 77,
         "models": {
             "Airbus": {
-                "A320-200": ""
+                "A320-200": "https://www.jetphotos.com/photo/10866832"
             },
             "COMAC": {
-                "C909": ""
+                "C909": "https://www.jetphotos.com/photo/11594509"
             },
             "Bombardier": {
-                "CRJ900": ""
+                "CRJ900": "https://www.jetphotos.com/photo/10590860"
             }
         }
     },
@@ -283,9 +283,9 @@
         "passengerAircraftCount": 73,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Loong_Air_Airbus_A320-200_B-8243.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Loong_Air_Airbus_A320-251N_B-1232_@_WSSS_2026-01-29.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:20240127_Airbus_A321-251NX_of_Loong_Air_(B-327C)_landing_at_HGH_02.jpg"
             }
         }
     },
@@ -294,8 +294,8 @@
         "passengerAircraftCount": 60,
         "models": {
             "Boeing": {
-                "B737-700": "",
-                "B737-800": ""
+                "B737-700": "https://www.jetphotos.com/photo/11059510",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1523@PKX_(20191027150005).jpg"
             }
         }
     },
@@ -304,15 +304,15 @@
         "passengerAircraftCount": 50,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A330-300": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:Lucky_Air_Airbus_A319-112_B-6221_(8742588573).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Lucky_Air.A320-200.KMG.2013.I.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:20230602_B-1361_at_CGO_03.jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:B-305W_at_CGO_20190406_01.jpg"
             },
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:Boeing_737-200_(6050739150).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B737-800_20150328_123755.jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:20231230_Boeing_737-8_MAX_of_Lucky_Air_(B-207P)_at_CGO_02.jpg"
             }
         }
     },
@@ -321,11 +321,11 @@
         "passengerAircraftCount": 47,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A319neo": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A330-200": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:TIBET_AIRLINES_(7783173176).jpg",
+                "A319neo": "https://commons.wikimedia.org/wiki/File:Hamburg-Finkenwerder_Airport_Tibet_Airlines_Airbus_A319-153N_B-32C1_(DSC00231).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:TBA_A320_B-1682_30jun15_LFBO.jpg",
+                "A320neo": "https://www.jetphotos.com/showphotos.php?airline=Tibet%20Airlines&aircraft=Airbus%20A320-251N&width=1920&height=1080",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:B-8420@PEK_(20170327144950).jpg"
             }
         }
     },
@@ -334,10 +334,10 @@
         "passengerAircraftCount": 46,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A319-100": "https://commons.wikimedia.org/wiki/File:China_West_Air_Airbus_A319-133_B-6420_(8744795282).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-6811_-_China_West_Air_-_Airbus_A320-232_-_CKG_(10382330343).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-306W_at_CGO_20190406_01.jpg",
+                "A321neo": "https://www.jetphotos.com/showphotos.php?airline=West%20Air&aircraft=Airbus%20A321-251NX&width=1920&height=1080"
             }
         }
     },
@@ -346,10 +346,10 @@
         "passengerAircraftCount": 44,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:HK_Express,_A320-200,_B-LCB_on_finals_into_Kansai_International_Airport.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-LCP@HKG_(20180903123106).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-LEJ@HKG_(20181006125306).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:HK_Express_Airbus_A321neo_B-KKC_on_final_approach_to_Taoyuan_February_2026.jpg"
             }
         }
     },
@@ -358,9 +358,9 @@
         "passengerAircraftCount": 38,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-9956_-_Qingdao_Airlines_-_Airbus_A320-214(WL)_-_TAO_(16828081056).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Qingdao_Airlines_Airbus_320neo_B-304R_at_Haikou_Meilan_Airport_-HAK.jpg",
+                "A321neo": "https://www.jetphotos.com/photo/11963653"
             }
         }
     },
@@ -369,9 +369,9 @@
         "passengerAircraftCount": 32,
         "models": {
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:B-2668_-_Kunming_Airlines_-_Boeing_737-78S_-_TAO_(12323194793).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1991_at_CGO_20190405.jpg",
+                "B737 MAX 8": "https://www.jetphotos.com/photo/11071724"
             }
         }
     },
@@ -380,9 +380,9 @@
         "passengerAircraftCount": 31,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A321-200": "",
-                "A330-300": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Airlines_Airbus_A320_(B-LPB)_at_Taichung_Airport.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-LPR_(01_Mar_2025).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Hong_Kong_Airlines_Airbus_A330-300_B-LNO_(17892033015).jpg"
             }
         }
     },
@@ -391,9 +391,9 @@
         "passengerAircraftCount": 30,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-2343_-_Chongqing_Airlines_-_Airbus_A320-233_-_TAO_(14918752270).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:B-302J@CKG_(20191224075427).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:B-30E3@PEK_(20200108100405).jpg"
             }
         }
     },
@@ -402,11 +402,11 @@
         "passengerAircraftCount": 27,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5660_at_SZX_20190331_02.jpg",
+                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Hebei%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
             },
             "Embraer": {
-                "E190": ""
+                "E190": "https://www.jetphotos.com/showphotos.php?airline=Hebei%20Airlines&aircraft=Embraer%20190-100LR&width=1920&height=1080"
             }
         }
     },
@@ -415,8 +415,8 @@
         "passengerAircraftCount": 27,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_9_Air_Boeing_737-8GP_B-1719_@_ZSPD_2025-12-23.jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:20240427_Boeing_737-8_MAX_of_9_Air_(B-206J)_at_CGO_01.jpg"
             }
         }
     },
@@ -425,9 +425,9 @@
         "passengerAircraftCount": 25,
         "models": {
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:%E6%98%86%E6%98%8E%E9%95%BF%E6%B0%B4%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA%E5%81%9C%E6%9C%BA%E5%9D%AA05.jpg",
+                "B737-800": "https://www.jetphotos.com/showphotos.php?airline=Ruili%20Airlines&aircraft=Boeing%20737-800&width=1920&height=1080",
+                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Ruili%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
             }
         }
     },
@@ -436,11 +436,11 @@
         "passengerAircraftCount": 24,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": ""
+                "A320-200": "https://www.jetphotos.com/photo/10965416",
+                "A320neo": "https://www.jetphotos.com/photo/11416068"
             },
             "Embraer": {
-                "E190": ""
+                "E190": "https://commons.wikimedia.org/wiki/File:Emabraer190gxarrived.jpg"
             }
         }
     },
@@ -449,10 +449,10 @@
         "passengerAircraftCount": 22,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:B-MBC_(14034448138).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Air_Macau_Airbus_A320-200_NEO_B-MCL.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:B-MBA_-_Air_Macau_-_Airbus_A321-231_-_SHA_(13997909169).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Air_Macau_B-MBR_05-07-2023.jpg"
             }
         }
     },
@@ -461,8 +461,8 @@
         "passengerAircraftCount": 21,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Xinzheng_Airport_(CGO).jpg",
+                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Donghai%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
             }
         }
     },
@@ -471,9 +471,9 @@
         "passengerAircraftCount": 21,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737-900ER": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1738@PEK_(20150822113232).JPG",
+                "B737-900ER": "https://www.jetphotos.com/showphotos.php?airline=Okay%20Airways&aircraft=Boeing%20737-900ER&width=1920&height=1080",
+                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Okay%20Airways&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
             }
         }
     },
@@ -482,10 +482,10 @@
         "passengerAircraftCount": 20,
         "models": {
             "Airbus": {
-                "A320neo": ""
+                "A320neo": "https://commons.wikimedia.org/wiki/File:20230602_B-321V_at_CGO_02.jpg"
             },
             "Embraer": {
-                "E190": ""
+                "E190": "https://commons.wikimedia.org/wiki/File:B-3225_at_CGO_20190426_01.jpg"
             }
         }
     },
@@ -494,7 +494,7 @@
         "passengerAircraftCount": 18,
         "models": {
             "Boeing": {
-                "B737-800": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Jiangxi_Air_Boeing_737_B-5512_at_Chengdu_Tianfu_-_2024-05-19.jpg"
             }
         }
     },
@@ -503,8 +503,8 @@
         "passengerAircraftCount": 17,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Urumqi_Air_Boeing737-800.JPG",
+                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Urumqi%20Air&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
             }
         }
     },
@@ -513,8 +513,8 @@
         "passengerAircraftCount": 16,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 8": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1905@FOC_(20150812195800).JPG",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:20240427_Boeing_737-8_MAX_of_Fuzhou_Airlines_(B-207M)_at_CGO.jpg"
             }
         }
     },
@@ -523,10 +523,10 @@
         "passengerAircraftCount": 16,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A319-100": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A319-100&width=1920&height=1080",
+                "A320-200": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A320-200&width=1920&height=1080",
+                "A320neo": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A320neo&width=1920&height=1080",
+                "A321neo": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A321neo&width=1920&height=1080"
             }
         }
     },
@@ -535,7 +535,7 @@
         "passengerAircraftCount": 13,
         "models": {
             "Boeing": {
-                "B737-800": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-8FH_B-5180_in_XIY,_20241225.jpg"
             }
         }
     },
@@ -544,8 +544,8 @@
         "passengerAircraftCount": 10,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B787-9": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-1571_at_CGO_20190426.jpg",
+                "B787-9": "https://www.jetphotos.com/showphotos.php?airline=Suparna%20Airlines&aircraft=Boeing%20787-9&width=1920&height=1080"
             }
         }
     },
@@ -554,8 +554,8 @@
         "passengerAircraftCount": 10,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": ""
+                "A319-100": "https://www.jetphotos.com/showphotos.php?airline=Guilin%20Airlines&aircraft=Airbus%20A319-100&width=1920&height=1080",
+                "A320-200": "https://www.jetphotos.com/showphotos.php?airline=Guilin%20Airlines&aircraft=Airbus%20A320-200&width=1920&height=1080"
             }
         }
     },
@@ -564,7 +564,7 @@
         "passengerAircraftCount": 9,
         "models": {
             "Airbus": {
-                "A320-200": ""
+                "A320-200": "https://www.jetphotos.com/photo/11992895"
             }
         }
     },
@@ -573,8 +573,8 @@
         "passengerAircraftCount": 8,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737 MAX 9": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-KJA@HKG_(27-9-2021).jpg",
+                "B737 MAX 9": "https://www.jetphotos.com/showphotos.php?airline=Greater%20Bay%20Airlines&aircraft=Boeing%20737%20MAX%209&width=1920&height=1080"
             }
         }
     },
@@ -583,7 +583,7 @@
         "passengerAircraftCount": 7,
         "models": {
             "COMAC": {
-                "C909": ""
+                "C909": "https://www.jetphotos.com/photo/11554764"
             }
         }
     },
@@ -592,7 +592,7 @@
         "passengerAircraftCount": 3,
         "models": {
             "Boeing": {
-                "B737-800": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-2637_(10971134666).jpg"
             }
         }
     },
@@ -601,8 +601,8 @@
         "passengerAircraftCount": 0,
         "models": {
             "Airbus": {
-                "A330-200F": "",
-                "A330-300P2F": ""
+                "A330-200F": "https://www.jetphotos.com/showphotos.php?airline=Air%20Hong%20Kong&aircraft=Airbus%20A330-200F&width=1920&height=1080",
+                "A330-300P2F": "https://commons.wikimedia.org/wiki/File:EI-HEC_(11_Jun_2020).jpg"
             }
         }
     },
@@ -611,11 +611,11 @@
         "passengerAircraftCount": 613,
         "models": {
             "Airbus": {
-                "A320-200": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Hamburg_Airport_Lauda_Europe_Airbus_A320-214_9H-LOU_(DSC02176).jpg"
             },
             "Boeing": {
-                "B737-800": "",
-                "B737-8200": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:EI-EVL_Ryanair_Boeing_737-8AS(WL)_(34452608002).jpg",
+                "B737-8200": "https://commons.wikimedia.org/wiki/File:Hamburg_Airport_Ryanair_Boeing_737-8200_MAX_EI-HGZ_(DSC06013).jpg"
             }
         }
     },
@@ -624,24 +624,24 @@
         "passengerAircraftCount": 267,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A321neoLR": "",
-                "A380-800": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:ANA_A320-200(JA8386)_(5308427646).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:JA214A@PEK_(20181227132258).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:JA101A_3_A321-131_ANA_All_Nippon_NGO_20MAY03_(8405240312).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:JA136A_RJTT_1.jpg",
+                "A321neoLR": "https://www.jetphotos.com/showphotos.php?airline=All%20Nippon%20Airways&aircraft=Airbus%20A321-272NX&width=1920&height=1080",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways_A380_(JA381A)_@_NRT,_April_2019.jpg"
             },
             "Boeing": {
-                "B737-800": "",
-                "B767-300": "",
-                "B777-200": "",
-                "B777-300": "",
-                "B787-8": "",
-                "B787-9": "",
-                "B787-10": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:ANA_B737-800(JA51AN)_(5746057044).jpg",
+                "B767-300": "https://commons.wikimedia.org/wiki/File:ANA_B767-300(JA8669)_(5285607820).jpg",
+                "B777-200": "https://commons.wikimedia.org/wiki/File:ANA_B777-200(JA712A)_(6902902117).jpg",
+                "B777-300": "https://commons.wikimedia.org/wiki/File:ANA_B777-300(JA751A)_(5718881057).jpg",
+                "B787-8": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways_Boeing_787-8_Dreamliner_JA801A_OKJ.jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:ANA_Boeing_787_being_towed_in_Frankfurt.jpg",
+                "B787-10": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways,_Boeing_787-10,_JA900A,_NRT.jpg"
             },
             "De Havilland Canada": {
-                "DHC-8-400": ""
+                "DHC-8-400": "https://commons.wikimedia.org/wiki/File:JA850A_(31683759012).jpg"
             }
         }
     },
@@ -650,9 +650,9 @@
         "passengerAircraftCount": 224,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A320neo": "",
-                "A321neo": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:9M-AGT_(AirAsia).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Air_Asia_Airbus_A320-200N_9M-NEO.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:AirAsia_airplane_seen_at_the_Langkawi_International_Airport_09.jpg"
             }
         }
     },
@@ -661,16 +661,16 @@
         "passengerAircraftCount": 85,
         "models": {
             "Airbus": {
-                "A320-200": "",
-                "A330-300": "",
-                "A350-900": "",
-                "A380-800": ""
+                "A320-200": "https://commons.wikimedia.org/wiki/File:HS-TDG_%26_HS-BBO_(15870376296).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Airbus_A330-300_Thai_Airways_MSN1338_-_HS-TBD.jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:Thai_Airways,_Airbus_A350-900_HS-THF_NRT_(39657486154).jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:Airbus_A380-800_Thai_AW_(THA)_F-WWSQ_-_MSN_125_-_Will_be_HS-TUE_(9649201690).jpg"
             },
             "Boeing": {
-                "B777-200ER": "",
-                "B777-300ER": "",
-                "B787-8": "",
-                "B787-9": ""
+                "B777-200ER": "https://commons.wikimedia.org/wiki/File:Thai_B777-200ER(HS-TJV)_(5004041305).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:HS-TKP_-_Thai_Airways_International_-_Boeing_777-3AL(ER)_-_PEK_(13958030718).jpg",
+                "B787-8": "https://commons.wikimedia.org/wiki/File:Thai_Airways_International_Boeing_787-8_HS-TQB_at_Fukuoka_Airport.jpg",
+                "B787-9": "https://www.jetphotos.com/photo/11038282"
             }
         }
     },
@@ -679,10 +679,10 @@
         "passengerAircraftCount": 50,
         "models": {
             "Airbus": {
-                "A321neo": ""
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Transavia_Airbus_A321-251NX_PH-YHY.jpg"
             },
             "Boeing": {
-                "B737-800": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:PH-HZE_Transavia_Boeing_737-8K2(WL)_-_cn_28377_pic5.JPG"
             }
         }
     },
@@ -691,8 +691,8 @@
         "passengerAircraftCount": 28,
         "models": {
             "Boeing": {
-                "B737-800": "",
-                "B737-900ER": ""
+                "B737-800": "https://commons.wikimedia.org/wiki/File:HS-LUI_(aircraft).jpg",
+                "B737-900ER": "https://commons.wikimedia.org/wiki/File:HS-LTR.jpg"
             }
         }
     }
