@@ -369,10 +369,65 @@
   filter: drop-shadow(0 0 0.38rem rgba(158, 216, 242, 0.52));
 }
 
-.airport-footprint__marker:hover {
+.airport-footprint__marker:hover,
+.airport-footprint__marker:focus-visible {
   fill: oklch(0.94 0.04 220);
   stroke-width: 3.2;
   filter: drop-shadow(0 0 0.58rem rgba(158, 216, 242, 0.72));
+}
+
+.airport-footprint__marker:hover {
+  cursor: none;
+}
+
+.airport-footprint__marker:focus-visible {
+  outline: none;
+}
+
+.airport-footprint__tooltip {
+  position: absolute;
+  z-index: 6;
+  max-width: min(12rem, calc(100% - 2rem));
+  padding: 0.45rem 0.62rem;
+  color: #dff4ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  background-color: oklch(0.15 0.024 244 / 0.94);
+  border: 1px solid rgba(164, 188, 201, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 0.85rem 1.8rem rgba(2, 8, 18, 0.34);
+  transform: translate3d(-50%, calc(-100% - 0.72rem), 0);
+}
+
+.airport-footprint__tooltip::after {
+  position: absolute;
+  bottom: -0.32rem;
+  left: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  background-color: oklch(0.15 0.024 244 / 0.94);
+  border-right: 1px solid rgba(164, 188, 201, 0.22);
+  border-bottom: 1px solid rgba(164, 188, 201, 0.22);
+  content: '';
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.airport-footprint__flag-cursor {
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1.45rem;
+  line-height: 1;
+  pointer-events: none;
+  text-shadow: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
+  transform: translate3d(0.32rem, -0.16rem, 0);
 }
 
 .airport-footprint__legend {
