@@ -14,7 +14,8 @@ export interface AirlineFleet {
 export interface AirplaneDataItem {
   airline: string;
   passengerAircraftCount: number;
-  models: Record<string, string[]>;
+  /** 制造商名称 -> 具体机型名称 -> 占位字符串（预留扩展，当前为空串） */
+  models: Record<string, Record<string, string>>;
 }
 
 export interface AirlineReferenceSource {

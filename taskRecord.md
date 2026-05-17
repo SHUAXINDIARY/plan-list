@@ -1735,3 +1735,34 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将 `public/data/airplan.json` 中各航司 `models` 下的机型列表改为「机型名 -> 空字符串」的映射结构，并同步类型与首页数据转换逻辑。
+
+## 完成过程
+
+1. 遍历全部航司条目，将每个制造商下的机型数组转为以机型为 key、`value` 为 `""` 的对象。
+2. 更新 `AirplaneDataItem.models` 类型为 `Record<string, Record<string, string>>`。
+3. 在 `createAirlineFleets` 中用 `Object.keys(modelMap)` 得到机型列表供现有 UI 渲染。
+4. 运行 `pnpm run build` 通过构建；对 `taskRecord.md` 与本次改动文件执行 `ReadLints`。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - `models` 内由 `string[]` 改为 `Record<string, "" | string>`（当前值均为空串）。
+
+- `src/pages/home/type.d.ts`
+  - `AirplaneDataItem.models` 类型与上述结构对齐。
+
+- `src/pages/home/index.tsx`
+  - `createAirlineFleets` 从新映射结构提取机型名称数组。
+
+- `taskRecord.md`
+  - 追加本次任务记录。

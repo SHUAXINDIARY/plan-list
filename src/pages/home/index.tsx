@@ -33,9 +33,9 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
     .map((airplaneDataItem: AirplaneDataItem): AirlineFleet => {
       // 保留制造商层级，便于渲染时按航司和制造商分组展示机型。
       const formattedManufacturers: ManufacturerFleet[] = Object.entries(airplaneDataItem.models).map(
-        ([manufacturerName, models]: [string, string[]]): ManufacturerFleet => ({
+        ([manufacturerName, modelMap]: [string, Record<string, string>]): ManufacturerFleet => ({
           manufacturerName,
-          models,
+          models: Object.keys(modelMap),
         }),
       );
       // 统计每家航司的机型数量，用于概览和条目元信息。
