@@ -1,8 +1,6 @@
-import type { ReactElement } from 'react';
+import { Suspense, lazy, type ReactElement } from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router';
 import './App.css';
-import HomePage from './pages/home';
-import PersonalPage from './pages/personal';
 
 interface NavigationItem {
   path: string;
@@ -16,10 +14,16 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { path: '/personal', label: '我的乘坐记录', end: false },
 ];
 
+// 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
+const HomePage = lazy(async () => import('./pages/home'));
+const PersonalPage = lazy(async () => import('./pages/personal'));
+
+// 根据路由激活状态生成导航类名，保持当前页面入口高亮。
 const getNavigationClassName = ({ isActive }: { isActive: boolean }): string => {
   return isActive ? 'app-nav__link app-nav__link--active' : 'app-nav__link';
 };
 
+// 应用根组件负责装配导航、路由和页面级懒加载边界。
 const App = (): ReactElement => {
   return (
     <BrowserRouter>
@@ -44,10 +48,12 @@ const App = (): ReactElement => {
         </header>
 
         <main className="app-main">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/personal" element={<PersonalPage />} />
-          </Routes>
+          <Suspense fallback={<p className="route-loading">正在载入页面...</p>}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/personal" element={<PersonalPage />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </BrowserRouter>

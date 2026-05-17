@@ -449,3 +449,37 @@
 
 - `taskRecord.md`
   - 追加本次首页结果区布局优化任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将不同页面组件改为按需加载，避免应用启动时一次性全量引入首页和个人记录页代码。
+
+## 完成过程
+
+1. 读取 `src/App.tsx`、`src/App.css` 和 `src/pages/personal/index.tsx`，确认当前路由页面通过静态 import 全量引入。
+2. 在 `src/App.tsx` 中使用 React `lazy` 将 `HomePage` 和 `PersonalPage` 改为动态导入。
+3. 使用 `Suspense` 包裹路由区域，为页面 chunk 加载期间提供轻量加载态。
+4. 为导航类名函数和根组件补充逻辑注释，保持函数注释规则一致。
+5. 在 `src/App.css` 中新增路由加载态样式，保持与现有深色档案视觉一致。
+6. 根据 TypeScript 诊断补充 `module: "ESNext"`，让动态 `import()` 与 Rsbuild 代码分割配置匹配。
+
+## 修改具体文件
+
+- `src/App.tsx`
+  - 将首页和个人记录页从静态 import 改为 `lazy` 动态导入。
+  - 使用 `Suspense` 包裹路由，增加页面按需加载边界。
+
+- `src/App.css`
+  - 新增 `route-loading` 页面加载态样式。
+
+- `tsconfig.json`
+  - 新增 `module: "ESNext"`，支持动态导入和路由级代码分割。
+
+- `taskRecord.md`
+  - 追加本次页面按需加载任务记录。

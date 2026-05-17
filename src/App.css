@@ -141,6 +141,15 @@ a {
   line-height: 1.7;
 }
 
+.route-loading {
+  padding: 1rem 1.1rem;
+  color: #d9e7ee;
+  background-color: rgba(15, 31, 48, 0.78);
+  border: 1px solid rgba(164, 188, 201, 0.18);
+  border-radius: 0.9rem;
+  animation: archive-reveal var(--motion-duration-standard) var(--motion-ease-out-quint) both;
+}
+
 @media (max-width: 640px) {
   .app-header {
     align-items: flex-start;
