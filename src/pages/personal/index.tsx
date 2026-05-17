@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactElement } from 'react';
+import { imgs as aircraftPhotoUrls } from './constant';
 import './index.css';
 
 interface CheckedAirport {
@@ -454,7 +455,7 @@ const PersonalPage = (): ReactElement => {
 
       <div className="personal-summary" aria-label="个人航空档案概览">
         <span>
-          <strong>0</strong>
+          <strong>{aircraftPhotoUrls.length}</strong>
           拍摄飞机
         </span>
         <span>
@@ -472,10 +473,17 @@ const PersonalPage = (): ReactElement => {
           <p className="personal-section__eyebrow">Aircraft Photos</p>
           <h2 id="photo-aircraft-title">拍摄的飞机</h2>
         </div>
-        <div className="aircraft-photo-empty">
-          <p>还没有录入拍摄飞机。</p>
-          <span>后续可以按航司、机型、注册号或拍摄机场整理照片记录。</span>
-        </div>
+        <ul className="aircraft-photo-gallery" aria-label="拍摄的飞机照片列表">
+          {aircraftPhotoUrls.map((aircraftPhotoUrl: string, aircraftPhotoIndex: number): ReactElement => (
+            <li key={aircraftPhotoUrl}>
+              <img
+                src={aircraftPhotoUrl}
+                alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
+                loading="lazy"
+              />
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="personal-section" aria-labelledby="airport-map-title">

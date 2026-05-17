@@ -923,3 +923,36 @@
 
 - `taskRecord.md`
   - 追加本次地图样式优化任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+在个人页“拍摄的飞机”模块中渲染 `src/pages/personal/constant.ts` 提供的图片数据。
+
+## 完成过程
+
+1. 读取 `src/pages/personal/index.tsx`、`src/pages/personal/index.css` 和 `src/pages/personal/constant.ts`，确认拍摄飞机模块仍为空状态。
+2. 为 `constant.ts` 中的 `imgs` 补充 `string[]` 类型声明，并保持图片 URL 数据结构不变。
+3. 在个人页中导入图片数组，将顶部拍摄飞机统计数改为图片数组长度。
+4. 使用语义化列表渲染图片网格，并为每张图片添加懒加载和可读 `alt` 文案。
+5. 新增图片画廊样式，支持响应式网格、固定比例裁切和 hover 反馈。
+
+## 修改具体文件
+
+- `src/pages/personal/constant.ts`
+  - 为 `imgs` 图片数组补充显式类型声明，并统一字符串写法。
+
+- `src/pages/personal/index.tsx`
+  - 导入图片数组并渲染拍摄飞机图片网格。
+  - 将拍摄飞机统计数改为图片数量。
+
+- `src/pages/personal/index.css`
+  - 移除拍摄飞机空状态样式，新增图片画廊网格样式。
+
+- `taskRecord.md`
+  - 追加本次图片数据渲染任务记录。
