@@ -1,0 +1,194 @@
+.personal-archive {
+  width: min(100%, 72rem);
+}
+
+.personal-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+
+.personal-summary span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-height: 2.45rem;
+  padding: 0 0.85rem;
+  color: #b5c6d1;
+  background-color: rgba(7, 17, 29, 0.58);
+  border: 1px solid rgba(164, 188, 201, 0.14);
+  border-radius: 999px;
+}
+
+.personal-summary strong {
+  color: #dff4ff;
+  font-size: 1.1rem;
+}
+
+.personal-section {
+  margin-top: 1.5rem;
+}
+
+.personal-section__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(164, 188, 201, 0.12);
+}
+
+.personal-archive p.personal-section__eyebrow {
+  margin: 0;
+  color: #7cc8eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.personal-section h2 {
+  margin: 0.3rem 0 0;
+  color: #f4f8fb;
+  font-size: 1.2rem;
+}
+
+.aircraft-photo-empty {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  color: #b5c6d1;
+  background-color: rgba(7, 17, 29, 0.44);
+  border: 1px dashed rgba(164, 188, 201, 0.24);
+  border-radius: 1rem;
+}
+
+.personal-archive .aircraft-photo-empty p {
+  max-width: none;
+  margin: 0;
+  color: #edf4f8;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.aircraft-photo-empty span {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.airport-footprint {
+  position: relative;
+  min-height: 20rem;
+  margin-top: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 74% 28%, rgba(124, 200, 235, 0.16), transparent 10rem),
+    linear-gradient(135deg, rgba(7, 17, 29, 0.9), rgba(13, 31, 48, 0.72));
+  border: 1px solid rgba(164, 188, 201, 0.14);
+  border-radius: 1rem;
+}
+
+.airport-footprint__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(164, 188, 201, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(164, 188, 201, 0.08) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.42));
+}
+
+.airport-footprint__marker {
+  position: absolute;
+  width: 0.62rem;
+  height: 0.62rem;
+  background-color: #9ed8f2;
+  border: 2px solid rgba(244, 248, 251, 0.92);
+  border-radius: 999px;
+  box-shadow: 0 0 0 0.34rem rgba(124, 200, 235, 0.13);
+  transform: translate3d(-50%, -50%, 0);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-footprint__marker:hover {
+  background-color: #dff4ff;
+  box-shadow: 0 0 0 0.48rem rgba(124, 200, 235, 0.2);
+  transform: translate3d(-50%, -50%, 0) scale(1.18);
+}
+
+.airport-country-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.airport-country {
+  min-width: 0;
+  padding: 1rem;
+  background-color: rgba(7, 17, 29, 0.52);
+  border: 1px solid rgba(164, 188, 201, 0.12);
+  border-radius: 1rem;
+}
+
+.airport-country__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(164, 188, 201, 0.1);
+}
+
+.airport-country h3 {
+  margin: 0;
+  color: #f4f8fb;
+  font-size: 1rem;
+}
+
+.airport-country__header span {
+  flex: 0 0 auto;
+  color: #8ea7b5;
+  font-size: 0.82rem;
+}
+
+.airport-country ul {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0;
+  margin: 0.85rem 0 0;
+  list-style: none;
+}
+
+.airport-country li {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.airport-country li span {
+  color: #dff4ff;
+  font-size: 0.9rem;
+}
+
+.airport-country small {
+  color: #8ea7b5;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 640px) {
+  .personal-section__header,
+  .airport-country__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .airport-footprint {
+    min-height: 16rem;
+  }
+}
