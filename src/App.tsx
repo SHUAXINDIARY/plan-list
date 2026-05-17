@@ -13,6 +13,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "机型资料库", end: true },
     { path: "/personal", label: "个人记录", end: false },
 ];
+const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
@@ -50,6 +51,14 @@ const App = (): ReactElement => {
                                 </NavLink>
                             ),
                         )}
+                        <a
+                            className="app-nav__link"
+                            href={AUTHOR_PROFILE_URL}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            联系作者
+                        </a>
                     </nav>
                 </header>
 
