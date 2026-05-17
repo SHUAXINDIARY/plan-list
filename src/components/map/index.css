@@ -59,7 +59,7 @@
 
 .annotated-world-map__marker {
   fill: oklch(0.84 0.08 225);
-  cursor: help;
+  cursor: none;
   pointer-events: visiblePainted;
   stroke: rgba(244, 248, 251, 0.9);
   stroke-width: 2.4;
@@ -75,10 +75,6 @@
   fill: oklch(0.94 0.04 220);
   stroke-width: 3.2;
   filter: drop-shadow(0 0 0.58rem rgba(158, 216, 242, 0.72));
-}
-
-.annotated-world-map__marker:hover {
-  cursor: none;
 }
 
 .annotated-world-map__marker:focus-visible {
