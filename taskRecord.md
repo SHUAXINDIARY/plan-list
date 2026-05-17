@@ -60,3 +60,32 @@
 - `taskRecord.md`
   - 新增本次对话任务记录。
   - 当前已调整为“日期、任务目的、完成过程、修改具体文件”的格式。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将“每次任务生成完成并交付前自动更新 `taskRecord.md`”写入项目规则，确保后续任务都有持续、统一的执行记录。
+
+## 完成过程
+
+1. 阅读 `create-rule` skill，确认修改 Cursor 项目规则时应遵循 `.mdc` 规则文件格式。
+2. 读取 `.cursor/rules/project-base-rules.mdc` 和 `taskRecord.md`，确认现有规则结构与任务记录格式。
+3. 在 `.cursor/rules/project-base-rules.mdc` 的当前目录说明中补充 `taskRecord.md` 的文件职责。
+4. 在 `.cursor/rules/project-base-rules.mdc` 中新增 `任务记录` 小节。
+5. 明确后续每次任务完成并准备交付前，必须自动追加或补充 `taskRecord.md`。
+6. 明确记录格式必须包含 `日期`、`任务目的`、`完成过程`、`修改具体文件` 四个部分。
+7. 明确更新任务记录后，需要使用 `ReadLints` 检查 `taskRecord.md` 和本次修改过的文件。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 新增 `taskRecord.md` 的目录职责说明。
+  - 新增 `任务记录` 小节，规定后续任务完成后自动更新任务记录。
+
+- `taskRecord.md`
+  - 追加本次规则变更的任务记录。
