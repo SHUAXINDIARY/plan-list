@@ -400,6 +400,7 @@
     {
         "airline": "瑞安航空",
         "passengerAircraftCount": 613,
+        "imgs": [],
         "models": {
             "Airbus": ["A320-200"],
             "Boeing": ["B737-800", "B737-8200"]
@@ -408,6 +409,7 @@
     {
         "airline": "全日空",
         "passengerAircraftCount": 267,
+        "imgs": [],
         "models": {
             "Airbus": [
                 "A320-200",
@@ -432,6 +434,7 @@
     {
         "airline": "亚洲航空",
         "passengerAircraftCount": 224,
+        "imgs": [],
         "models": {
             "Airbus": ["A320-200", "A320neo", "A321neo"]
         }
@@ -439,6 +442,7 @@
     {
         "airline": "泰国航空",
         "passengerAircraftCount": 85,
+        "imgs": [],
         "models": {
             "Airbus": ["A320-200", "A330-300", "A350-900", "A380-800"],
             "Boeing": ["B777-200ER", "B777-300ER", "B787-8", "B787-9"]
@@ -447,6 +451,7 @@
     {
         "airline": "泛航航空",
         "passengerAircraftCount": 50,
+        "imgs": [],
         "models": {
             "Airbus": ["A321neo"],
             "Boeing": ["B737-800"]
@@ -455,6 +460,7 @@
     {
         "airline": "泰国狮子航空",
         "passengerAircraftCount": 28,
+        "imgs": [],
         "models": {
             "Boeing": ["B737-800", "B737-900ER"]
         }
