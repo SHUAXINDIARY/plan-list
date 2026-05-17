@@ -1104,3 +1104,79 @@
 
 - `taskRecord.md`
   - 追加本次图片预览动效任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+新增仅在生产构建阶段执行的 Rsbuild 插件，为个人页飞机图片生成小体积预览图，并让列表使用预览图、全屏时加载原图。
+
+## 完成过程
+
+1. 读取 `rsbuild-best-practices` 规范、`rsbuild.config.ts`、个人页图片常量和页面渲染逻辑，确认应使用 Rsbuild build hook 在生产构建前生成预览资源。
+2. 新增 `sharp` 和 Node 类型声明作为构建期依赖，用于下载远程图片并压缩成 48px WebP data URL。
+3. 在 `rsbuild.config.ts` 中新增 `pluginAircraftPhotoPreviews`，通过 `onBeforeBuild` 提取 `constant.ts` 中启用的图片 URL，分批下载并生成预览图映射。
+4. 为插件增加单图下载超时、失败回退和已生成预览图缓存读取，避免远程图片不可达时阻塞构建。
+5. 新增 `photoPreviews.generated.ts` 作为构建生成模块，并在 `constant.ts` 中导出包含 `originalUrl` 与 `previewUrl` 的 `aircraftPhotos` 数据。
+6. 调整个人页图片列表使用 `previewUrl` 展示缩略图，全屏预览继续读取 `originalUrl`，确保只有点击后才加载原图。
+7. 运行诊断和生产构建验证，确认构建成功；部分远程图片超时会按预期回退到原图。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - 新增生产构建期图片预览图生成插件，包含 URL 提取、下载、压缩、缓存和超时兜底逻辑。
+
+- `src/pages/personal/photoPreviews.generated.ts`
+  - 新增构建生成的图片预览图映射模块。
+
+- `src/pages/personal/type.d.ts`
+  - 新增 `AircraftPhoto` 类型。
+
+- `src/pages/personal/constant.ts`
+  - 新增 `aircraftPhotos` 数据，将原图 URL 与构建期预览图 URL 组合输出。
+
+- `src/pages/personal/index.tsx`
+  - 图片列表改用预览图展示，全屏预览继续使用原图。
+
+- `package.json`
+  - 新增 `sharp` 和 `@types/node` 构建期开发依赖。
+
+- `pnpm-lock.yaml`
+  - 更新依赖锁定信息。
+
+- `taskRecord.md`
+  - 追加本次构建期图片预览图生成任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将飞机照片预览图生成插件逻辑从 `rsbuild.config.ts` 拆分到独立的 `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`，保持 Rsbuild 配置文件聚焦于配置声明。
+
+## 完成过程
+
+1. 读取 `rsbuild-best-practices` 规范和现有 `rsbuild.config.ts`，确认拆分范围为构建期图片预览图生成插件及其辅助函数。
+2. 在 `rsbuild_plugins/pluginAircraftPhotoPreviews.ts` 中迁入 URL 提取、远程图片下载压缩、缓存读取、生成模块写入和 Rsbuild 插件注册逻辑。
+3. 精简 `rsbuild.config.ts`，移除插件内部实现，仅保留 `pluginAircraftPhotoPreviews` 的导入与 `plugins` 注册。
+4. 使用诊断工具检查 `rsbuild.config.ts` 与 `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`，确认未发现 lint 问题。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - 移除构建期图片预览图生成实现，改为从插件文件导入并注册 `pluginAircraftPhotoPreviews`。
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
+  - 新增飞机照片预览图生成插件实现，封装原有下载、压缩、缓存和生成模块逻辑。
+
+- `taskRecord.md`
+  - 追加本次 Rsbuild 插件逻辑拆分任务记录。
