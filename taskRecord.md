@@ -1302,3 +1302,31 @@
 
 - `taskRecord.md`
   - 追加本次预览图压缩质量提升任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将世界地图 SVG 生成脚本 `rsbuild_plugins/generateMap.ts` 从 JavaScript 写法转换为类型完整的 TypeScript。
+
+## 完成过程
+
+1. 读取 `generateMap.ts` 与 `tsconfig.json`，确认当前脚本虽为 `.ts` 文件但仍使用 CommonJS `require` 和隐式类型。
+2. 将文件系统依赖改为 `node:fs` ESM import，并为 GeoJSON 坐标、几何、Feature、国家路径和地图标签补充类型声明。
+3. 为 XML 转义、投影、ring/path 转换、经纬网和国家分组生成函数补齐参数与返回值类型。
+4. 保留原有输入输出路径、SVG 样式和生成结构，避免改变生成结果职责。
+5. 使用 `ReadLints` 与单文件 `tsc --ignoreConfig --noEmit` 验证脚本类型检查通过。
+
+## 修改具体文件
+
+- `rsbuild_plugins/generateMap.ts`
+  - 转换为 TypeScript ESM 写法，补齐 GeoJSON 与 SVG 生成逻辑类型声明。
+
+- `taskRecord.md`
+  - 追加本次地图生成脚本 TypeScript 化任务记录。
