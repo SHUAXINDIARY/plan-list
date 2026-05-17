@@ -1,0 +1,93 @@
+---
+description: 项目通用开发规范，覆盖 TypeScript、异步、函数、注释、前端体验与 Rsbuild 工作流
+alwaysApply: true
+---
+
+# 项目基础规则
+
+## 技术栈
+
+- 项目使用 JavaScript / TypeScript、Rsbuild 与现代前端工程体系。
+- 优先遵循仓库已有目录结构、命名方式、组件模式和工具链配置。
+- 修改 Rsbuild、Rspack、构建脚本、资源处理或性能相关内容时，先参考项目内 `rsbuild-best-practices` skill。
+
+## 当前目录
+
+- 当前项目根目录是 `/plan-list`，所有读写、生成和命令执行默认以此目录为工作区。
+- 当前项目目录结构如下，生成文件时必须严格按目录职责存放：
+  - `.agents/skills/`：项目级 Agent Skills；新增或维护 skill 时，每个 skill 必须独立成目录并包含 `SKILL.md`。
+  - `.agents/skills/impeccable/`：前端设计、审查、打磨、适配、动效、可访问性和体验优化相关 skill。
+  - `.agents/skills/rsbuild-best-practices/`：Rsbuild 配置、构建、资源、性能、CLI 和调试相关 skill。
+  - `.cursor/rules/`：Cursor 项目规则；新增规则文件必须使用 `.mdc` 格式。
+  - `public/`：静态公共资源，例如 favicon、无需打包处理且需要按原路径访问的资源。
+  - `src/`：应用源码目录，业务组件、样式、工具函数、类型声明和应用入口都应放在这里。
+  - `src/assets/`：源码内引用并参与构建处理的图片、字体、图标等资源。
+  - `src/types/`：项目共享类型声明、接口、枚举和类型工具。
+  - `src/utils/`：可复用纯工具函数、格式化函数、数据转换函数和无 UI 的辅助逻辑。
+  - `src/App.tsx`：应用根组件。
+  - `src/App.css`：应用根组件相关样式。
+  - `src/index.tsx`：应用入口与渲染挂载逻辑。
+  - `src/env.d.ts`：环境类型声明。
+  - `AGENTS.md`：项目级 Agent 说明与常用命令。
+  - `README.md`：项目说明文档。
+  - `package.json`：包信息、脚本和依赖声明。
+  - `pnpm-lock.yaml`：pnpm 锁文件。
+  - `rsbuild.config.ts`：Rsbuild 配置。
+  - `skills-lock.json`：skills 锁定信息。
+  - `tsconfig.json`：TypeScript 配置。
+- 不要把业务源码、文档、脚本或资源生成到 `.git/`、`node_modules/` 或项目根目录外。
+- 新增源码、配置、文档、资源或脚本时，优先放入已有约定目录；没有明确目录时，先根据上面的目录职责判断最小合适位置。
+- 不要生成临时文件、调试产物、备份文件或一次性脚本并遗留在仓库中，除非它们是交付内容的一部分。
+- 生成文件必须符合本规则中的类型、注释、命名、前端体验和验证要求。
+
+## TypeScript 规范
+
+- TypeScript 类型必须完整声明，禁止使用 `any`、`unknown`、`never` 作为逃避建模的兜底类型。
+- 函数参数、返回值、组件 props、事件处理器和异步结果都要有明确类型。
+- 优先使用 `interface` 或具名 `type` 表达业务语义，避免在复杂位置堆叠匿名类型。
+- 类型收窄应通过明确的判断函数、枚举、联合类型或标准库 API 完成，避免强制断言。
+
+## 异步与数据流
+
+- 异步代码统一使用 `async` / `await`，不要混用 `.then()` 链式写法。
+- 每个异步边界都要明确处理加载、成功、失败和空数据状态。
+- 错误处理应保留上下文信息，避免静默吞错或只打印无意义日志。
+- 不要在渲染逻辑中直接触发副作用；副作用应放在事件处理、生命周期或明确的服务函数中。
+
+## 函数与状态
+
+- 函数应尽量遵循纯函数原则：相同输入得到相同输出，不隐式修改外部状态。
+- 有副作用的函数必须通过命名或注释表达意图，例如请求接口、写入缓存、更新 DOM 或修改全局状态。
+- 单个函数只承担一个清晰职责；当分支过多或嵌套过深时，拆分为具名辅助函数。
+- 状态更新应保持不可变数据模式，不直接修改已有对象或数组。
+
+## 常量与注释
+
+- 文件级常量必须集中放在文件顶部，并为每个业务含义不直观的常量添加简短注释。
+- 魔法数字、固定文案、路由路径、存储 key、正则表达式等应提取为具名常量。
+- 关键业务逻辑、复杂条件、非显然取舍必须写注释说明原因。
+- 避免解释代码表面行为的低价值注释，例如“给变量赋值”。
+
+## 前端实现
+
+- UI 代码必须关注可访问性：语义化 HTML、键盘可用、可读的 aria 文案和足够的对比度。
+- 组件应具备响应式适配能力，避免固定宽高导致小屏溢出。
+- 处理文案溢出、空状态、错误状态、加载状态和极端数据量。
+- 样式优先复用项目已有 token、变量、类名和组件模式，避免引入不一致的视觉系统。
+
+## 验证与交付
+
+- 修改后优先运行与改动相关的类型检查、构建、测试或 lint 命令。
+- 不确定命令时参考 `AGENTS.md` 中的项目命令。
+- 不提交无关格式化、锁文件或配置变更；不要回滚用户已有改动。
+
+## 启用 Skills
+
+- Cursor Skills 是可版本管理的能力包，用于为 Agent 提供特定领域知识、脚本、模板和工作流；规则细节参考官方文档：https://cursor.com/docs/skills。
+- Cursor 会自动发现 `.agents/skills/`、`.cursor/skills/`、`~/.agents/skills/`、`~/.cursor/skills/` 下包含 `SKILL.md` 的 skill。
+- 每个 skill 必须位于独立目录中，并在 `SKILL.md` frontmatter 中声明 `name` 与 `description`；`name` 应与父目录名一致。
+- 需要按文件范围限制 skill 时，优先使用 `paths` frontmatter 字段；新 skill 不要优先使用旧的 `globs` 字段。
+- skill 默认由 Agent 根据上下文自动判断是否使用；只允许手动 `/skill-name` 调用的场景，设置 `disable-model-invocation: true`。
+- 前端界面设计、审查、打磨、适配、动效、可访问性或体验优化任务，优先使用项目内 `impeccable` skill。
+- Rsbuild 配置、构建、资源、性能、CLI 或调试任务，优先使用 `rsbuild-best-practices` skill。
+- 创建或维护 Cursor 规则时，遵循 `create-rule` skill 的 `.mdc` 格式与简洁性要求。
