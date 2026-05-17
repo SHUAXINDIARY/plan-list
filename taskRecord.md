@@ -1585,3 +1585,30 @@
 
 - `taskRecord.md`
   - 追加本次国旗光标闪烁修复任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+维护项目基础规则，补充 `src/pages/` 与 `src/components/` 模块目录的文件组织职责说明。
+
+## 完成过程
+
+1. 读取 `create-rule` skill 与现有 `.cursor/rules/project-base-rules.mdc`，确认需要维护的是已存在的 alwaysApply 项目基础规则。
+2. 在目录说明中新增 `src/components/` 的职责描述。
+3. 补充 `src/pages/*/` 页面模块和 `src/components/*/` 组件模块的常见四文件结构约定，明确 `constant.ts`、`type.d.ts`、`index.tsx`、`index.css` 的职责边界。
+4. 使用 `ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 新增通用组件目录说明，并补充页面/组件模块四类文件的职责约定。
+
+- `taskRecord.md`
+  - 追加本次项目规则维护任务记录。

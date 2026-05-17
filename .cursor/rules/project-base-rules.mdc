@@ -25,6 +25,7 @@ alwaysApply: true
   - `public/data/airplan.json`：航司与机型映射数据，供航司机型 wiki 和个人乘坐记录功能读取。
   - `src/`：应用源码目录，业务组件、样式、工具函数、类型声明和应用入口都应放在这里。
   - `src/assets/`：源码内引用并参与构建处理的图片、字体、图标等资源。
+  - `src/components/`：可跨页面复用的通用 UI 组件、业务组件和组件内样式目录。
   - `src/pages/`：页面级模块目录，按业务页面拆分子目录，承载页面组件、页面样式和页面内局部逻辑。
   - `src/pages/home/`：航司机型 wiki、首页内容展示、资料浏览和入口相关页面模块。
   - `src/pages/personal/`：个人乘坐记录、已乘机型清单和个人记录相关页面模块。
@@ -47,6 +48,7 @@ alwaysApply: true
   - `tsconfig.json`：TypeScript 配置。
 - 不要把业务源码、文档、脚本或资源生成到 `.git/`、`node_modules/` 或项目根目录外。
 - 新增源码、配置、文档、资源或脚本时，优先放入已有约定目录；没有明确目录时，先根据上面的目录职责判断最小合适位置。
+- `src/pages/*/` 页面模块和 `src/components/*/` 组件模块通常包含 `constant.ts`、`index.tsx`、`type.d.ts`、`index.css` 四类文件：常量和静态配置放入对应 `constant.ts`，类型声明放入 `type.d.ts`，UI 结构与交互逻辑放入 `index.tsx`，组件或页面样式放入 `index.css`。
 - 不要生成临时文件、调试产物、备份文件或一次性脚本并遗留在仓库中，除非它们是交付内容的一部分。
 - 生成文件必须符合本规则中的类型、注释、命名、前端体验和验证要求。
 
