@@ -36,7 +36,7 @@ const App = (): ReactElement => {
                 <header className="app-header">
                     <div>
                         <p className="app-kicker">Night Flight Archive</p>
-                        <p className="app-title">Plan List</p>
+                        <p className="app-title">Plane List</p>
                     </div>
                     <nav className="app-nav" aria-label="主导航">
                         {NAVIGATION_ITEMS.map(

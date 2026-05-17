@@ -1,10 +1,10 @@
 <!-- SEED: re-run /impeccable document once there's code to capture the actual tokens and components. -->
 ---
-name: Plan List
+name: Plane List
 description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界面
 ---
 
-# Design System: Plan List
+# Design System: Plane List
 
 ## 1. Overview
 

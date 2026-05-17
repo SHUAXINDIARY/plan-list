@@ -633,7 +633,7 @@
 ## 完成过程
 
 1. 读取 `PRODUCT.md` 和 `rsbuild.config.ts`，确认站点定位为航司机型资料库与个人乘坐记录工具。
-2. 在 `rsbuild.config.ts` 中新增 `html.title`，设置站点标题为 `Plan List | 航司机型资料库`。
+2. 在 `rsbuild.config.ts` 中新增 `html.title`，设置站点标题为 `Plane List | 航司机型资料库`。
 3. 在 `html.meta` 中补充作者、描述、关键词、主题色和 viewport 信息。
 4. 保留现有 React 插件配置，不改动构建入口和其他无关配置。
 
