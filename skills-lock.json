@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": "skills/rsbuild-best-practices/SKILL.md",
       "computedHash": "2f1de26a27367666c49d16b114d31dbf78dc71f02b3e0784b1e3bf90f4e6e90b"
+    },
+    "vercel-react-native-skills": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-native-skills/SKILL.md",
+      "computedHash": "41d24eafa7c3d82e270439808f7cfbc4d51aeb2d14f2809a2267c16275784d06"
     }
   }
 }
