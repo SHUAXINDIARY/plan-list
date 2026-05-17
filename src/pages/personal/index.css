@@ -73,6 +73,21 @@
   border-radius: 0.9rem;
 }
 
+.aircraft-photo-gallery__button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  cursor: zoom-in;
+  background: transparent;
+  border: 0;
+}
+
+.aircraft-photo-gallery__button:focus-visible {
+  outline: 2px solid oklch(0.78 0.105 222);
+  outline-offset: -3px;
+}
+
 .aircraft-photo-gallery img {
   display: block;
   width: 100%;
@@ -87,6 +102,154 @@
 .aircraft-photo-gallery li:hover img {
   filter: brightness(1.08);
   transform: scale(1.025);
+}
+
+@keyframes photo-preview-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes photo-preview-backdrop-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes photo-preview-content-enter {
+  from {
+    opacity: 0;
+    transform: scale3d(0.985, 0.985, 1);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes photo-preview-content-exit {
+  from {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale3d(0.985, 0.985, 1);
+  }
+}
+
+.aircraft-photo-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+  background:
+    radial-gradient(circle at 50% 20%, oklch(0.32 0.045 225 / 0.34), transparent 22rem),
+    oklch(0.1 0.018 245 / 0.94);
+  animation: photo-preview-backdrop-enter 220ms var(--motion-ease-out-quint) both;
+}
+
+.aircraft-photo-preview--closing {
+  animation: photo-preview-backdrop-exit 180ms var(--motion-ease-out-quart) both;
+}
+
+.aircraft-photo-preview__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  pointer-events: none;
+  animation: photo-preview-content-enter 220ms var(--motion-ease-out-quint) both;
+  will-change: opacity, transform;
+}
+
+.aircraft-photo-preview--closing .aircraft-photo-preview__content {
+  animation: photo-preview-content-exit 180ms var(--motion-ease-out-quart) both;
+}
+
+.aircraft-photo-preview__header {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  left: 1.25rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: auto;
+}
+
+.aircraft-photo-preview__header p {
+  margin: 0;
+  color: #7cc8eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.aircraft-photo-preview__header h2 {
+  margin: 0.25rem 0 0;
+  color: #f4f8fb;
+  font-size: 1rem;
+}
+
+.aircraft-photo-preview__header button {
+  flex: 0 0 auto;
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  color: #dff4ff;
+  cursor: pointer;
+  background-color: rgba(15, 31, 48, 0.86);
+  border: 1px solid rgba(164, 188, 201, 0.22);
+  border-radius: 999px;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-photo-preview__header button:hover {
+  background-color: rgba(25, 49, 72, 0.92);
+  border-color: rgba(124, 200, 235, 0.48);
+  transform: translateY(-1px);
+}
+
+.aircraft-photo-preview__header button:focus-visible {
+  outline: 2px solid oklch(0.78 0.105 222);
+  outline-offset: 3px;
+}
+
+.aircraft-photo-preview img {
+  display: block;
+  width: auto;
+  max-width: calc(100vw - 2.5rem);
+  max-height: calc(100vh - 2.5rem);
+  max-height: calc(100dvh - 2.5rem);
+  object-fit: contain;
+  background-color: rgba(7, 17, 29, 0.72);
+  border-radius: 0.75rem;
+  box-shadow: 0 1.5rem 4rem rgba(2, 8, 18, 0.46);
+  pointer-events: auto;
 }
 
 .airport-footprint {
@@ -308,5 +471,23 @@
 
   .airport-footprint {
     min-height: 16rem;
+  }
+
+  .aircraft-photo-preview {
+    padding: 0;
+  }
+
+  .aircraft-photo-preview__header {
+    top: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .aircraft-photo-preview img {
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100vh - 1.5rem);
+    max-height: calc(100dvh - 1.5rem);
   }
 }
