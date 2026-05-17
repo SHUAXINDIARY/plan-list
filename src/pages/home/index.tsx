@@ -1,6 +1,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
   type ReactElement,
@@ -114,6 +115,7 @@ const HomePage = (): ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>('');
   const [selectedManufacturer, setSelectedManufacturer] = useState<string>(ALL_MANUFACTURERS_VALUE);
+  const fleetResultsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect((): (() => void) => {
     let isMounted = true;
@@ -173,6 +175,13 @@ const HomePage = (): ReactElement => {
 
   // 将筛选条件组合成视图 key，让结果区在数据切换时执行进入过渡。
   const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}`;
+
+  useEffect((): void => {
+    // 筛选条件变化后重置结果区滚动位置，避免新结果停留在旧列表的中段。
+    if (fleetResultsRef.current) {
+      fleetResultsRef.current.scrollTop = 0;
+    }
+  }, [filteredViewKey]);
 
   // 航司搜索输入实时写入状态，驱动列表过滤。
   const handleAirlineSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -234,7 +243,7 @@ const HomePage = (): ReactElement => {
       ) : null}
 
       {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
-        <div className="fleet-results" aria-live="polite">
+        <div className="fleet-results" ref={fleetResultsRef} aria-live="polite">
           {filteredAirlineFleets.length === 0 ? (
             <p className="data-state data-state--filtered-empty" key={`empty-${filteredViewKey}`}>
               没有匹配当前筛选条件的航司或机型。

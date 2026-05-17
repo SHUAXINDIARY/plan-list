@@ -483,3 +483,28 @@
 
 - `taskRecord.md`
   - 追加本次页面按需加载任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+让首页筛选结果每次过滤后自动回到结果区顶部，避免滚动位置停留在旧结果列表中段。
+
+## 完成过程
+
+1. 读取 `src/pages/home/index.tsx`，确认筛选结果由 `filteredViewKey` 驱动切换，并由 `fleet-results` 容器内部滚动。
+2. 为结果滚动容器新增 `useRef<HTMLDivElement | null>` 引用。
+3. 新增监听 `filteredViewKey` 的 `useEffect`，在搜索词或制造商筛选变化后将结果区 `scrollTop` 重置为 `0`。
+4. 将 `fleetResultsRef` 绑定到 `fleet-results` 容器，确保重置作用于内部滚动区域。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增结果区 ref 和筛选变化后的滚动位置重置逻辑。
+
+- `taskRecord.md`
+  - 追加本次筛选滚动重置任务记录。
