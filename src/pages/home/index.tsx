@@ -233,39 +233,43 @@ const HomePage = (): ReactElement => {
         <p className="data-state">暂无机型数据。</p>
       ) : null}
 
-      {!isLoading && !errorMessage && airlineFleets.length > 0 && filteredAirlineFleets.length === 0 ? (
-        <p className="data-state data-state--filtered-empty" key={`empty-${filteredViewKey}`}>
-          没有匹配当前筛选条件的航司或机型。
-        </p>
-      ) : null}
+      {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
+        <div className="fleet-results" aria-live="polite">
+          {filteredAirlineFleets.length === 0 ? (
+            <p className="data-state data-state--filtered-empty" key={`empty-${filteredViewKey}`}>
+              没有匹配当前筛选条件的航司或机型。
+            </p>
+          ) : (
+            <div className="airline-list" key={`list-${filteredViewKey}`}>
+              {filteredAirlineFleets.map((airlineFleet: AirlineFleet): ReactElement => (
+                <article className="airline-entry" key={airlineFleet.airlineName}>
+                  <header className="airline-entry__header">
+                    <h2>{airlineFleet.airlineName}</h2>
+                    <span>
+                      {airlineFleet.manufacturerCount} 个制造商 / {airlineFleet.aircraftCount} 个机型
+                    </span>
+                  </header>
 
-      <div className="airline-list" key={`list-${filteredViewKey}`}>
-        {filteredAirlineFleets.map((airlineFleet: AirlineFleet): ReactElement => (
-          <article className="airline-entry" key={airlineFleet.airlineName}>
-            <header className="airline-entry__header">
-              <h2>{airlineFleet.airlineName}</h2>
-              <span>
-                {airlineFleet.manufacturerCount} 个制造商 / {airlineFleet.aircraftCount} 个机型
-              </span>
-            </header>
-
-            <div className="manufacturer-list">
-              {airlineFleet.manufacturers.map((manufacturer: ManufacturerFleet): ReactElement => (
-                <section className="manufacturer-block" key={manufacturer.manufacturerName}>
-                  <h3>{manufacturer.manufacturerName}</h3>
-                  <ul className="aircraft-model-list">
-                    {manufacturer.models.map((model: string): ReactElement => (
-                      <li key={`${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${model}`}>
-                        {model}
-                      </li>
+                  <div className="manufacturer-list">
+                    {airlineFleet.manufacturers.map((manufacturer: ManufacturerFleet): ReactElement => (
+                      <section className="manufacturer-block" key={manufacturer.manufacturerName}>
+                        <h3>{manufacturer.manufacturerName}</h3>
+                        <ul className="aircraft-model-list">
+                          {manufacturer.models.map((model: string): ReactElement => (
+                            <li key={`${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${model}`}>
+                              {model}
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
                     ))}
-                  </ul>
-                </section>
+                  </div>
+                </article>
               ))}
             </div>
-          </article>
-        ))}
-      </div>
+          )}
+        </div>
+      ) : null}
     </section>
   );
 };

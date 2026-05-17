@@ -47,6 +47,24 @@
   animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
+.fleet-results {
+  height: clamp(24rem, 52vh, 38rem);
+  padding-right: 0.35rem;
+  margin-top: 1.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.fleet-results > .data-state {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  box-sizing: border-box;
+  margin-top: 0;
+  text-align: center;
+}
+
 .fleet-toolbar {
   display: flex;
   align-items: center;
@@ -130,7 +148,6 @@
 .airline-list {
   display: grid;
   gap: 1rem;
-  margin-top: 1.5rem;
   animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
@@ -232,6 +249,10 @@
 }
 
 @media (max-width: 640px) {
+  .fleet-results {
+    height: min(30rem, 58vh);
+  }
+
   .fleet-toolbar {
     align-items: stretch;
     flex-direction: column;
