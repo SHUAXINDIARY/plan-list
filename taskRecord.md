@@ -956,3 +956,63 @@
 
 - `taskRecord.md`
   - 追加本次图片数据渲染任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将个人页中的常量数据拆分到同目录 `constant.ts`，让页面组件聚焦渲染和计算逻辑。
+
+## 完成过程
+
+1. 读取 `src/pages/personal/index.tsx` 与 `src/pages/personal/constant.ts`，确认页面内仍包含机场、地图边界、陆地区块、区域标签和航迹等静态数据。
+2. 在 `constant.ts` 中导出个人页所需的数据类型、图片数组、机场列表、地图边界、陆地区块、区域标签和航迹数据。
+3. 调整 `index.tsx` 导入逻辑，移除页面内常量数据定义，保留国家分组、坐标换算和组件渲染逻辑。
+4. 检查相关文件诊断，确认本次调整没有引入新的编辑器诊断。
+
+## 修改具体文件
+
+- `src/pages/personal/constant.ts`
+  - 新增并导出个人页机场、地图和航迹相关常量数据及类型。
+
+- `src/pages/personal/index.tsx`
+  - 改为从 `constant.ts` 导入静态数据和共享类型，删除页面内常量数据定义。
+
+- `taskRecord.md`
+  - 追加本次常量拆分任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将个人页相关 TypeScript 类型定义统一拆分到同目录 `type.d.ts`，让常量数据和页面组件不再直接声明共享类型。
+
+## 完成过程
+
+1. 读取 `src/pages/personal/type.d.ts`、`constant.ts` 和 `index.tsx`，确认类型定义分别散落在常量文件和页面文件中。
+2. 将机场、地图、航迹、机场分组和坐标定位相关接口统一迁入 `type.d.ts` 并导出。
+3. 调整 `constant.ts` 使用 `import type` 引入数据标注所需类型，保留静态数据导出。
+4. 调整 `index.tsx` 使用 `import type` 从 `type.d.ts` 引入页面渲染与计算所需类型。
+5. 检查相关文件诊断并运行构建验证，确认类型拆分后项目仍可正常构建。
+
+## 修改具体文件
+
+- `src/pages/personal/type.d.ts`
+  - 新增个人页机场、地图、航迹、机场分组和坐标定位相关类型定义。
+
+- `src/pages/personal/constant.ts`
+  - 移除内联接口定义，改为从 `type.d.ts` 导入类型。
+
+- `src/pages/personal/index.tsx`
+  - 移除页面内接口定义，改为从 `type.d.ts` 导入类型。
+
+- `taskRecord.md`
+  - 追加本次类型拆分任务记录。
