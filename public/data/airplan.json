@@ -396,5 +396,67 @@
         "passengerAircraftCount": 0,
         "imgs": [],
         "models": { "Airbus": ["A330-200F", "A330-300P2F"] }
+    },
+    {
+        "airline": "瑞安航空",
+        "passengerAircraftCount": 613,
+        "models": {
+            "Airbus": ["A320-200"],
+            "Boeing": ["B737-800", "B737-8200"]
+        }
+    },
+    {
+        "airline": "全日空",
+        "passengerAircraftCount": 267,
+        "models": {
+            "Airbus": [
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A321neoLR",
+                "A380-800"
+            ],
+            "Boeing": [
+                "B737-800",
+                "B767-300",
+                "B777-200",
+                "B777-300",
+                "B787-8",
+                "B787-9",
+                "B787-10"
+            ],
+            "De Havilland Canada": ["DHC-8-400"]
+        }
+    },
+    {
+        "airline": "亚洲航空",
+        "passengerAircraftCount": 224,
+        "models": {
+            "Airbus": ["A320-200", "A320neo", "A321neo"]
+        }
+    },
+    {
+        "airline": "泰国航空",
+        "passengerAircraftCount": 85,
+        "models": {
+            "Airbus": ["A320-200", "A330-300", "A350-900", "A380-800"],
+            "Boeing": ["B777-200ER", "B777-300ER", "B787-8", "B787-9"]
+        }
+    },
+    {
+        "airline": "泛航航空",
+        "passengerAircraftCount": 50,
+        "models": {
+            "Airbus": ["A321neo"],
+            "Boeing": ["B737-800"]
+        }
+    },
+    {
+        "airline": "泰国狮子航空",
+        "passengerAircraftCount": 28,
+        "models": {
+            "Boeing": ["B737-800", "B737-900ER"]
+        }
     }
 ]
