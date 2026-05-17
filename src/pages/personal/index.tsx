@@ -102,6 +102,7 @@ const PHOTO_PREVIEW_EXIT_DURATION_MS = 180;
 const PersonalPage = (): ReactElement => {
   const [previewPhotoIndex, setPreviewPhotoIndex] = useState<number | null>(null);
   const [isPhotoPreviewClosing, setIsPhotoPreviewClosing] = useState<boolean>(false);
+  const [isPreviewPhotoLoading, setIsPreviewPhotoLoading] = useState<boolean>(false);
   const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
   const photoPreviewCloseTimerRef = useRef<number | null>(null);
   const previewPhotoUrl = previewPhotoIndex === null ? null : aircraftPhotos[previewPhotoIndex]?.originalUrl ?? null;
@@ -164,7 +165,13 @@ const PersonalPage = (): ReactElement => {
   const openPhotoPreview = (aircraftPhotoIndex: number): void => {
     clearPhotoPreviewCloseTimer();
     setIsPhotoPreviewClosing(false);
+    setIsPreviewPhotoLoading(true);
     setPreviewPhotoIndex(aircraftPhotoIndex);
+  };
+
+  // 原图加载结束后隐藏加载提示，避免用户误以为全屏预览卡住。
+  const settlePreviewPhotoLoading = (): void => {
+    setIsPreviewPhotoLoading(false);
   };
 
   // 只在用户点击遮罩本身时关闭，避免点击图片内容导致预览意外退出。
@@ -199,9 +206,19 @@ const PersonalPage = (): ReactElement => {
             关闭
           </button>
         </header>
+        {isPreviewPhotoLoading ? (
+          <div className="aircraft-photo-preview__loading" role="status" aria-live="polite">
+            <span aria-hidden="true" />
+            <p>正在载入原图...</p>
+          </div>
+        ) : null}
         <img
+          className={isPreviewPhotoLoading ? 'aircraft-photo-preview__image--loading' : undefined}
+          key={previewPhotoUrl}
           src={previewPhotoUrl}
           alt={`全屏预览拍摄的飞机照片 ${previewPhotoIndex === null ? '' : previewPhotoIndex + 1}`}
+          onLoad={settlePreviewPhotoLoading}
+          onError={settlePreviewPhotoLoading}
         />
       </div>
     </div>

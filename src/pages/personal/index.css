@@ -148,6 +148,12 @@
   }
 }
 
+@keyframes photo-preview-loading-orbit {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
 .aircraft-photo-preview {
   position: fixed;
   inset: 0;
@@ -239,6 +245,41 @@
   outline-offset: 3px;
 }
 
+.aircraft-photo-preview__loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  color: #dff4ff;
+  background-color: rgba(7, 17, 29, 0.88);
+  border: 1px solid rgba(164, 188, 201, 0.2);
+  border-radius: 999px;
+  box-shadow: 0 1rem 3rem rgba(2, 8, 18, 0.36);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.aircraft-photo-preview__loading span {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(124, 200, 235, 0.18);
+  border-top-color: oklch(0.78 0.105 222);
+  border-radius: 999px;
+  animation: photo-preview-loading-orbit 840ms linear infinite;
+}
+
+.aircraft-photo-preview__loading p {
+  margin: 0;
+  color: #dff4ff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .aircraft-photo-preview img {
   display: block;
   width: auto;
@@ -250,6 +291,10 @@
   border-radius: 0.75rem;
   box-shadow: 0 1.5rem 4rem rgba(2, 8, 18, 0.46);
   pointer-events: auto;
+}
+
+.aircraft-photo-preview__image--loading {
+  opacity: 0;
 }
 
 .airport-footprint {
