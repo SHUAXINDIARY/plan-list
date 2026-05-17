@@ -170,6 +170,9 @@ const HomePage = (): ReactElement => {
     );
   }, [filteredAirlineFleets]);
 
+  // 将筛选条件组合成视图 key，让结果区在数据切换时执行进入过渡。
+  const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}`;
+
   // 航司搜索输入实时写入状态，驱动列表过滤。
   const handleAirlineSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setAirlineSearchTerm(event.target.value);
@@ -230,10 +233,12 @@ const HomePage = (): ReactElement => {
       ) : null}
 
       {!isLoading && !errorMessage && airlineFleets.length > 0 && filteredAirlineFleets.length === 0 ? (
-        <p className="data-state">没有匹配当前筛选条件的航司或机型。</p>
+        <p className="data-state data-state--filtered-empty" key={`empty-${filteredViewKey}`}>
+          没有匹配当前筛选条件的航司或机型。
+        </p>
       ) : null}
 
-      <div className="airline-list">
+      <div className="airline-list" key={`list-${filteredViewKey}`}>
         {filteredAirlineFleets.map((airlineFleet: AirlineFleet): ReactElement => (
           <article className="airline-entry" key={airlineFleet.airlineName}>
             <header className="airline-entry__header">
