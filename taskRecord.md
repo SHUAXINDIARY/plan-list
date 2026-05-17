@@ -1464,3 +1464,41 @@
 
 - `taskRecord.md`
   - 追加本次地图点位国旗光标任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+将个人航空档案中的地图渲染、坐标投影、点位交互和样式逻辑拆分到 `src/components/map/index.tsx`，形成只接收标注数据即可渲染的通用地图组件。
+
+## 完成过程
+
+1. 读取个人页组件、个人页样式、地图组件入口和机场坐标数据，确认地图逻辑目前集中在个人页内。
+2. 在 `src/components/map/index.tsx` 中新增 `AnnotatedWorldMap` 组件，封装地图底图、坐标投影、航线绘制、点位 hover、tooltip、国旗光标和图例渲染。
+3. 新增 `src/components/map/index.css`，将原个人页内的地图容器、底图、航线、标记点、tooltip、国旗光标和图例样式迁移到组件目录。
+4. 改造个人页，只将机场数据整理为 `WorldMapMarker[]` 并传入通用地图组件，移除页面内地图渲染和交互状态。
+5. 清理个人页样式中已迁移的地图样式，保留照片预览和机场列表样式。
+6. 使用 `ReadLints` 与构建命令检查本次修改文件。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 新增通用地图组件及其标注、航线数据类型，封装地图渲染与交互逻辑。
+
+- `src/components/map/index.css`
+  - 新增地图组件样式，承载底图容器、航线、点位、tooltip、国旗光标和图例视觉。
+
+- `src/pages/personal/index.tsx`
+  - 改为生成机场标注数据并调用通用地图组件，移除页面内地图坐标投影与 hover 交互逻辑。
+
+- `src/pages/personal/index.css`
+  - 删除已迁移到地图组件内的地图相关样式。
+
+- `taskRecord.md`
+  - 追加本次地图通用组件拆分任务记录。

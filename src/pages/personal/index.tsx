@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CSSProperties, MouseEvent, ReactElement } from 'react';
+import type { MouseEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
-import WorldMap from '../../components/map/map.svg?react';
+import AnnotatedWorldMap from '../../components/map';
+import type { WorldMapMarker } from '../../components/map';
 import {
   CHECKED_AIRPORTS,
   MAP_ROUTES,
@@ -10,17 +11,9 @@ import {
 import type {
   AircraftPhoto,
   AirportCountryGroup,
-  AirportMarkerPosition,
   CheckedAirport,
-  MapCoordinate,
-  MapRoute,
 } from './type';
 import './index.css';
-
-interface AirportFlagCursorPosition {
-  x: number;
-  y: number;
-}
 
 // 根据描述中的国家前缀提取分组名称，让机场列表保持地理层级。
 const getAirportCountryName = (airport: CheckedAirport): string => {
@@ -57,31 +50,6 @@ const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup
     });
 };
 
-const WORLD_MAP_WIDTH = 1200;
-const WORLD_MAP_HEIGHT = 650;
-const WORLD_MAP_MARGIN_X = 42;
-const WORLD_MAP_MARGIN_Y = 42;
-const WORLD_MAP_CONTENT_WIDTH = WORLD_MAP_WIDTH - WORLD_MAP_MARGIN_X * 2;
-const WORLD_MAP_CONTENT_HEIGHT = WORLD_MAP_HEIGHT - WORLD_MAP_MARGIN_Y * 2;
-
-// 将经纬度换算成 Natural Earth 地图 SVG 的画布坐标。
-const projectMapCoordinate = (coordinate: MapCoordinate): AirportMarkerPosition => {
-  return {
-    left: WORLD_MAP_MARGIN_X + ((coordinate.lng + 180) / 360) * WORLD_MAP_CONTENT_WIDTH,
-    top: WORLD_MAP_MARGIN_Y + ((90 - coordinate.lat) / 180) * WORLD_MAP_CONTENT_HEIGHT,
-  };
-};
-
-// 根据两个经纬度端点生成二次贝塞尔航线，让跨区域连线保持轻微弧度。
-const getMapRoutePath = (route: MapRoute): string => {
-  const startPosition = projectMapCoordinate(route.start);
-  const endPosition = projectMapCoordinate(route.end);
-  const controlPointX = (startPosition.left + endPosition.left) / 2;
-  const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
-
-  return `M ${startPosition.left} ${startPosition.top} Q ${controlPointX} ${controlPointY} ${endPosition.left} ${endPosition.top}`;
-};
-
 const airportCountryGroups = groupAirportsByCountry(CHECKED_AIRPORTS);
 const checkedCountryCount = airportCountryGroups.length;
 // 关闭动画需要短暂保留预览层，时长与 CSS 退出动画保持一致。
@@ -98,35 +66,31 @@ const AIRPORT_COUNTRY_FLAG_BY_NAME: Record<string, string> = {
   韩国: '🇰🇷',
 };
 
+// 将机场业务数据整理为通用地图组件可消费的标注数据。
+const airportMapMarkers: WorldMapMarker[] = CHECKED_AIRPORTS.map(
+  (airport: CheckedAirport): WorldMapMarker => {
+    const countryName = getAirportCountryName(airport);
+
+    return {
+      id: airport.name,
+      name: airport.name,
+      description: airport.description,
+      coordinate: {
+        lat: airport.lat,
+        lng: airport.lng,
+      },
+      flag: AIRPORT_COUNTRY_FLAG_BY_NAME[countryName] ?? DEFAULT_AIRPORT_COUNTRY_FLAG,
+    };
+  },
+);
+
 const PersonalPage = (): ReactElement => {
   const [previewPhotoIndex, setPreviewPhotoIndex] = useState<number | null>(null);
   const [isPhotoPreviewClosing, setIsPhotoPreviewClosing] = useState<boolean>(false);
   const [isPreviewPhotoLoading, setIsPreviewPhotoLoading] = useState<boolean>(false);
-  const [hoveredAirport, setHoveredAirport] = useState<CheckedAirport | null>(null);
-  const [airportFlagCursorPosition, setAirportFlagCursorPosition] = useState<AirportFlagCursorPosition | null>(null);
   const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
   const photoPreviewCloseTimerRef = useRef<number | null>(null);
   const previewPhotoUrl = previewPhotoIndex === null ? null : aircraftPhotos[previewPhotoIndex]?.originalUrl ?? null;
-  const hoveredAirportMarkerPosition = hoveredAirport === null ? null : projectMapCoordinate(hoveredAirport);
-  const hoveredAirportTooltipStyle: CSSProperties | undefined =
-    hoveredAirportMarkerPosition === null
-      ? undefined
-      : {
-          left: `${(hoveredAirportMarkerPosition.left / WORLD_MAP_WIDTH) * 100}%`,
-          top: `${(hoveredAirportMarkerPosition.top / WORLD_MAP_HEIGHT) * 100}%`,
-        };
-  const hoveredAirportCountryName = hoveredAirport === null ? null : getAirportCountryName(hoveredAirport);
-  const hoveredAirportCountryFlag =
-    hoveredAirportCountryName === null
-      ? DEFAULT_AIRPORT_COUNTRY_FLAG
-      : AIRPORT_COUNTRY_FLAG_BY_NAME[hoveredAirportCountryName] ?? DEFAULT_AIRPORT_COUNTRY_FLAG;
-  const airportFlagCursorStyle: CSSProperties | undefined =
-    airportFlagCursorPosition === null
-      ? undefined
-      : {
-          left: `${airportFlagCursorPosition.x}px`,
-          top: `${airportFlagCursorPosition.y}px`,
-        };
 
   // 清理延迟卸载计时器，避免快速开关图片时保留过期关闭任务。
   const clearPhotoPreviewCloseTimer = useCallback((): void => {
@@ -200,34 +164,6 @@ const PersonalPage = (): ReactElement => {
     if (event.target === event.currentTarget) {
       closePhotoPreview();
     }
-  };
-
-  // 记录当前指向的机场点和鼠标位置，供地图浮层与国旗光标同步展示。
-  const showAirportTooltip = (event: MouseEvent<SVGCircleElement>, airport: CheckedAirport): void => {
-    setHoveredAirport(airport);
-    setAirportFlagCursorPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  };
-
-  // 鼠标在机场点内移动时持续更新国旗位置，让 emoji 跟随真实指针。
-  const updateAirportFlagCursorPosition = (event: MouseEvent<SVGCircleElement>): void => {
-    setAirportFlagCursorPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  };
-
-  // 键盘聚焦机场点时只展示名称提示，避免在无鼠标位置时显示漂浮国旗。
-  const showAirportTooltipFromFocus = (airport: CheckedAirport): void => {
-    setHoveredAirport(airport);
-  };
-
-  // 离开机场点或失焦后隐藏浮层，避免名称停留在旧坐标上。
-  const hideAirportTooltip = (): void => {
-    setHoveredAirport(null);
-    setAirportFlagCursorPosition(null);
   };
 
   const photoPreviewElement = previewPhotoUrl ? (
@@ -327,68 +263,13 @@ const PersonalPage = (): ReactElement => {
           <p className="personal-section__eyebrow">Airport Check-ins</p>
           <h2 id="airport-map-title">打卡过的机场</h2>
         </div>
-        <div className="airport-footprint" aria-label="机场打卡足迹示意图">
-          <WorldMap
-            className="airport-footprint__map"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true"
-            focusable="false"
-          />
-          <svg
-            className="airport-footprint__routes"
-            viewBox={`0 0 ${WORLD_MAP_WIDTH} ${WORLD_MAP_HEIGHT}`}
-            preserveAspectRatio="xMidYMid meet"
-            aria-label="机场打卡点和主要航迹"
-            focusable="false"
-          >
-            {MAP_ROUTES.map((route: MapRoute): ReactElement => (
-              <path
-                className="airport-footprint__route"
-                d={getMapRoutePath(route)}
-                key={route.name}
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-            {CHECKED_AIRPORTS.map((airport: CheckedAirport): ReactElement => {
-              const markerPosition = projectMapCoordinate(airport);
-
-              return (
-                <circle
-                  className="airport-footprint__marker"
-                  key={airport.name}
-                  cx={markerPosition.left}
-                  cy={markerPosition.top}
-                  r="5.6"
-                  vectorEffect="non-scaling-stroke"
-                  tabIndex={0}
-                  role="img"
-                  aria-label={`${airport.name}，${airport.description}`}
-                  onMouseEnter={(event: MouseEvent<SVGCircleElement>): void => showAirportTooltip(event, airport)}
-                  onMouseMove={updateAirportFlagCursorPosition}
-                  onMouseLeave={hideAirportTooltip}
-                  onFocus={(): void => showAirportTooltipFromFocus(airport)}
-                  onBlur={hideAirportTooltip}
-                >
-                  <title>{`${airport.name}，${airport.description}`}</title>
-                </circle>
-              );
-            })}
-          </svg>
-          {hoveredAirport && hoveredAirportTooltipStyle ? (
-            <div className="airport-footprint__tooltip" style={hoveredAirportTooltipStyle} role="tooltip">
-              {hoveredAirport.name}
-            </div>
-          ) : null}
-          {hoveredAirport && airportFlagCursorStyle ? (
-            <div className="airport-footprint__flag-cursor" style={airportFlagCursorStyle} aria-hidden="true">
-              {hoveredAirportCountryFlag}
-            </div>
-          ) : null}
-          <div className="airport-footprint__legend" aria-hidden="true">
-            <span>打卡机场</span>
-            <span>主要航迹</span>
-          </div>
-        </div>
+        <AnnotatedWorldMap
+          ariaLabel="机场打卡足迹示意图"
+          markers={airportMapMarkers}
+          routes={MAP_ROUTES}
+          markerLegendLabel="打卡机场"
+          routeLegendLabel="主要航迹"
+        />
       </section>
 
       <section className="airport-country-list" aria-label="机场打卡列表">
