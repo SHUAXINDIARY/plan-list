@@ -90,26 +90,38 @@
 }
 
 .fleet-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  gap: 0.95rem;
+  padding: 1rem;
   margin-top: 1.75rem;
+  background-color: rgba(7, 17, 29, 0.56);
+  border: 1px solid rgba(164, 188, 201, 0.14);
+  border-radius: 1rem;
   animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) 80ms both;
 }
 
-.fleet-summary,
-.fleet-filters {
+.fleet-summary {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.55rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(164, 188, 201, 0.1);
+}
+
+.fleet-filters {
+  display: grid;
+  grid-template-columns: minmax(13rem, 1.2fr) repeat(2, minmax(12rem, 1fr));
+  gap: 0.85rem;
 }
 
 .fleet-summary span {
-  padding: 0.5rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.15rem;
+  padding: 0 0.75rem;
   color: #dff4ff;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   border: 1px solid rgba(124, 200, 235, 0.24);
   border-radius: 999px;
   background-color: rgba(55, 126, 160, 0.18);
@@ -119,10 +131,9 @@
 }
 
 .fleet-filter {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-width: min(100%, 14rem);
+  display: grid;
+  gap: 0.42rem;
+  min-width: 0;
 }
 
 .fleet-filter span {
@@ -136,7 +147,8 @@
 
 .fleet-filter input,
 .fleet-filter select {
-  width: 12rem;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 2.55rem;
   color: #edf4f8;
   background-color: rgba(7, 17, 29, 0.9);
@@ -150,7 +162,6 @@
 }
 
 .fleet-filter input {
-  box-sizing: border-box;
   padding: 0.65rem 0.8rem;
 }
 
@@ -272,30 +283,19 @@
   transform: translate3d(0, -1px, 0);
 }
 
+@media (max-width: 900px) {
+  .fleet-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 640px) {
   .fleet-results {
     height: min(30rem, 58vh);
   }
 
-  .fleet-toolbar {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
   .fleet-filters {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .fleet-filter {
-    align-items: stretch;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .fleet-filter input,
-  .fleet-filter select {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .airline-entry__header {
