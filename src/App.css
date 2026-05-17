@@ -1,8 +1,36 @@
 body {
+  --motion-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --motion-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-duration-fast: 160ms;
+  --motion-duration-standard: 240ms;
+  --motion-duration-enter: 480ms;
   margin: 0;
   color: #edf4f8;
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   background-image: linear-gradient(to bottom, #020917, #101725);
+}
+
+@keyframes archive-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.75rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes archive-state-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 button,
@@ -63,9 +91,10 @@ a {
   border: 1px solid rgba(164, 188, 201, 0.16);
   border-radius: 999px;
   transition:
-    color 180ms ease-out,
-    border-color 180ms ease-out,
-    background-color 180ms ease-out;
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
 .app-nav__link:hover,
@@ -73,6 +102,7 @@ a {
   color: #f4f8fb;
   border-color: rgba(100, 181, 216, 0.72);
   outline: none;
+  transform: translate3d(0, -1px, 0);
 }
 
 .app-nav__link--active {
@@ -94,6 +124,7 @@ a {
   background-color: rgba(10, 21, 33, 0.78);
   border: 1px solid rgba(164, 188, 201, 0.16);
   border-radius: 1.25rem;
+  animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) both;
 }
 
 .page-eyebrow {
@@ -134,6 +165,10 @@ a {
   border-radius: 0.9rem;
 }
 
+.data-state--loading {
+  animation: archive-state-pulse 1.6s var(--motion-ease-out-quart) infinite;
+}
+
 .data-state--error {
   color: #ffd3d3;
   border-color: rgba(242, 118, 118, 0.5);
@@ -141,15 +176,17 @@ a {
 
 .fleet-toolbar {
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
   margin-top: 1.75rem;
+  animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) 80ms both;
 }
 
 .fleet-summary,
 .fleet-filters {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
@@ -161,12 +198,16 @@ a {
   border: 1px solid rgba(124, 200, 235, 0.24);
   border-radius: 999px;
   background-color: rgba(55, 126, 160, 0.18);
+  transition:
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-standard) var(--motion-ease-out-quart);
 }
 
 .fleet-filter {
-  display: grid;
-  gap: 0.4rem;
-  min-width: min(100%, 12rem);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: min(100%, 14rem);
 }
 
 .fleet-filter span {
@@ -174,18 +215,23 @@ a {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
+  white-space: nowrap;
   text-transform: uppercase;
 }
 
 .fleet-filter input,
 .fleet-filter select {
-  width: 100%;
+  width: 12rem;
   min-height: 2.55rem;
   color: #edf4f8;
   background-color: rgba(7, 17, 29, 0.9);
   border: 1px solid rgba(164, 188, 201, 0.18);
   border-radius: 0.75rem;
   outline: none;
+  transition:
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-standard) var(--motion-ease-out-quart),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quart);
 }
 
 .fleet-filter input {
@@ -205,12 +251,14 @@ a {
 .fleet-filter select:focus {
   border-color: rgba(124, 200, 235, 0.78);
   box-shadow: 0 0 0 3px rgba(124, 200, 235, 0.12);
+  transform: translate3d(0, -1px, 0);
 }
 
 .airline-list {
   display: grid;
   gap: 1rem;
   margin-top: 1.5rem;
+  animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) 140ms both;
 }
 
 .airline-entry {
@@ -218,6 +266,16 @@ a {
   background-color: rgba(7, 17, 29, 0.72);
   border: 1px solid rgba(164, 188, 201, 0.14);
   border-radius: 1rem;
+  transition:
+    background-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quart);
+}
+
+.airline-entry:hover {
+  background-color: rgba(10, 26, 42, 0.82);
+  border-color: rgba(124, 200, 235, 0.28);
+  transform: translate3d(0, -2px, 0);
 }
 
 .airline-entry__header {
@@ -271,6 +329,16 @@ a {
   background-color: rgba(18, 36, 54, 0.84);
   border: 1px solid rgba(164, 188, 201, 0.12);
   border-radius: 0.55rem;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-model-list li:hover {
+  color: #f4f8fb;
+  border-color: rgba(124, 200, 235, 0.34);
+  transform: translate3d(0, -1px, 0);
 }
 
 @media (max-width: 640px) {
@@ -293,7 +361,19 @@ a {
     flex-direction: column;
   }
 
+  .fleet-filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .fleet-filter {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .fleet-filter input,
+  .fleet-filter select {
     width: 100%;
   }
 
@@ -304,5 +384,16 @@ a {
 
   .airline-entry__header span {
     white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

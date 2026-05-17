@@ -267,3 +267,93 @@
 
 - `taskRecord.md`
   - 追加本次筛选功能任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+补充项目基础规则，要求所有函数都必须添加逻辑注释。
+
+## 完成过程
+
+1. 读取 `create-rule` skill，确认修改 Cursor 项目规则应遵循 `.mdc` 文件格式。
+2. 定位 `.cursor/rules/project-base-rules.mdc` 的 `常量与注释` 小节。
+3. 在该小节中新增函数注释要求，明确所有函数都必须说明函数目的、关键输入输出或核心处理逻辑。
+4. 按项目规则将本次规则补充追加到 `taskRecord.md`。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 在 `常量与注释` 小节补充所有函数必须添加逻辑注释的规则。
+
+- `taskRecord.md`
+  - 追加本次规则补充任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+按 `/animate` 要求为首页机型数据页面加入克制的动效和微交互，提升加载、筛选、悬停和状态反馈体验。
+
+## 完成过程
+
+1. 读取 `frontend-design` skill，并结合手动附加的 `animate` skill 要求确认动效原则。
+2. 读取 `PRODUCT.md` 和 `DESIGN.md`，确认项目 UI 基调为 `Night Flight Archive`，动效应克制、服务状态反馈并支持减少动态偏好。
+3. 读取 `src/pages/home/index.tsx` 和 `src/App.css`，确认首页已有航司数据渲染、搜索和制造商筛选。
+4. 在 `src/pages/home/index.tsx` 中补充函数逻辑注释，满足项目规则中“所有函数都必须添加逻辑注释”的要求。
+5. 在 `src/App.css` 中新增动效变量、进入动画和加载态脉冲动画。
+6. 为页面面板、筛选工具栏和航司列表加入顺序进入动效。
+7. 为导航、筛选输入、航司条目和机型标签加入 hover / focus 微交互。
+8. 将脉冲动效限制在加载状态，避免错误或空结果提示持续闪动。
+9. 增加 `prefers-reduced-motion: reduce` 规则，保证减少动态偏好下禁用动画和过渡。
+10. 使用 `ReadLints` 检查 `src/pages/home/index.tsx` 和 `src/App.css`，未发现 linter 问题。
+11. 运行 `pnpm run build` 验证生产构建通过。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 补充函数逻辑注释。
+  - 为加载状态增加专用 `data-state--loading` 类名。
+
+- `src/App.css`
+  - 新增动效变量、进入动画和加载态脉冲动画。
+  - 新增导航、筛选控件、航司条目和机型标签的微交互。
+  - 新增 `prefers-reduced-motion` 降级规则。
+
+- `taskRecord.md`
+  - 追加本次 `/animate` 动效增强任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+调整首页机型数据筛选工具栏布局，让统计信息、搜索控件和制造商筛选在桌面端同一排水平对齐展示。
+
+## 完成过程
+
+1. 读取 `impeccable` skill，并加载 `PRODUCT.md`、`DESIGN.md` 与 product register 参考，确认本次为产品界面布局微调。
+2. 读取 `src/pages/home/index.tsx` 和 `src/App.css`，定位工具栏结构与 `fleet-toolbar`、`fleet-filter` 相关样式。
+3. 将桌面端工具栏和筛选区改为居中对齐的横向布局。
+4. 将筛选 label 内部从上下排列改为横向排列，并为输入框和下拉框设置稳定宽度。
+5. 补充小屏媒体查询，使筛选项在窄屏下恢复纵向排列并占满可用宽度。
+
+## 修改具体文件
+
+- `src/App.css`
+  - 调整首页筛选工具栏、统计摘要和筛选控件的水平对齐方式。
+  - 保留小屏下纵向适配，避免控件挤压。
+
+- `taskRecord.md`
+  - 追加本次 UI 对齐调整任务记录。

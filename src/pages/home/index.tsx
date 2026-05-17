@@ -26,15 +26,18 @@ const AIRPLANE_DATA_URL = '/data/airplan.json';
 // 制造商筛选的默认值，表示不过滤制造商。
 const ALL_MANUFACTURERS_VALUE = 'all';
 
+// 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。
 const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
   return Object.entries(airplaneData)
     .map(([airlineName, manufacturers]: [string, Record<string, string[]>]): AirlineFleet => {
+      // 保留制造商层级，便于渲染时按航司和制造商分组展示机型。
       const formattedManufacturers: ManufacturerFleet[] = Object.entries(manufacturers).map(
         ([manufacturerName, models]: [string, string[]]): ManufacturerFleet => ({
           manufacturerName,
           models,
         }),
       );
+      // 统计每家航司的机型数量，用于概览和条目元信息。
       const aircraftCount = formattedManufacturers.reduce(
         (total: number, manufacturer: ManufacturerFleet): number => total + manufacturer.models.length,
         0,
@@ -52,6 +55,7 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
     );
 };
 
+// 从全部航司机队中提取唯一制造商选项，供下拉筛选使用。
 const getManufacturerOptions = (airlineFleets: AirlineFleet[]): string[] => {
   const manufacturerNames = new Set<string>();
 
@@ -66,6 +70,7 @@ const getManufacturerOptions = (airlineFleets: AirlineFleet[]): string[] => {
   );
 };
 
+// 同时根据航司搜索词和制造商筛选项过滤数据，并重新计算过滤后的统计数量。
 const filterAirlineFleets = (
   airlineFleets: AirlineFleet[],
   airlineSearchTerm: string,
@@ -78,6 +83,7 @@ const filterAirlineFleets = (
       airlineFleet.airlineName.toLocaleLowerCase().includes(normalizedSearchTerm),
     )
     .map((airlineFleet: AirlineFleet): AirlineFleet => {
+      // 制造商筛选只影响每家航司内部的制造商分组，不破坏原始数据。
       const filteredManufacturers =
         selectedManufacturer === ALL_MANUFACTURERS_VALUE
           ? airlineFleet.manufacturers
@@ -100,6 +106,7 @@ const filterAirlineFleets = (
     .filter((airlineFleet: AirlineFleet): boolean => airlineFleet.manufacturers.length > 0);
 };
 
+// 首页负责加载公开机型数据，并提供航司搜索、制造商筛选和分组展示。
 const HomePage = (): ReactElement => {
   const [airlineFleets, setAirlineFleets] = useState<AirlineFleet[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -110,6 +117,7 @@ const HomePage = (): ReactElement => {
   useEffect((): (() => void) => {
     let isMounted = true;
 
+    // 异步读取 public 目录中的 JSON 数据，并避免组件卸载后继续写入状态。
     const loadAirplaneData = async (): Promise<void> => {
       try {
         setIsLoading(true);
@@ -144,14 +152,17 @@ const HomePage = (): ReactElement => {
     };
   }, []);
 
+  // 只在原始航司机队变化时重新计算制造商下拉选项，避免每次输入都重复整理选项。
   const manufacturerOptions = useMemo((): string[] => {
     return getManufacturerOptions(airlineFleets);
   }, [airlineFleets]);
 
+  // 根据当前搜索词和制造商筛选项生成页面实际展示的数据。
   const filteredAirlineFleets = useMemo((): AirlineFleet[] => {
     return filterAirlineFleets(airlineFleets, airlineSearchTerm, selectedManufacturer);
   }, [airlineFleets, airlineSearchTerm, selectedManufacturer]);
 
+  // 统计过滤结果中的机型数量，用于让概览数字与当前列表保持一致。
   const totalAircraftCount = useMemo((): number => {
     return filteredAirlineFleets.reduce(
       (total: number, airlineFleet: AirlineFleet): number => total + airlineFleet.aircraftCount,
@@ -159,10 +170,12 @@ const HomePage = (): ReactElement => {
     );
   }, [filteredAirlineFleets]);
 
+  // 航司搜索输入实时写入状态，驱动列表过滤。
   const handleAirlineSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setAirlineSearchTerm(event.target.value);
   };
 
+  // 制造商下拉切换后立即更新过滤条件。
   const handleManufacturerChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setSelectedManufacturer(event.target.value);
   };
@@ -175,7 +188,7 @@ const HomePage = (): ReactElement => {
         按航司浏览当前机队中的制造商与机型，后续可继续扩展到机型详情和个人乘坐状态。
       </p>
 
-      {isLoading ? <p className="data-state">正在载入机型数据...</p> : null}
+      {isLoading ? <p className="data-state data-state--loading">正在载入机型数据...</p> : null}
 
       {errorMessage ? <p className="data-state data-state--error">{errorMessage}</p> : null}
 
