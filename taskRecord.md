@@ -1766,3 +1766,35 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+首页航司机型列表中，当 `airplan.json` 里某机型映射值为非空且为 http(s) URL 时，点击在新标签页打开该链接。
+
+## 完成过程
+
+1. 扩展类型：`AircraftModelEntry` 承载机型名与原始映射字符串；`ManufacturerFleet.models` 使用该结构。
+2. 在 `createAirlineFleets` 中由 `Object.entries(modelMap)` 构建条目，保留 JSON 中键顺序。
+3. 新增 `isHttpOrHttpsUrl`，用 `URL` 校验协议仅为 `http:`/`https:`，列表渲染时对合法 URL 输出 `<a target="_blank" rel="noreferrer">`。
+4. 为 `.aircraft-model-list` 内链接补充与现有芯片风格一致的样式。
+5. 运行 `pnpm run build`；对改动文件执行 `ReadLints`。
+
+## 修改具体文件
+
+- `src/pages/home/type.d.ts`
+  - 新增 `AircraftModelEntry`；`ManufacturerFleet.models` 改为该数组；补充 `AirplaneDataItem.models` 注释。
+
+- `src/pages/home/index.tsx`
+  - `isHttpOrHttpsUrl`、数据映射与机型列表条件渲染外链。
+
+- `src/pages/home/index.css`
+  - 机型列表内链接颜色与下划线样式。
+
+- `taskRecord.md`
+  - 追加本次任务记录。

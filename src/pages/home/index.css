@@ -264,6 +264,18 @@
   transform: translate3d(0, -1px, 0);
 }
 
+/* 机型映射值为 http(s) URL 时渲染为外链，与芯片文字对齐并保持可辨认。 */
+.aircraft-model-list a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(124, 200, 235, 0.4);
+  text-underline-offset: 0.12em;
+}
+
+.aircraft-model-list a:hover {
+  text-decoration-color: rgba(244, 248, 251, 0.9);
+}
+
 .reference-sources {
   margin-top: 1.25rem;
   background-color: rgba(7, 17, 29, 0.32);

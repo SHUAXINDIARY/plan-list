@@ -4,23 +4,23 @@
         "passengerAircraftCount": 662,
         "models": {
             "Airbus": {
-                "A319-100": "",
-                "A320-200": "",
-                "A320neo": "",
-                "A321-200": "",
-                "A321neo": "",
-                "A330-200": "",
-                "A330-300": "",
-                "A350-900": ""
+                "A319-100": "https://www.jetphotos.com/photo/11939693",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines,_A320-200,_B-6559_(19218729078).jpg",
+                "A320neo": "https://www.jetphotos.com/photo/10694529",
+                "A321-200": "https://www.jetphotos.com/photo/10981364",
+                "A321neo": "https://www.jetphotos.com/photo/11915893",
+                "A330-200": "https://www.jetphotos.com/photo/11090873",
+                "A330-300": "https://www.jetphotos.com/photo/11619586",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:(CHN-Fujian)_China_Eastern_Airlines_Airbus_A350-941_B-304N_@_ZSAM_2025-03-19.jpg"
             },
             "Boeing": {
-                "B737-700": "",
-                "B737-800": "",
-                "B737 MAX 8": "",
-                "B777-300ER": ""
+                "B737-700": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines_Boeing_737-79P(WL)_(Purple_Peacock_Livery)_B-5295_(8825907280).jpg",
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-800_%E2%80%98B-1308%E2%80%99_China_Eastern_Airlines_(55222626534).jpg",
+                "B737 MAX 8": "https://www.jetphotos.com/photo/11198706",
+                "B777-300ER": "https://www.jetphotos.com/photo/11130331"
             },
             "COMAC": {
-                "C919": ""
+                "C919": "https://commons.wikimedia.org/wiki/File:China_Eastern_Airlines_COMAC_C919_Airplane_B-919A.jpg"
             }
         }
     },

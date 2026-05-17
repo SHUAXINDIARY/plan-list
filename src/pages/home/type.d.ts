@@ -1,6 +1,12 @@
+/** 单个机型在列表中的展示项：名称为机型代号，referenceUrl 来自静态数据的映射值。 */
+export interface AircraftModelEntry {
+  name: string;
+  referenceUrl: string;
+}
+
 export interface ManufacturerFleet {
   manufacturerName: string;
-  models: string[];
+  models: AircraftModelEntry[];
 }
 
 export interface AirlineFleet {
@@ -14,7 +20,7 @@ export interface AirlineFleet {
 export interface AirplaneDataItem {
   airline: string;
   passengerAircraftCount: number;
-  /** 制造商名称 -> 具体机型名称 -> 占位字符串（预留扩展，当前为空串） */
+  /** 制造商名称 -> 具体机型名称 -> 说明或外链（http(s) URL 时在界面中可点击新开标签页） */
   models: Record<string, Record<string, string>>;
 }
 

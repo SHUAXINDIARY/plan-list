@@ -7,6 +7,7 @@ import {
   type ReactElement,
 } from 'react';
 import type {
+  AircraftModelEntry,
   AirlineFleet,
   AirlineReferenceSource,
   AirplaneData,
@@ -27,6 +28,20 @@ const isPassengerAircraftSortOrder = (value: string): value is PassengerAircraft
   return value === 'passenger-desc' || value === 'passenger-asc';
 };
 
+// 判断机型映射值是否为可安全用于 href 的 http(s) 链接，避免 javascript: 等非 HTTP 协议。
+const isHttpOrHttpsUrl = (value: string): boolean => {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return false;
+  }
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
 // 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。
 const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
   return airplaneData
@@ -35,7 +50,12 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
       const formattedManufacturers: ManufacturerFleet[] = Object.entries(airplaneDataItem.models).map(
         ([manufacturerName, modelMap]: [string, Record<string, string>]): ManufacturerFleet => ({
           manufacturerName,
-          models: Object.keys(modelMap),
+          models: Object.entries(modelMap).map(
+            ([modelName, referenceValue]): AircraftModelEntry => ({
+              name: modelName,
+              referenceUrl: referenceValue,
+            }),
+          ),
         }),
       );
       // 统计每家航司的机型数量，用于概览和条目元信息。
@@ -317,11 +337,23 @@ const HomePage = (): ReactElement => {
                       <section className="manufacturer-block" key={manufacturer.manufacturerName}>
                         <h3>{manufacturer.manufacturerName}</h3>
                         <ul className="aircraft-model-list">
-                          {manufacturer.models.map((model: string): ReactElement => (
-                            <li key={`${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${model}`}>
-                              {model}
-                            </li>
-                          ))}
+                          {manufacturer.models.map((modelEntry: AircraftModelEntry): ReactElement => {
+                            const listKey = `${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${modelEntry.name}`;
+                            if (isHttpOrHttpsUrl(modelEntry.referenceUrl)) {
+                              return (
+                                <li key={listKey}>
+                                  <a
+                                    href={modelEntry.referenceUrl.trim()}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {modelEntry.name}
+                                  </a>
+                                </li>
+                              );
+                            }
+                            return <li key={listKey}>{modelEntry.name}</li>;
+                          })}
                         </ul>
                       </section>
                     ))}
