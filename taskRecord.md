@@ -1271,3 +1271,34 @@
 
 - `taskRecord.md`
   - 追加本次全屏图片预览 loading 任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+提高构建期飞机照片预览图压缩质量，让缩略图达到接近 480p 的可辨识清晰度。
+
+## 完成过程
+
+1. 读取 `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`，确认当前预览图生成参数为 48px 与较低 WebP 质量。
+2. 将预览图尺寸提升为 640x480，并提高 WebP quality 与 effort，让压缩后仍可看清图片内容。
+3. 新增 `480p-v1` 缓存版本标记，避免继续复用旧版模糊 data URL。
+4. 将下载与压缩超时时间放宽到 12 秒，提高较大预览图生成成功率。
+5. 运行生产构建刷新 `photoPreviews.generated.ts`，确认构建通过；少数远程图片仍因网络或处理耗时超时并按现有逻辑回退原图。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
+  - 提升预览图尺寸、WebP 压缩质量和超时时间，并新增缓存版本校验。
+
+- `src/pages/personal/photoPreviews.generated.ts`
+  - 由构建刷新为新版更高清的预览图 data URL 映射。
+
+- `taskRecord.md`
+  - 追加本次预览图压缩质量提升任务记录。
