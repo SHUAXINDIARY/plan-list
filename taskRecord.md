@@ -619,3 +619,52 @@
 
 - `taskRecord.md`
   - 追加本次筛选工具栏布局优化任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+配置 Rsbuild 生成的 HTML 站点信息，让页面标题和 meta 内容匹配当前航司机型资料库产品定位。
+
+## 完成过程
+
+1. 读取 `PRODUCT.md` 和 `rsbuild.config.ts`，确认站点定位为航司机型资料库与个人乘坐记录工具。
+2. 在 `rsbuild.config.ts` 中新增 `html.title`，设置站点标题为 `Plan List | 航司机型资料库`。
+3. 在 `html.meta` 中补充作者、描述、关键词、主题色和 viewport 信息。
+4. 保留现有 React 插件配置，不改动构建入口和其他无关配置。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - 新增 HTML 标题与站点相关 meta 信息配置。
+
+- `taskRecord.md`
+  - 追加本次 HTML 站点信息配置任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+配置站点标签页 icon，让 Rsbuild 生成的 HTML 使用指定 GitHub 头像作为 favicon。
+
+## 完成过程
+
+1. 读取 `rsbuild-best-practices` skill，确认继续使用 `rsbuild.config.ts` 和 Rsbuild 一等配置项。
+2. 在 `rsbuild.config.ts` 的 `html` 配置中新增 `favicon` 字段。
+3. 将 favicon 指向 `https://avatars.githubusercontent.com/u/32100575?v=4`，保留现有标题、meta 和 React 插件配置。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - 新增 `html.favicon`，配置站点标签页 icon。
+
+- `taskRecord.md`
+  - 追加本次 favicon 配置任务记录。
