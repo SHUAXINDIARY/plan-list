@@ -1,223 +1,354 @@
-{
-    "中国国际航空": {
-        "Airbus": [
-            "A319-100",
-            "A319neo",
-            "A320-200",
-            "A320neo",
-            "A321-200",
-            "A321neo",
-            "A330-200",
-            "A330-300",
-            "A350-900"
-        ],
-        "Boeing": [
-            "B737-700",
-            "B737-800",
-            "B737 MAX 8",
-            "B747-400",
-            "B747-8I",
-            "B777-300ER",
-            "B787-9"
-        ],
-        "COMAC": ["C919"]
+[
+    {
+        "airline": "中国东方航空",
+        "passengerAircraftCount": 662,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200",
+                "A330-300",
+                "A350-900"
+            ],
+            "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B777-300ER"],
+            "COMAC": ["C919"]
+        }
     },
-    "中国东方航空": {
-        "Airbus": [
-            "A319-100",
-            "A320-200",
-            "A320neo",
-            "A321-200",
-            "A321neo",
-            "A330-200",
-            "A330-300",
-            "A350-900"
-        ],
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B777-300ER"],
-        "COMAC": ["C919"]
+    {
+        "airline": "中国南方航空",
+        "passengerAircraftCount": 662,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200",
+                "A330-300",
+                "A350-900"
+            ],
+            "Boeing": [
+                "B737-700",
+                "B737-800",
+                "B737 MAX 8",
+                "B777-300ER",
+                "B787-8",
+                "B787-9"
+            ],
+            "COMAC": ["C909", "C919"],
+            "Embraer": ["E190"]
+        }
     },
-    "中国南方航空": {
-        "Airbus": [
-            "A319-100",
-            "A320-200",
-            "A320neo",
-            "A321-200",
-            "A321neo",
-            "A330-200",
-            "A330-300",
-            "A350-900"
-        ],
-        "Boeing": [
-            "B737-700",
-            "B737-800",
-            "B737 MAX 8",
-            "B777-300ER",
-            "B787-8",
-            "B787-9"
-        ],
-        "COMAC": ["C909", "C919"],
-        "Embraer": ["E190"]
+    {
+        "airline": "中国国际航空",
+        "passengerAircraftCount": 528,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A319neo",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200",
+                "A330-300",
+                "A350-900"
+            ],
+            "Boeing": [
+                "B737-700",
+                "B737-800",
+                "B737 MAX 8",
+                "B747-400",
+                "B747-8I",
+                "B777-300ER",
+                "B787-9"
+            ],
+            "COMAC": ["C919"]
+        }
     },
-    "海南航空": {
-        "Airbus": ["A320neo", "A321neo", "A330-200", "A330-300", "A330-900"],
-        "Boeing": ["B737-800", "B737 MAX 8", "B787-8", "B787-9"]
+    {
+        "airline": "海南航空",
+        "passengerAircraftCount": 220,
+        "models": {
+            "Airbus": [
+                "A320neo",
+                "A321neo",
+                "A330-200",
+                "A330-300",
+                "A330-900"
+            ],
+            "Boeing": ["B737-800", "B737 MAX 8", "B787-8", "B787-9"]
+        }
     },
-    "厦门航空": {
-        "Airbus": ["A320neo", "A321neo"],
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B787-8", "B787-9"]
+    {
+        "airline": "深圳航空",
+        "passengerAircraftCount": 202,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A330-300"
+            ],
+            "Boeing": ["B737-800", "B737 MAX 8"]
+        }
     },
-    "深圳航空": {
-        "Airbus": ["A319-100", "A320-200", "A320neo", "A321-200", "A330-300"],
-        "Boeing": ["B737-800", "B737 MAX 8"]
+    {
+        "airline": "四川航空",
+        "passengerAircraftCount": 202,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200",
+                "A330-300",
+                "A350-900"
+            ]
+        }
     },
-    "四川航空": {
-        "Airbus": [
-            "A319-100",
-            "A320-200",
-            "A320neo",
-            "A321-200",
-            "A321neo",
-            "A330-200",
-            "A330-300",
-            "A350-900"
-        ]
+    {
+        "airline": "厦门航空",
+        "passengerAircraftCount": 171,
+        "models": {
+            "Airbus": ["A320neo", "A321neo"],
+            "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B787-8", "B787-9"]
+        }
     },
-    "山东航空": {
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8"]
+    {
+        "airline": "国泰航空",
+        "passengerAircraftCount": 159,
+        "models": {
+            "Airbus": ["A321neo", "A330-300", "A350-900", "A350-1000"],
+            "Boeing": ["B777-300", "B777-300ER"]
+        }
     },
-    "上海航空": {
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B787-9"]
+    {
+        "airline": "山东航空",
+        "passengerAircraftCount": 135,
+        "models": { "Boeing": ["B737-700", "B737-800", "B737 MAX 8"] }
     },
-    "吉祥航空": {
-        "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"],
-        "Boeing": ["B787-9"]
+    {
+        "airline": "春秋航空",
+        "passengerAircraftCount": 132,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321neo"] }
     },
-    "春秋航空": {
-        "Airbus": ["A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "天津航空",
+        "passengerAircraftCount": 103,
+        "models": {
+            "Airbus": [
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200"
+            ],
+            "Embraer": ["E190", "E195"]
+        }
     },
-    "天津航空": {
-        "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo", "A330-200"],
-        "Embraer": ["E190", "E195"]
+    {
+        "airline": "吉祥航空",
+        "passengerAircraftCount": 102,
+        "models": {
+            "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"],
+            "Boeing": ["B787-9"]
+        }
     },
-    "首都航空": {
-        "Airbus": [
-            "A319-100",
-            "A320-200",
-            "A320neo",
-            "A321-200",
-            "A321neo",
-            "A330-200",
-            "A330-300"
-        ]
+    {
+        "airline": "上海航空",
+        "passengerAircraftCount": 86,
+        "models": { "Boeing": ["B737-700", "B737-800", "B737 MAX 8", "B787-9"] }
     },
-    "祥鹏航空": {
-        "Airbus": ["A319-100", "A320-200", "A320neo", "A330-300"],
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8"]
+    {
+        "airline": "成都航空",
+        "passengerAircraftCount": 82,
+        "models": { "Airbus": ["A320-200", "A320neo"], "COMAC": ["C909"] }
     },
-    "西部航空": {
-        "Airbus": ["A319-100", "A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "首都航空",
+        "passengerAircraftCount": 81,
+        "models": {
+            "Airbus": [
+                "A319-100",
+                "A320-200",
+                "A320neo",
+                "A321-200",
+                "A321neo",
+                "A330-200",
+                "A330-300"
+            ]
+        }
     },
-    "成都航空": {
-        "Airbus": ["A320-200", "A320neo"],
-        "COMAC": ["C909"]
+    {
+        "airline": "华夏航空",
+        "passengerAircraftCount": 77,
+        "models": {
+            "Airbus": ["A320-200"],
+            "COMAC": ["C909"],
+            "Bombardier": ["CRJ900"]
+        }
     },
-    "华夏航空": {
-        "Airbus": ["A320-200"],
-        "COMAC": ["C909"],
-        "Bombardier": ["CRJ900"]
+    {
+        "airline": "长龙航空",
+        "passengerAircraftCount": 73,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321neo"] }
     },
-    "长龙航空": {
-        "Airbus": ["A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "中国联合航空",
+        "passengerAircraftCount": 60,
+        "models": { "Boeing": ["B737-700", "B737-800"] }
     },
-    "中国联合航空": {
-        "Boeing": ["B737-700", "B737-800"]
+    {
+        "airline": "祥鹏航空",
+        "passengerAircraftCount": 50,
+        "models": {
+            "Airbus": ["A319-100", "A320-200", "A320neo", "A330-300"],
+            "Boeing": ["B737-700", "B737-800", "B737 MAX 8"]
+        }
     },
-    "九元航空": {
-        "Boeing": ["B737-800", "B737 MAX 8"]
+    {
+        "airline": "西藏航空",
+        "passengerAircraftCount": 47,
+        "models": {
+            "Airbus": ["A319-100", "A319neo", "A320-200", "A320neo", "A330-200"]
+        }
     },
-    "青岛航空": {
-        "Airbus": ["A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "西部航空",
+        "passengerAircraftCount": 46,
+        "models": { "Airbus": ["A319-100", "A320-200", "A320neo", "A321neo"] }
     },
-    "瑞丽航空": {
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8"]
+    {
+        "airline": "香港快运航空",
+        "passengerAircraftCount": 44,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"] }
     },
-    "东海航空": {
-        "Boeing": ["B737-800", "B737 MAX 8"]
+    {
+        "airline": "青岛航空",
+        "passengerAircraftCount": 38,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321neo"] }
     },
-    "奥凯航空": {
-        "Boeing": ["B737-800", "B737-900ER", "B737 MAX 8"]
+    {
+        "airline": "昆明航空",
+        "passengerAircraftCount": 32,
+        "models": { "Boeing": ["B737-700", "B737-800", "B737 MAX 8"] }
     },
-    "河北航空": {
-        "Boeing": ["B737-800", "B737 MAX 8"],
-        "Embraer": ["E190"]
+    {
+        "airline": "香港航空",
+        "passengerAircraftCount": 31,
+        "models": { "Airbus": ["A320-200", "A321-200", "A330-300"] }
     },
-    "昆明航空": {
-        "Boeing": ["B737-700", "B737-800", "B737 MAX 8"]
+    {
+        "airline": "重庆航空",
+        "passengerAircraftCount": 30,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321neo"] }
     },
-    "大连航空": {
-        "Boeing": ["B737-800"]
+    {
+        "airline": "河北航空",
+        "passengerAircraftCount": 27,
+        "models": { "Boeing": ["B737-800", "B737 MAX 8"], "Embraer": ["E190"] }
     },
-    "福州航空": {
-        "Boeing": ["B737-800", "B737 MAX 8"]
+    {
+        "airline": "九元航空",
+        "passengerAircraftCount": 27,
+        "models": { "Boeing": ["B737-800", "B737 MAX 8"] }
     },
-    "乌鲁木齐航空": {
-        "Boeing": ["B737-800", "B737 MAX 8"]
+    {
+        "airline": "瑞丽航空",
+        "passengerAircraftCount": 25,
+        "models": { "Boeing": ["B737-700", "B737-800", "B737 MAX 8"] }
     },
-    "北部湾航空": {
-        "Airbus": ["A320-200", "A320neo"],
-        "Embraer": ["E190"]
+    {
+        "airline": "北部湾航空",
+        "passengerAircraftCount": 24,
+        "models": { "Airbus": ["A320-200", "A320neo"], "Embraer": ["E190"] }
     },
-    "多彩贵州航空": {
-        "Airbus": ["A320neo"],
-        "Embraer": ["E190"]
+    {
+        "airline": "澳门航空",
+        "passengerAircraftCount": 22,
+        "models": { "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"] }
     },
-    "桂林航空": {
-        "Airbus": ["A319-100", "A320-200"]
+    {
+        "airline": "东海航空",
+        "passengerAircraftCount": 21,
+        "models": { "Boeing": ["B737-800", "B737 MAX 8"] }
     },
-    "江西航空": {
-        "Boeing": ["B737-800"]
+    {
+        "airline": "奥凯航空",
+        "passengerAircraftCount": 21,
+        "models": { "Boeing": ["B737-800", "B737-900ER", "B737 MAX 8"] }
     },
-    "重庆航空": {
-        "Airbus": ["A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "多彩贵州航空",
+        "passengerAircraftCount": 20,
+        "models": { "Airbus": ["A320neo"], "Embraer": ["E190"] }
     },
-    "西藏航空": {
-        "Airbus": ["A319-100", "A319neo", "A320-200", "A320neo", "A330-200"]
+    {
+        "airline": "江西航空",
+        "passengerAircraftCount": 18,
+        "models": { "Boeing": ["B737-800"] }
     },
-    "湖南航空": {
-        "Airbus": ["A319-100", "A320-200", "A320neo", "A321neo"]
+    {
+        "airline": "乌鲁木齐航空",
+        "passengerAircraftCount": 17,
+        "models": { "Boeing": ["B737-800", "B737 MAX 8"] }
     },
-    "长安航空": {
-        "Boeing": ["B737-800"]
+    {
+        "airline": "福州航空",
+        "passengerAircraftCount": 16,
+        "models": { "Boeing": ["B737-800", "B737 MAX 8"] }
     },
-    "金鹏航空": {
-        "Boeing": ["B737-800", "B787-9"]
+    {
+        "airline": "湖南航空",
+        "passengerAircraftCount": 16,
+        "models": { "Airbus": ["A319-100", "A320-200", "A320neo", "A321neo"] }
     },
-    "龙江航空": {
-        "Airbus": ["A320-200"]
+    {
+        "airline": "长安航空",
+        "passengerAircraftCount": 13,
+        "models": { "Boeing": ["B737-800"] }
     },
-    "天骄航空": {
-        "COMAC": ["C909"]
+    {
+        "airline": "金鹏航空",
+        "passengerAircraftCount": 10,
+        "models": { "Boeing": ["B737-800", "B787-9"] }
     },
-    "一二三航空": {
-        "COMAC": ["C909"]
+    {
+        "airline": "桂林航空",
+        "passengerAircraftCount": 10,
+        "models": { "Airbus": ["A319-100", "A320-200"] }
     },
-    "国泰航空": {
-        "Airbus": ["A321neo", "A330-300", "A350-900", "A350-1000"],
-        "Boeing": ["B777-300", "B777-300ER"]
+    {
+        "airline": "龙江航空",
+        "passengerAircraftCount": 9,
+        "models": { "Airbus": ["A320-200"] }
     },
-    "香港快运航空": {
-        "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"]
+    {
+        "airline": "大湾区航空",
+        "passengerAircraftCount": 8,
+        "models": { "Boeing": ["B737-800", "B737 MAX 9"] }
     },
-    "香港航空": {
-        "Airbus": ["A320-200", "A321-200", "A330-300"]
+    {
+        "airline": "天骄航空",
+        "passengerAircraftCount": 7,
+        "models": { "COMAC": ["C909"] }
     },
-    "大湾区航空": {
-        "Boeing": ["B737-800", "B737 MAX 9"]
+    {
+        "airline": "大新华航空",
+        "passengerAircraftCount": 3,
+        "models": { "Boeing": ["B737-800"] }
     },
-    "澳门航空": {
-        "Airbus": ["A320-200", "A320neo", "A321-200", "A321neo"]
-    },
-    "香港华民航空": {
-        "Airbus": ["A330-200F", "A330-300P2F"]
+    {
+        "airline": "香港华民航空",
+        "passengerAircraftCount": 0,
+        "models": { "Airbus": ["A330-200F", "A330-300P2F"] }
     }
-}
+]

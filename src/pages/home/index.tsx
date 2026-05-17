@@ -15,12 +15,21 @@ interface ManufacturerFleet {
 
 interface AirlineFleet {
   airlineName: string;
+  passengerAircraftCount: number;
   manufacturerCount: number;
   aircraftCount: number;
   manufacturers: ManufacturerFleet[];
 }
 
-type AirplaneData = Record<string, Record<string, string[]>>;
+interface AirplaneDataItem {
+  airline: string;
+  passengerAircraftCount: number;
+  models: Record<string, string[]>;
+}
+
+type AirplaneData = AirplaneDataItem[];
+
+type PassengerAircraftSortOrder = 'passenger-desc' | 'passenger-asc';
 
 // 公开静态数据路径，由 public/data/airplan.json 提供航司与机型映射。
 const AIRPLANE_DATA_URL = '/data/airplan.json';
@@ -28,12 +37,20 @@ const AIRPLANE_DATA_URL = '/data/airplan.json';
 // 制造商筛选的默认值，表示不过滤制造商。
 const ALL_MANUFACTURERS_VALUE = 'all';
 
+// 默认按照公开数据中的客机数量从多到少排序，优先展示规模更大的航司。
+const DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER: PassengerAircraftSortOrder = 'passenger-desc';
+
+// 判断下拉值是否为受支持的客机数量排序方式，避免直接信任 DOM 字符串。
+const isPassengerAircraftSortOrder = (value: string): value is PassengerAircraftSortOrder => {
+  return value === 'passenger-desc' || value === 'passenger-asc';
+};
+
 // 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。
 const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
-  return Object.entries(airplaneData)
-    .map(([airlineName, manufacturers]: [string, Record<string, string[]>]): AirlineFleet => {
+  return airplaneData
+    .map((airplaneDataItem: AirplaneDataItem): AirlineFleet => {
       // 保留制造商层级，便于渲染时按航司和制造商分组展示机型。
-      const formattedManufacturers: ManufacturerFleet[] = Object.entries(manufacturers).map(
+      const formattedManufacturers: ManufacturerFleet[] = Object.entries(airplaneDataItem.models).map(
         ([manufacturerName, models]: [string, string[]]): ManufacturerFleet => ({
           manufacturerName,
           models,
@@ -46,7 +63,8 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
       );
 
       return {
-        airlineName,
+        airlineName: airplaneDataItem.airline,
+        passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
         manufacturerCount: formattedManufacturers.length,
         aircraftCount,
         manufacturers: formattedManufacturers,
@@ -55,6 +73,25 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
     .sort((firstAirline: AirlineFleet, secondAirline: AirlineFleet): number =>
       firstAirline.airlineName.localeCompare(secondAirline.airlineName, 'zh-Hans-CN'),
     );
+};
+
+// 按客机数量对航司机队排序，数量相同时用航司名称保证排序稳定。
+const sortAirlineFleetsByPassengerAircraftCount = (
+  airlineFleets: AirlineFleet[],
+  sortOrder: PassengerAircraftSortOrder,
+): AirlineFleet[] => {
+  return [...airlineFleets].sort((firstAirline: AirlineFleet, secondAirline: AirlineFleet): number => {
+    const passengerAircraftDifference =
+      sortOrder === 'passenger-desc'
+        ? secondAirline.passengerAircraftCount - firstAirline.passengerAircraftCount
+        : firstAirline.passengerAircraftCount - secondAirline.passengerAircraftCount;
+
+    if (passengerAircraftDifference !== 0) {
+      return passengerAircraftDifference;
+    }
+
+    return firstAirline.airlineName.localeCompare(secondAirline.airlineName, 'zh-Hans-CN');
+  });
 };
 
 // 从全部航司机队中提取唯一制造商选项，供下拉筛选使用。
@@ -77,10 +114,11 @@ const filterAirlineFleets = (
   airlineFleets: AirlineFleet[],
   airlineSearchTerm: string,
   selectedManufacturer: string,
+  sortOrder: PassengerAircraftSortOrder,
 ): AirlineFleet[] => {
   const normalizedSearchTerm = airlineSearchTerm.trim().toLocaleLowerCase();
 
-  return airlineFleets
+  const filteredAirlineFleets = airlineFleets
     .filter((airlineFleet: AirlineFleet): boolean =>
       airlineFleet.airlineName.toLocaleLowerCase().includes(normalizedSearchTerm),
     )
@@ -106,6 +144,8 @@ const filterAirlineFleets = (
       };
     })
     .filter((airlineFleet: AirlineFleet): boolean => airlineFleet.manufacturers.length > 0);
+
+  return sortAirlineFleetsByPassengerAircraftCount(filteredAirlineFleets, sortOrder);
 };
 
 // 首页负责加载公开机型数据，并提供航司搜索、制造商筛选和分组展示。
@@ -115,6 +155,9 @@ const HomePage = (): ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>('');
   const [selectedManufacturer, setSelectedManufacturer] = useState<string>(ALL_MANUFACTURERS_VALUE);
+  const [selectedSortOrder, setSelectedSortOrder] = useState<PassengerAircraftSortOrder>(
+    DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
+  );
   const fleetResultsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect((): (() => void) => {
@@ -162,8 +205,8 @@ const HomePage = (): ReactElement => {
 
   // 根据当前搜索词和制造商筛选项生成页面实际展示的数据。
   const filteredAirlineFleets = useMemo((): AirlineFleet[] => {
-    return filterAirlineFleets(airlineFleets, airlineSearchTerm, selectedManufacturer);
-  }, [airlineFleets, airlineSearchTerm, selectedManufacturer]);
+    return filterAirlineFleets(airlineFleets, airlineSearchTerm, selectedManufacturer, selectedSortOrder);
+  }, [airlineFleets, airlineSearchTerm, selectedManufacturer, selectedSortOrder]);
 
   // 统计过滤结果中的机型数量，用于让概览数字与当前列表保持一致。
   const totalAircraftCount = useMemo((): number => {
@@ -173,8 +216,17 @@ const HomePage = (): ReactElement => {
     );
   }, [filteredAirlineFleets]);
 
+  // 统计过滤结果中的客机数量，用于呈现新数据结构提供的机队规模。
+  const totalPassengerAircraftCount = useMemo((): number => {
+    return filteredAirlineFleets.reduce(
+      (total: number, airlineFleet: AirlineFleet): number =>
+        total + airlineFleet.passengerAircraftCount,
+      0,
+    );
+  }, [filteredAirlineFleets]);
+
   // 将筛选条件组合成视图 key，让结果区在数据切换时执行进入过渡。
-  const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}`;
+  const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}-${selectedSortOrder}`;
 
   useEffect((): void => {
     // 筛选条件变化后重置结果区滚动位置，避免新结果停留在旧列表的中段。
@@ -191,6 +243,13 @@ const HomePage = (): ReactElement => {
   // 制造商下拉切换后立即更新过滤条件。
   const handleManufacturerChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setSelectedManufacturer(event.target.value);
+  };
+
+  // 排序下拉切换后按客机数量重新组织当前过滤结果。
+  const handleSortOrderChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    if (isPassengerAircraftSortOrder(event.target.value)) {
+      setSelectedSortOrder(event.target.value);
+    }
   };
 
   return (
@@ -219,6 +278,7 @@ const HomePage = (): ReactElement => {
         <div className="fleet-toolbar" aria-label="机型数据筛选与概览">
           <div className="fleet-summary" aria-label="机型数据概览">
             <span>{filteredAirlineFleets.length} 家航司</span>
+            <span>{totalPassengerAircraftCount} 架客机</span>
             <span>{totalAircraftCount} 个机型记录</span>
           </div>
 
@@ -244,6 +304,14 @@ const HomePage = (): ReactElement => {
                 ))}
               </select>
             </label>
+
+            <label className="fleet-filter">
+              <span>客机数量排序</span>
+              <select value={selectedSortOrder} onChange={handleSortOrderChange}>
+                <option value="passenger-desc">由多到少</option>
+                <option value="passenger-asc">由少到多</option>
+              </select>
+            </label>
           </div>
         </div>
       ) : null}
@@ -265,7 +333,8 @@ const HomePage = (): ReactElement => {
                   <header className="airline-entry__header">
                     <h2>{airlineFleet.airlineName}</h2>
                     <span>
-                      {airlineFleet.manufacturerCount} 个制造商 / {airlineFleet.aircraftCount} 个机型
+                      {airlineFleet.passengerAircraftCount} 架客机 / {airlineFleet.manufacturerCount}{' '}
+                      个制造商 / {airlineFleet.aircraftCount} 个机型
                     </span>
                   </header>
 

@@ -536,3 +536,58 @@
 
 - `taskRecord.md`
   - 追加本次数据来源说明任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+按照 `public/data/airplan.json` 的新数组数据结构调整首页字段读取与展示逻辑。
+
+## 完成过程
+
+1. 对照 `public/data/airplan.json` 的新结构，确认数据项字段为 `airline`、`passengerAircraftCount` 和 `models`。
+2. 调整 `src/pages/home/index.tsx` 中的 TypeScript 数据类型，将旧对象映射结构改为数组数据项结构。
+3. 更新 `createAirlineFleets`，从新字段中读取航司名称、客机数量和制造商机型分组。
+4. 新增过滤结果中的客机数量统计，让顶部概览展示新数据结构提供的机队规模。
+5. 更新航司条目元信息，展示每家航司的客机数量、制造商数量和机型数量。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 调整 `AirplaneData` 类型与数据转换逻辑以匹配新 JSON 结构。
+  - 新增客机数量统计与航司条目展示字段。
+
+- `taskRecord.md`
+  - 追加本次数据结构适配任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+在首页筛选条件中新增客机数量排序，排序依据为 `public/data/airplan.json` 中的 `passengerAircraftCount` 字段。
+
+## 完成过程
+
+1. 读取当前首页数据结构适配后的 `src/pages/home/index.tsx`，确认航司数据已包含 `passengerAircraftCount`。
+2. 新增 `PassengerAircraftSortOrder` 类型、默认排序常量和排序值判断函数。
+3. 新增按客机数量排序的辅助函数，数量相同时使用航司名称保持稳定排序。
+4. 将排序方式接入 `filterAirlineFleets`，让搜索、制造商筛选和客机数量排序共同生成展示结果。
+5. 在筛选工具栏新增“客机数量排序”下拉控件，支持由多到少和由少到多。
+6. 将排序条件加入 `filteredViewKey`，确保排序变化后结果区动画和滚动重置正常触发。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增客机数量排序状态、排序控件和排序逻辑。
+  - 按 `passengerAircraftCount` 对筛选结果进行升序或降序排列。
+
+- `taskRecord.md`
+  - 追加本次筛选排序功能任务记录。
