@@ -200,6 +200,16 @@ const HomePage = (): ReactElement => {
       <p>
         按航司浏览当前机队中的制造商与机型，后续可继续扩展到机型详情和个人乘坐状态。
       </p>
+      <p className="data-source-note">
+        数据来源：
+        <a
+          href="https://www.caac.gov.cn/XXGK/XXGK/TJSJ/202604/P020260417665629030648.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          中国民用航空局公开统计资料
+        </a>
+      </p>
 
       {isLoading ? <p className="data-state data-state--loading">正在载入机型数据...</p> : null}
 

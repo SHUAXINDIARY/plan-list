@@ -508,3 +508,31 @@
 
 - `taskRecord.md`
   - 追加本次筛选滚动重置任务记录。
+
+---
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+在首页新增数据来源说明，并提供指向中国民用航空局公开 PDF 资料的新窗口链接。
+
+## 完成过程
+
+1. 读取 `src/pages/home/index.css`，确认首页局部样式维护位置。
+2. 在 `src/pages/home/index.tsx` 的页面简介下方新增数据来源小字说明。
+3. 为数据来源链接添加 `target="_blank"` 和 `rel="noreferrer"`，确保点击后新窗口打开并减少外链风险。
+4. 在 `src/pages/home/index.css` 中新增数据来源说明样式，保持低调元信息层级，并补充链接 hover / focus 状态。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增数据来源说明和外部 PDF 链接。
+
+- `src/pages/home/index.css`
+  - 新增数据来源说明与链接交互样式。
+
+- `taskRecord.md`
+  - 追加本次数据来源说明任务记录。

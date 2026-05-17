@@ -25,6 +25,30 @@
   width: min(100%, 72rem);
 }
 
+.aircraft-wiki .data-source-note {
+  margin-top: 0.65rem;
+  color: #8ea7b5;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.data-source-note a {
+  color: #9ed8f2;
+  text-decoration: underline;
+  text-decoration-color: rgba(158, 216, 242, 0.42);
+  text-underline-offset: 0.18em;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    text-decoration-color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.data-source-note a:hover,
+.data-source-note a:focus-visible {
+  color: #dff4ff;
+  outline: none;
+  text-decoration-color: rgba(223, 244, 255, 0.82);
+}
+
 .data-state {
   padding: 1rem 1.1rem;
   margin-top: 1.5rem;
