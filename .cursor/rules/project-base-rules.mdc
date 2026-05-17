@@ -29,6 +29,8 @@ alwaysApply: true
   - `src/index.tsx`：应用入口与渲染挂载逻辑。
   - `src/env.d.ts`：环境类型声明。
   - `AGENTS.md`：项目级 Agent 说明与常用命令。
+  - `PRODUCT.md`：项目产品定位、目标用户、品牌语气、反参考和设计原则。
+  - `DESIGN.md`：项目 UI 基调、视觉系统、颜色、字体、组件和设计禁忌。
   - `README.md`：项目说明文档。
   - `package.json`：包信息、脚本和依赖声明。
   - `pnpm-lock.yaml`：pnpm 锁文件。
