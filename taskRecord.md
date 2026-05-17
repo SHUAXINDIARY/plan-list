@@ -1502,3 +1502,59 @@
 
 - `taskRecord.md`
   - 追加本次地图通用组件拆分任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+修正通用地图组件中国旗光标的位置，让机场点 hover 时国旗稳定悬浮在鼠标上方。
+
+## 完成过程
+
+1. 读取 `src/components/map/index.tsx` 和 `src/components/map/index.css`，确认国旗光标当前渲染在地图容器内部。
+2. 将国旗光标通过 `createPortal` 渲染到 `document.body`，避免受地图容器定位和裁剪影响。
+3. 调整国旗光标 CSS transform，以鼠标屏幕坐标为锚点居中悬浮在鼠标上方。
+4. 使用 `ReadLints` 与构建命令检查本次修改文件。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 将国旗光标改为 portal 渲染，保持基于鼠标 `clientX/clientY` 的固定定位。
+
+- `src/components/map/index.css`
+  - 调整国旗光标偏移方式，使其显示在鼠标正上方。
+
+- `taskRecord.md`
+  - 追加本次国旗光标位置修正任务记录。
+
+---
+
+# 任务记录
+
+## 日期
+
+2026-05-17
+
+## 任务目的
+
+微调地图机场点 hover 时的国旗光标位置，让国旗直接出现在鼠标 hover 位置。
+
+## 完成过程
+
+1. 根据交互反馈确认国旗不再需要悬浮在鼠标上方，而是应与鼠标 hover 坐标对齐。
+2. 调整 `src/components/map/index.css` 中国旗光标的 `transform`，以鼠标坐标为中心显示。
+3. 使用 `ReadLints` 与构建命令检查本次修改文件。
+
+## 修改具体文件
+
+- `src/components/map/index.css`
+  - 将国旗光标偏移从上方悬浮调整为鼠标 hover 位置居中显示。
+
+- `taskRecord.md`
+  - 追加本次国旗光标 hover 位置微调任务记录。

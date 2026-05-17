@@ -128,7 +128,7 @@
   line-height: 1;
   pointer-events: none;
   text-shadow: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
-  transform: translate3d(0.32rem, -0.16rem, 0);
+  transform: translate3d(-50%, -50%, 0);
 }
 
 .annotated-world-map__legend {

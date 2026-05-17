@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CSSProperties, MouseEvent, ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import WorldMap from './map.svg?react';
 import './index.css';
 
@@ -121,69 +122,74 @@ const AnnotatedWorldMap = ({
   };
 
   return (
-    <div className="annotated-world-map" role="group" aria-label={ariaLabel}>
-      <WorldMap
-        className="annotated-world-map__base"
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-        focusable="false"
-      />
-      <svg
-        className="annotated-world-map__overlay"
-        viewBox={`0 0 ${WORLD_MAP_WIDTH} ${WORLD_MAP_HEIGHT}`}
-        preserveAspectRatio="xMidYMid meet"
-        aria-label={hasRoutes ? `${markerLegendLabel}和${routeLegendLabel}` : markerLegendLabel}
-        focusable="false"
-      >
-        {routes.map((route: WorldMapRoute): ReactElement => (
-          <path
-            className="annotated-world-map__route"
-            d={getMapRoutePath(route)}
-            key={route.name}
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-        {markers.map((marker: WorldMapMarker): ReactElement => {
-          const markerPosition = projectMapCoordinate(marker.coordinate);
-          const markerAccessibleLabel = marker.description ? `${marker.name}，${marker.description}` : marker.name;
-
-          return (
-            <circle
-              className="annotated-world-map__marker"
-              key={marker.id}
-              cx={markerPosition.left}
-              cy={markerPosition.top}
-              r="5.6"
+    <>
+      <div className="annotated-world-map" role="group" aria-label={ariaLabel}>
+        <WorldMap
+          className="annotated-world-map__base"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+          focusable="false"
+        />
+        <svg
+          className="annotated-world-map__overlay"
+          viewBox={`0 0 ${WORLD_MAP_WIDTH} ${WORLD_MAP_HEIGHT}`}
+          preserveAspectRatio="xMidYMid meet"
+          aria-label={hasRoutes ? `${markerLegendLabel}和${routeLegendLabel}` : markerLegendLabel}
+          focusable="false"
+        >
+          {routes.map((route: WorldMapRoute): ReactElement => (
+            <path
+              className="annotated-world-map__route"
+              d={getMapRoutePath(route)}
+              key={route.name}
               vectorEffect="non-scaling-stroke"
-              tabIndex={0}
-              role="img"
-              aria-label={markerAccessibleLabel}
-              onMouseEnter={(event: MouseEvent<SVGCircleElement>): void => showMarkerTooltip(event, marker)}
-              onMouseMove={updateFlagCursorPosition}
-              onMouseLeave={hideMarkerTooltip}
-              onFocus={(): void => showMarkerTooltipFromFocus(marker)}
-              onBlur={hideMarkerTooltip}
-            >
-              <title>{markerAccessibleLabel}</title>
-            </circle>
-          );
-        })}
-      </svg>
-      {hoveredMarker && hoveredMarkerTooltipStyle ? (
-        <div className="annotated-world-map__tooltip" style={hoveredMarkerTooltipStyle} role="tooltip">
-          {hoveredMarker.name}
+            />
+          ))}
+          {markers.map((marker: WorldMapMarker): ReactElement => {
+            const markerPosition = projectMapCoordinate(marker.coordinate);
+            const markerAccessibleLabel = marker.description ? `${marker.name}，${marker.description}` : marker.name;
+
+            return (
+              <circle
+                className="annotated-world-map__marker"
+                key={marker.id}
+                cx={markerPosition.left}
+                cy={markerPosition.top}
+                r="5.6"
+                vectorEffect="non-scaling-stroke"
+                tabIndex={0}
+                role="img"
+                aria-label={markerAccessibleLabel}
+                onMouseEnter={(event: MouseEvent<SVGCircleElement>): void => showMarkerTooltip(event, marker)}
+                onMouseMove={updateFlagCursorPosition}
+                onMouseLeave={hideMarkerTooltip}
+                onFocus={(): void => showMarkerTooltipFromFocus(marker)}
+                onBlur={hideMarkerTooltip}
+              >
+                <title>{markerAccessibleLabel}</title>
+              </circle>
+            );
+          })}
+        </svg>
+        {hoveredMarker && hoveredMarkerTooltipStyle ? (
+          <div className="annotated-world-map__tooltip" style={hoveredMarkerTooltipStyle} role="tooltip">
+            {hoveredMarker.name}
+          </div>
+        ) : null}
+        <div className="annotated-world-map__legend" aria-hidden="true">
+          <span>{markerLegendLabel}</span>
+          {hasRoutes ? <span>{routeLegendLabel}</span> : null}
         </div>
-      ) : null}
-      {hoveredMarker && flagCursorStyle ? (
-        <div className="annotated-world-map__flag-cursor" style={flagCursorStyle} aria-hidden="true">
-          {hoveredMarker.flag ?? DEFAULT_MARKER_FLAG}
-        </div>
-      ) : null}
-      <div className="annotated-world-map__legend" aria-hidden="true">
-        <span>{markerLegendLabel}</span>
-        {hasRoutes ? <span>{routeLegendLabel}</span> : null}
       </div>
-    </div>
+      {hoveredMarker && flagCursorStyle
+        ? createPortal(
+            <div className="annotated-world-map__flag-cursor" style={flagCursorStyle} aria-hidden="true">
+              {hoveredMarker.flag ?? DEFAULT_MARKER_FLAG}
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
   );
 };
 
