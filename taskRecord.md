@@ -1991,3 +1991,64 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+应用顶部主导航增加「补充资料」入口，新开标签页跳转飞书资料征集表单。
+
+## 完成过程
+
+1. 在 `App.tsx` 增加 `CONTRIBUTION_FORM_URL` 常量及「补充资料」外链（`target="_blank"`、`rel="noreferrer"`），置于「联系作者」之前。
+2. 在 `App.css` 增加 `app-nav__link--cta` 样式以略突出的胶囊按钮视觉。
+3. 运行 `pnpm run build`；`ReadLints` 检查改动文件。
+
+## 修改具体文件
+
+- `src/App.tsx`
+  - 飞书表单 URL 常量与导航链接。
+
+- `src/App.css`
+  - `.app-nav__link--cta` 样式。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+将首页机型数据概览统计与「补充资料」外链排在同一行展示。
+
+## 完成过程
+
+1. 抽取飞书表单地址至 `src/constants/external-links.ts`，供 `App.tsx` 与首页共用。
+2. 在 `fleet-summary` 内增加 `fleet-summary__stats` 包裹三项统计胶囊，右侧放置与主导航样式一致的「补充资料」链接。
+3. 调整 `index.css`：`fleet-summary` 使用横向 `flex` 与 `space-between`，窄屏时自动折行。
+4. 运行 `pnpm run build`；`ReadLints` 检查改动文件。
+
+## 修改具体文件
+
+- `src/constants/external-links.ts`
+  - 新增：`CONTRIBUTION_FORM_URL` 常量与文件说明注释。
+
+- `src/App.tsx`
+  - 从共享常量导入表单 URL，移除本地重复字符串。
+
+- `src/pages/home/index.tsx`
+  - 导入 `CONTRIBUTION_FORM_URL`；概览区结构与「补充资料」链接。
+
+- `src/pages/home/index.css`
+  - `.fleet-summary`、`.fleet-summary__stats`、`.fleet-summary__cta`；统计胶囊选择器改为 `.fleet-summary__stats span`。
+
+- `taskRecord.md`
+  - 追加本次任务记录。

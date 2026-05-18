@@ -80,10 +80,23 @@
 .fleet-summary {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
-  gap: 0.55rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid rgba(164, 188, 201, 0.1);
+}
+
+.fleet-summary__stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.fleet-summary__cta {
+  flex-shrink: 0;
 }
 
 .fleet-filters {
@@ -98,7 +111,7 @@
   scrollbar-gutter: stable;
 }
 
-.fleet-summary span {
+.fleet-summary__stats span {
   display: inline-flex;
   align-items: center;
   min-height: 2.15rem;

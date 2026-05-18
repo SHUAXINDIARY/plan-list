@@ -105,6 +105,19 @@ a {
     border-color: rgba(100, 181, 216, 0.82);
 }
 
+/* 主导航内突出次要行动：跳转外部资料补充表单。 */
+.app-nav__link--cta {
+    color: #f4f8fb;
+    background-color: rgba(124, 200, 235, 0.14);
+    border-color: rgba(124, 200, 235, 0.38);
+}
+
+.app-nav__link--cta:hover,
+.app-nav__link--cta:focus-visible {
+    background-color: rgba(124, 200, 235, 0.24);
+    border-color: rgba(124, 200, 235, 0.58);
+}
+
 .app-main {
     flex: 1;
     display: grid;

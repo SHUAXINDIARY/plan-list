@@ -1,5 +1,6 @@
 import { Suspense, lazy, type ReactElement } from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { CONTRIBUTION_FORM_URL } from "./constants/external-links";
 import "./App.css";
 
 interface NavigationItem {
@@ -51,6 +52,14 @@ const App = (): ReactElement => {
                                 </NavLink>
                             ),
                         )}
+                        <a
+                            className="app-nav__link app-nav__link--cta"
+                            href={CONTRIBUTION_FORM_URL}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            补充资料
+                        </a>
                         <a
                             className="app-nav__link"
                             href={AUTHOR_PROFILE_URL}

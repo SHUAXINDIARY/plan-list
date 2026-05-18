@@ -15,6 +15,7 @@ import type {
   ManufacturerFleet,
   PassengerAircraftSortOrder,
 } from './type';
+import { CONTRIBUTION_FORM_URL } from '../../constants/external-links';
 import {
   AIRLINE_REFERENCE_SOURCES,
   AIRPLANE_DATA_URL,
@@ -338,9 +339,19 @@ const HomePage = (): ReactElement => {
       {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
         <div className="fleet-toolbar" aria-label="机型数据筛选与概览">
           <div className="fleet-summary" aria-label="机型数据概览">
-            <span>{filteredAirlineFleets.length} 家航司</span>
-            <span>{totalPassengerAircraftCount} 架客机</span>
-            <span>{totalAircraftCount} 个机型记录</span>
+            <div className="fleet-summary__stats">
+              <span>{filteredAirlineFleets.length} 家航司</span>
+              <span>{totalPassengerAircraftCount} 架客机</span>
+              <span>{totalAircraftCount} 个机型记录</span>
+            </div>
+            <a
+              className="fleet-summary__cta app-nav__link app-nav__link--cta"
+              href={CONTRIBUTION_FORM_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              补充资料
+            </a>
           </div>
 
           <div className="fleet-filters">
