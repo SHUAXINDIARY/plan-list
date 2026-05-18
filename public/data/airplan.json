@@ -646,6 +646,20 @@
         }
     },
     {
+        "airline": "阿联酋航空",
+        "passengerAircraftCount": 264,
+        "models": {
+            "Airbus": {
+                "A350-900": "https://commons.wikimedia.org/wiki/File:Emirates_A350-900_Bologna_Airport_-_2025.jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:Airbus_A380-800_-_Emirates_(A6-EDF).JPG"
+            },
+            "Boeing": {
+                "B777-200LR": "https://commons.wikimedia.org/wiki/File:A6-EWJ_Emirates_2009_Boeing_777-21H-LR_(cn_35590-775)_(6940419226).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Emirates_Boeing_777-300ER_A6-EBN_(28319395444).jpg"
+            }
+        }
+    },
+    {
         "airline": "亚洲航空",
         "passengerAircraftCount": 224,
         "models": {
@@ -653,6 +667,21 @@
                 "A320-200": "https://commons.wikimedia.org/wiki/File:9M-AGT_(AirAsia).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:Air_Asia_Airbus_A320-200N_9M-NEO.jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:AirAsia_airplane_seen_at_the_Langkawi_International_Airport_09.jpg"
+            }
+        }
+    },
+    {
+        "airline": "新加坡航空",
+        "passengerAircraftCount": 148,
+        "models": {
+            "Airbus": {
+                "A350-900": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Airbus_A350_9V-SMK_Singapore_2025_(01).jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:9V-SKU-_Singapore_Airlines_Airbus_A380-800.jpg"
+            },
+            "Boeing": {
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Singapore_Airlines_Boeing_737_MAX_8_9V-MBR_@_WSSS_2025-11-19.jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_777-300ER_(9V-SNB)_at_Frankfurt_Airport_(6).jpg",
+                "B787-10": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_787_9V-SCD_Singapore_2025_(02).jpg"
             }
         }
     },
