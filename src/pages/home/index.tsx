@@ -18,6 +18,7 @@ import type {
 import {
   AIRLINE_REFERENCE_SOURCES,
   AIRPLANE_DATA_URL,
+  ALL_AIRCRAFT_MODELS_VALUE,
   ALL_MANUFACTURERS_VALUE,
   DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
 } from './constant';
@@ -111,11 +112,38 @@ const getManufacturerOptions = (airlineFleets: AirlineFleet[]): string[] => {
   );
 };
 
-// 同时根据航司搜索词和制造商筛选项过滤数据，并重新计算过滤后的统计数量。
+// 从航司机队中收集具体型号选项；已选制造商时仅保留该制造商下出现过的型号，便于缩小下拉范围。
+const getAircraftModelOptions = (
+  airlineFleets: AirlineFleet[],
+  selectedManufacturer: string,
+): string[] => {
+  const modelNames = new Set<string>();
+
+  airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
+    airlineFleet.manufacturers.forEach((manufacturer: ManufacturerFleet): void => {
+      if (
+        selectedManufacturer !== ALL_MANUFACTURERS_VALUE &&
+        manufacturer.manufacturerName !== selectedManufacturer
+      ) {
+        return;
+      }
+      manufacturer.models.forEach((modelEntry: AircraftModelEntry): void => {
+        modelNames.add(modelEntry.name);
+      });
+    });
+  });
+
+  return Array.from(modelNames).sort((firstName: string, secondName: string): number =>
+    firstName.localeCompare(secondName, 'zh-Hans-CN'),
+  );
+};
+
+// 同时根据航司搜索词、制造商与具体型号筛选项过滤数据，并重新计算过滤后的统计数量。
 const filterAirlineFleets = (
   airlineFleets: AirlineFleet[],
   airlineSearchTerm: string,
   selectedManufacturer: string,
+  selectedAircraftModel: string,
   sortOrder: PassengerAircraftSortOrder,
 ): AirlineFleet[] => {
   const normalizedSearchTerm = airlineSearchTerm.trim().toLocaleLowerCase();
@@ -126,13 +154,28 @@ const filterAirlineFleets = (
     )
     .map((airlineFleet: AirlineFleet): AirlineFleet => {
       // 制造商筛选只影响每家航司内部的制造商分组，不破坏原始数据。
-      const filteredManufacturers =
+      const manufacturerFiltered =
         selectedManufacturer === ALL_MANUFACTURERS_VALUE
           ? airlineFleet.manufacturers
           : airlineFleet.manufacturers.filter(
               (manufacturer: ManufacturerFleet): boolean =>
                 manufacturer.manufacturerName === selectedManufacturer,
             );
+      // 具体型号筛选在制造商筛选结果上继续收窄，仅保留名称匹配的机型条目。
+      const filteredManufacturers =
+        selectedAircraftModel === ALL_AIRCRAFT_MODELS_VALUE
+          ? manufacturerFiltered
+          : manufacturerFiltered
+              .map(
+                (manufacturer: ManufacturerFleet): ManufacturerFleet => ({
+                  ...manufacturer,
+                  models: manufacturer.models.filter(
+                    (modelEntry: AircraftModelEntry): boolean =>
+                      modelEntry.name === selectedAircraftModel,
+                  ),
+                }),
+              )
+              .filter((manufacturer: ManufacturerFleet): boolean => manufacturer.models.length > 0);
       const aircraftCount = filteredManufacturers.reduce(
         (total: number, manufacturer: ManufacturerFleet): number => total + manufacturer.models.length,
         0,
@@ -150,13 +193,14 @@ const filterAirlineFleets = (
   return sortAirlineFleetsByPassengerAircraftCount(filteredAirlineFleets, sortOrder);
 };
 
-// 首页负责加载公开机型数据，并提供航司搜索、制造商筛选和分组展示。
+// 首页负责加载公开机型数据，并提供航司搜索、制造商与具体型号筛选和分组展示。
 const HomePage = (): ReactElement => {
   const [airlineFleets, setAirlineFleets] = useState<AirlineFleet[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>('');
   const [selectedManufacturer, setSelectedManufacturer] = useState<string>(ALL_MANUFACTURERS_VALUE);
+  const [selectedAircraftModel, setSelectedAircraftModel] = useState<string>(ALL_AIRCRAFT_MODELS_VALUE);
   const [selectedSortOrder, setSelectedSortOrder] = useState<PassengerAircraftSortOrder>(
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
   );
@@ -205,10 +249,30 @@ const HomePage = (): ReactElement => {
     return getManufacturerOptions(airlineFleets);
   }, [airlineFleets]);
 
-  // 根据当前搜索词和制造商筛选项生成页面实际展示的数据。
+  // 具体型号选项随制造商筛选变化，避免列出与当前制造商无关的型号。
+  const aircraftModelOptions = useMemo((): string[] => {
+    return getAircraftModelOptions(airlineFleets, selectedManufacturer);
+  }, [airlineFleets, selectedManufacturer]);
+
+  useEffect((): void => {
+    if (selectedAircraftModel === ALL_AIRCRAFT_MODELS_VALUE) {
+      return;
+    }
+    if (!aircraftModelOptions.includes(selectedAircraftModel)) {
+      setSelectedAircraftModel(ALL_AIRCRAFT_MODELS_VALUE);
+    }
+  }, [aircraftModelOptions, selectedAircraftModel]);
+
+  // 根据当前 search、制造商与型号筛选项生成页面实际展示的数据。
   const filteredAirlineFleets = useMemo((): AirlineFleet[] => {
-    return filterAirlineFleets(airlineFleets, airlineSearchTerm, selectedManufacturer, selectedSortOrder);
-  }, [airlineFleets, airlineSearchTerm, selectedManufacturer, selectedSortOrder]);
+    return filterAirlineFleets(
+      airlineFleets,
+      airlineSearchTerm,
+      selectedManufacturer,
+      selectedAircraftModel,
+      selectedSortOrder,
+    );
+  }, [airlineFleets, airlineSearchTerm, selectedManufacturer, selectedAircraftModel, selectedSortOrder]);
 
   // 统计过滤结果中的机型数量，用于让概览数字与当前列表保持一致。
   const totalAircraftCount = useMemo((): number => {
@@ -228,7 +292,7 @@ const HomePage = (): ReactElement => {
   }, [filteredAirlineFleets]);
 
   // 将筛选条件组合成视图 key，让结果区在数据切换时执行进入过渡。
-  const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}-${selectedSortOrder}`;
+  const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}-${selectedAircraftModel}-${selectedSortOrder}`;
 
   useEffect((): void => {
     // 筛选条件变化后重置结果区滚动位置，避免新结果停留在旧列表的中段。
@@ -245,6 +309,11 @@ const HomePage = (): ReactElement => {
   // 制造商下拉切换后立即更新过滤条件。
   const handleManufacturerChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setSelectedManufacturer(event.target.value);
+  };
+
+  // 具体型号下拉切换后按机型名称收窄列表与芯片展示。
+  const handleAircraftModelChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setSelectedAircraftModel(event.target.value);
   };
 
   // 排序下拉切换后按客机数量重新组织当前过滤结果。
@@ -292,6 +361,18 @@ const HomePage = (): ReactElement => {
                 {manufacturerOptions.map((manufacturerName: string): ReactElement => (
                   <option key={manufacturerName} value={manufacturerName}>
                     {manufacturerName}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="fleet-filter">
+              <span>具体型号</span>
+              <select value={selectedAircraftModel} onChange={handleAircraftModelChange}>
+                <option value={ALL_AIRCRAFT_MODELS_VALUE}>全部型号</option>
+                {aircraftModelOptions.map((modelName: string): ReactElement => (
+                  <option key={modelName} value={modelName}>
+                    {modelName}
                   </option>
                 ))}
               </select>

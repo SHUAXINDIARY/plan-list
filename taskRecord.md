@@ -1798,3 +1798,81 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+首页机型资料筛选区新增「具体型号」下拉，按所选机型过滤航司列表及卡片内展示的机型芯片。
+
+## 完成过程
+
+1. 在 `constant.ts` 增加 `ALL_AIRCRAFT_MODELS_VALUE`，与制造商「全部」语义对齐。
+2. 实现 `getAircraftModelOptions`：在全部制造商时收集全局唯一型号；选定制造商时仅收集该制造商下出现过的型号。
+3. 扩展 `filterAirlineFleets`：在制造商筛选后对 `ManufacturerFleet.models` 按机型名等值过滤，并同步 `aircraftCount` / `manufacturerCount`。
+4. 增加 `selectedAircraftModel` 状态、`handleAircraftModelChange`、工具栏 `<select>`；制造商变化导致当前型号不在选项内时重置为「全部型号」。
+5. 更新 `filteredViewKey` 含型号条件；运行 `pnpm run build` 与 `ReadLints`。
+
+## 修改具体文件
+
+- `src/pages/home/constant.ts`
+  - 新增 `ALL_AIRCRAFT_MODELS_VALUE`。
+
+- `src/pages/home/index.tsx`
+  - `getAircraftModelOptions`、`filterAirlineFleets` 型号参数、型号选项 memo、`useEffect` 校正非法选中、工具栏「具体型号」下拉。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+首页筛选工具栏与概览统计在同一行横向排布，避免筛选条件换行。
+
+## 完成过程
+
+1. 将 `.fleet-toolbar` 改为横向 `flex` + `nowrap`，窄屏 `overflow-x: auto` 横向滚动。
+2. `.fleet-summary` 与 `.fleet-filters` 同行；概览区右侧竖线分隔，去掉原先底部分割。
+3. `.fleet-filters` 改为横向 `flex` + `nowrap`；为第一项航司搜索设置更大 `flex` 与 `max-width`。
+4. 移除原 900px / 640px 下将筛选项改为多列栅格的规则；`ReadLints` 检查 CSS。
+
+## 修改具体文件
+
+- `src/pages/home/index.css`
+  - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters`、`.fleet-filter` 布局与响应式调整。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+航司机型工具栏改为两行：首行仅概览统计，次行筛选条件仍单行横向展示（必要时横向滚动）。
+
+## 完成过程
+
+1. `.fleet-toolbar` 改为纵向 `flex-direction: column`，去掉整栏横向滚动。
+2. `.fleet-summary` 恢复底部分割线，去掉与筛选区同列时的右侧竖线。
+3. `.fleet-filters` 保留 `flex-wrap: nowrap`，将 `overflow-x: auto` 仅放在第二行；`ReadLints` 检查 `index.css`。
+
+## 修改具体文件
+
+- `src/pages/home/index.css`
+  - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters` 两行布局调整。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
