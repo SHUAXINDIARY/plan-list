@@ -10,6 +10,7 @@ alwaysApply: true
 - 项目使用 JavaScript / TypeScript、Rsbuild 与现代前端工程体系。
 - 优先遵循仓库已有目录结构、命名方式、组件模式和工具链配置。
 - 修改 Rsbuild、Rspack、构建脚本、资源处理或性能相关内容时，先参考项目内 `rsbuild-best-practices` skill。
+- 技术栈与体验相关对外文档（人工查阅或与 Agent 对齐语境时使用）：设计与界面原则参阅 [Impeccable Style](https://impeccable.style/)（与项目内 `impeccable` skill 搭配）；React API、Hooks 与规则参阅 [React Reference](https://react.dev/reference/react)；Rsbuild 能力、定位与入门参阅 [Rsbuild 指南](https://rsbuild.rs/guide/start/)。
 
 ## 当前目录
 

@@ -1945,3 +1945,26 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+在项目基础规则「技术栈」中补充 Impeccable Style、React 与 Rsbuild 官方文档链接。
+
+## 完成过程
+
+1. 在 `.cursor/rules/project-base-rules.mdc` 的「技术栈」下新增一条，汇总三个外链及使用场景说明。
+2. `ReadLints` 检查规则文件。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 增加技术栈参考文档链接。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
