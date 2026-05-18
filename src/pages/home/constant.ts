@@ -19,6 +19,10 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     urls: ['https://www.caac.gov.cn/XXGK/XXGK/TJSJ/202604/P020260417665629030648.pdf'],
   },
   {
+    airlineName: '航机影像与开放媒体',
+    urls: ['https://www.jetphotos.com/', 'https://commons.wikimedia.org/'],
+  },
+  {
     airlineName: '瑞安航空',
     urls: [
       'https://www.sec.gov/Archives/edgar/data/1038683/000155837025007966/tmb-20250331x20f.htm',

@@ -1968,3 +1968,26 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+首页参考来源列表补充 JetPhotos 与 Wikimedia Commons 两个通用数据/媒体出处。
+
+## 完成过程
+
+1. 在 `AIRLINE_REFERENCE_SOURCES` 中新增「航机影像与开放媒体」分组，收录 `https://www.jetphotos.com/` 与 `https://commons.wikimedia.org/`。
+2. `ReadLints` 检查 `constant.ts` 与 `taskRecord.md`。
+
+## 修改具体文件
+
+- `src/pages/home/constant.ts`
+  - 新增参考来源项。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
