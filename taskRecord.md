@@ -1876,3 +1876,26 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+在项目基础规则中补充 TypeScript 类型与成员的注释要求。
+
+## 完成过程
+
+1. 在 `.cursor/rules/project-base-rules.mdc` 的「TypeScript 规范」中新增两条：类型定义须有类型级注释；`interface` / `class` 内每个属性与方法须有独立注释。
+2. 对规则文件执行 `ReadLints`。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 补充类型与成员注释约定。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
