@@ -52,14 +52,14 @@ const App = (): ReactElement => {
                                 </NavLink>
                             ),
                         )}
-                        <a
+                        {/* <a
                             className="app-nav__link app-nav__link--cta"
                             href={CONTRIBUTION_FORM_URL}
                             target="_blank"
                             rel="noreferrer"
                         >
                             补充资料
-                        </a>
+                        </a> */}
                         <a
                             className="app-nav__link"
                             href={AUTHOR_PROFILE_URL}
