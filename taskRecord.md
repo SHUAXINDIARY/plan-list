@@ -1899,3 +1899,49 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+延续 TypeScript 注释规范，补充具名 type、Pick/Omit、匿名对象、enum 成员与泛型参数的注释约定。
+
+## 完成过程
+
+1. 在 `.cursor/rules/project-base-rules.mdc`「TypeScript 规范」中新增五条，覆盖对象字面量与交叉 type、从已注释类型的工具类型省略重复注释、匿名结构边界、enum 成员与泛型形参。
+2. `ReadLints` 检查规则文件。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 补充上述 edge case 约定。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-18
+
+## 任务目的
+
+在「函数与状态」中补充函数体内部步骤、调用依赖与控制流注释要求。
+
+## 完成过程
+
+1. 在 `.cursor/rules/project-base-rules.mdc` 的「函数与状态」下新增两条：多步骤/异步边界的分段注释（依赖、调用链、外部读写）；非线性控制流与契约的意图说明。
+2. `ReadLints` 检查规则文件。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`
+  - 补充函数内部逻辑注释约定。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
