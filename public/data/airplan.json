@@ -4,13 +4,12 @@
         "passengerAircraftCount": 672,
         "models": {
             "Airbus": {
-                "A319": "",
                 "A319-100": "https://commons.wikimedia.org/wiki/File:China_Eastern_A319-100_(4175978528).jpg",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:B-1836@PEK_(20190630170006).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-301Z@PEK_(20190520165602).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:Harbin_Taiping_International_Airport_-_B-8559,_Airbus_A321_of_China_Eastern.jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-32KC@PEK_(20250215090855).jpg",
-                "A321NX": "",
+                "A321NX": "https://www.jetphotos.com/photo/11535125",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Eastern_Airlines)_B-6121_LHR_(5992973564).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:B-6095@PEK_(20201203152732).jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-308E@PEK_(20190623175611).jpg"
@@ -18,13 +17,13 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-5095_-_China_Eastern_Airlines_-_Boeing_737-79P(WL)_-_SHA_(12611513805).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1981@PEK_(20180108153148).jpg",
-                "B737-8": "",
+                "B737-8": "https://www.jetphotos.com/photo/10523088",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1385@PKX_(20250620180002).jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-7883@PEK_(20180407095358).jpg",
-                "B787-9": ""
+                "B787-9": "https://commons.wikimedia.org/wiki/File:B-209N@PEK_(20190630165218).jpg"
             },
             "COMAC": {
-                "C909": "",
+                "C909": "https://www.jetphotos.com/photo/11761452",
                 "C919": "https://commons.wikimedia.org/wiki/File:B-919A@PEK_(20221226151724).jpg"
             }
         }
