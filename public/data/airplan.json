@@ -68,14 +68,13 @@
         "passengerAircraftCount": 529,
         "models": {
             "Airbus": {
-                "A319": "",
-                "A319-100": "https://commons.wikimedia.org/wiki/File:Landing_at_Lhasa_airport.jpg",
+                "A319-100": "https://commons.wikimedia.org/wiki/File:B-6237_Airbus_A319_Air_China_(7595826032).jpg",
                 "A319neo": "https://commons.wikimedia.org/wiki/File:B-32NJ@PEK_(20260331165233).jpg",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:CCA_A320_B-1873_25sep14_LFBO-1.jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-309F@PEK_(20190726182906).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:B-6382_in_Incheon.jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-301E@PEK_(20181227134738).jpg",
-                "A321NX": "",
+                "A321NX": "https://commons.wikimedia.org/wiki/File:B-305F@PEK_(20191014144613).jpg",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:B-6093@PEK_(20200301141100).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:Beijing_Air_China_B-6512_1240264.jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-322Y@PEK_(20210603145509).jpg"
@@ -83,16 +82,15 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-5214_-_Air_China_-_Boeing_737-79L(WL)_-_Brown_Peony_Livery_-_CKG_(14920474757).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1529@PEK_(20180820143945).jpg",
-                "B737-8": "",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:Boeing_737_MAX_8_%E2%80%98B-1225%E2%80%99_Air_China_(47456821542).jpg",
                 "B747-400": "https://commons.wikimedia.org/wiki/File:B-2445@PEK_(20191211155026).jpg",
-                "B747-8": "",
+                "B747-8": "https://commons.wikimedia.org/wiki/File:Air_China_Boeing_747-8_port_profile_(33086724170).jpg",
                 "B747-8I": "https://commons.wikimedia.org/wiki/File:Air_China_Boeing_747-8_B-2487_IAD_MD1.jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-2039@PEK_(20190723090407).jpg",
                 "B787-9": "https://commons.wikimedia.org/wiki/File:B-7877@PEK_(20160526110356).jpg"
             },
             "COMAC": {
-                "C909": "",
+                "C909": "https://commons.wikimedia.org/wiki/File:20251130_Comac_C909_of_Air_China_(B-656J)_taxiing_at_CGO.jpg",
                 "C919": "https://commons.wikimedia.org/wiki/File:B-919X@PEK_(20240829112235).jpg",
                 "C919-700ER": ""
             }
