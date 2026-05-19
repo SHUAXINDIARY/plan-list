@@ -38,6 +38,8 @@ a {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    /* 避免窄屏出现横向滚动条时背景裁切异常；核心布局仍由各面板 width/min-width 约束。 */
+    overflow-x: clip;
     background:
         radial-gradient(
             circle at top left,
@@ -52,7 +54,10 @@ a {
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 1.25rem clamp(1rem, 4vw, 3rem);
+    padding-top: max(1.25rem, env(safe-area-inset-top, 0px));
+    padding-bottom: 1.25rem;
+    padding-left: max(clamp(1rem, 4vw, 3rem), env(safe-area-inset-left, 0px));
+    padding-right: max(clamp(1rem, 4vw, 3rem), env(safe-area-inset-right, 0px));
     border-bottom: 1px solid rgba(164, 188, 201, 0.16);
 }
 
@@ -79,6 +84,9 @@ a {
 }
 
 .app-nav__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.6rem 0.9rem;
     color: #b5c6d1;
     border: 1px solid rgba(164, 188, 201, 0.16);
@@ -122,11 +130,19 @@ a {
     flex: 1;
     display: grid;
     place-items: center;
-    /* padding: clamp(1rem, 5vw, 4rem); */
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding-top: clamp(0.75rem, 3vw, 2rem);
+    padding-bottom: max(clamp(0.75rem, 3vw, 2rem), env(safe-area-inset-bottom, 0px));
+    padding-left: max(clamp(0.75rem, 4vw, 3rem), env(safe-area-inset-left, 0px));
+    padding-right: max(clamp(0.75rem, 4vw, 3rem), env(safe-area-inset-right, 0px));
 }
 
 .page-panel {
     width: min(100%, 48rem);
+    max-width: 100%;
+    box-sizing: border-box;
     padding: clamp(1.5rem, 5vw, 3rem);
     background-color: rgba(10, 21, 33, 0.78);
     border: 1px solid rgba(164, 188, 201, 0.16);
@@ -182,7 +198,22 @@ a {
 
     .app-nav__link {
         flex: 1;
+        min-height: 2.75rem;
+        padding: 0.65rem 1rem;
         text-align: center;
+    }
+
+    .app-main {
+        align-self: stretch;
+    }
+
+    .page-panel h1 {
+        font-size: clamp(1.85rem, 9vw, 2.75rem);
+        line-height: 1.08;
+    }
+
+    .page-panel p:not(.page-eyebrow) {
+        font-size: 1rem;
     }
 }
 

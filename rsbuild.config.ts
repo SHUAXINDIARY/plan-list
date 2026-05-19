@@ -14,7 +14,8 @@ export default defineConfig({
                 "Plane List 是面向航空爱好者的航司机型资料库与个人乘坐记录工具。",
             keywords: "航司机型,飞机型号,航空资料库,乘坐记录,Plane List",
             "theme-color": "#07111d",
-            viewport: "width=device-width, initial-scale=1.0",
+            viewport:
+                "width=device-width, initial-scale=1.0, viewport-fit=cover",
         },
     },
     plugins: [pluginReact(), pluginSvgr(), pluginAircraftPhotoPreviews()],

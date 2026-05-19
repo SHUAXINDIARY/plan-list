@@ -2052,3 +2052,46 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-19
+
+## 任务目的
+
+针对移动端与小屏设备优化全局壳层、机型资料库首页、个人档案页与世界地图组件的布局与安全区，提升触控可用性与可读性。
+
+## 完成过程
+
+1. 在 `rsbuild.config.ts` 的 HTML viewport 中增加 `viewport-fit=cover`，配合 CSS `env(safe-area-inset-*)` 处理刘海屏与底部指示条。
+2. 调整 `App.css`：`app-shell` 横向裁剪溢出、`app-main` 与页头使用安全区内边距；导航链接采用约 44px 最小触控高度；窄屏下收敛标题与正文字号。
+3. `home/index.css`：≤640px 时筛选区改为纵向满宽堆叠、表单控件 `16px` 字号规避 iOS 输入缩放，概览区纵向排列并放大触控目标；参考来源列表单列。
+4. `personal/index.css`：概览胶囊单列铺满；照片栅格调小最小列宽；机场列表单列；全屏预览关闭按钮与安全区内边距。
+5. `components/map/index.css`：窄屏缩小地图内框、图例避开底部安全区、标记描边加粗，提示文案允许换行。
+6. 清理 `App.tsx` 中未使用的表单常量导入与注释导航片段。
+7. 运行 `pnpm run build`；`ReadLints` 检查改动文件。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`
+  - viewport 增加 `viewport-fit=cover`。
+
+- `src/App.tsx`
+  - 移除未使用的 `CONTRIBUTION_FORM_URL` 导入与注释掉的「补充资料」导航。
+
+- `src/App.css`
+  - 壳层横向裁剪、`app-header` / `app-main` 安全区与内边距；`page-panel` `max-width`；导航链接 `inline-flex`；640px 以下触控高度与标题字号。
+
+- `src/pages/home/index.css`
+  - 640px 以下工具条、概览、筛选、列表与参考来源栅格的移动端规则。
+
+- `src/pages/personal/index.css`
+  - 640px 以下概览、图库、机场列表与照片预览的移动端规则。
+
+- `src/components/map/index.css`
+  - 640px 以下地图装饰边距、图例安全区、标记与提示样式。
+
+- `taskRecord.md`
+  - 追加本次任务记录。

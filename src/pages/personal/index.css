@@ -358,10 +358,33 @@
 }
 
 @media (max-width: 640px) {
+  .personal-summary {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .personal-summary span {
+    box-sizing: border-box;
+    justify-content: center;
+    width: 100%;
+    min-height: 2.75rem;
+    touch-action: manipulation;
+  }
+
   .personal-section__header,
   .airport-country__header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .aircraft-photo-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.75rem), 1fr));
+    gap: 0.65rem;
+  }
+
+  .airport-country-list {
+    grid-template-columns: 1fr;
   }
 
   .aircraft-photo-preview {
@@ -369,11 +392,18 @@
   }
 
   .aircraft-photo-preview__header {
-    top: 0.75rem;
-    right: 0.75rem;
-    left: 0.75rem;
+    top: max(0.75rem, env(safe-area-inset-top, 0px));
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .aircraft-photo-preview__header button {
+    align-self: stretch;
+    justify-content: center;
+    min-height: 2.75rem;
+    touch-action: manipulation;
   }
 
   .aircraft-photo-preview img {
