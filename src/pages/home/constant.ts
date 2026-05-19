@@ -25,6 +25,12 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
         ],
     },
     {
+        airlineName: "sky team virtual",
+        urls: [
+            "https://skyteamvirtual.org/",
+        ],
+    },
+    {
         airlineName: "民航休息小站",
         urls: ["http://www.xmyzl.com/index.php"],
     },
