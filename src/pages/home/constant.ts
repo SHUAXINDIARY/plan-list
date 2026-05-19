@@ -37,6 +37,7 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
         urls: [
             "https://www.sec.gov/Archives/edgar/data/1038683/000155837025007966/tmb-20250331x20f.htm",
             "https://corporate.ryanair.com/about-us/our-fleet/",
+            "https://corporate.ryanair.com/news/ryanair-2025-26-pat-rises-40-to-e2-26bn-pre-except-traffic-grows-4-to-208m-despite-boeing-delays/",
         ],
     },
     {
