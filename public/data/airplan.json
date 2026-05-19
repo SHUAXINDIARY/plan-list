@@ -35,12 +35,12 @@
         "models": {
             "Airbus": {
                 "A319-100": "https://commons.wikimedia.org/wiki/File:China_Southern_A319-100(B-6042)_(3503952387).jpg",
-                "A319neo": "",
+                "A319neo": "https://commons.wikimedia.org/wiki/File:Hamburg-Finkenwerder_Airport_China_Southern_Airlines_Airbus_A319-153N_B-32LM_(DSC09591).jpg",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines,_A320-200,_B-9912_(19165804378).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-301A@CAN_(20180929155809).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Airbus_A321-211_B-6622_(8781568860).jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-8368@CAN_(20180929171152).jpg",
-                "A321NX": "",
+                "A321NX": "https://commons.wikimedia.org/wiki/File:B-30E1@PKX_(20210617180110).jpg",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Southern_AL)_B-6528_LHR_(7658950806).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:China_Southern_A330_(7188423513).jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-309W@PEK_(20191029135845).jpg"
@@ -48,10 +48,9 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-2698_-_China_Southern_Airlines_-_Boeing_737-76N_-_CKG_(9575135789).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1241@PEK_(20200305134300).jpg",
-                "B737-8": "",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1122@URC_(20230922123436).jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Boeing_777-300ER_(B-2009)_at_LAX_(22517456988).jpg",
-                "B777-F": "",
+                "B777-F": "https://oneworldvirtual.org/fleet/models/china-southern-boeing-777-f1b",
                 "B787-8": "https://commons.wikimedia.org/wiki/File:Boeing_787-8_B-2725_China_Southern_(10497279394).jpg",
                 "B787-9": "https://commons.wikimedia.org/wiki/File:B-1243_31032019LHR_(47537921911).jpg"
             },

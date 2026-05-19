@@ -29,6 +29,10 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
         urls: ["http://www.xmyzl.com/index.php"],
     },
     {
+        airlineName: "oneworld virtual",
+        urls: ["https://oneworldvirtual.org/"],
+    },
+    {
         airlineName: "航机影像与开放媒体",
         urls: ["https://www.jetphotos.com/", "https://commons.wikimedia.org/"],
     },
