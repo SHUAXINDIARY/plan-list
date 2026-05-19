@@ -1,14 +1,16 @@
 [
     {
         "airline": "中国东方航空",
-        "passengerAircraftCount": 662,
+        "passengerAircraftCount": 672,
         "models": {
             "Airbus": {
+                "A319": "",
                 "A319-100": "https://commons.wikimedia.org/wiki/File:China_Eastern_A319-100_(4175978528).jpg",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:B-1836@PEK_(20190630170006).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-301Z@PEK_(20190520165602).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:Harbin_Taiping_International_Airport_-_B-8559,_Airbus_A321_of_China_Eastern.jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-32KC@PEK_(20250215090855).jpg",
+                "A321NX": "",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Eastern_Airlines)_B-6121_LHR_(5992973564).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:B-6095@PEK_(20201203152732).jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-308E@PEK_(20190623175611).jpg"
@@ -16,24 +18,29 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-5095_-_China_Eastern_Airlines_-_Boeing_737-79P(WL)_-_SHA_(12611513805).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1981@PEK_(20180108153148).jpg",
+                "B737-8": "",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1385@PKX_(20250620180002).jpg",
-                "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-7883@PEK_(20180407095358).jpg"
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-7883@PEK_(20180407095358).jpg",
+                "B787-9": ""
             },
             "COMAC": {
+                "C909": "",
                 "C919": "https://commons.wikimedia.org/wiki/File:B-919A@PEK_(20221226151724).jpg"
             }
         }
     },
     {
         "airline": "中国南方航空",
-        "passengerAircraftCount": 662,
+        "passengerAircraftCount": 685,
         "models": {
             "Airbus": {
                 "A319-100": "https://commons.wikimedia.org/wiki/File:China_Southern_A319-100(B-6042)_(3503952387).jpg",
+                "A319neo": "",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines,_A320-200,_B-9912_(19165804378).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-301A@CAN_(20180929155809).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Airbus_A321-211_B-6622_(8781568860).jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-8368@CAN_(20180929171152).jpg",
+                "A321NX": "",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:Airbus_A330-200_(China_Southern_AL)_B-6528_LHR_(7658950806).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:China_Southern_A330_(7188423513).jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-309W@PEK_(20191029135845).jpg"
@@ -41,14 +48,17 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-2698_-_China_Southern_Airlines_-_Boeing_737-76N_-_CKG_(9575135789).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1241@PEK_(20200305134300).jpg",
+                "B737-8": "",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1122@URC_(20230922123436).jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Boeing_777-300ER_(B-2009)_at_LAX_(22517456988).jpg",
+                "B777-F": "",
                 "B787-8": "https://commons.wikimedia.org/wiki/File:Boeing_787-8_B-2725_China_Southern_(10497279394).jpg",
                 "B787-9": "https://commons.wikimedia.org/wiki/File:B-1243_31032019LHR_(47537921911).jpg"
             },
             "COMAC": {
                 "C909": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Comac_Arj21-700_B651W_at_CAN.jpg",
-                "C919": "https://commons.wikimedia.org/wiki/File:China_Southern_Airline_C919_at_CAN.jpg"
+                "C919": "https://commons.wikimedia.org/wiki/File:China_Southern_Airline_C919_at_CAN.jpg",
+                "C919-700": ""
             },
             "Embraer": {
                 "E190": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_ERJ-190LR_B-3205_(8757127004).jpg"
@@ -57,15 +67,17 @@
     },
     {
         "airline": "中国国际航空",
-        "passengerAircraftCount": 528,
+        "passengerAircraftCount": 529,
         "models": {
             "Airbus": {
+                "A319": "",
                 "A319-100": "https://commons.wikimedia.org/wiki/File:Landing_at_Lhasa_airport.jpg",
                 "A319neo": "https://commons.wikimedia.org/wiki/File:B-32NJ@PEK_(20260331165233).jpg",
                 "A320-200": "https://commons.wikimedia.org/wiki/File:CCA_A320_B-1873_25sep14_LFBO-1.jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-309F@PEK_(20190726182906).jpg",
                 "A321-200": "https://commons.wikimedia.org/wiki/File:B-6382_in_Incheon.jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:B-301E@PEK_(20181227134738).jpg",
+                "A321NX": "",
                 "A330-200": "https://commons.wikimedia.org/wiki/File:B-6093@PEK_(20200301141100).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:Beijing_Air_China_B-6512_1240264.jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-322Y@PEK_(20210603145509).jpg"
@@ -73,14 +85,18 @@
             "Boeing": {
                 "B737-700": "https://commons.wikimedia.org/wiki/File:B-5214_-_Air_China_-_Boeing_737-79L(WL)_-_Brown_Peony_Livery_-_CKG_(14920474757).jpg",
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1529@PEK_(20180820143945).jpg",
+                "B737-8": "",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:Boeing_737_MAX_8_%E2%80%98B-1225%E2%80%99_Air_China_(47456821542).jpg",
                 "B747-400": "https://commons.wikimedia.org/wiki/File:B-2445@PEK_(20191211155026).jpg",
+                "B747-8": "",
                 "B747-8I": "https://commons.wikimedia.org/wiki/File:Air_China_Boeing_747-8_B-2487_IAD_MD1.jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-2039@PEK_(20190723090407).jpg",
                 "B787-9": "https://commons.wikimedia.org/wiki/File:B-7877@PEK_(20160526110356).jpg"
             },
             "COMAC": {
-                "C919": "https://commons.wikimedia.org/wiki/File:B-919X@PEK_(20240829112235).jpg"
+                "C909": "",
+                "C919": "https://commons.wikimedia.org/wiki/File:B-919X@PEK_(20240829112235).jpg",
+                "C919-700ER": ""
             }
         }
     },

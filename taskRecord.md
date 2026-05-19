@@ -2095,3 +2095,99 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-19
+
+## 任务目的
+
+为中国东方航空机型映射补充用户给定清单中尚未出现的机型键，参考链接暂缺时使用空字符串占位。
+
+## 完成过程
+
+1. 对照用户提供机型列表与 `airplan.json` 中东航现有键名。
+2. 新增 `A319`、`A321NX`、`B737-8`、`B787-9`、`C909` 五条记录，`value` 设为 `""`；其余机型已在数据中保留既有 Wikimedia 链接。
+3. `python3 -m json.tool` 校验 JSON；`ReadLints` 检查 `taskRecord.md`。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - 中国东方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-19
+
+## 任务目的
+
+为中国南方航空机型映射补充用户给定清单中尚未出现的机型键，参考链接暂缺时使用空字符串占位。
+
+## 完成过程
+
+1. 对照用户提供机型列表与 `airplan.json` 中南航现有键名。
+2. 新增 `A319neo`、`A321NX`、`B737-8`、`B777-F`、`C919-700` 五条记录，`value` 设为 `""`；清单其余机型均已存在并保持原有 Wikimedia 链接。
+3. `python3 -m json.tool` 校验 JSON；`ReadLints` 检查 `taskRecord.md`。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - 中国南方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-19
+
+## 任务目的
+
+为中国国际航空机型映射补充用户给定清单中尚未出现的机型键，参考链接暂缺时使用空字符串占位。
+
+## 完成过程
+
+1. 对照用户提供机型列表与 `airplan.json` 中国航现有键名。
+2. 新增 `B737-8`、`C909` 两条记录，`value` 设为 `""`；清单其余机型均已存在并保持原有 Wikimedia 链接。
+3. `python3 -m json.tool` 校验 JSON；`ReadLints` 检查 `taskRecord.md`。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - 中国国际航空：Boeing / COMAC 下补充上述机型与空链接占位。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-19
+
+## 任务目的
+
+为中国国际航空机型映射再次对照用户给定清单，补全尚未出现的机型键，参考链接缺失处使用空字符串占位。
+
+## 完成过程
+
+1. 对照用户提供机型列表与 `airplan.json` 中国航 Airbus / Boeing / COMAC 既有键名。
+2. 新增 `A319`、`A321NX`、`B747-8`、`C919-700ER` 四条记录，`value` 设为 `""`；清单中其余机型均已存在，`B737 MAX 8` 等原有键保持不变。
+3. `python3 -m json.tool` 校验 JSON；`ReadLints` 检查 `taskRecord.md`、`public/data/airplan.json`。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - 中国国际航空：Airbus 增加 `A319`、`A321NX`；Boeing 增加 `B747-8`；COMAC 增加 `C919-700ER`，均为空链接占位。
+
+- `taskRecord.md`
+  - 追加本次任务记录。
