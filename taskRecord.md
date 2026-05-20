@@ -2785,3 +2785,23 @@
 - `src/components/map/type.d.ts`、`canvasMap.ts`、`index.tsx`、`index.css`：双轨绘制与图例。
 - `src/pages/personal/constant.ts`：机场 marker `scope`。
 - `taskRecord.md`：追加记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+补充 `docs/map.md`，说明 `src/components/map` 组件 SDK 的用法与数据约定。
+
+## 完成过程
+
+1. 梳理 `AnnotatedWorldMap` Props、类型、交互与主题 token。
+2. 写入快速开始、个人页数据准备范例、`canvasMap` 底层导出说明。
+
+## 修改具体文件
+
+- `docs/map.md`
+  - 新增世界地图组件使用文档。
+- `taskRecord.md`
+  - 追加本次任务记录。
