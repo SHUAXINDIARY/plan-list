@@ -68,6 +68,7 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
 
       return {
         airlineName: airplaneDataItem.airline,
+        airlineEnglishName: airplaneDataItem.airlineEnglishName,
         passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
         manufacturerCount: formattedManufacturers.length,
         aircraftCount,
@@ -416,8 +417,11 @@ const HomePage = (): ReactElement => {
                 <article className="airline-entry" key={airlineFleet.airlineName}>
                   <header className="airline-entry__header">
                     <div className="airline-entry__title">
-                      <h2>{airlineFleet.airlineName}</h2>
-                      <span>
+                      <div className="airline-entry__heading">
+                        <h2>{airlineFleet.airlineName}</h2>
+                        <span className="airline-entry__english-name">{airlineFleet.airlineEnglishName}</span>
+                      </div>
+                      <span className="airline-entry__meta">
                         {airlineFleet.passengerAircraftCount} 架客机 / {airlineFleet.manufacturerCount}{' '}
                         个制造商 / {airlineFleet.aircraftCount} 个机型
                       </span>

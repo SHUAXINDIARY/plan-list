@@ -262,13 +262,29 @@
   min-width: 0;
 }
 
+.airline-entry__heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
 .airline-entry__header h2 {
   margin: 0;
   color: #f4f8fb;
   font-size: 1.2rem;
 }
 
-.airline-entry__header span {
+.airline-entry__english-name {
+  color: #9cb5c2;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.airline-entry__meta {
   color: #8ea7b5;
   font-size: 0.86rem;
   white-space: nowrap;
@@ -515,7 +531,8 @@
     flex-direction: column;
   }
 
-  .airline-entry__header span {
+  .airline-entry__english-name,
+  .airline-entry__meta {
     white-space: normal;
   }
 

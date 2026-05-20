@@ -1744,6 +1744,35 @@
 
 ## 任务目的
 
+在首页航司列表标题处展示航司英文名，并保持与中文名称同行、小字号辅助呈现。
+
+## 完成过程
+
+1. 阅读首页渲染逻辑、样式和航司机队类型定义，确认标题数据来自 `createAirlineFleets` 转换后的 `AirlineFleet`。
+2. 在 `AirlineFleet` 中补充 `airlineEnglishName` 字段，并在数据转换时从 `AirplaneDataItem.airlineEnglishName` 传入。
+3. 在航司标题 DOM 中新增英文名展示节点，放在中文名后方同行显示。
+4. 新增标题行样式，让中英文名称基线对齐；英文名使用更小字号与更弱颜色，小屏允许换行避免溢出。
+5. 使用 `ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 航司机队转换保留英文名字段，并在航司标题中文名后展示英文名。
+- `src/pages/home/index.css`
+  - 新增 `.airline-entry__heading`、`.airline-entry__english-name`、`.airline-entry__meta` 样式，控制同行标题与辅助字号。
+- `src/pages/home/type.d.ts`
+  - 为 `AirlineFleet` 增加 `airlineEnglishName` 字段说明。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
 为 `public/data/airplan.json` 中每个航司记录新增英文名字段，便于后续英文展示、搜索或数据匹配。
 
 ## 完成过程

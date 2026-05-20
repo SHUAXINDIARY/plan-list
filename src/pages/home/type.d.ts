@@ -11,6 +11,8 @@ export interface ManufacturerFleet {
 
 export interface AirlineFleet {
   airlineName: string;
+  /** 航司英文名称，用于在中文名称旁展示辅助识别信息。 */
+  airlineEnglishName: string;
   passengerAircraftCount: number;
   manufacturerCount: number;
   aircraftCount: number;
