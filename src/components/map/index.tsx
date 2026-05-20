@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties, KeyboardEvent, PointerEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
-import worldMapImageUrl from './map.svg?url';
+import worldMapDarkImageUrl from './map.svg?url';
+import worldMapLightImageUrl from './map-light.svg?url';
+import { normalizeThemePreference } from '../../utils/themePreference';
+import type { ThemePreference } from '../../utils/themePreference';
 import {
   MAP_ZOOM_STEP,
   MAX_MAP_SCALE,
@@ -60,6 +63,13 @@ interface MapLayerCacheKey {
 const DEFAULT_MARKER_FLAG = '🌐';
 
 /**
+ * 按当前文档主题返回对应配色的世界地图 SVG 资源 URL。
+ */
+const resolveWorldMapImageUrl = (theme: ThemePreference): string => {
+  return theme === 'light' ? worldMapLightImageUrl : worldMapDarkImageUrl;
+};
+
+/**
  * 将 SVG 底图加载为可在 Canvas 上绘制的位图资源。
  */
 const loadWorldMapImage = (imageUrl: string): Promise<HTMLImageElement> => {
@@ -97,6 +107,9 @@ const AnnotatedWorldMap = ({
     height: 0,
   });
   const [isWorldMapImageReady, setIsWorldMapImageReady] = useState<boolean>(false);
+  const [worldMapTheme, setWorldMapTheme] = useState<ThemePreference>(() =>
+    normalizeThemePreference(document.documentElement.getAttribute('data-theme')),
+  );
   const dragStateRef = useRef<MapDragState | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -153,13 +166,18 @@ const AnnotatedWorldMap = ({
 
   viewportTransformRef.current = viewportTransform;
 
-  // 首屏加载 SVG 位图，供 Canvas 超采样绘制复用。
+  // 按主题加载对应配色的 SVG 位图，供 Canvas 超采样绘制复用。
   useEffect((): (() => void) | undefined => {
     let isCancelled = false;
 
+    setIsWorldMapImageReady(false);
+    worldMapImageRef.current = null;
+    mapLayerCacheRef.current = null;
+    mapLayerCacheKeyRef.current = null;
+
     const loadImage = async (): Promise<void> => {
       try {
-        const image = await loadWorldMapImage(worldMapImageUrl);
+        const image = await loadWorldMapImage(resolveWorldMapImageUrl(worldMapTheme));
 
         if (isCancelled) {
           return;
@@ -189,7 +207,7 @@ const AnnotatedWorldMap = ({
     return (): void => {
       isCancelled = true;
     };
-  }, []);
+  }, [worldMapTheme]);
 
   // 监听容器尺寸变化，保证画布 CSS 尺寸与 ResizeObserver 同步。
   useEffect((): (() => void) | undefined => {
@@ -218,12 +236,13 @@ const AnnotatedWorldMap = ({
     };
   }, []);
 
-  // 主题切换会改变 CSS 变量，监听 data-theme 以触发重绘。
+  // 主题切换会改变 CSS 变量与底图 SVG，监听 data-theme 以换图并重绘。
   useEffect((): (() => void) | undefined => {
     const themeObserver = new MutationObserver((): void => {
       mapCanvasPaletteRef.current = null;
-      mapLayerCacheRef.current = null;
-      mapLayerCacheKeyRef.current = null;
+      setWorldMapTheme(
+        normalizeThemePreference(document.documentElement.getAttribute('data-theme')),
+      );
       setViewportTransform((current: ViewportTransform): ViewportTransform => ({ ...current }));
     });
     themeObserver.observe(document.documentElement, {

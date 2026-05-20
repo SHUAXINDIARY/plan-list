@@ -2582,3 +2582,52 @@
   - 拖拽快路径、缓存失效键、画布尺寸复用与拖拽起止流程调整。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+结合 Impeccable 与 Night Flight / Daylight Archive 设计体系，优化世界地图 SVG 配色并与应用双主题对齐。
+
+## 完成过程
+
+1. 将原暖色教科书式大陆填色改为 restrained 冷青档案色：OKLCH 深海渐变、低彩度洲际区分、描边与经纬网弱化，强调色仅保留 hover 与图框信号。
+2. 新增 `map-light.svg`（日间冷灰蓝海 + 略亮陆地），默认 `map.svg` 为夜航深海色。
+3. 地图组件按 `data-theme` 切换底图 URL 并在主题变更时重新解码位图与清空离屏缓存。
+
+## 修改具体文件
+
+- `src/components/map/map.svg`
+  - Night Flight Archive 配色与无障碍文案更新。
+- `src/components/map/map-light.svg`
+  - Daylight Archive 亮色主题变体（新建）。
+- `src/components/map/index.tsx`
+  - 双主题 SVG 加载与 `worldMapTheme` 状态联动。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+加强世界地图各大洲边界可读性，同时保持 Night Flight / Daylight Archive 克制冷青体系。
+
+## 完成过程
+
+1. 提升 `.outline` 海岸线：略增亮度与 chroma、对齐 Navigation Signal 色相（hue 225–230），线宽 1.12px，透明度提高。
+2. 弱化 `.country` 国内国界描边，形成「洲界 > 国界」层级，避免线条争抢。
+3. 略拉大各洲填色 chroma 差，并减轻陆地阴影，避免描边被 drop-shadow 糊住。
+4. 深色 `map.svg` 与亮色 `map-light.svg` 同步调整。
+
+## 修改具体文件
+
+- `src/components/map/map.svg`
+  - 洲界、国界与填色对比度调整。
+- `src/components/map/map-light.svg`
+  - 同上（亮色主题参数）。
+- `taskRecord.md`
+  - 追加本次任务记录。
