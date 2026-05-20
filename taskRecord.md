@@ -2191,3 +2191,26 @@
 
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+优化首页航司机型结果区域（fleet-results）滚动条为内嵌 Scroll area 风格，不额外挤压内容布局。
+
+## 完成过程
+
+1. 确认 `414-455` 行所在列表滚动由父级 `.fleet-results` 承载。
+2. 为 `.fleet-results` 增加 `scrollbar-width`、`scrollbar-color`（Firefox）与 `::-webkit-scrollbar` 轨道/滑块样式，与深色档案风面板一致。
+3. 移除与 `scrollbar-gutter: stable` 叠床架屋的 `padding-right`，由稳定滚动槽位统一预留宽度，避免滚动条出现时内容横向跳动。
+
+## 修改具体文件
+
+- `src/pages/home/index.css`
+  - `.fleet-results`：细滚动条配色、WebKit 圆角 thumb、hover 提亮；去掉右侧手填 padding。
+- `taskRecord.md`
+  - 追加本次任务记录。

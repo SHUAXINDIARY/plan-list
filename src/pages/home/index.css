@@ -49,11 +49,36 @@
 
 .fleet-results {
   height: clamp(24rem, 52vh, 38rem);
-  padding-right: 0.35rem;
   margin-top: 1.5rem;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  /* thumb | track — 与 Fleet 深色面板一致的内嵌滚动轨道 */
+  scrollbar-color: rgba(124, 200, 235, 0.42) rgba(15, 31, 48, 0.55);
+}
+
+/* WebKit：细滚动条 + 圆角 thumb，不占额外版面（宽度由 scrollbar-gutter: stable 统一预留） */
+.fleet-results::-webkit-scrollbar {
+  width: 10px;
+}
+
+.fleet-results::-webkit-scrollbar-track {
+  margin-block: 0.45rem;
+  margin-inline-end: 2px;
+  background-color: rgba(15, 31, 48, 0.55);
+  border-radius: 999px;
+}
+
+.fleet-results::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  background-color: rgba(124, 200, 235, 0.42);
+}
+
+.fleet-results::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(158, 216, 242, 0.55);
 }
 
 .fleet-results > .data-state {
