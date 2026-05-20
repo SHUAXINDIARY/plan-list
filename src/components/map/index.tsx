@@ -6,16 +6,20 @@ import {
   MAP_ZOOM_STEP,
   MAX_MAP_SCALE,
   MIN_MAP_SCALE,
+  blitMapLayerCache,
+  buildMapLayerCache,
   clampNumber,
   constrainViewportTransform,
+  getMapCanvasInteractionMetrics,
   getMapCanvasRenderMetrics,
   hitTestMarkerAtScreen,
   mapCoordinateToScreen,
   paintAnnotatedWorldMap,
+  paintMapMarkers,
   projectMapCoordinate,
   readMapCanvasPalette,
 } from './canvasMap';
-import type { ViewportTransform } from './canvasMap';
+import type { MapCanvasPalette, MapCanvasRenderMetrics, ViewportTransform } from './canvasMap';
 import type { AnnotatedWorldMapProps, WorldMapMarker } from './type';
 import './index.css';
 
@@ -39,6 +43,18 @@ interface MapDragState {
   startViewportX: number;
   /** 拖拽起始时的视口平移 Y。 */
   startViewportY: number;
+}
+
+/** 底图离屏缓存失效判断用的快照键。 */
+interface MapLayerCacheKey {
+  /** 容器 CSS 宽度。 */
+  cssWidth: number;
+  /** 容器 CSS 高度。 */
+  cssHeight: number;
+  /** 缓存构建时的视口缩放。 */
+  scale: number;
+  /** 缓存构建时的航线条数。 */
+  routeCount: number;
 }
 
 const DEFAULT_MARKER_FLAG = '🌐';
@@ -89,6 +105,11 @@ const AnnotatedWorldMap = ({
   const redrawMapCanvasRef = useRef<() => void>(() => undefined);
   const pendingRedrawFrameRef = useRef<number | null>(null);
   const flagCursorElementRef = useRef<HTMLDivElement | null>(null);
+  const mapLayerCacheRef = useRef<HTMLCanvasElement | null>(null);
+  const mapLayerCacheKeyRef = useRef<MapLayerCacheKey | null>(null);
+  const mapCanvasMetricsRef = useRef<MapCanvasRenderMetrics | null>(null);
+  const mapCanvasPaletteRef = useRef<MapCanvasPalette | null>(null);
+  const isMapPanInteractingRef = useRef<boolean>(false);
   const hasRoutes = routes.length > 0;
   const isMapZoomed = viewportTransform.scale > MIN_MAP_SCALE;
   const focusedMarker =
@@ -200,6 +221,9 @@ const AnnotatedWorldMap = ({
   // 主题切换会改变 CSS 变量，监听 data-theme 以触发重绘。
   useEffect((): (() => void) | undefined => {
     const themeObserver = new MutationObserver((): void => {
+      mapCanvasPaletteRef.current = null;
+      mapLayerCacheRef.current = null;
+      mapLayerCacheKeyRef.current = null;
       setViewportTransform((current: ViewportTransform): ViewportTransform => ({ ...current }));
     });
     themeObserver.observe(document.documentElement, {
@@ -212,7 +236,92 @@ const AnnotatedWorldMap = ({
     };
   }, []);
 
-  // 依据视口缩放做超采样并重绘 Canvas，替代原先 SVG + CSS transform 方案。
+  /**
+   * 判断离屏底图缓存是否与当前容器尺寸、缩放和航线一致。
+   */
+  const isMapLayerCacheFresh = useCallback((): boolean => {
+    const cacheKey = mapLayerCacheKeyRef.current;
+
+    if (cacheKey === null || mapLayerCacheRef.current === null) {
+      return false;
+    }
+
+    return (
+      cacheKey.cssWidth === containerSize.width &&
+      cacheKey.cssHeight === containerSize.height &&
+      cacheKey.scale === viewportTransformRef.current.scale &&
+      cacheKey.routeCount === routes.length
+    );
+  }, [containerSize.height, containerSize.width, routes.length]);
+
+  /**
+   * 在拖拽开始前构建底图+航线离屏缓存，避免拖拽帧内重复 drawImage 世界地图。
+   */
+  const ensureMapLayerCache = useCallback((): void => {
+    const container = mapContainerRef.current;
+    const worldMapImage = worldMapImageRef.current;
+    const viewportScale = viewportTransformRef.current.scale;
+
+    if (
+      container === null ||
+      worldMapImage === null ||
+      !isWorldMapImageReady ||
+      viewportScale <= MIN_MAP_SCALE ||
+      containerSize.width <= 0 ||
+      containerSize.height <= 0 ||
+      isMapLayerCacheFresh()
+    ) {
+      return;
+    }
+
+    const palette = mapCanvasPaletteRef.current ?? readMapCanvasPalette(container);
+    mapCanvasPaletteRef.current = palette;
+    mapLayerCacheRef.current = buildMapLayerCache(
+      worldMapImage,
+      routes,
+      palette,
+      containerSize.width,
+      containerSize.height,
+      viewportScale,
+    );
+    mapLayerCacheKeyRef.current = {
+      cssWidth: containerSize.width,
+      cssHeight: containerSize.height,
+      scale: viewportScale,
+      routeCount: routes.length,
+    };
+  }, [containerSize.height, containerSize.width, isMapLayerCacheFresh, isWorldMapImageReady, routes]);
+
+  /**
+   * 仅在 backing store 或 CSS 尺寸变化时调整 canvas，避免拖拽帧反复分配显存。
+   */
+  const applyMapCanvasMetrics = (
+    canvas: HTMLCanvasElement,
+    context: CanvasRenderingContext2D,
+    metrics: MapCanvasRenderMetrics,
+  ): void => {
+    const previousMetrics = mapCanvasMetricsRef.current;
+
+    if (
+      previousMetrics === null ||
+      previousMetrics.pixelWidth !== metrics.pixelWidth ||
+      previousMetrics.pixelHeight !== metrics.pixelHeight ||
+      previousMetrics.cssWidth !== metrics.cssWidth ||
+      previousMetrics.cssHeight !== metrics.cssHeight
+    ) {
+      canvas.width = metrics.pixelWidth;
+      canvas.height = metrics.pixelHeight;
+      canvas.style.width = `${metrics.cssWidth}px`;
+      canvas.style.height = `${metrics.cssHeight}px`;
+      mapCanvasMetricsRef.current = metrics;
+    }
+
+    context.setTransform(metrics.pixelRatio, 0, 0, metrics.pixelRatio, 0, 0);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+  };
+
+  // 依据视口缩放做超采样并重绘 Canvas；拖拽中走离屏 blit + 标记点轻绘路径。
   const redrawMapCanvas = useCallback((): void => {
     const canvas = mapCanvasRef.current;
     const container = mapContainerRef.current;
@@ -229,27 +338,52 @@ const AnnotatedWorldMap = ({
       return;
     }
 
-    const metrics = getMapCanvasRenderMetrics(
-      containerSize.width,
-      containerSize.height,
-      viewportTransformRef.current.scale,
-      window.devicePixelRatio || 1,
-    );
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const isPanInteracting = isMapPanInteractingRef.current;
+    const metrics = isPanInteracting
+      ? getMapCanvasInteractionMetrics(
+          containerSize.width,
+          containerSize.height,
+          devicePixelRatio,
+        )
+      : getMapCanvasRenderMetrics(
+          containerSize.width,
+          containerSize.height,
+          viewportTransformRef.current.scale,
+          devicePixelRatio,
+        );
     const context = canvas.getContext('2d');
 
     if (context === null) {
       return;
     }
 
-    canvas.width = metrics.pixelWidth;
-    canvas.height = metrics.pixelHeight;
-    canvas.style.width = `${metrics.cssWidth}px`;
-    canvas.style.height = `${metrics.cssHeight}px`;
-    context.setTransform(metrics.pixelRatio, 0, 0, metrics.pixelRatio, 0, 0);
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
+    applyMapCanvasMetrics(canvas, context, metrics);
 
-    const palette = readMapCanvasPalette(container);
+    const palette = mapCanvasPaletteRef.current ?? readMapCanvasPalette(container);
+    mapCanvasPaletteRef.current = palette;
+
+    const viewport = viewportTransformRef.current;
+    const layerCache = mapLayerCacheRef.current;
+    const canUseLayerCache =
+      isPanInteracting &&
+      viewport.scale > MIN_MAP_SCALE &&
+      layerCache !== null &&
+      isMapLayerCacheFresh();
+
+    if (canUseLayerCache) {
+      blitMapLayerCache(context, layerCache, viewport, metrics.cssWidth, metrics.cssHeight);
+      paintMapMarkers(
+        context,
+        markers,
+        palette,
+        focusedMarkerId,
+        metrics.cssWidth,
+        metrics.cssHeight,
+        viewport,
+      );
+      return;
+    }
 
     paintAnnotatedWorldMap(
       context,
@@ -260,9 +394,38 @@ const AnnotatedWorldMap = ({
       focusedMarkerId,
       metrics.cssWidth,
       metrics.cssHeight,
-      viewportTransformRef.current,
+      viewport,
     );
-  }, [containerSize.height, containerSize.width, focusedMarkerId, isWorldMapImageReady, markers, routes]);
+
+    if (viewport.scale > MIN_MAP_SCALE) {
+      mapLayerCacheRef.current = buildMapLayerCache(
+        worldMapImage,
+        routes,
+        palette,
+        metrics.cssWidth,
+        metrics.cssHeight,
+        viewport.scale,
+      );
+      mapLayerCacheKeyRef.current = {
+        cssWidth: metrics.cssWidth,
+        cssHeight: metrics.cssHeight,
+        scale: viewport.scale,
+        routeCount: routes.length,
+      };
+      return;
+    }
+
+    mapLayerCacheRef.current = null;
+    mapLayerCacheKeyRef.current = null;
+  }, [
+    containerSize.height,
+    containerSize.width,
+    focusedMarkerId,
+    isMapLayerCacheFresh,
+    isWorldMapImageReady,
+    markers,
+    routes,
+  ]);
 
   redrawMapCanvasRef.current = redrawMapCanvas;
 
@@ -377,9 +540,13 @@ const AnnotatedWorldMap = ({
       startViewportX: viewportTransform.x,
       startViewportY: viewportTransform.y,
     };
+    isMapPanInteractingRef.current = true;
+    mapCanvasMetricsRef.current = null;
+    ensureMapLayerCache();
     setIsDraggingMap(true);
     setHoveredMarker(null);
     syncFlagCursorPosition(event.clientX, event.clientY);
+    scheduleMapRedraw();
   };
 
   // 拖拽过程中按初始位移和鼠标增量更新视口，并限制在地图边界内。
@@ -390,15 +557,14 @@ const AnnotatedWorldMap = ({
       return;
     }
 
-    const containerRect = event.currentTarget.getBoundingClientRect();
     const nextViewportTransform = constrainViewportTransform(
       {
         scale: viewportTransformRef.current.scale,
         x: dragState.startViewportX + event.clientX - dragState.startClientX,
         y: dragState.startViewportY + event.clientY - dragState.startClientY,
       },
-      containerRect.width,
-      containerRect.height,
+      containerSize.width,
+      containerSize.height,
     );
 
     viewportTransformRef.current = nextViewportTransform;
@@ -410,6 +576,8 @@ const AnnotatedWorldMap = ({
   const stopMapDrag = (event: PointerEvent<HTMLCanvasElement>): void => {
     if (dragStateRef.current?.pointerId === event.pointerId) {
       dragStateRef.current = null;
+      isMapPanInteractingRef.current = false;
+      mapCanvasMetricsRef.current = null;
       setIsDraggingMap(false);
       event.currentTarget.releasePointerCapture(event.pointerId);
       cancelScheduledMapRedraw();

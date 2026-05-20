@@ -2558,3 +2558,27 @@
   - tooltip 合成层提示。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+优化地图画布拖拽平移时的卡顿，在保持缩放后标记点位置准确的前提下提升交互帧率。
+
+## 完成过程
+
+1. 分析得拖拽每帧仍执行超采样全量 `drawImage` 世界地图与反复重置 canvas backing store，是主要瓶颈。
+2. 在 `canvasMap.ts` 拆分底图/航线与标记绘制，新增离屏 `buildMapLayerCache` + `blitMapLayerCache`，拖拽帧仅 blit 可见区域并重绘标记点。
+3. 拖拽期使用 `getMapCanvasInteractionMetrics` 降低 DPR 与像素面积上限，并仅在尺寸变化时调整 canvas，避免 pointermove 分配显存。
+4. `startMapDrag` 预构建缓存并走 rAF 轻绘路径；`stopMapDrag` 恢复全质量超采样重绘；主题切换时清空调色板与缓存。
+
+## 修改具体文件
+
+- `src/components/map/canvasMap.ts`
+  - 交互期画布指标、底图离屏缓存、blit 与绘制函数拆分。
+- `src/components/map/index.tsx`
+  - 拖拽快路径、缓存失效键、画布尺寸复用与拖拽起止流程调整。
+- `taskRecord.md`
+  - 追加本次任务记录。

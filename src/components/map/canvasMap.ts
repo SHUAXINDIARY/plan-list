@@ -42,6 +42,12 @@ export const MAX_ZOOM_SUPERSAMPLE_BOOST = 2;
 /** 单帧画布像素面积上限，防止高 DPR + 高缩放时内存暴涨。 */
 export const MAX_CANVAS_PIXEL_AREA = 6_000_000;
 
+/** 拖拽交互期画布像素面积上限，优先保证帧率。 */
+export const MAX_INTERACTION_CANVAS_PIXEL_AREA = 1_800_000;
+
+/** 拖拽交互期 DPR 上限，避免 Retina 屏下过大的 backing store。 */
+export const MAX_INTERACTION_DEVICE_PIXEL_RATIO = 1.5;
+
 /** 经纬度在地图坐标系中的投影结果。 */
 export interface MarkerPosition {
   /** 投影后的 X（地图坐标系，0 为左）。 */
@@ -163,6 +169,34 @@ export const getMapCanvasRenderMetrics = (
 };
 
 /**
+ * 拖拽平移阶段的画布指标：降低超采样与像素面积，减轻每帧 blit 成本。
+ */
+export const getMapCanvasInteractionMetrics = (
+  cssWidth: number,
+  cssHeight: number,
+  devicePixelRatio: number,
+): MapCanvasRenderMetrics => {
+  let pixelRatio = Math.min(devicePixelRatio, MAX_INTERACTION_DEVICE_PIXEL_RATIO);
+  let pixelWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
+  let pixelHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
+
+  if (pixelWidth * pixelHeight > MAX_INTERACTION_CANVAS_PIXEL_AREA) {
+    const areaScale = Math.sqrt(MAX_INTERACTION_CANVAS_PIXEL_AREA / (pixelWidth * pixelHeight));
+    pixelWidth = Math.max(1, Math.floor(pixelWidth * areaScale));
+    pixelHeight = Math.max(1, Math.floor(pixelHeight * areaScale));
+    pixelRatio *= areaScale;
+  }
+
+  return {
+    cssWidth,
+    cssHeight,
+    pixelWidth,
+    pixelHeight,
+    pixelRatio,
+  };
+};
+
+/**
  * 将地图坐标转换为容器内的屏幕 CSS 像素位置。
  */
 export const mapCoordinateToScreen = (
@@ -250,25 +284,34 @@ export const readMapCanvasPalette = (container: HTMLElement): MapCanvasPalette =
 };
 
 /**
- * 绘制底图与航线（随视口缩放），标记点在屏幕坐标下以固定像素尺寸绘制以保证位置准确且大小不变。
+ * 绘制底图与航线（随视口缩放）；可选省略视口平移，用于构建可平移 blit 的离屏缓存。
  */
-export const paintAnnotatedWorldMap = (
+export const paintMapBaseLayer = (
   context: CanvasRenderingContext2D,
   worldMapImage: CanvasImageSource,
-  markers: WorldMapMarker[],
   routes: WorldMapRoute[],
   palette: MapCanvasPalette,
-  activeMarkerId: string | null,
   cssWidth: number,
   cssHeight: number,
   viewportTransform: ViewportTransform,
+  options?: { omitViewportTranslate?: boolean },
 ): void => {
   const scaleX = cssWidth / WORLD_MAP_WIDTH;
   const scaleY = cssHeight / WORLD_MAP_HEIGHT;
+  const clearWidth = options?.omitViewportTranslate
+    ? cssWidth * viewportTransform.scale
+    : cssWidth;
+  const clearHeight = options?.omitViewportTranslate
+    ? cssHeight * viewportTransform.scale
+    : cssHeight;
 
-  context.clearRect(0, 0, cssWidth, cssHeight);
+  context.clearRect(0, 0, clearWidth, clearHeight);
   context.save();
-  context.translate(viewportTransform.x, viewportTransform.y);
+
+  if (!options?.omitViewportTranslate) {
+    context.translate(viewportTransform.x, viewportTransform.y);
+  }
+
   context.scale(viewportTransform.scale * scaleX, viewportTransform.scale * scaleY);
   context.drawImage(worldMapImage, 0, 0, WORLD_MAP_WIDTH, WORLD_MAP_HEIGHT);
 
@@ -290,8 +333,20 @@ export const paintAnnotatedWorldMap = (
   });
 
   context.restore();
+};
 
-  // 标记点在 CSS 像素空间绘制，半径不随 scale 变化；圆心由 mapCoordinateToScreen 保证与地理坐标对齐。
+/**
+ * 在屏幕坐标下绘制标记点，半径不随缩放变化。
+ */
+export const paintMapMarkers = (
+  context: CanvasRenderingContext2D,
+  markers: WorldMapMarker[],
+  palette: MapCanvasPalette,
+  activeMarkerId: string | null,
+  cssWidth: number,
+  cssHeight: number,
+  viewportTransform: ViewportTransform,
+): void => {
   markers.forEach((marker: WorldMapMarker): void => {
     const markerPosition = projectMapCoordinate(marker.coordinate);
     const screenPosition = mapCoordinateToScreen(
@@ -312,4 +367,100 @@ export const paintAnnotatedWorldMap = (
     context.lineWidth = isActive ? 3.2 : 2.4;
     context.stroke();
   });
+};
+
+/**
+ * 将当前缩放下的底图+航线离屏缓存，供拖拽时按视口偏移做 blit。
+ */
+export const buildMapLayerCache = (
+  worldMapImage: CanvasImageSource,
+  routes: WorldMapRoute[],
+  palette: MapCanvasPalette,
+  cssWidth: number,
+  cssHeight: number,
+  viewportScale: number,
+): HTMLCanvasElement => {
+  const cacheCanvas = document.createElement('canvas');
+  const cacheCssWidth = Math.max(1, Math.ceil(cssWidth * viewportScale));
+  const cacheCssHeight = Math.max(1, Math.ceil(cssHeight * viewportScale));
+
+  cacheCanvas.width = cacheCssWidth;
+  cacheCanvas.height = cacheCssHeight;
+
+  const cacheContext = cacheCanvas.getContext('2d');
+
+  if (cacheContext !== null) {
+    cacheContext.imageSmoothingEnabled = true;
+    cacheContext.imageSmoothingQuality = 'high';
+    paintMapBaseLayer(
+      cacheContext,
+      worldMapImage,
+      routes,
+      palette,
+      cssWidth,
+      cssHeight,
+      { scale: viewportScale, x: 0, y: 0 },
+      { omitViewportTranslate: true },
+    );
+  }
+
+  return cacheCanvas;
+};
+
+/**
+ * 从离屏缓存裁切当前视口可见区域并绘制到主画布（仅平移，不重复缩放绘制底图）。
+ */
+export const blitMapLayerCache = (
+  context: CanvasRenderingContext2D,
+  layerCache: HTMLCanvasElement,
+  viewportTransform: ViewportTransform,
+  cssWidth: number,
+  cssHeight: number,
+): void => {
+  context.clearRect(0, 0, cssWidth, cssHeight);
+  context.drawImage(
+    layerCache,
+    -viewportTransform.x,
+    -viewportTransform.y,
+    cssWidth,
+    cssHeight,
+    0,
+    0,
+    cssWidth,
+    cssHeight,
+  );
+};
+
+/**
+ * 绘制底图与航线（随视口缩放），标记点在屏幕坐标下以固定像素尺寸绘制以保证位置准确且大小不变。
+ */
+export const paintAnnotatedWorldMap = (
+  context: CanvasRenderingContext2D,
+  worldMapImage: CanvasImageSource,
+  markers: WorldMapMarker[],
+  routes: WorldMapRoute[],
+  palette: MapCanvasPalette,
+  activeMarkerId: string | null,
+  cssWidth: number,
+  cssHeight: number,
+  viewportTransform: ViewportTransform,
+): void => {
+  paintMapBaseLayer(
+    context,
+    worldMapImage,
+    routes,
+    palette,
+    cssWidth,
+    cssHeight,
+    viewportTransform,
+  );
+  paintMapMarkers(
+    context,
+    markers,
+    palette,
+    activeMarkerId,
+    cssWidth,
+    cssHeight,
+    viewportTransform,
+  );
 };
