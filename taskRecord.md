@@ -1740,6 +1740,32 @@
 
 ## 日期
 
+2026-05-20
+
+## 任务目的
+
+为 `public/data/airplan.json` 中每个航司记录新增英文名字段，便于后续英文展示、搜索或数据匹配。
+
+## 完成过程
+
+1. 阅读 `public/data/airplan.json`，确认每条航司数据以 `airline`、`passengerAircraftCount`、`models` 为主结构。
+2. 根据用户提供的中英文航司名称清单，在每个对应航司记录中新增 `airlineEnglishName` 字段。
+3. 同步更新 `src/pages/home/type.d.ts` 中的 `AirplaneDataItem` 类型声明，补充新增字段语义。
+4. 校验 JSON 结构与新增字段覆盖情况，并检查相关文件 linter 结果。
+
+## 修改具体文件
+
+- `public/data/airplan.json`
+  - 为每个航司对象新增 `airlineEnglishName` 字段，值为用户提供的英文航司名称。
+- `src/pages/home/type.d.ts`
+  - 为 `AirplaneDataItem` 增加 `airlineEnglishName` 类型字段及说明。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
 2026-05-17
 
 ## 任务目的

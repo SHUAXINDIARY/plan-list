@@ -19,6 +19,8 @@ export interface AirlineFleet {
 
 export interface AirplaneDataItem {
   airline: string;
+  /** 航司英文名称，用于跨语言展示、搜索或后续外部数据匹配。 */
+  airlineEnglishName: string;
   passengerAircraftCount: number;
   /** 制造商名称 -> 具体机型名称 -> 说明或外链（http(s) URL 时在界面中可点击新开标签页） */
   models: Record<string, Record<string, string>>;
