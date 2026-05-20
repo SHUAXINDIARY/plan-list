@@ -41,8 +41,13 @@ export interface MapRegionLabel {
   coordinate: MapCoordinate;
 }
 
+/** 航迹范围，字段语义与地图组件 `MapRouteScope` 一致。 */
+export type MapRouteScope = 'domestic' | 'international';
+
 export interface MapRoute {
   name: string;
   start: MapCoordinate;
   end: MapCoordinate;
+  /** 国内或国际航迹，决定地图上的线型与颜色。 */
+  scope: MapRouteScope;
 }

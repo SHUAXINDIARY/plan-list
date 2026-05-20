@@ -2739,3 +2739,49 @@
   - `MAP_ROUTES` 新增 7 条航线。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+地图航迹区分国内与国际，使用两种线型与颜色展示，并更新图例。
+
+## 完成过程
+
+1. `WorldMapRoute` / `MapRoute` 增加 `scope: domestic | international`。
+2. `canvasMap` 国内用实线暖色、国际用虚线冷色；CSS 变量拆分为两套描边色。
+3. 图例分「国内航迹」「国际航迹」两项，样式与画布一致。
+4. `MAP_ROUTES` 为全部航段标注 scope（中国大陆境内为 domestic，跨境/境外为 international）。
+
+## 修改具体文件
+
+- `src/components/map/type.d.ts`、`canvasMap.ts`、`index.tsx`、`index.css`
+  - 双轨航迹绘制与图例。
+- `src/pages/personal/type.d.ts`、`constant.ts`、`index.tsx`
+  - 航迹 scope 数据与图例入参调整。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+按 Impeccable / Night Flight Archive 设计体系优化地图航迹与机场标识：国内/国际双线型，标识与航迹视觉语义一致。
+
+## 完成过程
+
+1. 在 `App.css` 增加 `--pl-map-route-*`、`--pl-map-marker-*` token（OKLCH 冷青单色系，取代琥珀色国内线）。
+2. 航迹：国内实线低饱和、国际虚线 accent；先绘国内再绘国际。
+3. 机场标记增加 `scope`（中国=domestic），画布按范围分色填充/描边。
+4. 图例拆为四项：国内/境外机场 + 国内/国际航迹，样式与画布一致。
+
+## 修改具体文件
+
+- `src/App.css`：地图航迹与标记语义色 token。
+- `src/components/map/type.d.ts`、`canvasMap.ts`、`index.tsx`、`index.css`：双轨绘制与图例。
+- `src/pages/personal/constant.ts`：机场 marker `scope`。
+- `taskRecord.md`：追加记录。

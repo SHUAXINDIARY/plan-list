@@ -1,4 +1,4 @@
-import type { WorldMapMarker, WorldMapRoute } from './type';
+import type { MapRouteScope, WorldMapMarker, WorldMapRoute } from './type';
 
 /** 地图内部坐标系宽度，与 `map.svg` viewBox 一致。 */
 export const WORLD_MAP_WIDTH = 1200;
@@ -68,16 +68,26 @@ export interface ViewportTransform {
 
 /** 从 CSS 变量解析出的画布绘制配色。 */
 export interface MapCanvasPalette {
-  /** 航线描边色。 */
-  routeStroke: string;
-  /** 标记点填充色。 */
-  markerFill: string;
-  /** 标记点描边色。 */
-  markerStroke: string;
-  /** 高亮标记点填充色。 */
-  markerFillActive: string;
-  /** 高亮标记点描边色。 */
-  markerStrokeActive: string;
+  /** 国际航迹描边色。 */
+  routeStrokeInternational: string;
+  /** 国内航迹描边色。 */
+  routeStrokeDomestic: string;
+  /** 国内机场标记填充色。 */
+  markerDomesticFill: string;
+  /** 国内机场标记描边色。 */
+  markerDomesticStroke: string;
+  /** 高亮国内机场标记填充色。 */
+  markerDomesticFillActive: string;
+  /** 高亮国内机场标记描边色。 */
+  markerDomesticStrokeActive: string;
+  /** 境外机场标记填充色。 */
+  markerInternationalFill: string;
+  /** 境外机场标记描边色。 */
+  markerInternationalStroke: string;
+  /** 高亮境外机场标记填充色。 */
+  markerInternationalFillActive: string;
+  /** 高亮境外机场标记描边色。 */
+  markerInternationalStrokeActive: string;
 }
 
 /** 画布尺寸与超采样后的像素比。 */
@@ -275,12 +285,85 @@ export const readMapCanvasPalette = (container: HTMLElement): MapCanvasPalette =
   const styles = getComputedStyle(container);
 
   return {
-    routeStroke: styles.getPropertyValue('--pl-map-canvas-route-stroke').trim(),
-    markerFill: styles.getPropertyValue('--pl-map-canvas-marker-fill').trim(),
-    markerStroke: styles.getPropertyValue('--pl-map-canvas-marker-stroke').trim(),
-    markerFillActive: styles.getPropertyValue('--pl-map-canvas-marker-fill-active').trim(),
-    markerStrokeActive: styles.getPropertyValue('--pl-map-canvas-marker-stroke-active').trim(),
+    routeStrokeInternational: styles.getPropertyValue('--pl-map-route-international').trim(),
+    routeStrokeDomestic: styles.getPropertyValue('--pl-map-route-domestic').trim(),
+    markerDomesticFill: styles.getPropertyValue('--pl-map-marker-domestic-fill').trim(),
+    markerDomesticStroke: styles.getPropertyValue('--pl-map-marker-domestic-stroke').trim(),
+    markerDomesticFillActive: styles.getPropertyValue('--pl-map-marker-domestic-fill-active').trim(),
+    markerDomesticStrokeActive: styles
+      .getPropertyValue('--pl-map-marker-domestic-stroke-active')
+      .trim(),
+    markerInternationalFill: styles.getPropertyValue('--pl-map-marker-international-fill').trim(),
+    markerInternationalStroke: styles
+      .getPropertyValue('--pl-map-marker-international-stroke')
+      .trim(),
+    markerInternationalFillActive: styles
+      .getPropertyValue('--pl-map-marker-international-fill-active')
+      .trim(),
+    markerInternationalStrokeActive: styles
+      .getPropertyValue('--pl-map-marker-international-stroke-active')
+      .trim(),
   };
+};
+
+/**
+ * 按机场范围解析标记点绘制配色，与航迹 domestic / international 语义一致。
+ */
+const resolveMarkerPaintStyles = (
+  palette: MapCanvasPalette,
+  scope: MapRouteScope,
+  isActive: boolean,
+): { fillStyle: string; strokeStyle: string; lineWidth: number } => {
+  const isDomesticMarker = scope === 'domestic';
+
+  if (isDomesticMarker) {
+    return {
+      fillStyle: isActive ? palette.markerDomesticFillActive : palette.markerDomesticFill,
+      strokeStyle: isActive ? palette.markerDomesticStrokeActive : palette.markerDomesticStroke,
+      lineWidth: isActive ? 2.6 : 2,
+    };
+  }
+
+  return {
+    fillStyle: isActive ? palette.markerInternationalFillActive : palette.markerInternationalFill,
+    strokeStyle: isActive
+      ? palette.markerInternationalStrokeActive
+      : palette.markerInternationalStroke,
+    lineWidth: isActive ? 3 : 2.4,
+  };
+};
+
+/**
+ * 绘制单段航迹弧线，国内实线、国际虚线，色相均落在 Night Flight 冷青体系内。
+ */
+const paintMapRouteArc = (
+  context: CanvasRenderingContext2D,
+  route: WorldMapRoute,
+  palette: MapCanvasPalette,
+  viewportScale: number,
+): void => {
+  const startPosition = projectMapCoordinate(route.start);
+  const endPosition = projectMapCoordinate(route.end);
+  const controlPointX = (startPosition.left + endPosition.left) / 2;
+  const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
+  const isDomesticRoute = route.scope === 'domestic';
+
+  context.beginPath();
+  context.moveTo(startPosition.left, startPosition.top);
+  context.quadraticCurveTo(controlPointX, controlPointY, endPosition.left, endPosition.top);
+  context.strokeStyle = isDomesticRoute
+    ? palette.routeStrokeDomestic
+    : palette.routeStrokeInternational;
+  context.lineWidth = (isDomesticRoute ? 1.2 : 1.45) / viewportScale;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  if (isDomesticRoute) {
+    context.setLineDash([]);
+  } else {
+    context.setLineDash([7 / viewportScale, 9 / viewportScale]);
+  }
+  context.stroke();
+  context.setLineDash([]);
 };
 
 /**
@@ -315,21 +398,16 @@ export const paintMapBaseLayer = (
   context.scale(viewportTransform.scale * scaleX, viewportTransform.scale * scaleY);
   context.drawImage(worldMapImage, 0, 0, WORLD_MAP_WIDTH, WORLD_MAP_HEIGHT);
 
-  routes.forEach((route: WorldMapRoute): void => {
-    const startPosition = projectMapCoordinate(route.start);
-    const endPosition = projectMapCoordinate(route.end);
-    const controlPointX = (startPosition.left + endPosition.left) / 2;
-    const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
+  const domesticRoutes = routes.filter((route: WorldMapRoute): boolean => route.scope === 'domestic');
+  const internationalRoutes = routes.filter(
+    (route: WorldMapRoute): boolean => route.scope === 'international',
+  );
 
-    context.beginPath();
-    context.moveTo(startPosition.left, startPosition.top);
-    context.quadraticCurveTo(controlPointX, controlPointY, endPosition.left, endPosition.top);
-    context.strokeStyle = palette.routeStroke;
-    context.lineWidth = 1.4 / viewportTransform.scale;
-    context.lineCap = 'round';
-    context.setLineDash([8 / viewportTransform.scale, 10 / viewportTransform.scale]);
-    context.stroke();
-    context.setLineDash([]);
+  domesticRoutes.forEach((route: WorldMapRoute): void => {
+    paintMapRouteArc(context, route, palette, viewportTransform.scale);
+  });
+  internationalRoutes.forEach((route: WorldMapRoute): void => {
+    paintMapRouteArc(context, route, palette, viewportTransform.scale);
   });
 
   context.restore();
@@ -358,13 +436,14 @@ export const paintMapMarkers = (
     );
     const isActive = marker.id === activeMarkerId;
     const radius = isActive ? MARKER_RADIUS * 1.12 : MARKER_RADIUS;
+    const markerPaint = resolveMarkerPaintStyles(palette, marker.scope, isActive);
 
     context.beginPath();
     context.arc(screenPosition.left, screenPosition.top, radius, 0, Math.PI * 2);
-    context.fillStyle = isActive ? palette.markerFillActive : palette.markerFill;
+    context.fillStyle = markerPaint.fillStyle;
     context.fill();
-    context.strokeStyle = isActive ? palette.markerStrokeActive : palette.markerStroke;
-    context.lineWidth = isActive ? 3.2 : 2.4;
+    context.strokeStyle = markerPaint.strokeStyle;
+    context.lineWidth = markerPaint.lineWidth;
     context.stroke();
   });
 };

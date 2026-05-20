@@ -26,7 +26,13 @@ import type { MapCanvasPalette, MapCanvasRenderMetrics, ViewportTransform } from
 import type { AnnotatedWorldMapProps, WorldMapMarker } from './type';
 import './index.css';
 
-export type { AnnotatedWorldMapProps, MapCoordinate, WorldMapMarker, WorldMapRoute } from './type';
+export type {
+  AnnotatedWorldMapProps,
+  MapCoordinate,
+  MapRouteScope,
+  WorldMapMarker,
+  WorldMapRoute,
+} from './type';
 
 interface FlagCursorPosition {
   /** 国旗光标在视口中的 X（CSS 像素）。 */
@@ -56,9 +62,51 @@ interface MapLayerCacheKey {
   cssHeight: number;
   /** 缓存构建时的视口缩放。 */
   scale: number;
-  /** 缓存构建时的航线条数。 */
-  routeCount: number;
+  /** 缓存构建时的国内航线条数。 */
+  domesticRouteCount: number;
+  /** 缓存构建时的国际航线条数。 */
+  internationalRouteCount: number;
 }
+
+/**
+ * 统计各范围航迹数量，供离屏缓存失效判断使用。
+ */
+const countRoutesByScope = (
+  routes: AnnotatedWorldMapProps['routes'],
+): { domesticRouteCount: number; internationalRouteCount: number } => {
+  let domesticRouteCount = 0;
+  let internationalRouteCount = 0;
+
+  routes?.forEach((route): void => {
+    if (route.scope === 'domestic') {
+      domesticRouteCount += 1;
+      return;
+    }
+    internationalRouteCount += 1;
+  });
+
+  return { domesticRouteCount, internationalRouteCount };
+};
+
+/**
+ * 统计各范围机场标记数量，供图例显隐判断使用。
+ */
+const countMarkersByScope = (
+  markers: AnnotatedWorldMapProps['markers'],
+): { domesticMarkerCount: number; internationalMarkerCount: number } => {
+  let domesticMarkerCount = 0;
+  let internationalMarkerCount = 0;
+
+  markers.forEach((marker): void => {
+    if (marker.scope === 'domestic') {
+      domesticMarkerCount += 1;
+      return;
+    }
+    internationalMarkerCount += 1;
+  });
+
+  return { domesticMarkerCount, internationalMarkerCount };
+};
 
 const DEFAULT_MARKER_FLAG = '🌐';
 
@@ -90,8 +138,12 @@ const AnnotatedWorldMap = ({
   markers,
   routes = [],
   ariaLabel,
-  routeLegendLabel = '主要航迹',
-  markerLegendLabel = '打卡机场',
+  routeLegendLabel,
+  domesticRouteLegendLabel = '国内航迹',
+  internationalRouteLegendLabel = '国际航迹',
+  markerLegendLabel,
+  domesticMarkerLegendLabel = '国内机场',
+  internationalMarkerLegendLabel = '境外机场',
 }: AnnotatedWorldMapProps): ReactElement => {
   const [hoveredMarker, setHoveredMarker] = useState<WorldMapMarker | null>(null);
   const [focusedMarkerIndex, setFocusedMarkerIndex] = useState<number | null>(null);
@@ -123,7 +175,18 @@ const AnnotatedWorldMap = ({
   const mapCanvasMetricsRef = useRef<MapCanvasRenderMetrics | null>(null);
   const mapCanvasPaletteRef = useRef<MapCanvasPalette | null>(null);
   const isMapPanInteractingRef = useRef<boolean>(false);
-  const hasRoutes = routes.length > 0;
+  const { domesticRouteCount, internationalRouteCount } = countRoutesByScope(routes);
+  const { domesticMarkerCount, internationalMarkerCount } = countMarkersByScope(markers);
+  const hasDomesticRoutes = domesticRouteCount > 0;
+  const hasInternationalRoutes = internationalRouteCount > 0;
+  const hasDomesticMarkers = domesticMarkerCount > 0;
+  const hasInternationalMarkers = internationalMarkerCount > 0;
+  const resolvedDomesticRouteLegendLabel = routeLegendLabel ?? domesticRouteLegendLabel;
+  const resolvedInternationalRouteLegendLabel =
+    routeLegendLabel ?? internationalRouteLegendLabel;
+  const resolvedDomesticMarkerLegendLabel = markerLegendLabel ?? domesticMarkerLegendLabel;
+  const resolvedInternationalMarkerLegendLabel =
+    markerLegendLabel ?? internationalMarkerLegendLabel;
   const isMapZoomed = viewportTransform.scale > MIN_MAP_SCALE;
   const focusedMarker =
     focusedMarkerIndex === null ? null : (markers[focusedMarkerIndex] ?? null);
@@ -269,9 +332,10 @@ const AnnotatedWorldMap = ({
       cacheKey.cssWidth === containerSize.width &&
       cacheKey.cssHeight === containerSize.height &&
       cacheKey.scale === viewportTransformRef.current.scale &&
-      cacheKey.routeCount === routes.length
+      cacheKey.domesticRouteCount === domesticRouteCount &&
+      cacheKey.internationalRouteCount === internationalRouteCount
     );
-  }, [containerSize.height, containerSize.width, routes.length]);
+  }, [containerSize.height, containerSize.width, domesticRouteCount, internationalRouteCount]);
 
   /**
    * 在拖拽开始前构建底图+航线离屏缓存，避免拖拽帧内重复 drawImage 世界地图。
@@ -307,9 +371,18 @@ const AnnotatedWorldMap = ({
       cssWidth: containerSize.width,
       cssHeight: containerSize.height,
       scale: viewportScale,
-      routeCount: routes.length,
+      domesticRouteCount,
+      internationalRouteCount,
     };
-  }, [containerSize.height, containerSize.width, isMapLayerCacheFresh, isWorldMapImageReady, routes]);
+  }, [
+    containerSize.height,
+    containerSize.width,
+    domesticRouteCount,
+    internationalRouteCount,
+    isMapLayerCacheFresh,
+    isWorldMapImageReady,
+    routes,
+  ]);
 
   /**
    * 仅在 backing store 或 CSS 尺寸变化时调整 canvas，避免拖拽帧反复分配显存。
@@ -429,7 +502,8 @@ const AnnotatedWorldMap = ({
         cssWidth: metrics.cssWidth,
         cssHeight: metrics.cssHeight,
         scale: viewport.scale,
-        routeCount: routes.length,
+        domesticRouteCount,
+        internationalRouteCount,
       };
       return;
     }
@@ -439,7 +513,9 @@ const AnnotatedWorldMap = ({
   }, [
     containerSize.height,
     containerSize.width,
+    domesticRouteCount,
     focusedMarkerId,
+    internationalRouteCount,
     isMapLayerCacheFresh,
     isWorldMapImageReady,
     markers,
@@ -726,8 +802,26 @@ const AnnotatedWorldMap = ({
           </div>
         ) : null}
         <div className="annotated-world-map__legend" aria-hidden="true">
-          <span>{markerLegendLabel}</span>
-          {hasRoutes ? <span>{routeLegendLabel}</span> : null}
+          {hasDomesticMarkers ? (
+            <span className="annotated-world-map__legend-marker--domestic">
+              {resolvedDomesticMarkerLegendLabel}
+            </span>
+          ) : null}
+          {hasInternationalMarkers ? (
+            <span className="annotated-world-map__legend-marker--international">
+              {resolvedInternationalMarkerLegendLabel}
+            </span>
+          ) : null}
+          {hasDomesticRoutes ? (
+            <span className="annotated-world-map__legend-route--domestic">
+              {resolvedDomesticRouteLegendLabel}
+            </span>
+          ) : null}
+          {hasInternationalRoutes ? (
+            <span className="annotated-world-map__legend-route--international">
+              {resolvedInternationalRouteLegendLabel}
+            </span>
+          ) : null}
         </div>
       </div>
       {flagCursorStyle

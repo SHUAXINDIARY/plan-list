@@ -202,7 +202,6 @@ const PersonalPage = (): ReactElement => {
           markers={airportMapMarkers}
           routes={MAP_ROUTES}
           markerLegendLabel="打卡机场"
-          routeLegendLabel="主要航迹"
         />
       </section>
 
