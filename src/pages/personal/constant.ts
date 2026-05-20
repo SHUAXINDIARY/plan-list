@@ -303,8 +303,10 @@ export const MAP_ROUTES: MapRoute[] = [
   createMapRoute('名古屋至首都', '名古屋中部国际机场', '北京首都国际机场', 'international'),
   createMapRoute('首都至东京（羽田）', '北京首都国际机场', '东京羽田机场', 'international'),
   createMapRoute('东京（羽田）至首都', '东京羽田机场', '北京首都国际机场', 'international'),
+  createMapRoute('大兴至庆阳', '北京大兴国际机场', '庆阳机场', 'domestic'),
   createMapRoute('大兴至昆明', '北京大兴国际机场', '昆明长水国际机场', 'domestic'),
   createMapRoute('昆明至大兴', '昆明长水国际机场', '北京大兴国际机场', 'domestic'),
+  createMapRoute('昆明至重庆', '昆明长水国际机场', '重庆江北国际机场', 'domestic'),
   createMapRoute('昆明至清迈', '昆明长水国际机场', '清迈国际机场', 'international'),
   createMapRoute('清迈至曼谷（素万那普）', '清迈国际机场', '曼谷素万那普国际机场', 'international'),
 ];
