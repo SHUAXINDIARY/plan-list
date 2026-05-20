@@ -86,6 +86,9 @@ const AnnotatedWorldMap = ({
   const mapCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const worldMapImageRef = useRef<HTMLImageElement | null>(null);
   const viewportTransformRef = useRef<ViewportTransform>(viewportTransform);
+  const redrawMapCanvasRef = useRef<() => void>(() => undefined);
+  const pendingRedrawFrameRef = useRef<number | null>(null);
+  const flagCursorElementRef = useRef<HTMLDivElement | null>(null);
   const hasRoutes = routes.length > 0;
   const isMapZoomed = viewportTransform.scale > MIN_MAP_SCALE;
   const activeMarker =
@@ -259,9 +262,52 @@ const AnnotatedWorldMap = ({
     );
   }, [activeMarker?.id, containerSize.height, containerSize.width, isWorldMapImageReady, markers, routes]);
 
+  redrawMapCanvasRef.current = redrawMapCanvas;
+
+  // 拖拽时合并到单帧 rAF 重绘，避免每次 pointermove 触发 React 更新与整幅超采样绘制。
+  const scheduleMapRedraw = useCallback((): void => {
+    if (pendingRedrawFrameRef.current !== null) {
+      return;
+    }
+
+    pendingRedrawFrameRef.current = requestAnimationFrame((): void => {
+      pendingRedrawFrameRef.current = null;
+      redrawMapCanvasRef.current();
+    });
+  }, []);
+
+  const cancelScheduledMapRedraw = useCallback((): void => {
+    if (pendingRedrawFrameRef.current === null) {
+      return;
+    }
+
+    cancelAnimationFrame(pendingRedrawFrameRef.current);
+    pendingRedrawFrameRef.current = null;
+  }, []);
+
+  // 拖拽中直接改 DOM 位置，避免高频 setState 导致国旗光标与画布不同步。
+  const syncFlagCursorPosition = (clientX: number, clientY: number, preferDirectUpdate: boolean): void => {
+    if (preferDirectUpdate && flagCursorElementRef.current !== null) {
+      flagCursorElementRef.current.style.left = `${clientX}px`;
+      flagCursorElementRef.current.style.top = `${clientY}px`;
+      return;
+    }
+
+    setFlagCursorPosition({
+      x: clientX,
+      y: clientY,
+    });
+  };
+
   useEffect((): void => {
     redrawMapCanvas();
   }, [redrawMapCanvas, viewportTransform, isWorldMapImageReady]);
+
+  useEffect((): (() => void) => {
+    return (): void => {
+      cancelScheduledMapRedraw();
+    };
+  }, [cancelScheduledMapRedraw]);
 
   // 滚轮缩放时以指针局部位置为锚点，保持指向区域留在指针下方。
   const zoomMapFromWheel = useCallback((event: WheelEvent): void => {
@@ -330,6 +376,8 @@ const AnnotatedWorldMap = ({
       startViewportY: viewportTransform.y,
     };
     setIsDraggingMap(true);
+    setHoveredMarker(null);
+    syncFlagCursorPosition(event.clientX, event.clientY, flagCursorElementRef.current !== null);
   };
 
   // 拖拽过程中按初始位移和鼠标增量更新视口，并限制在地图边界内。
@@ -343,7 +391,7 @@ const AnnotatedWorldMap = ({
     const containerRect = event.currentTarget.getBoundingClientRect();
     const nextViewportTransform = constrainViewportTransform(
       {
-        scale: viewportTransform.scale,
+        scale: viewportTransformRef.current.scale,
         x: dragState.startViewportX + event.clientX - dragState.startClientX,
         y: dragState.startViewportY + event.clientY - dragState.startClientY,
       },
@@ -351,7 +399,9 @@ const AnnotatedWorldMap = ({
       containerRect.height,
     );
 
-    setViewportTransform(nextViewportTransform);
+    viewportTransformRef.current = nextViewportTransform;
+    scheduleMapRedraw();
+    syncFlagCursorPosition(event.clientX, event.clientY, true);
   };
 
   // 释放或取消指针时结束拖拽，并释放浏览器指针捕获。
@@ -360,6 +410,9 @@ const AnnotatedWorldMap = ({
       dragStateRef.current = null;
       setIsDraggingMap(false);
       event.currentTarget.releasePointerCapture(event.pointerId);
+      cancelScheduledMapRedraw();
+      setViewportTransform({ ...viewportTransformRef.current });
+      redrawMapCanvasRef.current();
     }
   };
 
@@ -384,11 +437,7 @@ const AnnotatedWorldMap = ({
     );
 
     setHoveredMarker(markerUnderPointer);
-    // 指针在画布内始终更新光标位置，非标记点区域使用默认国旗样式。
-    setFlagCursorPosition({
-      x: clientX,
-      y: clientY,
-    });
+    syncFlagCursorPosition(clientX, clientY, false);
   };
 
   const handleCanvasPointerMove = (event: PointerEvent<HTMLCanvasElement>): void => {
@@ -482,7 +531,12 @@ const AnnotatedWorldMap = ({
       </div>
       {flagCursorStyle
         ? createPortal(
-            <div className="annotated-world-map__flag-cursor" style={flagCursorStyle} aria-hidden="true">
+            <div
+              ref={flagCursorElementRef}
+              className="annotated-world-map__flag-cursor"
+              style={flagCursorStyle}
+              aria-hidden="true"
+            >
               {hoveredMarker?.flag ?? DEFAULT_MARKER_FLAG}
             </div>,
             document.body,

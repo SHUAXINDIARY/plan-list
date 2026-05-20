@@ -2494,3 +2494,24 @@
   - 画布内实时跟随指针的国旗光标展示逻辑。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+优化地图拖拽时的卡顿：国旗光标与画布应实时跟随指针，避免延迟感。
+
+## 完成过程
+
+1. 拖拽中不再每次 `pointermove` 调用 `setViewportTransform`，改为更新 `viewportTransformRef` 并用 `requestAnimationFrame` 合并 Canvas 重绘。
+2. 拖拽结束再同步 React 状态并补一帧绘制；国旗光标在拖拽中通过 ref 直接改 DOM 的 `left/top`，避免高频 setState。
+3. 开始拖拽时清除悬停标记并同步光标位置。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - rAF 批处理重绘、拖拽视口 ref 化、国旗光标直连 DOM 更新。
+- `taskRecord.md`
+  - 追加本次任务记录。
