@@ -384,14 +384,11 @@ const AnnotatedWorldMap = ({
     );
 
     setHoveredMarker(markerUnderPointer);
-    setFlagCursorPosition(
-      markerUnderPointer === null
-        ? null
-        : {
-            x: clientX,
-            y: clientY,
-          },
-    );
+    // 指针在画布内始终更新光标位置，非标记点区域使用默认国旗样式。
+    setFlagCursorPosition({
+      x: clientX,
+      y: clientY,
+    });
   };
 
   const handleCanvasPointerMove = (event: PointerEvent<HTMLCanvasElement>): void => {
@@ -483,10 +480,10 @@ const AnnotatedWorldMap = ({
           {hasRoutes ? <span>{routeLegendLabel}</span> : null}
         </div>
       </div>
-      {activeMarker && flagCursorStyle && hoveredMarker !== null
+      {flagCursorStyle
         ? createPortal(
             <div className="annotated-world-map__flag-cursor" style={flagCursorStyle} aria-hidden="true">
-              {activeMarker.flag ?? DEFAULT_MARKER_FLAG}
+              {hoveredMarker?.flag ?? DEFAULT_MARKER_FLAG}
             </div>,
             document.body,
           )

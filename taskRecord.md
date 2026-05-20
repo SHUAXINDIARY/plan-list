@@ -2474,3 +2474,23 @@
   - 底图加载就绪状态与首帧重绘触发修复。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+修复地图画布上指针移动时国旗光标不显示、仅悬停标记点才出现的问题。
+
+## 完成过程
+
+1. `updatePointerOverMap` 在画布内始终更新 `flagCursorPosition`，命中标记时仍单独设置 `hoveredMarker`。
+2. 国旗 Portal 改为仅依赖 `flagCursorStyle`；标记点上用 `hoveredMarker.flag`，其余区域用默认 `🌐`。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 画布内实时跟随指针的国旗光标展示逻辑。
+- `taskRecord.md`
+  - 追加本次任务记录。
