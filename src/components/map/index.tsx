@@ -91,27 +91,30 @@ const AnnotatedWorldMap = ({
   const flagCursorElementRef = useRef<HTMLDivElement | null>(null);
   const hasRoutes = routes.length > 0;
   const isMapZoomed = viewportTransform.scale > MIN_MAP_SCALE;
-  const activeMarker =
-    hoveredMarker ?? (focusedMarkerIndex === null ? null : (markers[focusedMarkerIndex] ?? null));
-  const hoveredMarkerPosition =
-    activeMarker === null ? null : projectMapCoordinate(activeMarker.coordinate);
-  const hoveredMarkerScreenPosition =
-    hoveredMarkerPosition === null || containerSize.width === 0
+  const focusedMarker =
+    focusedMarkerIndex === null ? null : (markers[focusedMarkerIndex] ?? null);
+  const tooltipMarker = hoveredMarker ?? focusedMarker;
+  const activeMarker = tooltipMarker;
+  const tooltipMarkerPosition =
+    tooltipMarker === null ? null : projectMapCoordinate(tooltipMarker.coordinate);
+  const tooltipScreenPosition =
+    tooltipMarkerPosition === null || containerSize.width === 0
       ? null
       : mapCoordinateToScreen(
-          hoveredMarkerPosition.left,
-          hoveredMarkerPosition.top,
+          tooltipMarkerPosition.left,
+          tooltipMarkerPosition.top,
           viewportTransform,
           containerSize.width,
           containerSize.height,
         );
-  const hoveredMarkerTooltipStyle: CSSProperties | undefined =
-    hoveredMarkerScreenPosition === null
+  const markerTooltipStyle: CSSProperties | undefined =
+    tooltipScreenPosition === null
       ? undefined
       : {
-          left: `${hoveredMarkerScreenPosition.left}px`,
-          top: `${hoveredMarkerScreenPosition.top}px`,
+          left: `${tooltipScreenPosition.left}px`,
+          top: `${tooltipScreenPosition.top}px`,
         };
+  const focusedMarkerId = focusedMarker?.id ?? null;
   const flagCursorStyle: CSSProperties | undefined =
     flagCursorPosition === null
       ? undefined
@@ -247,7 +250,6 @@ const AnnotatedWorldMap = ({
     context.imageSmoothingQuality = 'high';
 
     const palette = readMapCanvasPalette(container);
-    const activeMarkerId = activeMarker?.id ?? null;
 
     paintAnnotatedWorldMap(
       context,
@@ -255,12 +257,12 @@ const AnnotatedWorldMap = ({
       markers,
       routes,
       palette,
-      activeMarkerId,
+      focusedMarkerId,
       metrics.cssWidth,
       metrics.cssHeight,
       viewportTransformRef.current,
     );
-  }, [activeMarker?.id, containerSize.height, containerSize.width, isWorldMapImageReady, markers, routes]);
+  }, [containerSize.height, containerSize.width, focusedMarkerId, isWorldMapImageReady, markers, routes]);
 
   redrawMapCanvasRef.current = redrawMapCanvas;
 
@@ -285,9 +287,9 @@ const AnnotatedWorldMap = ({
     pendingRedrawFrameRef.current = null;
   }, []);
 
-  // 拖拽中直接改 DOM 位置，避免高频 setState 导致国旗光标与画布不同步。
-  const syncFlagCursorPosition = (clientX: number, clientY: number, preferDirectUpdate: boolean): void => {
-    if (preferDirectUpdate && flagCursorElementRef.current !== null) {
+  // 国旗光标优先直连 DOM，避免 pointermove 触发 React 重渲染连带 tooltip 卡顿。
+  const syncFlagCursorPosition = (clientX: number, clientY: number): void => {
+    if (flagCursorElementRef.current !== null) {
       flagCursorElementRef.current.style.left = `${clientX}px`;
       flagCursorElementRef.current.style.top = `${clientY}px`;
       return;
@@ -377,7 +379,7 @@ const AnnotatedWorldMap = ({
     };
     setIsDraggingMap(true);
     setHoveredMarker(null);
-    syncFlagCursorPosition(event.clientX, event.clientY, flagCursorElementRef.current !== null);
+    syncFlagCursorPosition(event.clientX, event.clientY);
   };
 
   // 拖拽过程中按初始位移和鼠标增量更新视口，并限制在地图边界内。
@@ -401,7 +403,7 @@ const AnnotatedWorldMap = ({
 
     viewportTransformRef.current = nextViewportTransform;
     scheduleMapRedraw();
-    syncFlagCursorPosition(event.clientX, event.clientY, true);
+    syncFlagCursorPosition(event.clientX, event.clientY);
   };
 
   // 释放或取消指针时结束拖拽，并释放浏览器指针捕获。
@@ -436,8 +438,17 @@ const AnnotatedWorldMap = ({
       containerSize.height,
     );
 
-    setHoveredMarker(markerUnderPointer);
-    syncFlagCursorPosition(clientX, clientY, false);
+    setHoveredMarker((previousMarker: WorldMapMarker | null): WorldMapMarker | null => {
+      const previousMarkerId = previousMarker?.id ?? null;
+      const nextMarkerId = markerUnderPointer?.id ?? null;
+
+      if (previousMarkerId === nextMarkerId) {
+        return previousMarker;
+      }
+
+      return markerUnderPointer;
+    });
+    syncFlagCursorPosition(clientX, clientY);
   };
 
   const handleCanvasPointerMove = (event: PointerEvent<HTMLCanvasElement>): void => {
@@ -503,6 +514,9 @@ const AnnotatedWorldMap = ({
           tabIndex={0}
           role="img"
           aria-label={mapCanvasLabel}
+          onPointerEnter={(event: PointerEvent<HTMLCanvasElement>): void => {
+            syncFlagCursorPosition(event.clientX, event.clientY);
+          }}
           onPointerDown={startMapDrag}
           onPointerMove={handleCanvasPointerMove}
           onPointerUp={stopMapDrag}
@@ -515,13 +529,13 @@ const AnnotatedWorldMap = ({
             setFlagCursorPosition(null);
           }}
         />
-        {activeMarker && hoveredMarkerTooltipStyle ? (
+        {tooltipMarker && markerTooltipStyle ? (
           <div
             className="annotated-world-map__tooltip"
-            style={hoveredMarkerTooltipStyle}
+            style={markerTooltipStyle}
             role="tooltip"
           >
-            {activeMarker.name}
+            {tooltipMarker.name}
           </div>
         ) : null}
         <div className="annotated-world-map__legend" aria-hidden="true">

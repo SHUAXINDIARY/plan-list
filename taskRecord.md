@@ -2535,3 +2535,26 @@
   - 标记点屏幕空间固定尺寸绘制与坐标投影。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+优化地图标记 hover 时 tooltip 出现的卡顿感。
+
+## 完成过程
+
+1. 排查得 hover 会更新 `activeMarker?.id` 并触发整幅 Canvas 超采样重绘；已改为仅键盘聚焦时在画布高亮，hover 只更新 DOM tooltip。
+2. `setHoveredMarker` 在标记 id 未变时不更新状态；国旗光标在 Portal 挂载后一律直连 DOM，减少 pointermove 导致的重渲染。
+3. tooltip 增加 `will-change: left, top` 以利合成层位移。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - hover 与 Canvas 重绘解耦、悬停状态去重、光标 DOM 直连。
+- `src/components/map/index.css`
+  - tooltip 合成层提示。
+- `taskRecord.md`
+  - 追加本次任务记录。

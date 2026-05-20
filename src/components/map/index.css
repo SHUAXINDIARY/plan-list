@@ -72,6 +72,7 @@ html[data-theme='light'] .annotated-world-map__canvas:focus-visible {
 .annotated-world-map__tooltip {
   position: absolute;
   z-index: 6;
+  will-change: left, top;
   max-width: min(12rem, calc(100% - 2rem));
   padding: 0.45rem 0.62rem;
   color: var(--pl-text-emphasis);
