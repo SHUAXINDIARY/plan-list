@@ -17,6 +17,14 @@ export default defineConfig({
             viewport:
                 "width=device-width, initial-scale=1.0, viewport-fit=cover",
         },
+        tags: [
+            {
+                tag: "script",
+                head: true,
+                append: false,
+                children: `(function(){try{var k='plane-list-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+            },
+        ],
     },
     plugins: [pluginReact(), pluginSvgr(), pluginAircraftPhotoPreviews()],
 });

@@ -2365,3 +2365,38 @@
   - 与设计实现同步的语义 token、结构与 Do/Don't 更新。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+在保留现有深色「Night Flight Archive」为默认的前提下，增加日间阅读向亮色主题，并在顶栏提供深浅切换与持久化。
+
+## 完成过程
+
+1. 依 impeccable 原则为亮色写场景句与冷灰蓝中性策略；在 `App.css` 用 `:root` / `html[data-theme="light"]` 定义 `--pl-*` 语义 token，壳层、面板、Fleet、个人页与地图样式改为引用变量。
+2. 新增 `src/utils/themePreference.ts`、`ThemeToggle` 组件；`App.tsx` 用状态与 `useLayoutEffect` 同步 `data-theme`、`localStorage` 与 `theme-color` meta。
+3. `rsbuild.config.ts` 在 `<head>` 最前注入内联脚本，降低亮色刷新 FOUC；更新 `DESIGN.md` §2.4 与 Header 说明；`pnpm run build` 通过；`ReadLints` 检查改动文件。
+
+## 修改具体文件
+
+- `src/App.css`
+  - `--pl-*` 深浅两套 token；`.app-header__actions`、`.theme-toggle`。
+- `src/App.tsx`
+  - 主题状态、持久化与顶栏 `ThemeToggle` 编排。
+- `src/utils/themePreference.ts`
+  - 存储键、读写与 `meta theme-color` 辅助函数（新建）。
+- `src/components/theme-toggle/index.tsx`
+  - 无障碍主题切换按钮（新建）。
+- `src/pages/home/index.css`、`src/pages/personal/index.css`、`src/components/map/index.css`
+  - 颜色改为 `var(--pl-*)`；地图在亮色下补充 route/marker 对比微调。
+- `rsbuild.config.ts`
+  - `html.tags` 首屏主题恢复脚本。
+- `DESIGN.md`
+  - §2.4 亮色说明、双主题概览、Header 与 Do 条款小幅更新。
+- `taskRecord.md`
+  - 追加本次任务记录。

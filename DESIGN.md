@@ -25,6 +25,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 - 全站 sans：数据、筛选、导航、芯片统一无衬线，避免 ornament 混入控件。
 - 信息组织优先使用列表、分区标题、筛选行和状态胶囊；Fleet 区域内联滚动与整页滚动共用一套滚动条色相（见 §7）。
 - 动效以 160–480ms 的过渡与单次 reveal 动画为主，`prefers-reduced-motion: reduce` 下收窄为瞬时（见 `src/App.css`）。
+- **双主题**：默认深色「Night Flight Archive」；亮色为日间阅读向的冷灰蓝底，由 `--pl-*` token 在 `html[data-theme="light"]` 下整体覆写，顶栏可切换并写入 `localStorage`（见 §2.4）。
 
 ## 2. Colors
 
@@ -75,9 +76,20 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 
 ### 2.3 Named Rules
 
-**The Drenched Night Rule.** 深色是阅读环境，不是皮肤开关。正文与数据行的对比度仍以 WCAG AA 为基准目标（参见 `PRODUCT.md`）。
+**The Drenched Night Rule.** 深色为默认档案语境；亮色为可选日间阅读语境。两套主题下正文与数据行均以 WCAG AA 为对比度目标（参见 `PRODUCT.md`）。
 
 **The Accent Rarity Rule.** 青蓝停留在导航信号、Eyebrow、外链与滚动 thumb 等小面积色块；Fleet 条目 hover 只允许轻微上浮与边框变亮，不写满屏渐变。
+
+### 2.4 亮色主题（Daylight Archive）
+
+**场景句**：日间在自然光或明亮室内查阅机型、核对乘机记录时，需要接近纸张的浅色冷灰底，强调色略压低饱和度，避免屏幕眩光与浅色外链对比不足。
+
+| 机制 | 说明 |
+|------|------|
+| **变量层** | `:root` 定义深色默认 `--pl-*`；`html[data-theme="light"]` 覆写同一批变量，首页 / 个人页 / 地图样式只引用变量，不手写两套色值。 |
+| **首屏** | `rsbuild.config.ts` 的 `html.tags` 在 `<head>` 最前注入内联脚本，从 `localStorage.getItem('plane-list-theme')` 恢复 `light` / `dark`，减轻亮色刷新时的闪烁。 |
+| **控件** | 顶栏右侧、`主导航` 左侧：`ThemeToggle` 圆角按钮，图标太阳（当前深色时可切浅色）/ 月亮（当前亮色时可切深色），`aria-pressed` 为真表示亮色激活；`meta[name=theme-color]` 随主题切换。 |
+| **色票倾向** | 壳层：浅冷灰蓝渐变（`#dfeaf3`～`#e8f0f7` 系）；正文墨蓝灰（`#243848` 系）；强调与外链改为偏深的钢青（`#1a6f9a` / `#0b6e9e` 系），仍保持单冷色accent 体系。 |
 
 ## 3. Typography
 
@@ -124,7 +136,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 
 | 构件 | 行为 |
 |------|------|
-| **Header** | 左品牌（kicker + title），右 `NavLink` 主导航；小屏纵向堆叠、链接全宽约定触摸高度 `2.75rem`。 |
+| **Header** | 左品牌（kicker + title），右为 **主题切换**（`ThemeToggle`）与 `NavLink` 主导航；小屏纵向堆叠、链接全宽约定触摸高度 `2.75rem`。 |
 | **Nav Pill** | 默认幽灵边线；`**--active`** 浅青底 + 亮边；`**--cta**`（若使用）更高亮青的浅填充。外链（如「联系作者」）与路由链视觉同级。 |
 | **Main** | 单列 `grid` 居中承接页面模块；Wiki 与个人页自控内部 max-width。 |
 
@@ -173,7 +185,7 @@ Firefox：依赖 `scrollbar-width: thin` + `scrollbar-color`；Safari/Chromium�
 
 - **Do** 继续使用层级化 navy surface + hairline border 区分区块，少用阴影讲故事。
 - **Do** 让机型代号、航司名、载客统计与数据来源成为Fleet列表的第一可读信息。
-- **Do** 把新溢出滚动区域接到 **`scroll-area-night` + `:root` 变量**，保持轨道色相一致。
+- **Do** 把溢出滚动区域接到 **`scroll-area-night` + `:root`（或 `html[data-theme]`）滚动变量**，保持轨道色相一致。
 - **Do** 用 `motion-duration-fast` / `standard` / `enter` 三档时间管理反馈，不与随机自定义时长混用。
 
 ### Don't

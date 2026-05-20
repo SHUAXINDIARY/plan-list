@@ -1,6 +1,20 @@
-import { Suspense, lazy, type ReactElement } from "react";
+import {
+    Suspense,
+    lazy,
+    useLayoutEffect,
+    useState,
+    type ReactElement,
+} from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { ThemeToggle } from "./components/theme-toggle";
 import "./App.css";
+import {
+    applyThemePreference,
+    readThemePreferenceFromStorage,
+    updateDocumentThemeColor,
+    writeThemePreferenceToStorage,
+    type ThemePreference,
+} from "./utils/themePreference";
 
 interface NavigationItem {
     path: string;
@@ -30,6 +44,22 @@ const getNavigationClassName = ({
 
 // 应用根组件负责装配导航、路由和页面级懒加载边界。
 const App = (): ReactElement => {
+    const [themePreference, setThemePreference] = useState<ThemePreference>(
+        (): ThemePreference => {
+            const fromAttr = document.documentElement.getAttribute("data-theme");
+            if (fromAttr === "light" || fromAttr === "dark") {
+                return fromAttr;
+            }
+            return readThemePreferenceFromStorage();
+        },
+    );
+
+    useLayoutEffect(() => {
+        applyThemePreference(themePreference);
+        writeThemePreferenceToStorage(themePreference);
+        updateDocumentThemeColor(themePreference);
+    }, [themePreference]);
+
     return (
         <BrowserRouter>
             <div className="app-shell">
@@ -38,28 +68,38 @@ const App = (): ReactElement => {
                         <p className="app-kicker">Night Flight Archive</p>
                         <p className="app-title">Plane List</p>
                     </div>
-                    <nav className="app-nav" aria-label="主导航">
-                        {NAVIGATION_ITEMS.map(
-                            (item: NavigationItem): ReactElement => (
-                                <NavLink
-                                    key={item.path}
-                                    to={item.path}
-                                    end={item.end}
-                                    className={getNavigationClassName}
-                                >
-                                    {item.label}
-                                </NavLink>
-                            ),
-                        )}
-                        <a
-                            className="app-nav__link"
-                            href={AUTHOR_PROFILE_URL}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            联系作者
-                        </a>
-                    </nav>
+                    <div className="app-header__actions">
+                        <ThemeToggle
+                            preference={themePreference}
+                            onToggle={(): void => {
+                                setThemePreference((previous: ThemePreference) =>
+                                    previous === "dark" ? "light" : "dark",
+                                );
+                            }}
+                        />
+                        <nav className="app-nav" aria-label="主导航">
+                            {NAVIGATION_ITEMS.map(
+                                (item: NavigationItem): ReactElement => (
+                                    <NavLink
+                                        key={item.path}
+                                        to={item.path}
+                                        end={item.end}
+                                        className={getNavigationClassName}
+                                    >
+                                        {item.label}
+                                    </NavLink>
+                                ),
+                            )}
+                            <a
+                                className="app-nav__link"
+                                href={AUTHOR_PROFILE_URL}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                联系作者
+                            </a>
+                        </nav>
+                    </div>
                 </header>
 
                 <main className="app-main">

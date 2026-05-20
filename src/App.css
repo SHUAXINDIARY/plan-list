@@ -1,12 +1,219 @@
+/* ========= 全站语义色（深色为默认，亮色见 `html[data-theme="light"]`）========= */
 :root {
-    /* Night Flight Archive 纵向滚动轨道 token：视口与 `.scroll-area-night` 容器共用 */
+    /* 正文与标题 */
+    --pl-text-body: #edf4f8;
+    --pl-text-heading: #f4f8fb;
+    --pl-text-secondary: #b5c6d1;
+    --pl-text-kicker: #9fb6c5;
+    --pl-text-meta: #8ea7b5;
+    --pl-text-placeholder: #6f8796;
+    --pl-text-emphasis: #dff4ff;
+    --pl-text-data: #d9e7ee;
+    --pl-text-english: #9cb5c2;
+    --pl-text-chip: #d6e5ed;
+
+    --pl-accent: #7cc8eb;
+    --pl-link: #9ed8f2;
+    --pl-link-decoration: rgba(158, 216, 242, 0.36);
+    --pl-link-hover: #dff4ff;
+    --pl-link-hover-decoration: rgba(223, 244, 255, 0.82);
+    --pl-underline-model: rgba(124, 200, 235, 0.4);
+    --pl-underline-model-hover: rgba(244, 248, 251, 0.9);
+
+    --pl-border-default: rgba(164, 188, 201, 0.16);
+    --pl-border-muted: rgba(164, 188, 201, 0.14);
+    --pl-border-divider: rgba(164, 188, 201, 0.1);
+    --pl-border-divider-mid: rgba(164, 188, 201, 0.12);
+    --pl-border-input: rgba(164, 188, 201, 0.18);
+    --pl-border-strong: rgba(164, 188, 201, 0.22);
+    --pl-border-nav-hover: rgba(100, 181, 216, 0.72);
+    --pl-border-nav-active: rgba(100, 181, 216, 0.82);
+    --pl-nav-active-bg: rgba(55, 126, 160, 0.28);
+    --pl-border-focus: rgba(124, 200, 235, 0.78);
+    --pl-focus-glow: 0 0 0 3px rgba(124, 200, 235, 0.12);
+    --pl-border-accent-soft: rgba(124, 200, 235, 0.24);
+    --pl-border-entry-hover: rgba(124, 200, 235, 0.28);
+    --pl-border-chip-hover: rgba(124, 200, 235, 0.34);
+    --pl-border-pill: rgba(124, 200, 235, 0.24);
+    --pl-border-preview-btn-hover: rgba(124, 200, 235, 0.48);
+    --pl-border-loading-ring: rgba(124, 200, 235, 0.18);
+    --pl-border-error: rgba(242, 118, 118, 0.5);
+
+    --pl-surface-panel: rgba(10, 21, 33, 0.78);
+    --pl-surface-toolbar: rgba(7, 17, 29, 0.56);
+    --pl-surface-entry: rgba(7, 17, 29, 0.72);
+    --pl-surface-entry-hover: rgba(10, 26, 42, 0.82);
+    --pl-surface-input: rgba(7, 17, 29, 0.9);
+    --pl-surface-chip: rgba(18, 36, 54, 0.84);
+    --pl-surface-reference: rgba(7, 17, 29, 0.32);
+    --pl-surface-reference-hover: rgba(10, 26, 42, 0.58);
+    --pl-surface-data-state: rgba(15, 31, 48, 0.78);
+    --pl-surface-route-loading: rgba(15, 31, 48, 0.78);
+    --pl-surface-pill: rgba(55, 126, 160, 0.18);
+    --pl-surface-personal-pill: rgba(7, 17, 29, 0.58);
+    --pl-surface-gallery: rgba(7, 17, 29, 0.58);
+    --pl-surface-image: rgba(15, 31, 48, 0.78);
+    --pl-surface-airport: rgba(7, 17, 29, 0.52);
+    --pl-surface-preview-btn: rgba(15, 31, 48, 0.86);
+    --pl-surface-preview-btn-hover: rgba(25, 49, 72, 0.92);
+    --pl-surface-preview-loading: rgba(7, 17, 29, 0.88);
+    --pl-surface-preview-img: rgba(7, 17, 29, 0.72);
+
+    --pl-nav-cta-bg: rgba(124, 200, 235, 0.14);
+    --pl-nav-cta-border: rgba(124, 200, 235, 0.38);
+    --pl-nav-cta-bg-hover: rgba(124, 200, 235, 0.24);
+    --pl-nav-cta-border-hover: rgba(124, 200, 235, 0.58);
+
+    --pl-body-gradient: linear-gradient(to bottom, #020917, #101725);
+    --pl-shell-bg:
+        radial-gradient(
+            circle at top left,
+            rgba(43, 119, 157, 0.24),
+            transparent 34rem
+        ),
+        linear-gradient(135deg, #07111d 0%, #0b1421 48%, #111827 100%);
+
+    --pl-error-text: #ffd3d3;
+
+    --pl-shadow-preview-loading: 0 1rem 3rem rgba(2, 8, 18, 0.36);
+    --pl-shadow-preview-img: 0 1.5rem 4rem rgba(2, 8, 18, 0.46);
+    --pl-shadow-map-tooltip: 0 0.85rem 1.8rem rgba(2, 8, 18, 0.34);
+    --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
+
+    --pl-map-bg:
+        radial-gradient(circle at 72% 28%, oklch(0.68 0.085 225 / 0.14), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.58 0.07 218 / 0.12), transparent 10rem),
+        linear-gradient(135deg, oklch(0.16 0.022 248 / 0.96), oklch(0.22 0.026 230 / 0.82));
+    --pl-map-border: rgba(164, 188, 201, 0.16);
+    --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.04);
+    --pl-map-frame: rgba(124, 200, 235, 0.1);
+    --pl-map-vignette:
+        linear-gradient(to right, rgba(7, 17, 29, 0.42), transparent 18%, transparent 82%, rgba(7, 17, 29, 0.38)),
+        linear-gradient(to bottom, rgba(7, 17, 29, 0.3), transparent 28%, rgba(7, 17, 29, 0.26));
+
+    --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
+    --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
+    --pl-map-legend-bg: rgba(7, 17, 29, 0.72);
+    --pl-map-legend-text: rgba(217, 231, 238, 0.78);
+    --pl-map-legend-border: rgba(164, 188, 201, 0.14);
+
+    --pl-preview-backdrop:
+        radial-gradient(circle at 50% 20%, oklch(0.32 0.045 225 / 0.34), transparent 22rem),
+        oklch(0.1 0.018 245 / 0.94);
+
+    --pl-summary-chevron: #9ed8f2;
+
+    /* Night Flight Archive 纵向滚动轨道 token */
     --scroll-area-size: 10px;
-    /** 滚动轨道背景色 */
     --scroll-area-track-bg: rgba(15, 31, 48, 0.55);
-    /** 拖拽条默认色 */
     --scroll-area-thumb: rgba(124, 200, 235, 0.42);
-    /** 拖拽条悬停提亮 */
     --scroll-area-thumb-hover: rgba(158, 216, 242, 0.55);
+}
+
+html[data-theme="light"] {
+    --pl-text-body: #243848;
+    --pl-text-heading: #142a3a;
+    --pl-text-secondary: #4d6578;
+    --pl-text-kicker: #5a7285;
+    --pl-text-meta: #5e7688;
+    --pl-text-placeholder: #8a9bab;
+    --pl-text-emphasis: #0d4a6b;
+    --pl-text-data: #2c4154;
+    --pl-text-english: #5c7588;
+    --pl-text-chip: #1e3d52;
+    --pl-accent: #1a6f9a;
+    --pl-link: #0b6e9e;
+    --pl-link-decoration: rgba(11, 110, 158, 0.45);
+    --pl-link-hover: #0a5a82;
+    --pl-link-hover-decoration: rgba(10, 90, 130, 0.75);
+    --pl-underline-model: rgba(21, 104, 150, 0.55);
+    --pl-underline-model-hover: rgba(21, 36, 52, 0.85);
+
+    --pl-border-default: rgba(30, 55, 72, 0.14);
+    --pl-border-muted: rgba(30, 55, 72, 0.12);
+    --pl-border-divider: rgba(30, 55, 72, 0.08);
+    --pl-border-divider-mid: rgba(30, 55, 72, 0.1);
+    --pl-border-input: rgba(30, 55, 72, 0.16);
+    --pl-border-strong: rgba(30, 55, 72, 0.2);
+    --pl-border-nav-hover: rgba(21, 104, 150, 0.55);
+    --pl-border-nav-active: rgba(21, 104, 150, 0.62);
+    --pl-nav-active-bg: rgba(100, 181, 216, 0.22);
+    --pl-border-focus: rgba(21, 104, 150, 0.62);
+    --pl-focus-glow: 0 0 0 3px rgba(21, 104, 150, 0.14);
+    --pl-border-accent-soft: rgba(21, 104, 150, 0.28);
+    --pl-border-entry-hover: rgba(21, 104, 150, 0.38);
+    --pl-border-chip-hover: rgba(21, 104, 150, 0.42);
+    --pl-border-pill: rgba(21, 104, 150, 0.28);
+    --pl-border-preview-btn-hover: rgba(21, 104, 150, 0.48);
+    --pl-border-loading-ring: rgba(21, 104, 150, 0.25);
+
+    --pl-surface-panel: oklch(0.99 0.006 245 / 0.94);
+    --pl-surface-toolbar: oklch(0.97 0.012 245 / 0.95);
+    --pl-surface-entry: oklch(0.985 0.008 245 / 0.97);
+    --pl-surface-entry-hover: oklch(0.96 0.016 245 / 0.98);
+    --pl-surface-input: oklch(0.995 0.004 245 / 0.98);
+    --pl-surface-chip: oklch(0.94 0.02 245 / 0.95);
+    --pl-surface-reference: oklch(0.965 0.012 245 / 0.88);
+    --pl-surface-reference-hover: oklch(0.955 0.016 245 / 0.94);
+    --pl-surface-data-state: oklch(0.975 0.01 245 / 0.96);
+    --pl-surface-route-loading: oklch(0.975 0.01 245 / 0.96);
+    --pl-surface-pill: rgba(100, 181, 216, 0.18);
+    --pl-surface-personal-pill: oklch(0.97 0.012 245 / 0.94);
+    --pl-surface-gallery: oklch(0.97 0.012 245 / 0.94);
+    --pl-surface-image: oklch(0.93 0.018 245 / 0.88);
+    --pl-surface-airport: oklch(0.98 0.008 245 / 0.95);
+    --pl-surface-preview-btn: oklch(0.995 0.004 245 / 0.96);
+    --pl-surface-preview-btn-hover: oklch(0.96 0.016 245 / 0.98);
+    --pl-surface-preview-loading: oklch(0.995 0.004 245 / 0.97);
+    --pl-surface-preview-img: oklch(0.985 0.008 245 / 0.98);
+
+    --pl-nav-cta-bg: rgba(100, 181, 216, 0.2);
+    --pl-nav-cta-border: rgba(21, 104, 150, 0.35);
+    --pl-nav-cta-bg-hover: rgba(100, 181, 216, 0.28);
+    --pl-nav-cta-border-hover: rgba(21, 104, 150, 0.45);
+
+    --pl-body-gradient: linear-gradient(to bottom, #e5edf5, #d8e6f0);
+    --pl-shell-bg:
+        radial-gradient(
+            circle at top left,
+            rgba(100, 181, 216, 0.2),
+            transparent 34rem
+        ),
+        linear-gradient(135deg, #dfeaf3 0%, #e8f0f7 48%, #dce8f2 100%);
+
+    --pl-error-text: #b42318;
+
+    --pl-shadow-preview-loading: 0 1rem 2.5rem rgba(20, 40, 60, 0.12);
+    --pl-shadow-preview-img: 0 1.5rem 3rem rgba(20, 40, 60, 0.14);
+    --pl-shadow-map-tooltip: 0 0.85rem 1.8rem rgba(20, 40, 60, 0.12);
+    --pl-text-shadow-flag: 0 0.35rem 0.75rem rgba(20, 40, 60, 0.15);
+
+    --pl-map-bg:
+        radial-gradient(circle at 72% 28%, oklch(0.72 0.08 225 / 0.22), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.78 0.06 218 / 0.2), transparent 10rem),
+        linear-gradient(135deg, oklch(0.94 0.02 248 / 0.98), oklch(0.9 0.025 230 / 0.92));
+    --pl-map-border: rgba(30, 55, 72, 0.12);
+    --pl-map-inset: inset 0 0 0 1px rgba(21, 104, 150, 0.08);
+    --pl-map-frame: rgba(21, 104, 150, 0.16);
+    --pl-map-vignette:
+        linear-gradient(to right, oklch(0.94 0.02 245 / 0.55), transparent 18%, transparent 82%, oklch(0.94 0.02 245 / 0.52)),
+        linear-gradient(to bottom, oklch(0.94 0.02 245 / 0.45), transparent 28%, oklch(0.94 0.02 245 / 0.4));
+
+    --pl-map-tooltip-bg: oklch(0.99 0.006 245 / 0.96);
+    --pl-map-tooltip-border: rgba(30, 55, 72, 0.14);
+    --pl-map-legend-bg: oklch(0.99 0.006 245 / 0.92);
+    --pl-map-legend-text: rgba(36, 56, 72, 0.82);
+    --pl-map-legend-border: rgba(30, 55, 72, 0.12);
+
+    --pl-preview-backdrop:
+        radial-gradient(circle at 50% 20%, oklch(0.72 0.06 225 / 0.2), transparent 22rem),
+        oklch(0.94 0.02 245 / 0.92);
+
+    --pl-summary-chevron: #0b6e9e;
+
+    --scroll-area-track-bg: rgba(220, 232, 241, 0.65);
+    --scroll-area-thumb: rgba(21, 104, 150, 0.35);
+    --scroll-area-thumb-hover: rgba(21, 104, 150, 0.48);
 }
 
 body {
@@ -16,9 +223,11 @@ body {
     --motion-duration-standard: 240ms;
     --motion-duration-enter: 480ms;
     margin: 0;
-    color: #edf4f8;
+    color: var(--pl-text-body);
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    background-image: linear-gradient(to bottom, #020917, #101725);
+    background-image: var(--pl-body-gradient);
+    transition: background-color 240ms var(--motion-ease-out-quart),
+        color 240ms var(--motion-ease-out-quart);
 }
 
 /*
@@ -86,15 +295,9 @@ a {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    /* 避免窄屏出现横向滚动条时背景裁切异常；核心布局仍由各面板 width/min-width 约束。 */
     overflow-x: clip;
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(43, 119, 157, 0.24),
-            transparent 34rem
-        ),
-        linear-gradient(135deg, #07111d 0%, #0b1421 48%, #111827 100%);
+    background: var(--pl-shell-bg);
+    transition: background 240ms var(--motion-ease-out-quart);
 }
 
 .app-header {
@@ -106,12 +309,64 @@ a {
     padding-bottom: 1.25rem;
     padding-left: max(clamp(1rem, 4vw, 3rem), env(safe-area-inset-left, 0px));
     padding-right: max(clamp(1rem, 4vw, 3rem), env(safe-area-inset-right, 0px));
-    border-bottom: 1px solid rgba(164, 188, 201, 0.16);
+    border-bottom: 1px solid var(--pl-border-default);
+}
+
+.app-header__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem 1rem;
+}
+
+.theme-toggle {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    color: var(--pl-text-secondary);
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid var(--pl-border-default);
+    border-radius: 999px;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    color: var(--pl-text-heading);
+    border-color: var(--pl-border-nav-hover);
+    outline: none;
+    transform: translate3d(0, -1px, 0);
+}
+
+.theme-toggle[aria-pressed="true"] {
+    color: var(--pl-accent);
+    border-color: var(--pl-border-nav-active);
+    background-color: var(--pl-nav-active-bg);
+}
+
+.theme-toggle__icon {
+    display: inline-flex;
+    line-height: 0;
+}
+
+.theme-toggle__svg {
+    display: block;
 }
 
 .app-kicker {
     margin: 0 0 0.25rem;
-    color: #9fb6c5;
+    color: var(--pl-text-kicker);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.18em;
@@ -120,7 +375,7 @@ a {
 
 .app-title {
     margin: 0;
-    color: #f4f8fb;
+    color: var(--pl-text-heading);
     font-size: 1.15rem;
     font-weight: 700;
 }
@@ -136,8 +391,8 @@ a {
     align-items: center;
     justify-content: center;
     padding: 0.6rem 0.9rem;
-    color: #b5c6d1;
-    border: 1px solid rgba(164, 188, 201, 0.16);
+    color: var(--pl-text-secondary);
+    border: 1px solid var(--pl-border-default);
     border-radius: 999px;
     transition:
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
@@ -149,29 +404,29 @@ a {
 
 .app-nav__link:hover,
 .app-nav__link:focus-visible {
-    color: #f4f8fb;
-    border-color: rgba(100, 181, 216, 0.72);
+    color: var(--pl-text-heading);
+    border-color: var(--pl-border-nav-hover);
     outline: none;
     transform: translate3d(0, -1px, 0);
 }
 
 .app-nav__link--active {
-    color: #f4f8fb;
-    background-color: rgba(55, 126, 160, 0.28);
-    border-color: rgba(100, 181, 216, 0.82);
+    color: var(--pl-text-heading);
+    background-color: var(--pl-nav-active-bg);
+    border-color: var(--pl-border-nav-active);
 }
 
 /* 主导航内突出次要行动：跳转外部资料补充表单。 */
 .app-nav__link--cta {
-    color: #f4f8fb;
-    background-color: rgba(124, 200, 235, 0.14);
-    border-color: rgba(124, 200, 235, 0.38);
+    color: var(--pl-text-heading);
+    background-color: var(--pl-nav-cta-bg);
+    border-color: var(--pl-nav-cta-border);
 }
 
 .app-nav__link--cta:hover,
 .app-nav__link--cta:focus-visible {
-    background-color: rgba(124, 200, 235, 0.24);
-    border-color: rgba(124, 200, 235, 0.58);
+    background-color: var(--pl-nav-cta-bg-hover);
+    border-color: var(--pl-nav-cta-border-hover);
 }
 
 .app-main {
@@ -192,16 +447,19 @@ a {
     max-width: 100%;
     box-sizing: border-box;
     padding: clamp(1.5rem, 5vw, 3rem);
-    background-color: rgba(10, 21, 33, 0.78);
-    border: 1px solid rgba(164, 188, 201, 0.16);
+    background-color: var(--pl-surface-panel);
+    border: 1px solid var(--pl-border-default);
     border-radius: 1.25rem;
     animation: archive-reveal var(--motion-duration-enter)
         var(--motion-ease-out-quint) both;
+    transition:
+        background-color 240ms var(--motion-ease-out-quart),
+        border-color 240ms var(--motion-ease-out-quart);
 }
 
 .page-eyebrow {
     margin: 0 0 0.75rem;
-    color: #7cc8eb;
+    color: var(--pl-accent);
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.16em;
@@ -210,7 +468,7 @@ a {
 
 .page-panel h1 {
     margin: 0;
-    color: #f4f8fb;
+    color: var(--pl-text-heading);
     font-size: clamp(2.4rem, 6vw, 4.25rem);
     line-height: 0.96;
 }
@@ -218,7 +476,7 @@ a {
 .page-panel p:not(.page-eyebrow) {
     max-width: 42rem;
     margin: 1.25rem 0 0;
-    color: #b5c6d1;
+    color: var(--pl-text-secondary);
     font-size: 1.05rem;
     font-weight: 400;
     line-height: 1.7;
@@ -226,9 +484,9 @@ a {
 
 .route-loading {
     padding: 1rem 1.1rem;
-    color: #d9e7ee;
-    background-color: rgba(15, 31, 48, 0.78);
-    border: 1px solid rgba(164, 188, 201, 0.18);
+    color: var(--pl-text-data);
+    background-color: var(--pl-surface-route-loading);
+    border: 1px solid var(--pl-border-input);
     border-radius: 0.9rem;
     animation: archive-reveal var(--motion-duration-standard)
         var(--motion-ease-out-quint) both;
@@ -238,6 +496,16 @@ a {
     .app-header {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .app-header__actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .theme-toggle {
+        align-self: flex-end;
     }
 
     .app-nav {
