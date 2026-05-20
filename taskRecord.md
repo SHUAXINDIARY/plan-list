@@ -2269,3 +2269,26 @@
   - `.fleet-results`：细滚动条配色、WebKit 圆角 thumb、hover 提亮；去掉右侧手填 padding。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将整页（视口）滚动条与应用内 Fleet「Scroll area」风格对齐，不改变 `App.tsx` 结构、整体留白与 Night Flight Archive 基调。
+
+## 完成过程
+
+1. 视口纵向滚动作用于文档 `:root`，在 `App.css` 增加与 `.fleet-results` 一致的 `scrollbar-width`、`scrollbar-color`（Firefox）与 `::-webkit-scrollbar` 样式。
+2. 使用 `scrollbar-gutter: stable` 占位垂直 gutter，减轻滚动条出现/消失时正文宽度跳动；无需修改各页面 padding。
+3. `ReadLints` 检查 `App.css`、`taskRecord.md`。
+
+## 修改具体文件
+
+- `src/App.css`
+  - `:root` 视口滚动条细轨道与同色系 thumb/hover。
+- `taskRecord.md`
+  - 追加本次任务记录。

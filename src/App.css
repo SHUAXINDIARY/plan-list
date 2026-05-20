@@ -10,6 +10,38 @@ body {
     background-image: linear-gradient(to bottom, #020917, #101725);
 }
 
+/*
+ * 视口（页面级）滚动条：与 Fleet 结果区等「内嵌 Scroll area」同色同形，避免出现两套系统滚动条观感。
+ * scrollbar-gutter: stable 仅占位垂直 gutter，避免因有无滚动条切换导致整页内容横向偏移。
+ */
+:root {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 200, 235, 0.42) rgba(15, 31, 48, 0.55);
+}
+
+:root::-webkit-scrollbar {
+    width: 10px;
+}
+
+:root::-webkit-scrollbar-track {
+    margin-block: 0.45rem;
+    margin-inline-end: 2px;
+    background-color: rgba(15, 31, 48, 0.55);
+    border-radius: 999px;
+}
+
+:root::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    background-color: rgba(124, 200, 235, 0.42);
+}
+
+:root::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(158, 216, 242, 0.55);
+}
+
 @keyframes archive-reveal {
     from {
         opacity: 0;
