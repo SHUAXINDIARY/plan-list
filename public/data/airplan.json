@@ -739,5 +739,22 @@
                 "B737-900ER": "https://commons.wikimedia.org/wiki/File:HS-LTR.jpg"
             }
         }
+    },
+    {
+        "airline": "中华航空",
+        "passengerAircraftCount": 83,
+        "models": {
+            "Airbus": {
+                "A321-271NX": "https://www.jetphotos.com/photo/12086806",
+                "A330-302": "https://www.jetphotos.com/photo/12085983",
+                "A350-941": "https://www.jetphotos.com/photo/12078577"
+            },
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:2013-11-20_B-18652_China_Airlines_Boeing_737-800.jpg",
+                "B747-400": "https://commons.wikimedia.org/wiki/File:HONG_KONG_KAI_TAK_FEB_1998_CHINA_AIRLINES_BOEING_737-400_B-18671_(8673210208).jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:China_Airlines_%28Boeing_livery%29,_Boeing_777-300ER,_B-18007_-_TPE_%2836358197250%29.jpg",
+                "B777-F": "https://www.jetphotos.com/photo/12086390"
+            }
+        }
     }
 ]
