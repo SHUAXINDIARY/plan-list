@@ -2631,3 +2631,28 @@
   - 同上（亮色主题参数）。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将个人页 `CHECKED_AIRPORTS` 机场打卡数据从 `personal/constant.ts` 迁移到全站 `constants` 模块集中维护。
+
+## 完成过程
+
+1. 在 `src/constants/external-links.ts` 增加 `CheckedAirport` 类型与 `CHECKED_AIRPORTS` 数组，并更新文件头说明。
+2. `personal/type.d.ts` 改为从 constants 再导出 `CheckedAirport`，页面类型引用保持不变。
+3. `personal/constant.ts` 删除原数据块，改为导入并再导出 `CHECKED_AIRPORTS`，派生逻辑（分组、地图 marker）不变。
+
+## 修改具体文件
+
+- `src/constants/external-links.ts`
+  - 承接机场打卡静态数据与类型定义。
+- `src/pages/personal/constant.ts`
+  - 移除内联数组，转引 constants。
+- `src/pages/personal/type.d.ts`
+  - `CheckedAirport` 类型来源改为 constants。
+- `taskRecord.md`
+  - 追加本次任务记录。

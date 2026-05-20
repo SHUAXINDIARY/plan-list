@@ -1,10 +1,6 @@
-export interface CheckedAirport {
-  name: string;
-  lat: number;
-  lng: number;
-  type: 'airport';
-  description: string;
-}
+import type { CheckedAirport } from '../../constants/external-links';
+
+export type { CheckedAirport };
 
 export interface AirportBounds {
   minLat: number;
@@ -19,7 +15,9 @@ export interface AirportMarkerPosition {
 }
 
 export interface AirportCountryGroup {
+  /** 国家或地区分组名称。 */
   countryName: string;
+  /** 该分组下的已打卡机场列表。 */
   airports: CheckedAirport[];
 }
 
