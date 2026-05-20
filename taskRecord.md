@@ -2400,3 +2400,26 @@
   - §2.4 亮色说明、双主题概览、Header 与 Do 条款小幅更新。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将个人页 `index.tsx` 中的模块级机场分组、地图标注与预览关闭时长等常量与派生数据拆分到 `constant.ts`，页面组件只保留交互与渲染。
+
+## 完成过程
+
+1. 在 `constant.ts` 中于 `CHECKED_AIRPORTS` 之后补充 `getAirportCountryName`、`groupAirportsByCountry`（模块内私有）及导出项 `airportCountryGroups`、`checkedCountryCount`、`PHOTO_PREVIEW_EXIT_DURATION_MS`、`airportMapMarkers`；引入 `WorldMapMarker` 与 `AirportCountryGroup` 类型。
+2. `index.tsx` 从 `./constant` 上述导出并删除重复定义；移除对已迁移逻辑的 `WorldMapMarker` 依赖。
+3. 执行 `pnpm run build` 通过；`ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/personal/constant.ts`
+  - 集中个人页机场分组、国家地区计数、全屏预览关闭时长、地图 markers 与国旗映射逻辑。
+- `src/pages/personal/index.tsx`
+  - 仅保留组件与从 `constant` 的导入。
+- `taskRecord.md`
+  - 追加本次任务记录。

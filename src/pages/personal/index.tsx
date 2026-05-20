@@ -2,11 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MouseEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import AnnotatedWorldMap from '../../components/map';
-import type { WorldMapMarker } from '../../components/map';
 import {
   CHECKED_AIRPORTS,
   MAP_ROUTES,
+  PHOTO_PREVIEW_EXIT_DURATION_MS,
   aircraftPhotos,
+  airportCountryGroups,
+  airportMapMarkers,
+  checkedCountryCount,
 } from './constant';
 import type {
   AircraftPhoto,
@@ -14,75 +17,6 @@ import type {
   CheckedAirport,
 } from './type';
 import './index.css';
-
-// 根据描述中的国家前缀提取分组名称，让机场列表保持地理层级。
-const getAirportCountryName = (airport: CheckedAirport): string => {
-  const countryNameMatch = airport.description.match(/^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国)/);
-
-  return countryNameMatch ? countryNameMatch[1] : '其他地区';
-};
-
-// 按国家或地区聚合机场，并让打卡数更多的分组优先展示。
-const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup[] => {
-  const airportGroups = new Map<string, CheckedAirport[]>();
-
-  airports.forEach((airport: CheckedAirport): void => {
-    const countryName = getAirportCountryName(airport);
-    const groupedAirports = airportGroups.get(countryName) ?? [];
-    airportGroups.set(countryName, [...groupedAirports, airport]);
-  });
-
-  return Array.from(airportGroups.entries())
-    .map(
-      ([countryName, groupedAirports]: [string, CheckedAirport[]]): AirportCountryGroup => ({
-        countryName,
-        airports: groupedAirports,
-      }),
-    )
-    .sort((firstGroup: AirportCountryGroup, secondGroup: AirportCountryGroup): number => {
-      const airportCountDifference = secondGroup.airports.length - firstGroup.airports.length;
-
-      if (airportCountDifference !== 0) {
-        return airportCountDifference;
-      }
-
-      return firstGroup.countryName.localeCompare(secondGroup.countryName, 'zh-Hans-CN');
-    });
-};
-
-const airportCountryGroups = groupAirportsByCountry(CHECKED_AIRPORTS);
-const checkedCountryCount = airportCountryGroups.length;
-// 关闭动画需要短暂保留预览层，时长与 CSS 退出动画保持一致。
-const PHOTO_PREVIEW_EXIT_DURATION_MS = 180;
-const DEFAULT_AIRPORT_COUNTRY_FLAG = '🌐';
-const AIRPORT_COUNTRY_FLAG_BY_NAME: Record<string, string> = {
-  中国: '🇨🇳',
-  日本: '🇯🇵',
-  泰国: '🇹🇭',
-  西班牙: '🇪🇸',
-  意大利: '🇮🇹',
-  法国: '🇫🇷',
-  摩洛哥: '🇲🇦',
-  韩国: '🇰🇷',
-};
-
-// 将机场业务数据整理为通用地图组件可消费的标注数据。
-const airportMapMarkers: WorldMapMarker[] = CHECKED_AIRPORTS.map(
-  (airport: CheckedAirport): WorldMapMarker => {
-    const countryName = getAirportCountryName(airport);
-
-    return {
-      id: airport.name,
-      name: airport.name,
-      description: airport.description,
-      coordinate: {
-        lat: airport.lat,
-        lng: airport.lng,
-      },
-      flag: AIRPORT_COUNTRY_FLAG_BY_NAME[countryName] ?? DEFAULT_AIRPORT_COUNTRY_FLAG,
-    };
-  },
-);
 
 const PersonalPage = (): ReactElement => {
   const [previewPhotoIndex, setPreviewPhotoIndex] = useState<number | null>(null);

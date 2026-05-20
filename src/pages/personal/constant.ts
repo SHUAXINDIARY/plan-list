@@ -1,5 +1,14 @@
+import type { WorldMapMarker } from '../../components/map';
 import { aircraftPhotoPreviewUrls } from './photoPreviews.generated';
-import type { AircraftPhoto, AirportBounds, CheckedAirport, MapLandmass, MapRegionLabel, MapRoute } from './type';
+import type {
+  AircraftPhoto,
+  AirportBounds,
+  AirportCountryGroup,
+  CheckedAirport,
+  MapLandmass,
+  MapRegionLabel,
+  MapRoute,
+} from './type';
 
 export const imgs: string[] = [
   'https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/IMG_0304.JPG',
@@ -246,6 +255,81 @@ export const CHECKED_AIRPORTS: CheckedAirport[] = [
     description: '泰国清迈府清迈国际机场',
   },
 ];
+
+// 根据描述中的国家前缀提取分组名称，让机场列表保持地理层级。
+const getAirportCountryName = (airport: CheckedAirport): string => {
+  const countryNameMatch = airport.description.match(/^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国)/);
+
+  return countryNameMatch ? countryNameMatch[1] : '其他地区';
+};
+
+// 按国家或地区聚合机场，并让打卡数更多的分组优先展示。
+const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup[] => {
+  const airportGroups = new Map<string, CheckedAirport[]>();
+
+  airports.forEach((airport: CheckedAirport): void => {
+    const countryName = getAirportCountryName(airport);
+    const groupedAirports = airportGroups.get(countryName) ?? [];
+    airportGroups.set(countryName, [...groupedAirports, airport]);
+  });
+
+  return Array.from(airportGroups.entries())
+    .map(
+      ([countryName, groupedAirports]: [string, CheckedAirport[]]): AirportCountryGroup => ({
+        countryName,
+        airports: groupedAirports,
+      }),
+    )
+    .sort((firstGroup: AirportCountryGroup, secondGroup: AirportCountryGroup): number => {
+      const airportCountDifference = secondGroup.airports.length - firstGroup.airports.length;
+
+      if (airportCountDifference !== 0) {
+        return airportCountDifference;
+      }
+
+      return firstGroup.countryName.localeCompare(secondGroup.countryName, 'zh-Hans-CN');
+    });
+};
+
+/** 个人页按国家或地区分组后的机场打卡列表，供列表区与统计展示复用。 */
+export const airportCountryGroups: AirportCountryGroup[] = groupAirportsByCountry(CHECKED_AIRPORTS);
+
+/** 机场打卡涉及的国家或地区数量，与 `airportCountryGroups` 长度一致。 */
+export const checkedCountryCount: number = airportCountryGroups.length;
+
+// 关闭动画需要短暂保留预览层，时长与 CSS 退出动画保持一致。
+export const PHOTO_PREVIEW_EXIT_DURATION_MS = 180;
+
+const DEFAULT_AIRPORT_COUNTRY_FLAG = '🌐';
+
+const AIRPORT_COUNTRY_FLAG_BY_NAME: Record<string, string> = {
+  中国: '🇨🇳',
+  日本: '🇯🇵',
+  泰国: '🇹🇭',
+  西班牙: '🇪🇸',
+  意大利: '🇮🇹',
+  法国: '🇫🇷',
+  摩洛哥: '🇲🇦',
+  韩国: '🇰🇷',
+};
+
+/** 将机场业务数据整理为通用地图组件可消费的标注数据。 */
+export const airportMapMarkers: WorldMapMarker[] = CHECKED_AIRPORTS.map(
+  (airport: CheckedAirport): WorldMapMarker => {
+    const countryName = getAirportCountryName(airport);
+
+    return {
+      id: airport.name,
+      name: airport.name,
+      description: airport.description,
+      coordinate: {
+        lat: airport.lat,
+        lng: airport.lng,
+      },
+      flag: AIRPORT_COUNTRY_FLAG_BY_NAME[countryName] ?? DEFAULT_AIRPORT_COUNTRY_FLAG,
+    };
+  },
+);
 
 // 足迹图使用固定地理范围，覆盖欧洲、北非、东亚和东南亚，避免按点位自动缩放后缺少地图语境。
 export const AIRPORT_MAP_BOUNDS: AirportBounds = {
