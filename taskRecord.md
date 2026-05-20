@@ -2423,3 +2423,54 @@
   - 仅保留组件与从 `constant` 的导入。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将通用地图组件从 SVG 叠加层改为 Canvas 绘制 `map.svg` 底图，并按视口缩放做超采样，便于放大局部后清晰查看密集标记点。
+
+## 完成过程
+
+1. 新增 `canvasMap.ts`：经纬度投影、视口约束、超采样像素比计算、Canvas 绘制航线/标记、屏幕坐标命中检测与 CSS 变量配色读取。
+2. 新增 `type.d.ts` 承载 `WorldMapMarker`、`WorldMapRoute` 等类型，避免与绘制模块循环依赖。
+3. `index.tsx` 通过 `map.svg?url` 加载位图，`ResizeObserver` 与 `MutationObserver(data-theme)` 触发重绘；滚轮缩放上限提升至 5×，放大后可拖拽平移；指针命中与方向键聚焦保留 tooltip/国旗光标。
+4. `index.css` 改为 Canvas 布局并补充 `--pl-map-canvas-*` 绘制 token；`env.d.ts` 声明 `*.svg?url`；修复 `KeyboardEvent` 类型引用；`pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/components/map/canvasMap.ts`（新建）
+  - Canvas 绘制与超采样、命中检测、视口数学工具。
+- `src/components/map/type.d.ts`（新建）
+  - 地图组件公共类型。
+- `src/components/map/index.tsx`
+  - Canvas 渲染主流程，替代 `map.svg?react` + SVG overlay。
+- `src/components/map/index.css`
+  - Canvas/主题绘制变量与样式清理。
+- `src/env.d.ts`
+  - `*.svg?url` 模块声明。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+修复地图 Canvas 首次进入页面黑屏、需滚轮缩放后才显示的问题。
+
+## 完成过程
+
+1. 排查绘制链路：底图异步加载仅写入 `ref`，未触发 React 重绘；容器尺寸先就绪时 `redrawMapCanvas` 因无底图提前返回，底图到达后无二次绘制。
+2. 增加 `isWorldMapImageReady` 状态，在 `image.decode()` 完成后置为 `true` 并纳入 `redrawMapCanvas` 与重绘 `useEffect` 依赖，保证底图与尺寸齐备后自动首帧绘制。
+3. `pnpm run build` 通过；`ReadLints` 检查 `index.tsx`。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`
+  - 底图加载就绪状态与首帧重绘触发修复。
+- `taskRecord.md`
+  - 追加本次任务记录。

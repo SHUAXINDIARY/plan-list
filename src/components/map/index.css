@@ -8,6 +8,19 @@
   border: 1px solid var(--pl-map-border);
   border-radius: 1rem;
   box-shadow: var(--pl-map-inset);
+  --pl-map-canvas-route-stroke: oklch(0.78 0.105 222 / 0.52);
+  --pl-map-canvas-marker-fill: oklch(0.84 0.08 225);
+  --pl-map-canvas-marker-stroke: rgba(244, 248, 251, 0.9);
+  --pl-map-canvas-marker-fill-active: oklch(0.94 0.04 220);
+  --pl-map-canvas-marker-stroke-active: rgba(244, 248, 251, 0.95);
+}
+
+html[data-theme='light'] .annotated-world-map {
+  --pl-map-canvas-route-stroke: oklch(0.42 0.1 230 / 0.62);
+  --pl-map-canvas-marker-fill: oklch(0.84 0.08 225);
+  --pl-map-canvas-marker-stroke: oklch(0.28 0.04 245);
+  --pl-map-canvas-marker-fill-active: oklch(0.55 0.12 225);
+  --pl-map-canvas-marker-stroke-active: oklch(0.28 0.04 245);
 }
 
 .annotated-world-map--zoomed {
@@ -24,6 +37,7 @@
   border: 1px solid var(--pl-map-frame);
   border-radius: 0.8rem;
   content: '';
+  pointer-events: none;
 }
 
 .annotated-world-map::after {
@@ -35,77 +49,24 @@
   content: '';
 }
 
-.annotated-world-map__viewport {
+.annotated-world-map__canvas {
   position: absolute;
   inset: 0;
   z-index: 3;
-  transform-origin: 0 0;
-  will-change: transform;
-}
-
-.annotated-world-map__base {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  display: block;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-}
-
-.annotated-world-map__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.annotated-world-map__route {
-  fill: none;
-  stroke: oklch(0.78 0.105 222 / 0.52);
-  stroke-dasharray: 8 10;
-  stroke-linecap: round;
-  stroke-width: 1.4;
-}
-
-html[data-theme="light"] .annotated-world-map__route {
-  stroke: oklch(0.42 0.1 230 / 0.62);
-}
-
-.annotated-world-map__marker {
-  fill: oklch(0.84 0.08 225);
   cursor: none;
-  pointer-events: visiblePainted;
-  stroke: rgba(244, 248, 251, 0.9);
-  stroke-width: 2.4;
-  transition:
-    fill var(--motion-duration-fast) var(--motion-ease-out-quart),
-    stroke-width var(--motion-duration-fast) var(--motion-ease-out-quart),
-    filter var(--motion-duration-fast) var(--motion-ease-out-quart);
-  filter: drop-shadow(0 0 0.38rem rgba(158, 216, 242, 0.52));
-}
-
-html[data-theme="light"] .annotated-world-map__marker {
-  stroke: oklch(0.28 0.04 245);
-  filter: drop-shadow(0 0 0.32rem rgba(21, 104, 150, 0.35));
-}
-
-.annotated-world-map__marker:hover,
-.annotated-world-map__marker:focus-visible {
-  fill: oklch(0.94 0.04 220);
-  stroke-width: 3.2;
-  filter: drop-shadow(0 0 0.58rem rgba(158, 216, 242, 0.72));
-}
-
-html[data-theme="light"] .annotated-world-map__marker:hover,
-html[data-theme="light"] .annotated-world-map__marker:focus-visible {
-  fill: oklch(0.55 0.12 225);
-  filter: drop-shadow(0 0 0.45rem rgba(21, 104, 150, 0.42));
-}
-
-.annotated-world-map__marker:focus-visible {
   outline: none;
+}
+
+.annotated-world-map__canvas:focus-visible {
+  outline: 2px solid oklch(0.78 0.105 222 / 0.85);
+  outline-offset: -0.2rem;
+}
+
+html[data-theme='light'] .annotated-world-map__canvas:focus-visible {
+  outline-color: oklch(0.42 0.1 230 / 0.75);
 }
 
 .annotated-world-map__tooltip {
@@ -162,6 +123,7 @@ html[data-theme="light"] .annotated-world-map__marker:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  pointer-events: none;
 }
 
 .annotated-world-map__legend span {
@@ -186,7 +148,7 @@ html[data-theme="light"] .annotated-world-map__marker:focus-visible {
   content: '';
 }
 
-html[data-theme="light"] .annotated-world-map__legend span::before {
+html[data-theme='light'] .annotated-world-map__legend span::before {
   background-color: oklch(0.52 0.14 225);
 }
 
@@ -197,7 +159,7 @@ html[data-theme="light"] .annotated-world-map__legend span::before {
   border-radius: 0;
 }
 
-html[data-theme="light"] .annotated-world-map__legend span:last-child::before {
+html[data-theme='light'] .annotated-world-map__legend span:last-child::before {
   background-color: oklch(0.42 0.1 230 / 0.65);
 }
 
@@ -216,9 +178,5 @@ html[data-theme="light"] .annotated-world-map__legend span:last-child::before {
     white-space: normal;
     text-align: center;
     line-height: 1.35;
-  }
-
-  .annotated-world-map__marker {
-    stroke-width: 3;
   }
 }

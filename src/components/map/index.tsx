@@ -1,112 +1,63 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CSSProperties, MouseEvent, PointerEvent, ReactElement } from 'react';
+import type { CSSProperties, KeyboardEvent, PointerEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
-import WorldMap from './map.svg?react';
+import worldMapImageUrl from './map.svg?url';
+import {
+  MAP_ZOOM_STEP,
+  MAX_MAP_SCALE,
+  MIN_MAP_SCALE,
+  clampNumber,
+  constrainViewportTransform,
+  getMapCanvasRenderMetrics,
+  hitTestMarkerAtScreen,
+  mapCoordinateToScreen,
+  paintAnnotatedWorldMap,
+  projectMapCoordinate,
+  readMapCanvasPalette,
+} from './canvasMap';
+import type { ViewportTransform } from './canvasMap';
+import type { AnnotatedWorldMapProps, WorldMapMarker } from './type';
 import './index.css';
 
-interface MapCoordinate {
-  lat: number;
-  lng: number;
-}
-
-interface MarkerPosition {
-  left: number;
-  top: number;
-}
+export type { AnnotatedWorldMapProps, MapCoordinate, WorldMapMarker, WorldMapRoute } from './type';
 
 interface FlagCursorPosition {
+  /** 国旗光标在视口中的 X（CSS 像素）。 */
   x: number;
-  y: number;
-}
-
-interface ViewportTransform {
-  scale: number;
-  x: number;
+  /** 国旗光标在视口中的 Y（CSS 像素）。 */
   y: number;
 }
 
 interface MapDragState {
+  /** 当前捕获的指针 ID。 */
   pointerId: number;
+  /** 拖拽起始时指针的 clientX。 */
   startClientX: number;
+  /** 拖拽起始时指针的 clientY。 */
   startClientY: number;
+  /** 拖拽起始时的视口平移 X。 */
   startViewportX: number;
+  /** 拖拽起始时的视口平移 Y。 */
   startViewportY: number;
 }
 
-export interface WorldMapMarker {
-  id: string;
-  name: string;
-  coordinate: MapCoordinate;
-  description?: string;
-  flag?: string;
-}
-
-export interface WorldMapRoute {
-  name: string;
-  start: MapCoordinate;
-  end: MapCoordinate;
-}
-
-export interface AnnotatedWorldMapProps {
-  markers: WorldMapMarker[];
-  routes?: WorldMapRoute[];
-  ariaLabel: string;
-  routeLegendLabel?: string;
-  markerLegendLabel?: string;
-}
-
-const WORLD_MAP_WIDTH = 1200;
-const WORLD_MAP_HEIGHT = 650;
-const WORLD_MAP_MARGIN_X = 42;
-const WORLD_MAP_MARGIN_Y = 42;
-const WORLD_MAP_CONTENT_WIDTH = WORLD_MAP_WIDTH - WORLD_MAP_MARGIN_X * 2;
-const WORLD_MAP_CONTENT_HEIGHT = WORLD_MAP_HEIGHT - WORLD_MAP_MARGIN_Y * 2;
 const DEFAULT_MARKER_FLAG = '🌐';
-const MIN_MAP_SCALE = 1;
-const MAX_MAP_SCALE = 4;
-const MAP_ZOOM_STEP = 1.18;
 
-// 将数值限制在可用范围内，用于避免缩放和平移状态越界。
-const clampNumber = (value: number, minValue: number, maxValue: number): number => {
-  return Math.min(Math.max(value, minValue), maxValue);
-};
+/**
+ * 将 SVG 底图加载为可在 Canvas 上绘制的位图资源。
+ */
+const loadWorldMapImage = (imageUrl: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject): void => {
+    const image = new Image();
 
-// 根据容器尺寸收束视口位移，避免放大后把地图拖出可视区域。
-const constrainViewportTransform = (
-  viewportTransform: ViewportTransform,
-  containerRect: DOMRect,
-): ViewportTransform => {
-  if (viewportTransform.scale <= MIN_MAP_SCALE) {
-    return {
-      scale: MIN_MAP_SCALE,
-      x: 0,
-      y: 0,
+    image.onload = (): void => {
+      resolve(image);
     };
-  }
-
-  return {
-    scale: viewportTransform.scale,
-    x: clampNumber(viewportTransform.x, containerRect.width * (1 - viewportTransform.scale), 0),
-    y: clampNumber(viewportTransform.y, containerRect.height * (1 - viewportTransform.scale), 0),
-  };
-};
-
-// 将经纬度换算成 Natural Earth 地图 SVG 的画布坐标。
-const projectMapCoordinate = (coordinate: MapCoordinate): MarkerPosition => {
-  return {
-    left: WORLD_MAP_MARGIN_X + ((coordinate.lng + 180) / 360) * WORLD_MAP_CONTENT_WIDTH,
-    top: WORLD_MAP_MARGIN_Y + ((90 - coordinate.lat) / 180) * WORLD_MAP_CONTENT_HEIGHT,
-  };
-};
-
-// 根据两个经纬度端点生成二次贝塞尔路径，让跨区域连线保持轻微弧度。
-const getMapRoutePath = (route: WorldMapRoute): string => {
-  const startPosition = projectMapCoordinate(route.start);
-  const endPosition = projectMapCoordinate(route.end);
-  const controlPointX = (startPosition.left + endPosition.left) / 2;
-  const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
-
-  return `M ${startPosition.left} ${startPosition.top} Q ${controlPointX} ${controlPointY} ${endPosition.left} ${endPosition.top}`;
+    image.onerror = (): void => {
+      reject(new Error('世界地图 SVG 加载失败'));
+    };
+    image.src = imageUrl;
+  });
 };
 
 const AnnotatedWorldMap = ({
@@ -117,6 +68,7 @@ const AnnotatedWorldMap = ({
   markerLegendLabel = '打卡机场',
 }: AnnotatedWorldMapProps): ReactElement => {
   const [hoveredMarker, setHoveredMarker] = useState<WorldMapMarker | null>(null);
+  const [focusedMarkerIndex, setFocusedMarkerIndex] = useState<number | null>(null);
   const [flagCursorPosition, setFlagCursorPosition] = useState<FlagCursorPosition | null>(null);
   const [viewportTransform, setViewportTransform] = useState<ViewportTransform>({
     scale: MIN_MAP_SCALE,
@@ -124,25 +76,39 @@ const AnnotatedWorldMap = ({
     y: 0,
   });
   const [isDraggingMap, setIsDraggingMap] = useState<boolean>(false);
+  const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  });
+  const [isWorldMapImageReady, setIsWorldMapImageReady] = useState<boolean>(false);
   const dragStateRef = useRef<MapDragState | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const worldMapImageRef = useRef<HTMLImageElement | null>(null);
+  const viewportTransformRef = useRef<ViewportTransform>(viewportTransform);
   const hasRoutes = routes.length > 0;
   const isMapZoomed = viewportTransform.scale > MIN_MAP_SCALE;
-  const hoveredMarkerPosition = hoveredMarker === null ? null : projectMapCoordinate(hoveredMarker.coordinate);
+  const activeMarker =
+    hoveredMarker ?? (focusedMarkerIndex === null ? null : (markers[focusedMarkerIndex] ?? null));
+  const hoveredMarkerPosition =
+    activeMarker === null ? null : projectMapCoordinate(activeMarker.coordinate);
+  const hoveredMarkerScreenPosition =
+    hoveredMarkerPosition === null || containerSize.width === 0
+      ? null
+      : mapCoordinateToScreen(
+          hoveredMarkerPosition.left,
+          hoveredMarkerPosition.top,
+          viewportTransform,
+          containerSize.width,
+          containerSize.height,
+        );
   const hoveredMarkerTooltipStyle: CSSProperties | undefined =
-    hoveredMarkerPosition === null
+    hoveredMarkerScreenPosition === null
       ? undefined
       : {
-          left: `${(hoveredMarkerPosition.left / WORLD_MAP_WIDTH) * 100}%`,
-          top: `${(hoveredMarkerPosition.top / WORLD_MAP_HEIGHT) * 100}%`,
+          left: `${hoveredMarkerScreenPosition.left}px`,
+          top: `${hoveredMarkerScreenPosition.top}px`,
         };
-  const hoveredMarkerTooltipTransform =
-    viewportTransform.scale === MIN_MAP_SCALE
-      ? undefined
-      : `translate3d(-50%, calc(-100% - 0.72rem), 0) scale(${1 / viewportTransform.scale})`;
-  // 缩放抵消父级 scale 时，以气泡底部中心为变换原点，使标签始终对齐标记点正上方。
-  const hoveredMarkerTooltipTransformOrigin: CSSProperties['transformOrigin'] =
-    viewportTransform.scale === MIN_MAP_SCALE ? undefined : '50% 100%';
   const flagCursorStyle: CSSProperties | undefined =
     flagCursorPosition === null
       ? undefined
@@ -150,9 +116,6 @@ const AnnotatedWorldMap = ({
           left: `${flagCursorPosition.x}px`,
           top: `${flagCursorPosition.y}px`,
         };
-  const mapViewportStyle: CSSProperties = {
-    transform: `translate3d(${viewportTransform.x}px, ${viewportTransform.y}px, 0) scale(${viewportTransform.scale})`,
-  };
   const mapClassName = [
     'annotated-world-map',
     isMapZoomed ? 'annotated-world-map--zoomed' : '',
@@ -161,12 +124,152 @@ const AnnotatedWorldMap = ({
     .filter(Boolean)
     .join(' ');
 
+  viewportTransformRef.current = viewportTransform;
+
+  // 首屏加载 SVG 位图，供 Canvas 超采样绘制复用。
+  useEffect((): (() => void) | undefined => {
+    let isCancelled = false;
+
+    const loadImage = async (): Promise<void> => {
+      try {
+        const image = await loadWorldMapImage(worldMapImageUrl);
+
+        if (isCancelled) {
+          return;
+        }
+
+        // decode 完成后再标记就绪，避免首帧 drawImage 时位图未解码导致空白画布。
+        if (typeof image.decode === 'function') {
+          await image.decode();
+        }
+
+        if (isCancelled) {
+          return;
+        }
+
+        worldMapImageRef.current = image;
+        setIsWorldMapImageReady(true);
+      } catch {
+        if (!isCancelled) {
+          worldMapImageRef.current = null;
+          setIsWorldMapImageReady(false);
+        }
+      }
+    };
+
+    void loadImage();
+
+    return (): void => {
+      isCancelled = true;
+    };
+  }, []);
+
+  // 监听容器尺寸变化，保证画布 CSS 尺寸与 ResizeObserver 同步。
+  useEffect((): (() => void) | undefined => {
+    const container = mapContainerRef.current;
+
+    if (container === null) {
+      return undefined;
+    }
+
+    const updateContainerSize = (): void => {
+      const rect = container.getBoundingClientRect();
+      setContainerSize({
+        width: rect.width,
+        height: rect.height,
+      });
+    };
+
+    updateContainerSize();
+    const resizeObserver = new ResizeObserver((): void => {
+      updateContainerSize();
+    });
+    resizeObserver.observe(container);
+
+    return (): void => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  // 主题切换会改变 CSS 变量，监听 data-theme 以触发重绘。
+  useEffect((): (() => void) | undefined => {
+    const themeObserver = new MutationObserver((): void => {
+      setViewportTransform((current: ViewportTransform): ViewportTransform => ({ ...current }));
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return (): void => {
+      themeObserver.disconnect();
+    };
+  }, []);
+
+  // 依据视口缩放做超采样并重绘 Canvas，替代原先 SVG + CSS transform 方案。
+  const redrawMapCanvas = useCallback((): void => {
+    const canvas = mapCanvasRef.current;
+    const container = mapContainerRef.current;
+    const worldMapImage = worldMapImageRef.current;
+
+    if (
+      canvas === null ||
+      container === null ||
+      !isWorldMapImageReady ||
+      worldMapImage === null ||
+      containerSize.width <= 0 ||
+      containerSize.height <= 0
+    ) {
+      return;
+    }
+
+    const metrics = getMapCanvasRenderMetrics(
+      containerSize.width,
+      containerSize.height,
+      viewportTransformRef.current.scale,
+      window.devicePixelRatio || 1,
+    );
+    const context = canvas.getContext('2d');
+
+    if (context === null) {
+      return;
+    }
+
+    canvas.width = metrics.pixelWidth;
+    canvas.height = metrics.pixelHeight;
+    canvas.style.width = `${metrics.cssWidth}px`;
+    canvas.style.height = `${metrics.cssHeight}px`;
+    context.setTransform(metrics.pixelRatio, 0, 0, metrics.pixelRatio, 0, 0);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+
+    const palette = readMapCanvasPalette(container);
+    const activeMarkerId = activeMarker?.id ?? null;
+
+    paintAnnotatedWorldMap(
+      context,
+      worldMapImage,
+      markers,
+      routes,
+      palette,
+      activeMarkerId,
+      metrics.cssWidth,
+      metrics.cssHeight,
+      viewportTransformRef.current,
+    );
+  }, [activeMarker?.id, containerSize.height, containerSize.width, isWorldMapImageReady, markers, routes]);
+
+  useEffect((): void => {
+    redrawMapCanvas();
+  }, [redrawMapCanvas, viewportTransform, isWorldMapImageReady]);
+
   // 滚轮缩放时以指针局部位置为锚点，保持指向区域留在指针下方。
   const zoomMapFromWheel = useCallback((event: WheelEvent): void => {
     event.preventDefault();
     event.stopPropagation();
 
     const container = event.currentTarget;
+
     if (!(container instanceof HTMLDivElement)) {
       return;
     }
@@ -191,17 +294,18 @@ const AnnotatedWorldMap = ({
           x: localPointerX - mapPointX * nextScale,
           y: localPointerY - mapPointY * nextScale,
         },
-        containerRect,
+        containerRect.width,
+        containerRect.height,
       );
     });
   }, []);
 
-  // React 17+ 默认对 wheel 使用 passive 监听，preventDefault 无效；在此用非 passive 监听并阻止冒泡，避免页面或外层容器随滚轮滚动。
-  useEffect(() => {
+  // React 17+ 默认对 wheel 使用 passive 监听，preventDefault 无效；在此用非 passive 监听并阻止冒泡。
+  useEffect((): (() => void) | undefined => {
     const container = mapContainerRef.current;
 
     if (container === null) {
-      return;
+      return undefined;
     }
 
     container.addEventListener('wheel', zoomMapFromWheel, { passive: false });
@@ -212,7 +316,7 @@ const AnnotatedWorldMap = ({
   }, [zoomMapFromWheel]);
 
   // 放大后按住地图即可拖拽平移，未放大时保持普通浏览行为。
-  const startMapDrag = (event: PointerEvent<HTMLDivElement>): void => {
+  const startMapDrag = (event: PointerEvent<HTMLCanvasElement>): void => {
     if (event.button !== 0 || !isMapZoomed) {
       return;
     }
@@ -229,7 +333,7 @@ const AnnotatedWorldMap = ({
   };
 
   // 拖拽过程中按初始位移和鼠标增量更新视口，并限制在地图边界内。
-  const dragMap = (event: PointerEvent<HTMLDivElement>): void => {
+  const dragMap = (event: PointerEvent<HTMLCanvasElement>): void => {
     const dragState = dragStateRef.current;
 
     if (!dragState || dragState.pointerId !== event.pointerId) {
@@ -243,14 +347,15 @@ const AnnotatedWorldMap = ({
         x: dragState.startViewportX + event.clientX - dragState.startClientX,
         y: dragState.startViewportY + event.clientY - dragState.startClientY,
       },
-      containerRect,
+      containerRect.width,
+      containerRect.height,
     );
 
     setViewportTransform(nextViewportTransform);
   };
 
   // 释放或取消指针时结束拖拽，并释放浏览器指针捕获。
-  const stopMapDrag = (event: PointerEvent<HTMLDivElement>): void => {
+  const stopMapDrag = (event: PointerEvent<HTMLCanvasElement>): void => {
     if (dragStateRef.current?.pointerId === event.pointerId) {
       dragStateRef.current = null;
       setIsDraggingMap(false);
@@ -258,117 +363,130 @@ const AnnotatedWorldMap = ({
     }
   };
 
-  // 记录当前指向的标记点和鼠标位置，供名称浮层与国旗光标同步展示。
-  const showMarkerTooltip = (event: MouseEvent<SVGCircleElement>, marker: WorldMapMarker): void => {
-    setHoveredMarker(marker);
-    setFlagCursorPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
+  // 根据指针在画布上的位置做命中检测，同步 tooltip 与国旗光标。
+  const updatePointerOverMap = (clientX: number, clientY: number): void => {
+    const container = mapContainerRef.current;
+
+    if (container === null || containerSize.width === 0) {
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const localX = clientX - containerRect.left;
+    const localY = clientY - containerRect.top;
+    const markerUnderPointer = hitTestMarkerAtScreen(
+      markers,
+      localX,
+      localY,
+      viewportTransformRef.current,
+      containerSize.width,
+      containerSize.height,
+    );
+
+    setHoveredMarker(markerUnderPointer);
+    setFlagCursorPosition(
+      markerUnderPointer === null
+        ? null
+        : {
+            x: clientX,
+            y: clientY,
+          },
+    );
   };
 
-  // 鼠标在标记点内移动时持续更新国旗位置，让 emoji 跟随真实指针。
-  const updateFlagCursorPosition = (event: MouseEvent<SVGCircleElement>): void => {
-    setFlagCursorPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
+  const handleCanvasPointerMove = (event: PointerEvent<HTMLCanvasElement>): void => {
+    if (dragStateRef.current !== null) {
+      dragMap(event);
+      return;
+    }
+
+    updatePointerOverMap(event.clientX, event.clientY);
   };
 
-  // 键盘聚焦标记点时只展示名称提示，避免在无鼠标位置时显示漂浮国旗。
-  const showMarkerTooltipFromFocus = (marker: WorldMapMarker): void => {
-    setHoveredMarker(marker);
-  };
+  const handleCanvasPointerLeave = (): void => {
+    if (dragStateRef.current !== null) {
+      return;
+    }
 
-  // 离开标记点或失焦后隐藏浮层，避免名称和国旗停留在旧坐标上。
-  const hideMarkerTooltip = (): void => {
     setHoveredMarker(null);
     setFlagCursorPosition(null);
   };
 
+  // 键盘在标记点间循环聚焦，供无法精确指向小圆点的用户使用。
+  const handleCanvasKeyDown = (event: KeyboardEvent<HTMLCanvasElement>): void => {
+    if (markers.length === 0) {
+      return;
+    }
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      setFocusedMarkerIndex((currentIndex: number | null): number => {
+        const nextIndex = currentIndex === null ? 0 : (currentIndex + 1) % markers.length;
+        return nextIndex;
+      });
+      setHoveredMarker(null);
+      setFlagCursorPosition(null);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setFocusedMarkerIndex((currentIndex: number | null): number => {
+        const nextIndex =
+          currentIndex === null
+            ? markers.length - 1
+            : (currentIndex - 1 + markers.length) % markers.length;
+        return nextIndex;
+      });
+      setHoveredMarker(null);
+      setFlagCursorPosition(null);
+    }
+  };
+
+  const mapCanvasLabel =
+    activeMarker === null
+      ? `${ariaLabel}。滚轮可缩放地图，放大后可拖拽查看局部；方向键可依次聚焦标记点。`
+      : `${ariaLabel}。当前标记：${activeMarker.description ? `${activeMarker.name}，${activeMarker.description}` : activeMarker.name}`;
+
   return (
     <>
-      <div
-        ref={mapContainerRef}
-        className={mapClassName}
-        role="group"
-        aria-label={ariaLabel}
-        onPointerDown={startMapDrag}
-        onPointerMove={dragMap}
-        onPointerUp={stopMapDrag}
-        onPointerCancel={stopMapDrag}
-      >
-        <div className="annotated-world-map__viewport" style={mapViewportStyle}>
-          <WorldMap
-            className="annotated-world-map__base"
-            preserveAspectRatio="xMidYMid meet"
-            aria-hidden="true"
-            focusable="false"
-          />
-          <svg
-            className="annotated-world-map__overlay"
-            viewBox={`0 0 ${WORLD_MAP_WIDTH} ${WORLD_MAP_HEIGHT}`}
-            preserveAspectRatio="xMidYMid meet"
-            aria-label={hasRoutes ? `${markerLegendLabel}和${routeLegendLabel}` : markerLegendLabel}
-            focusable="false"
+      <div ref={mapContainerRef} className={mapClassName} role="group" aria-label={ariaLabel}>
+        <canvas
+          ref={mapCanvasRef}
+          className="annotated-world-map__canvas"
+          tabIndex={0}
+          role="img"
+          aria-label={mapCanvasLabel}
+          onPointerDown={startMapDrag}
+          onPointerMove={handleCanvasPointerMove}
+          onPointerUp={stopMapDrag}
+          onPointerCancel={stopMapDrag}
+          onPointerLeave={handleCanvasPointerLeave}
+          onKeyDown={handleCanvasKeyDown}
+          onBlur={(): void => {
+            setFocusedMarkerIndex(null);
+            setHoveredMarker(null);
+            setFlagCursorPosition(null);
+          }}
+        />
+        {activeMarker && hoveredMarkerTooltipStyle ? (
+          <div
+            className="annotated-world-map__tooltip"
+            style={hoveredMarkerTooltipStyle}
+            role="tooltip"
           >
-            {routes.map((route: WorldMapRoute): ReactElement => (
-              <path
-                className="annotated-world-map__route"
-                d={getMapRoutePath(route)}
-                key={route.name}
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-            {markers.map((marker: WorldMapMarker): ReactElement => {
-              const markerPosition = projectMapCoordinate(marker.coordinate);
-              const markerAccessibleLabel = marker.description ? `${marker.name}，${marker.description}` : marker.name;
-
-              return (
-                <circle
-                  className="annotated-world-map__marker"
-                  key={marker.id}
-                  cx={markerPosition.left}
-                  cy={markerPosition.top}
-                  r="5.6"
-                  vectorEffect="non-scaling-stroke"
-                  tabIndex={0}
-                  role="img"
-                  aria-label={markerAccessibleLabel}
-                  onMouseEnter={(event: MouseEvent<SVGCircleElement>): void => showMarkerTooltip(event, marker)}
-                  onMouseMove={updateFlagCursorPosition}
-                  onMouseLeave={hideMarkerTooltip}
-                  onFocus={(): void => showMarkerTooltipFromFocus(marker)}
-                  onBlur={hideMarkerTooltip}
-                >
-                  <title>{markerAccessibleLabel}</title>
-                </circle>
-              );
-            })}
-          </svg>
-          {hoveredMarker && hoveredMarkerTooltipStyle ? (
-            <div
-              className="annotated-world-map__tooltip"
-              style={{
-                ...hoveredMarkerTooltipStyle,
-                transform: hoveredMarkerTooltipTransform,
-                transformOrigin: hoveredMarkerTooltipTransformOrigin,
-              }}
-              role="tooltip"
-            >
-              {hoveredMarker.name}
-            </div>
-          ) : null}
-        </div>
+            {activeMarker.name}
+          </div>
+        ) : null}
         <div className="annotated-world-map__legend" aria-hidden="true">
           <span>{markerLegendLabel}</span>
           {hasRoutes ? <span>{routeLegendLabel}</span> : null}
         </div>
       </div>
-      {hoveredMarker && flagCursorStyle
+      {activeMarker && flagCursorStyle && hoveredMarker !== null
         ? createPortal(
             <div className="annotated-world-map__flag-cursor" style={flagCursorStyle} aria-hidden="true">
-              {hoveredMarker.flag ?? DEFAULT_MARKER_FLAG}
+              {activeMarker.flag ?? DEFAULT_MARKER_FLAG}
             </div>,
             document.body,
           )
