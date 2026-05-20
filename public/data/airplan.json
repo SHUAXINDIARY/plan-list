@@ -613,7 +613,7 @@
     },
     {
         "airline": "香港华民航空",
-        "passengerAircraftCount": 0,
+        "passengerAircraftCount": 14,
         "models": {
             "Airbus": {
                 "A330-200F": "https://www.jetphotos.com/showphotos.php?airline=Air%20Hong%20Kong&aircraft=Airbus%20A330-200F&width=1920&height=1080",
