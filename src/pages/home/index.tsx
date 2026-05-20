@@ -406,7 +406,7 @@ const HomePage = (): ReactElement => {
       ) : null}
 
       {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
-        <div className="fleet-results" ref={fleetResultsRef} aria-live="polite">
+        <div className="fleet-results scroll-area-night" ref={fleetResultsRef} aria-live="polite">
           {filteredAirlineFleets.length === 0 ? (
             <p className="data-state data-state--filtered-empty" key={`empty-${filteredViewKey}`}>
               没有匹配当前筛选条件的航司或机型。

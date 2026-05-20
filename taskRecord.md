@@ -2292,3 +2292,76 @@
   - `:root` 视口滚动条细轨道与同色系 thumb/hover。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将 README 从 Rsbuild 默认模板改写为 Plane List / Night Flight Archive 的站点说明，并保留可执行的开发与构建命令。
+
+## 完成过程
+
+1. 对照 `PRODUCT.md` 提炼产品定位、目标用户与两页主干能力（机型资料库、个人记录）。
+2. 补充技术栈、静态数据路径与指向 `AGENTS.md` / `PRODUCT.md` / `DESIGN.md` 的延伸阅读。
+3. `ReadLints` 检查 `README.md`、`taskRecord.md`。
+
+## 修改具体文件
+
+- `README.md`
+  - 站点简介、功能、技术栈、本地命令与外链；中英文混排以中文为主便于读者理解。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+统一滚动条（Scroll area）样式实现，抽出共享 token 与选择器列表，去掉 `App.css` 与 `home/index.css` 的规则重复。
+
+## 完成过程
+
+1. 在 `App.css` 的 `:root` 上声明 `--scroll-area-*` 变量，` :root` 与 `.scroll-area-night` 共用 `scrollbar-*` / `::-webkit-scrollbar-*` 规则块。
+2. 首页 Fleet 容器增加工具类 `scroll-area-night`，`home/index.css` 中 `.fleet-results` 仅保留高度与 `overflow`、`overscroll` 布局语义。
+3. `pnpm run build` 校验构建；`ReadLints` 检查改动文件。
+
+## 修改具体文件
+
+- `src/App.css`
+  - 顶层滚动 token；视口与其他挂载 `scroll-area-night` 的容器共用滚动条样式。
+- `src/pages/home/index.tsx`
+  - `.fleet-results` 增加 `scroll-area-night`。
+- `src/pages/home/index.css`
+  - 删除与全局重复的 Fleet 纵向滚动条规则。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+将 `DESIGN.md` 从 seed 占位更新为反映当前实现的 Night Flight Archive 设计说明：语义色票、排版、动效变量、组件形态与滚动区约定。
+
+## 完成过程
+
+1. 对照 `src/App.css`、滚动条 `:root` 变量与 Fleet/壳层用法，重写颜色、字型层级、motion token、圆角与面板策略。
+2. 补充路由职责表、`scroll-area-night` / `--scroll-area-*` 章节与「已实现」导航形态，去掉大量 “to be resolved” 占位。
+3. 顶端注释改为中文版同步指引；`ReadLints` 检查 `DESIGN.md`、`taskRecord.md`。
+
+## 修改具体文件
+
+- `DESIGN.md`
+  - 与设计实现同步的语义 token、结构与 Do/Don't 更新。
+- `taskRecord.md`
+  - 追加本次任务记录。

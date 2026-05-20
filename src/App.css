@@ -1,3 +1,14 @@
+:root {
+    /* Night Flight Archive 纵向滚动轨道 token：视口与 `.scroll-area-night` 容器共用 */
+    --scroll-area-size: 10px;
+    /** 滚动轨道背景色 */
+    --scroll-area-track-bg: rgba(15, 31, 48, 0.55);
+    /** 拖拽条默认色 */
+    --scroll-area-thumb: rgba(124, 200, 235, 0.42);
+    /** 拖拽条悬停提亮 */
+    --scroll-area-thumb-hover: rgba(158, 216, 242, 0.55);
+}
+
 body {
     --motion-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     --motion-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
@@ -11,35 +22,40 @@ body {
 }
 
 /*
- * 视口（页面级）滚动条：与 Fleet 结果区等「内嵌 Scroll area」同色同形，避免出现两套系统滚动条观感。
- * scrollbar-gutter: stable 仅占位垂直 gutter，避免因有无滚动条切换导致整页内容横向偏移。
+ * 文档视口 + 挂载 `scroll-area-night` 的溢出容器共用细滚动条，避免出现多套系统滚动条观感。
+ * `scrollbar-gutter: stable` 仅占位纵向 gutter，减轻滚动条显隐导致的横向跳动。
  */
-:root {
+:root,
+.scroll-area-night {
     scrollbar-gutter: stable;
     scrollbar-width: thin;
-    scrollbar-color: rgba(124, 200, 235, 0.42) rgba(15, 31, 48, 0.55);
+    scrollbar-color: var(--scroll-area-thumb) var(--scroll-area-track-bg);
 }
 
-:root::-webkit-scrollbar {
-    width: 10px;
+:root::-webkit-scrollbar,
+.scroll-area-night::-webkit-scrollbar {
+    width: var(--scroll-area-size);
 }
 
-:root::-webkit-scrollbar-track {
+:root::-webkit-scrollbar-track,
+.scroll-area-night::-webkit-scrollbar-track {
     margin-block: 0.45rem;
     margin-inline-end: 2px;
-    background-color: rgba(15, 31, 48, 0.55);
+    background-color: var(--scroll-area-track-bg);
     border-radius: 999px;
 }
 
-:root::-webkit-scrollbar-thumb {
+:root::-webkit-scrollbar-thumb,
+.scroll-area-night::-webkit-scrollbar-thumb {
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: padding-box;
-    background-color: rgba(124, 200, 235, 0.42);
+    background-color: var(--scroll-area-thumb);
 }
 
-:root::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(158, 216, 242, 0.55);
+:root::-webkit-scrollbar-thumb:hover,
+.scroll-area-night::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scroll-area-thumb-hover);
 }
 
 @keyframes archive-reveal {
