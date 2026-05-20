@@ -2515,3 +2515,23 @@
   - rAF 批处理重绘、拖拽视口 ref 化、国旗光标直连 DOM 更新。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+## 日期
+
+2026-05-20
+
+## 任务目的
+
+地图标记点在任意缩放级别下保持相同屏幕尺寸，且缩放/平移后仍准确落在对应经纬度位置。
+
+## 完成过程
+
+1. `paintAnnotatedWorldMap` 中底图与航线仍在视口变换后绘制；`restore` 后在 CSS 像素空间用 `mapCoordinateToScreen` 定位圆心。
+2. 标记点半径与描边宽度改为固定像素，不再除以 `viewportTransform.scale`。
+
+## 修改具体文件
+
+- `src/components/map/canvasMap.ts`
+  - 标记点屏幕空间固定尺寸绘制与坐标投影。
+- `taskRecord.md`
+  - 追加本次任务记录。

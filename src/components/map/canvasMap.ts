@@ -27,7 +27,7 @@ export const MAX_MAP_SCALE = 5;
 /** 滚轮每次缩放的倍率步进。 */
 export const MAP_ZOOM_STEP = 1.18;
 
-/** 标记点在地图坐标系下的绘制半径。 */
+/** 标记点在屏幕（CSS 像素）下的绘制半径，不随画布缩放变化。 */
 export const MARKER_RADIUS = 5.6;
 
 /** 指针命中检测在屏幕坐标下的半径（像素）。 */
@@ -250,7 +250,7 @@ export const readMapCanvasPalette = (container: HTMLElement): MapCanvasPalette =
 };
 
 /**
- * 在已设置视口变换的 2D 上下文中绘制底图、航线与标记点。
+ * 绘制底图与航线（随视口缩放），标记点在屏幕坐标下以固定像素尺寸绘制以保证位置准确且大小不变。
  */
 export const paintAnnotatedWorldMap = (
   context: CanvasRenderingContext2D,
@@ -289,19 +289,27 @@ export const paintAnnotatedWorldMap = (
     context.setLineDash([]);
   });
 
+  context.restore();
+
+  // 标记点在 CSS 像素空间绘制，半径不随 scale 变化；圆心由 mapCoordinateToScreen 保证与地理坐标对齐。
   markers.forEach((marker: WorldMapMarker): void => {
     const markerPosition = projectMapCoordinate(marker.coordinate);
+    const screenPosition = mapCoordinateToScreen(
+      markerPosition.left,
+      markerPosition.top,
+      viewportTransform,
+      cssWidth,
+      cssHeight,
+    );
     const isActive = marker.id === activeMarkerId;
     const radius = isActive ? MARKER_RADIUS * 1.12 : MARKER_RADIUS;
 
     context.beginPath();
-    context.arc(markerPosition.left, markerPosition.top, radius, 0, Math.PI * 2);
+    context.arc(screenPosition.left, screenPosition.top, radius, 0, Math.PI * 2);
     context.fillStyle = isActive ? palette.markerFillActive : palette.markerFill;
     context.fill();
     context.strokeStyle = isActive ? palette.markerStrokeActive : palette.markerStroke;
-    context.lineWidth = (isActive ? 3.2 : 2.4) / viewportTransform.scale;
+    context.lineWidth = isActive ? 3.2 : 2.4;
     context.stroke();
   });
-
-  context.restore();
 };
