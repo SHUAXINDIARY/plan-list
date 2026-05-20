@@ -6,6 +6,7 @@ import type {
   AirportBounds,
   AirportCountryGroup,
   CheckedAirport,
+  MapCoordinate,
   MapLandmass,
   MapRegionLabel,
   MapRoute,
@@ -226,31 +227,67 @@ export const MAP_REGION_LABELS: MapRegionLabel[] = [
   { name: '韩国', coordinate: { lat: 38, lng: 127 } },
 ];
 
-// 航迹弧线连接主要打卡区域，帮助地图从点位分布变成更有旅程感的示意图。
+/**
+ * 从已打卡机场常量中解析经纬度，供航迹弧线与 CHECKED_AIRPORTS 保持同源。
+ * @param airportName - 须与 CHECKED_AIRPORTS 条目的 name 完全一致。
+ */
+function coordinateOfCheckedAirport(airportName: CheckedAirport['name']): MapCoordinate {
+  const airport = CHECKED_AIRPORTS.find(
+    (item: CheckedAirport): boolean => item.name === airportName,
+  );
+  if (airport === undefined) {
+    throw new Error(`未在 CHECKED_AIRPORTS 中找到机场：${airportName}`);
+  }
+  return { lat: airport.lat, lng: airport.lng };
+}
+
+/**
+ * 构造单段航迹弧线；起点、终点机场名均引用 CHECKED_AIRPORTS。
+ * @param label - 航段展示名，兼作 React key。
+ * @param startAirport - 出发机场 name。
+ * @param endAirport - 到达机场 name。
+ */
+function createMapRoute(
+  label: string,
+  startAirport: CheckedAirport['name'],
+  endAirport: CheckedAirport['name'],
+): MapRoute {
+  return {
+    name: label,
+    start: coordinateOfCheckedAirport(startAirport),
+    end: coordinateOfCheckedAirport(endAirport),
+  };
+}
+
+// 航迹弧线按个人实际航程串联机场（忽略航班号与机型）；坐标来自 CHECKED_AIRPORTS。
+// 北京：国际线用首都，国内线用大兴；曼谷亚航走廊曼、泰航/海航等走素万那普；东京国航/春秋走成田、全日空走羽田。
 export const MAP_ROUTES: MapRoute[] = [
-  {
-    name: '欧洲至东亚',
-    start: { lat: 41.297445, lng: 2.083294 },
-    end: { lat: 39.509945, lng: 116.41092 },
-  },
-  {
-    name: '北非至欧洲',
-    start: { lat: 33.367467, lng: -7.58997 },
-    end: { lat: 48.726243, lng: 2.365247 },
-  },
-  {
-    name: '中国至日本',
-    start: { lat: 31.144344, lng: 121.808273 },
-    end: { lat: 35.549393, lng: 139.779839 },
-  },
-  {
-    name: '中国至东南亚',
-    start: { lat: 23.392436, lng: 113.298786 },
-    end: { lat: 13.690017, lng: 100.750112 },
-  },
-  {
-    name: '韩国至日本',
-    start: { lat: 37.460191, lng: 126.440696 },
-    end: { lat: 35.771986, lng: 140.39285 },
-  },
+  createMapRoute('大阪至天津', '大阪关西国际机场', '天津滨海国际机场'),
+  createMapRoute('天津至东京（成田）', '天津滨海国际机场', '东京成田国际机场'),
+  createMapRoute('东京（成田）至天津', '东京成田国际机场', '天津滨海国际机场'),
+  createMapRoute('大兴至三亚', '北京大兴国际机场', '三亚凤凰国际机场'),
+  createMapRoute('三亚至大兴', '三亚凤凰国际机场', '北京大兴国际机场'),
+  createMapRoute('首都至东京（成田）', '北京首都国际机场', '东京成田国际机场'),
+  createMapRoute('首都至曼谷（廊曼）', '北京首都国际机场', '曼谷廊曼国际机场'),
+  createMapRoute('曼谷（廊曼）至普吉', '曼谷廊曼国际机场', '普吉国际机场'),
+  createMapRoute('普吉至曼谷（素万那普）', '普吉国际机场', '曼谷素万那普国际机场'),
+  createMapRoute('曼谷（素万那普）至首都', '曼谷素万那普国际机场', '北京首都国际机场'),
+  createMapRoute('首都至曼谷（素万那普）', '北京首都国际机场', '曼谷素万那普国际机场'),
+  createMapRoute('首都至首尔（仁川）', '北京首都国际机场', '首尔仁川国际机场'),
+  createMapRoute('首尔（仁川）至首都', '首尔仁川国际机场', '北京首都国际机场'),
+  createMapRoute('首都至大阪', '北京首都国际机场', '大阪关西国际机场'),
+  createMapRoute('大阪至首都', '大阪关西国际机场', '北京首都国际机场'),
+  createMapRoute('大兴至上海（浦东）', '北京大兴国际机场', '上海浦东国际机场'),
+  createMapRoute('上海（浦东）至巴塞罗那', '上海浦东国际机场', '巴塞罗那埃尔普拉特机场'),
+  createMapRoute('巴塞罗那至罗马', '巴塞罗那埃尔普拉特机场', '罗马菲乌米奇诺机场'),
+  createMapRoute('罗马至巴黎（奥利）', '罗马菲乌米奇诺机场', '巴黎奥利机场'),
+  createMapRoute('巴黎（奥利）至卡萨布兰卡', '巴黎奥利机场', '卡萨布兰卡穆罕默德五世机场'),
+  createMapRoute('卡萨布兰卡至首都', '卡萨布兰卡穆罕默德五世机场', '北京首都国际机场'),
+  createMapRoute('首都至名古屋', '北京首都国际机场', '名古屋中部国际机场'),
+  createMapRoute('名古屋至首都', '名古屋中部国际机场', '北京首都国际机场'),
+  createMapRoute('首都至东京（羽田）', '北京首都国际机场', '东京羽田机场'),
+  createMapRoute('东京（羽田）至首都', '东京羽田机场', '北京首都国际机场'),
+  createMapRoute('大兴至昆明', '北京大兴国际机场', '昆明长水国际机场'),
+  createMapRoute('昆明至清迈', '昆明长水国际机场', '清迈国际机场'),
+  createMapRoute('清迈至曼谷（素万那普）', '清迈国际机场', '曼谷素万那普国际机场'),
 ];
