@@ -170,12 +170,15 @@
         "passengerAircraftCount": 159,
         "models": {
             "Airbus": {
+                "A321-251NX": "https://www.planespotters.net/photo/1922735/b-hpj-cathay-pacific-airbus-a321-251nx",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:Hamburg-Finkenwerder_Airport_Cathay_Pacific_Airbus_A321-251NX_B-HPJ_(DSC00251).jpg",
                 "A330-300": "https://commons.wikimedia.org/wiki/File:B-HLN@HKG_(20180903121447).jpg",
                 "A350-900": "https://commons.wikimedia.org/wiki/File:B-LRM@HKG_(20180918112059).jpg",
                 "A350-1000": "https://commons.wikimedia.org/wiki/File:Cathay_Pacific_A350-1000_(B-LXA)_@_HKG,_March_2019.jpg"
             },
             "Boeing": {
+                "B747-8F": "https://commons.wikimedia.org/wiki/File:B-LJN@HKG_(20180908122015).jpg",
+                "B747-400ERF": "https://airplane-pictures.net/photo/659336/b-lia-cathay-pacific-cargo-boeing-747-400f-erf/",
                 "B777-300": "https://commons.wikimedia.org/wiki/File:Cathay_Pacific_Boeing_777-300;_B-HNG@HKG;04.08.2011_615ku_(6207861928).jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:B-KQL@PEK_(20200113151353).jpg"
             }
