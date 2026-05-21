@@ -49,7 +49,13 @@ const IconSun = (): ReactElement => (
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
-        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.75" />
+        <circle
+            cx="12"
+            cy="12"
+            r="4"
+            stroke="currentColor"
+            strokeWidth="1.75"
+        />
         <path
             stroke="currentColor"
             strokeWidth="1.75"
@@ -64,19 +70,17 @@ const IconSun = (): ReactElement => (
  */
 const IconMoon = (): ReactElement => (
     <svg
-        className="theme-toggle__svg"
-        width="20"
-        height="20"
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
     >
-        <path
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21 13.2A8.5 8.5 0 0111.8 3a6.8 6.8 0 109 10.2z"
-        />
+        <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
     </svg>
 );
