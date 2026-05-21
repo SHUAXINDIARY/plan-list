@@ -2,6 +2,8 @@ import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { pluginSvgr } from "@rsbuild/plugin-svgr";
 import { pluginAircraftPhotoPreviews } from "./rsbuild_plugins/pluginAircraftPhotoPreviews";
+import { codeInspectorPlugin } from 'code-inspector-plugin';
+
 
 // Docs: https://rsbuild.rs/config/
 export default defineConfig({
@@ -25,6 +27,15 @@ export default defineConfig({
                 children: `(function(){try{var k='plane-list-theme';var t=localStorage.getItem(k);if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
             },
         ],
+    },
+    tools: {
+        rspack: {
+            plugins: [
+                codeInspectorPlugin({
+                    bundler: 'rspack',
+                })
+            ]
+        }
     },
     plugins: [pluginReact(), pluginSvgr(), pluginAircraftPhotoPreviews()],
 });

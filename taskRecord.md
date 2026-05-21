@@ -1740,6 +1740,35 @@
 
 ## 日期
 
+2026-05-21
+
+## 任务目的
+
+按 Impeccable 产品界面原则，为个人页机场国家/地区折叠列表增加克制的展开与收起过渡效果。
+
+## 完成过程
+
+1. 阅读用户提供的 Impeccable Style 页面摘录，并结合当前 `PRODUCT.md`、`DESIGN.md` 的产品界面基调确认动效应服务状态变化。
+2. 将机场列表从 `hidden` 即时显示/隐藏改为保留在 DOM 中的 `airport-country__body` 折叠容器。
+3. 通过 `grid-template-rows`、`opacity` 与 `transform` 组合实现短时长展开/收起过渡，并保留 `aria-expanded` 与 `aria-hidden` 状态表达。
+4. 调整个人页 CSS，补充内容区过渡、溢出裁剪和展开态指示，保持 Night Flight Archive 的克制视觉。
+5. 使用 `ReadLints` 检查个人页 TSX 与 CSS 文件。
+
+## 修改具体文件
+
+- `src/pages/personal/index.tsx`
+  - 将机场列表包裹为可过渡的折叠内容区域。
+  - 保留按钮控制关系，并用 `aria-hidden` 表达内容区折叠状态。
+- `src/pages/personal/index.css`
+  - 新增折叠内容区展开/收起过渡效果。
+  - 移除 `hidden` 直接 `display: none` 的即时切换样式。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
 2026-05-20
 
 ## 任务目的
@@ -2822,5 +2851,33 @@
 
 - `src/pages/personal/constant.ts`
   - 新增大兴—庆阳、昆明—重庆航线。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-21
+
+## 任务目的
+
+将个人页机场国家/地区分组列表改为默认折叠，并通过点击 header 展开对应机场清单。
+
+## 完成过程
+
+1. 读取 `impeccable` skill、项目产品与设计上下文，确认本次为产品界面的低干扰交互优化。
+2. 在 `src/pages/personal/index.tsx` 中新增机场国家/地区展开状态，默认集合为空，使所有分组初始折叠。
+3. 将机场分组 header 改为可点击按钮，补充 `aria-expanded`、`aria-controls` 与受控列表 `hidden` 状态。
+4. 在 `src/pages/personal/index.css` 中调整折叠分组样式，增加展开指示、hover、focus-visible 与移动端排版。
+5. 使用 `ReadLints` 检查本次修改的个人页文件。
+
+## 修改具体文件
+
+- `src/pages/personal/index.tsx`
+  - 新增机场国家/地区分组展开状态与切换逻辑。
+  - 将机场列表改为默认折叠、点击 header 展开/收起。
+- `src/pages/personal/index.css`
+  - 新增折叠按钮、展开指示、隐藏列表与小屏适配样式。
 - `taskRecord.md`
   - 追加本次任务记录。

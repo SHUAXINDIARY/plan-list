@@ -304,38 +304,99 @@
 
 .airport-country {
   min-width: 0;
-  padding: 1rem;
+  overflow: hidden;
   background-color: var(--pl-surface-airport);
   border: 1px solid var(--pl-border-divider-mid);
   border-radius: 1rem;
 }
 
 .airport-country__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.85rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--pl-border-divider);
+  margin: 0;
 }
 
-.airport-country h3 {
+.airport-country__toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: 3.35rem;
+  padding: 0.85rem 1rem;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-country__toggle:hover {
+  background-color: var(--pl-surface-personal-pill);
+}
+
+.airport-country__toggle:focus-visible {
+  outline: 2px solid oklch(0.78 0.105 222);
+  outline-offset: -3px;
+}
+
+.airport-country__title {
+  min-width: 0;
   margin: 0;
   color: var(--pl-text-heading);
   font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
-.airport-country__header span {
+.airport-country__meta {
   flex: 0 0 auto;
   color: var(--pl-text-meta);
   font-size: 0.82rem;
 }
 
-.airport-country ul {
+.airport-country__indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 1.5px solid var(--pl-text-meta);
+  border-bottom: 1.5px solid var(--pl-text-meta);
+  transform: rotate(45deg) translateY(-1px);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-country--expanded .airport-country__indicator {
+  border-color: var(--pl-accent);
+  transform: rotate(225deg) translateY(-1px);
+}
+
+.airport-country__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translate3d(0, -0.25rem, 0);
+  transition:
+    grid-template-rows 220ms var(--motion-ease-out-quint),
+    opacity 180ms var(--motion-ease-out-quart),
+    transform 220ms var(--motion-ease-out-quint);
+}
+
+.airport-country--expanded .airport-country__body {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.airport-country__body ul {
   display: grid;
   gap: 0.65rem;
-  padding: 0;
-  margin: 0.85rem 0 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.85rem 1rem 1rem;
+  margin: 0;
+  border-top: 1px solid var(--pl-border-divider);
   list-style: none;
 }
 
@@ -370,10 +431,25 @@
     touch-action: manipulation;
   }
 
-  .personal-section__header,
-  .airport-country__header {
+  .personal-section__header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .airport-country__toggle {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 3.75rem;
+    touch-action: manipulation;
+  }
+
+  .airport-country__meta {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .airport-country__indicator {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 
   .aircraft-photo-gallery {

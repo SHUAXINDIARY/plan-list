@@ -20,6 +20,7 @@
     "@types/node": "^25.8.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "code-inspector-plugin": "^1.5.1",
     "sharp": "^0.34.5",
     "typescript": "^6.0.3"
   }

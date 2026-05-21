@@ -26,6 +26,9 @@ const PersonalPage = (): ReactElement => {
         useState<boolean>(false);
     const [isPreviewPhotoLoading, setIsPreviewPhotoLoading] =
         useState<boolean>(false);
+    const [expandedAirportCountries, setExpandedAirportCountries] = useState<
+        ReadonlySet<string>
+    >((): ReadonlySet<string> => new Set<string>());
     const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
     const photoPreviewCloseTimerRef = useRef<number | null>(null);
     const previewPhotoUrl =
@@ -101,6 +104,27 @@ const PersonalPage = (): ReactElement => {
     // 原图加载结束后隐藏加载提示，避免用户误以为全屏预览卡住。
     const settlePreviewPhotoLoading = (): void => {
         setIsPreviewPhotoLoading(false);
+    };
+
+    // 切换单个国家或地区的机场列表展开状态，默认集合为空即全部折叠。
+    const toggleAirportCountry = (countryName: string): void => {
+        setExpandedAirportCountries(
+            (
+                currentExpandedAirportCountries: ReadonlySet<string>,
+            ): ReadonlySet<string> => {
+                const nextExpandedAirportCountries = new Set<string>(
+                    currentExpandedAirportCountries,
+                );
+
+                if (nextExpandedAirportCountries.has(countryName)) {
+                    nextExpandedAirportCountries.delete(countryName);
+                    return nextExpandedAirportCountries;
+                }
+
+                nextExpandedAirportCountries.add(countryName);
+                return nextExpandedAirportCountries;
+            },
+        );
     };
 
     // 只在用户点击遮罩本身时关闭，避免点击图片内容导致预览意外退出。
@@ -257,34 +281,87 @@ const PersonalPage = (): ReactElement => {
                     {airportCountryGroups.map(
                         (
                             airportCountryGroup: AirportCountryGroup,
+                            airportCountryGroupIndex: number,
                         ): ReactElement => (
-                            <article
-                                className="airport-country"
-                                key={airportCountryGroup.countryName}
-                            >
-                                <header className="airport-country__header">
-                                    <h3>{airportCountryGroup.countryName}</h3>
-                                    <span>
-                                        {airportCountryGroup.airports.length}{" "}
-                                        个机场
-                                    </span>
-                                </header>
-                                <ul>
-                                    {airportCountryGroup.airports.map(
-                                        (
-                                            airport: CheckedAirport,
-                                        ): ReactElement => (
-                                            <li key={airport.name}>
-                                                <span>{airport.name}</span>
-                                                <small>
-                                                    {airport.lat.toFixed(4)},{" "}
-                                                    {airport.lng.toFixed(4)}
-                                                </small>
-                                            </li>
-                                        ),
-                                    )}
-                                </ul>
-                            </article>
+                            (() => {
+                                const isAirportCountryExpanded =
+                                    expandedAirportCountries.has(
+                                        airportCountryGroup.countryName,
+                                    );
+                                const airportCountryPanelId = `airport-country-airports-${airportCountryGroupIndex}`;
+
+                                return (
+                                    <article
+                                        className={`airport-country${isAirportCountryExpanded ? " airport-country--expanded" : ""}`}
+                                        key={airportCountryGroup.countryName}
+                                    >
+                                        <header className="airport-country__header">
+                                            <button
+                                                className="airport-country__toggle"
+                                                type="button"
+                                                aria-controls={
+                                                    airportCountryPanelId
+                                                }
+                                                aria-expanded={
+                                                    isAirportCountryExpanded
+                                                }
+                                                onClick={(): void =>
+                                                    toggleAirportCountry(
+                                                        airportCountryGroup.countryName,
+                                                    )
+                                                }
+                                            >
+                                                <span className="airport-country__title">
+                                                    {
+                                                        airportCountryGroup.countryName
+                                                    }
+                                                </span>
+                                                <span className="airport-country__meta">
+                                                    {
+                                                        airportCountryGroup
+                                                            .airports.length
+                                                    }{" "}
+                                                    个机场
+                                                </span>
+                                                <span
+                                                    className="airport-country__indicator"
+                                                    aria-hidden="true"
+                                                />
+                                            </button>
+                                        </header>
+                                        <div
+                                            className="airport-country__body"
+                                            id={airportCountryPanelId}
+                                            aria-hidden={
+                                                !isAirportCountryExpanded
+                                            }
+                                        >
+                                            <ul>
+                                                {airportCountryGroup.airports.map(
+                                                    (
+                                                        airport: CheckedAirport,
+                                                    ): ReactElement => (
+                                                        <li key={airport.name}>
+                                                            <span>
+                                                                {airport.name}
+                                                            </span>
+                                                            <small>
+                                                                {airport.lat.toFixed(
+                                                                    4,
+                                                                )}
+                                                                ,{" "}
+                                                                {airport.lng.toFixed(
+                                                                    4,
+                                                                )}
+                                                            </small>
+                                                        </li>
+                                                    ),
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </article>
+                                );
+                            })()
                         ),
                     )}
                 </section>
