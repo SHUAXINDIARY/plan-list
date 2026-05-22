@@ -86,4 +86,11 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.cathaypacific.com/cx/en_GB/flying-with-us/aircraft-and-fleet.html",
         ],
     },
+    {
+        airlineName: "汉莎航空",
+        urls: [
+            "https://www.lufthansagroup.com/en/company/fleet/lufthansa-and-regional-partners.html",
+            "https://en.wikipedia.org/wiki/Lufthansa_fleet",
+        ],
+    }
 ];
