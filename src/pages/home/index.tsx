@@ -9,7 +9,6 @@ import {
 import type {
     AircraftModelEntry,
     AirlineFleet,
-    AirlineReferenceSource,
     AirplaneData,
     AirplaneDataItem,
     ManufacturerFleet,
@@ -17,7 +16,6 @@ import type {
 } from "./type";
 import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
 import {
-    AIRLINE_REFERENCE_SOURCES,
     AIRPLANE_DATA_URL,
     ALL_AIRCRAFT_MODELS_VALUE,
     ALL_MANUFACTURERS_VALUE,
@@ -626,56 +624,6 @@ const HomePage = (): ReactElement => {
                 </div>
             ) : null}
 
-            <details className="reference-sources">
-                <summary className="reference-sources__summary">
-                    <span>
-                        <span className="reference-sources__eyebrow">
-                            References
-                        </span>
-                        <span className="reference-sources__title">
-                            数据参考来源
-                        </span>
-                    </span>
-                    <span className="reference-sources__summary-note">
-                        {AIRLINE_REFERENCE_SOURCES.length} 组来源，点击展开
-                    </span>
-                </summary>
-                <div className="reference-sources__list">
-                    {AIRLINE_REFERENCE_SOURCES.map(
-                        (
-                            referenceSource: AirlineReferenceSource,
-                        ): ReactElement => (
-                            <article
-                                className="reference-source"
-                                key={referenceSource.airlineName}
-                            >
-                                <h3>{referenceSource.airlineName}</h3>
-                                <ul>
-                                    {referenceSource.urls.map(
-                                        (
-                                            referenceUrl: string,
-                                            referenceIndex: number,
-                                        ): ReactElement => (
-                                            <li
-                                                key={`${referenceSource.airlineName}-${referenceUrl}`}
-                                            >
-                                                <a
-                                                    href={referenceUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    参考来源{" "}
-                                                    {referenceIndex + 1}
-                                                </a>
-                                            </li>
-                                        ),
-                                    )}
-                                </ul>
-                            </article>
-                        ),
-                    )}
-                </div>
-            </details>
         </section>
     );
 };

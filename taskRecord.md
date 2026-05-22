@@ -1740,6 +1740,115 @@
 
 ## 日期
 
+2026-05-22
+
+## 任务目的
+
+调整参考资料页面外链 hover 效果，移除边框高亮，仅突出对应链接。
+
+## 完成过程
+
+1. 检查 `src/pages/references/index.css` 中参考资料链接的 hover 与 focus-visible 样式。
+2. 移除 hover/focus 状态下的边框变色，保留文字颜色、背景和轻微位移反馈。
+3. 使用 `ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/references/index.css`
+  - 移除参考资料外链 hover/focus 时的边框高亮。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-22
+
+## 任务目的
+
+调整参考资料页面顶部概览胶囊，使数字与文案垂直居中。
+
+## 完成过程
+
+1. 检查 `src/pages/references/index.css` 中概览胶囊的对齐方式。
+2. 将 `.reference-archive__summary span` 的交叉轴对齐从基线改为居中，避免数字和中文文案出现上下错位。
+3. 使用 `ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/references/index.css`
+  - 调整参考资料概览胶囊内文本垂直对齐方式。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-22
+
+## 任务目的
+
+将首页底部参考来源区块抽离为独立参考资料页面，并在主导航增加入口。
+
+## 完成过程
+
+1. 读取 `impeccable` skill、项目产品与设计上下文，确认新页面应延续 Night Flight Archive 的产品界面风格。
+2. 从 `src/pages/home/index.tsx` 移除底部参考来源折叠区和本地 URL 域名格式化逻辑。
+3. 新增 `src/pages/references/` 页面模块，集中展示参考来源分组、链接数量和可扫读外链域名。
+4. 在 `src/App.tsx` 增加 `/references` 懒加载路由和“参考资料”主导航入口。
+5. 同步更新 `DESIGN.md` 中的路由说明。
+
+## 修改具体文件
+
+- `src/App.tsx`
+  - 新增“参考资料”导航项、懒加载页面和 `/references` 路由。
+- `src/pages/home/index.tsx`
+  - 移除首页内嵌参考来源区块。
+- `src/pages/home/index.css`
+  - 移除首页参考来源折叠区样式。
+- `src/pages/references/index.tsx`
+  - 新增独立参考资料页面，复用现有数据常量并展示来源分组。
+- `src/pages/references/index.css`
+  - 新增参考资料页布局、列表、外链和响应式样式。
+- `DESIGN.md`
+  - 更新当前产品结构中的路由说明。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-22
+
+## 任务目的
+
+按 Impeccable 产品界面原则优化首页底部数据参考来源区域的布局与样式，提升来源索引的可扫读性。
+
+## 完成过程
+
+1. 读取 `impeccable` skill 与用户提供的 Impeccable Style 摘录，确认本次优化应保持产品型、克制、资料索引式表达。
+2. 在 `src/pages/home/index.tsx` 中新增参考来源 URL 域名格式化函数，让链接显示可辨识域名而不是泛泛的序号文案。
+3. 调整参考来源 `details` 内部结构，新增说明文案、来源组数、单组来源数量、序号与域名展示。
+4. 在 `src/pages/home/index.css` 中重写参考来源区域样式，改为低干扰折叠索引、紧凑分栏、细边框层级和清晰 hover / focus 状态。
+5. 使用 `ReadLints` 检查首页 TSX 与 CSS 文件。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 新增 `getReferenceUrlHost` 辅助函数。
+  - 优化参考来源区域结构与链接展示文案。
+- `src/pages/home/index.css`
+  - 重写参考来源区 summary、分组、链接行与移动端样式。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
 2026-05-21
 
 ## 任务目的
@@ -2904,5 +3013,28 @@
 - `src/pages/home/constant.ts`
   - 扩展 `AIRLINE_REFERENCE_SOURCES`，新增多家国内外航司参考来源。
   - 合并瑞安航空、全日空、亚洲航空、泰国航空、泛航航空、泰国狮子航空、国泰航空和汉莎航空等既有条目来源。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-22
+
+## 任务目的
+
+调整参考资料页面顶部概览胶囊，使数字与文案垂直居中。
+
+## 完成过程
+
+1. 检查 `src/pages/references/index.css` 中概览胶囊的对齐方式。
+2. 将 `.reference-archive__summary span` 的交叉轴对齐从基线改为居中，避免数字和中文文案出现上下错位。
+3. 使用 `ReadLints` 检查本次修改文件。
+
+## 修改具体文件
+
+- `src/pages/references/index.css`
+  - 调整参考资料概览胶囊内文本垂直对齐方式。
 - `taskRecord.md`
   - 追加本次任务记录。

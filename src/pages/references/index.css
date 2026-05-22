@@ -1,0 +1,203 @@
+.reference-archive {
+  width: min(100%, 72rem);
+}
+
+.reference-archive__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 4vw, 3rem);
+}
+
+.reference-archive__summary {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  max-width: 18rem;
+}
+
+.reference-archive__summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  color: var(--pl-text-meta);
+  font-size: 0.84rem;
+  background-color: var(--pl-surface-pill);
+  border: 1px solid var(--pl-border-pill);
+  border-radius: 999px;
+}
+
+.reference-archive__summary strong {
+  color: var(--pl-text-emphasis);
+  font-size: 1rem;
+}
+
+.reference-archive__list {
+  display: grid;
+  gap: 0;
+  margin-top: 2rem;
+  background-color: var(--pl-surface-reference);
+  border: 1px solid var(--pl-border-divider);
+  border-radius: 1rem;
+  overflow: hidden;
+  animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) 80ms both;
+}
+
+.reference-entry {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.75fr) minmax(0, 1fr);
+  gap: clamp(0.9rem, 3vw, 1.75rem);
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--pl-border-divider);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.reference-entry:last-child {
+  border-bottom: 0;
+}
+
+.reference-entry:hover {
+  background-color: var(--pl-surface-reference-hover);
+}
+
+.reference-entry__header {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.reference-entry__serial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  min-height: 2.2rem;
+  color: var(--pl-accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background-color: var(--pl-surface-pill);
+  border: 1px solid var(--pl-border-pill);
+  border-radius: 999px;
+}
+
+.reference-entry__title {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.reference-entry h2 {
+  margin: 0;
+  color: var(--pl-text-heading);
+  font-size: 1rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.reference-entry__title span {
+  color: var(--pl-text-meta);
+  font-size: 0.8rem;
+}
+
+.reference-entry__links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.35rem 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.reference-entry__links a {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.15rem;
+  padding: 0 0.45rem;
+  color: var(--pl-text-secondary);
+  font-size: 0.84rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.reference-entry__links a:hover,
+.reference-entry__links a:focus-visible {
+  color: var(--pl-link-hover);
+  background-color: var(--pl-surface-entry-hover);
+  outline: none;
+  transform: translate3d(0, -1px, 0);
+}
+
+.reference-entry__links a:focus-visible {
+  box-shadow: var(--pl-focus-glow);
+}
+
+.reference-entry__link-index {
+  color: var(--pl-text-meta);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.reference-entry__link-domain {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .reference-archive__hero {
+    flex-direction: column;
+  }
+
+  .reference-archive__summary {
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  .reference-entry {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .reference-archive__summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .reference-archive__summary span {
+    justify-content: center;
+    min-height: 2.75rem;
+  }
+
+  .reference-entry {
+    padding: 0.95rem 0.85rem;
+  }
+
+  .reference-entry__links {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-entry__links a {
+    min-height: 2.75rem;
+    padding: 0 0.55rem;
+  }
+}

@@ -17,21 +17,26 @@ import {
 } from "./utils/themePreference";
 
 interface NavigationItem {
+    /** 路由路径，用于 NavLink 跳转和 key。 */
     path: string;
+    /** 导航中展示的中文页面名称。 */
     label: string;
+    /** 是否只在完全匹配路径时激活当前导航项。 */
     end: boolean;
 }
 
 // 应用主导航配置，后续新增页面时从这里扩展入口。
 const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "机型资料库", end: true },
-    { path: "/personal", label: "个人记录", end: false },
+    { path: "/personal", label: "站长记录", end: false },
+    { path: "/references", label: "参考资料", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
 const PersonalPage = lazy(async () => import("./pages/personal"));
+const ReferencesPage = lazy(async () => import("./pages/references"));
 
 // 根据路由激活状态生成导航类名，保持当前页面入口高亮。
 const getNavigationClassName = ({
@@ -113,6 +118,10 @@ const App = (): ReactElement => {
                             <Route
                                 path="/personal"
                                 element={<PersonalPage />}
+                            />
+                            <Route
+                                path="/references"
+                                element={<ReferencesPage />}
                             />
                         </Routes>
                     </Suspense>
