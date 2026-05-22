@@ -2881,3 +2881,28 @@
   - 新增折叠按钮、展开指示、隐藏列表与小屏适配样式。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-22
+
+## 任务目的
+
+合并补充首页航司参考来源列表，扩展底部参考来源折叠区可展示的外部出处。
+
+## 完成过程
+
+1. 读取 `src/pages/home/constant.ts`，确认 `AIRLINE_REFERENCE_SOURCES` 当前包含全局统计、通用来源和少量航司来源。
+2. 将用户提供的航司参考来源清单合并进 `AIRLINE_REFERENCE_SOURCES`。
+3. 对已有同名航司条目进行补充合并，保留原有来源并新增 Wikipedia、航司官网等链接，避免同一航司重复分组。
+4. 使用 `ReadLints` 检查 `src/pages/home/constant.ts`。
+
+## 修改具体文件
+
+- `src/pages/home/constant.ts`
+  - 扩展 `AIRLINE_REFERENCE_SOURCES`，新增多家国内外航司参考来源。
+  - 合并瑞安航空、全日空、亚洲航空、泰国航空、泛航航空、泰国狮子航空、国泰航空和汉莎航空等既有条目来源。
+- `taskRecord.md`
+  - 追加本次任务记录。
