@@ -811,5 +811,30 @@
                 "B777-F": "https://www.jetphotos.com/photo/12086390"
             }
         }
-    }
+    },
+    {
+      "airline": "汉莎航空",
+      "airlineEnglishName": "Lufthansa",
+      "passengerAircraftCount": 285,
+      "models": {
+        "Airbus": {
+          "A319-100": "https://commons.wikimedia.org/wiki/File:Lufthansa_A319-100_D-AILB_(8644000322).jpg",
+          "A320-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A320-200_(9214214645).jpg",
+          "A320neo": "https://commons.wikimedia.org/wiki/File:D-AIND_A320NEO_Lufthansa_(35673617915).jpg",
+          "A321-100": "https://commons.wikimedia.org/wiki/File:Lufthansa.a321-100.d-aire.arp.jpg",
+          "A321-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_a321-200_d-aisj_arp.jpg",
+          "A321neo": "https://commons.wikimedia.org/wiki/File:D-AIEB_Lufthansa_A321neo_%22Bielefeld%22.jpg",
+          "A330-300": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A330-300_D-AIKB_(7721065166)_(2).jpg",
+          "A340-300": "https://commons.wikimedia.org/wiki/File:D-AIGU_Airbus_A340-300_Lufthansa_FRA_2019-08-10_(19a).JPG",
+          "A340-600": "https://commons.wikimedia.org/wiki/File:Lufthansa_A340-600(D-AIHZ)_(4063195725).jpg",
+          "A350-900": "https://commons.wikimedia.org/wiki/File:Lufthansa_A350-900_D-AIXB.jpg",
+          "A380-800": "https://commons.wikimedia.org/wiki/File:Lufthansa_A380-800(D-AIMA)_(4692239502).jpg"
+        },
+        "Boeing": {
+          "B747-400": "https://commons.wikimedia.org/wiki/File:Lufthansa_-_D-ABVU_-_Boeing_747-400_-_San_Francisco_International_Airport-0389.jpg",
+          "B747-8": "https://commons.wikimedia.org/wiki/File:Boeing_747-8_(Lufthansa)_016.jpg",
+          "B787-9": "https://commons.wikimedia.org/wiki/File:Lufthansa,_D-ABPA,_Boeing_787-9_Dreamliner_(52660668116).jpg"
+        }
+  }
+}
 ]
