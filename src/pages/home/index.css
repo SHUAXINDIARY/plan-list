@@ -146,11 +146,16 @@
   text-transform: uppercase;
 }
 
-.fleet-filter input,
-.fleet-filter select {
+.fleet-filter.pl-select-field {
+  flex: 0 1 11rem;
+  min-width: 9.5rem;
+}
+
+.fleet-filter input {
   box-sizing: border-box;
   width: 100%;
   min-height: 2.55rem;
+  padding: 0.65rem 0.8rem;
   color: var(--pl-text-body);
   background-color: var(--pl-surface-input);
   border: 1px solid var(--pl-border-input);
@@ -162,20 +167,11 @@
     transform var(--motion-duration-standard) var(--motion-ease-out-quart);
 }
 
-.fleet-filter input {
-  padding: 0.65rem 0.8rem;
-}
-
-.fleet-filter select {
-  padding: 0.65rem 2rem 0.65rem 0.8rem;
-}
-
 .fleet-filter input::placeholder {
   color: var(--pl-text-placeholder);
 }
 
-.fleet-filter input:focus,
-.fleet-filter select:focus {
+.fleet-filter input:focus-visible {
   border-color: var(--pl-border-focus);
   box-shadow: var(--pl-focus-glow);
   transform: translate3d(0, -1px, 0);
@@ -366,8 +362,7 @@
   }
 
   /* iOS 聚焦输入框时字体过小会触发整页缩放，16px 为常用规避阈值。 */
-  .fleet-filter input,
-  .fleet-filter select {
+  .fleet-filter input {
     min-height: 2.75rem;
     font-size: 1rem;
   }

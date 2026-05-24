@@ -1,0 +1,280 @@
+/* Night Flight Archive 通用下拉：与 Fleet / 个人页筛选 select 共用 token 与动效档位。 */
+
+.pl-select-field {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 0.42rem;
+  min-width: 10rem;
+}
+
+.pl-select-field__label {
+  display: block;
+  color: var(--pl-text-meta);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.pl-select-field:has(.pl-select:focus-visible) .pl-select-field__label {
+  color: var(--pl-text-secondary);
+}
+
+.pl-select-wrap {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+}
+
+.pl-select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0.65rem 2.55rem 0.65rem 0.85rem;
+  color: var(--pl-text-data);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.35;
+  background-color: var(--pl-surface-input);
+  border: 1px solid var(--pl-border-input);
+  border-radius: 0.75rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: inset 0 1px 0 rgba(164, 188, 201, 0.07);
+  transition:
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-standard) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quart),
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.pl-select:not(:disabled):hover {
+  border-color: var(--pl-border-entry-hover);
+  background-color: var(--pl-surface-entry-hover);
+  color: var(--pl-text-body);
+}
+
+.pl-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.pl-select:focus-visible {
+  border-color: var(--pl-border-focus);
+  color: var(--pl-text-body);
+  box-shadow:
+    var(--pl-focus-glow),
+    inset 0 1px 0 rgba(164, 188, 201, 0.1);
+  transform: translate3d(0, -1px, 0);
+}
+
+.pl-select:active:not(:disabled) {
+  transform: translate3d(0, 0, 0);
+  transition-duration: var(--motion-duration-fast);
+}
+
+.pl-select__affordance {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  border-left: 1px solid var(--pl-border-divider);
+  border-radius: 0 0.62rem 0.62rem 0;
+  background-color: var(--pl-surface-reference);
+  pointer-events: none;
+  transition:
+    background-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.pl-select-wrap:has(.pl-select:not(:disabled):hover) .pl-select__affordance {
+  background-color: var(--pl-surface-reference-hover);
+  border-left-color: var(--pl-border-divider-mid);
+}
+
+.pl-select-wrap:has(.pl-select:focus-visible) .pl-select__affordance {
+  background-color: var(--pl-surface-pill);
+  border-left-color: var(--pl-border-accent-soft);
+}
+
+.pl-select-wrap:has(.pl-select:disabled) .pl-select__affordance {
+  opacity: 0.65;
+}
+
+.pl-select__chevron {
+  width: 0.8rem;
+  height: 0.8rem;
+  color: var(--pl-summary-chevron);
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quart);
+}
+
+.pl-select-wrap:has(.pl-select:not(:disabled):hover) .pl-select__chevron,
+.pl-select-wrap:has(.pl-select:focus-visible) .pl-select__chevron {
+  color: var(--pl-link);
+}
+
+.pl-select-wrap:has(.pl-select:not(:disabled):hover) .pl-select__chevron {
+  transform: translateY(1px);
+}
+
+.pl-select-wrap--open .pl-select__chevron {
+  color: var(--pl-link);
+  transform: rotate(180deg);
+}
+
+.pl-select-wrap--open .pl-select {
+  border-color: var(--pl-border-focus);
+  color: var(--pl-text-body);
+  box-shadow:
+    var(--pl-focus-glow),
+    inset 0 1px 0 rgba(164, 188, 201, 0.1);
+}
+
+.pl-select-wrap--open .pl-select__affordance {
+  background-color: var(--pl-surface-pill);
+  border-left-color: var(--pl-border-accent-soft);
+}
+
+.pl-select__value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+button.pl-select {
+  text-align: left;
+}
+
+.pl-select-menu {
+  max-height: 16rem;
+  margin: 0;
+  padding: 0.35rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  background-color: var(--pl-surface-data-state);
+  border: 1px solid var(--pl-border-strong);
+  border-radius: 0.75rem;
+  box-shadow: inset 0 1px 0 rgba(164, 188, 201, 0.08);
+  animation: pl-select-menu-enter var(--motion-duration-standard)
+    var(--motion-ease-out-quint) both;
+}
+
+.pl-select-menu--portal {
+  position: fixed;
+  box-sizing: border-box;
+}
+
+@keyframes pl-select-menu-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.pl-select-menu__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  color: var(--pl-text-data);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.35;
+  border: 1px solid transparent;
+  border-radius: 0.55rem;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.pl-select-menu__option--highlighted:not(.pl-select-menu__option--disabled) {
+  background-color: var(--pl-surface-entry-hover);
+  border-color: var(--pl-border-divider-mid);
+  color: var(--pl-text-body);
+}
+
+.pl-select-menu__option--selected {
+  background-color: var(--pl-nav-active-bg);
+  border-color: var(--pl-border-accent-soft);
+  color: var(--pl-text-emphasis);
+}
+
+.pl-select-menu__option--selected.pl-select-menu__option--highlighted {
+  border-color: var(--pl-border-nav-hover);
+}
+
+.pl-select-menu__option--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.pl-select-menu__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-select-menu__check {
+  flex-shrink: 0;
+  color: var(--pl-accent);
+}
+
+@media (max-width: 640px) {
+  /* iOS 聚焦时字体过小会触发整页缩放，16px 为常用规避阈值。 */
+  .pl-select {
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-select-field__label,
+  .pl-select,
+  .pl-select__affordance,
+  .pl-select__chevron,
+  .pl-select-menu__option {
+    transition: none;
+  }
+
+  .pl-select-menu {
+    animation: none;
+  }
+
+  .pl-select:focus-visible,
+  .pl-select:active:not(:disabled) {
+    transform: none;
+  }
+
+  .pl-select-wrap:has(.pl-select:not(:disabled):hover) .pl-select__chevron,
+  .pl-select-wrap--open .pl-select__chevron {
+    transform: none;
+  }
+}

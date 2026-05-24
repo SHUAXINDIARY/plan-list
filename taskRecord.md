@@ -3065,3 +3065,190 @@
   - 构建插件重新生成的预览图 data URL 映射。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+实现符合 Night Flight Archive 站点视觉的全站通用 Select 下拉组件。
+
+## 完成过程
+
+1. 对照 `DESIGN.md` 与 Fleet / 个人页现有 `select` 样式，抽取 `--pl-*` token、圆角、焦点辉光与动效档位。
+2. 在 `src/components/Select/` 新增 `type.d.ts`、`index.css`、`index.tsx`：支持 `options` 或 `children`、可选 eyebrow 标签字段布局、主题感知 chevron、`focus-visible` 与移动端 16px 防缩放。
+3. 运行 `pnpm run build` 验证类型与构建通过；使用 `ReadLints` 检查修改文件。
+
+## 修改具体文件
+
+- `src/components/Select/type.d.ts`
+  - 新增 `SelectOption`、`SelectProps` 类型声明。
+- `src/components/Select/index.css`
+  - 通用下拉字段与控件样式，对齐档案型深色/亮色主题 token。
+- `src/components/Select/index.tsx`
+  - 导出 `Select` 组件与类型。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+将首页 Fleet 筛选与个人页照片目录的原生 `<select>` 替换为通用 `Select` 组件，并清理重复样式。
+
+## 完成过程
+
+1. 在 `src/pages/home/index.tsx` 将 3 处制造商/型号/排序下拉改为 `Select`，航司搜索仍保留原生 `input` 与 `fleet-filter` 布局。
+2. 在 `src/pages/personal/index.tsx` 将照片目录下拉改为 `Select`（`children` 模式保留动态计数文案）。
+3. 精简 `home/index.css`、`personal/index.css` 中重复的 select 与 label 样式，仅保留页面级 flex/max-width 修饰（`.fleet-filter.pl-select-field`、`.aircraft-photo-filter.pl-select-field`）。
+4. 运行 `pnpm run build` 验证通过；使用 `ReadLints` 检查修改文件。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`
+  - 引入 `Select` 并替换 3 处筛选下拉。
+- `src/pages/personal/index.tsx`
+  - 引入 `Select` 并替换照片目录下拉。
+- `src/pages/home/index.css`
+  - 移除 select 专用规则；保留搜索 input 样式与 Select 布局修饰。
+- `src/pages/personal/index.css`
+  - 移除 select/label 重复样式，保留 `max-width` 布局修饰。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+为通用 `Select` 组件补充克制的表单微交互动效，强化 hover / focus / active 反馈并尊重 `prefers-reduced-motion`。
+
+## 完成过程
+
+1. 依据 `DESIGN.md` 动效档位（`--motion-duration-fast` / `standard`、`--motion-ease-out-quart`）规划 Select 反馈层：hover 提亮边框与输入面、focus-visible 保持青辉上浮、active 快速回压。
+2. 使用 `:has()` 联动 chevron 色相随 hover/focus 变化，并做 1px 下沉提示；字段 label 在 focus-within 时略提亮，建立标签与控件关系。
+3. 在 `prefers-reduced-motion: reduce` 下关闭过渡与位移。使用 `ReadLints` 检查修改文件。
+
+## 修改具体文件
+
+- `src/components/Select/index.css`
+  - 新增 hover、active、chevron 与 label 联动动效；扩展 reduced-motion 覆盖。
+- `src/components/Select/index.tsx`
+  - 更新组件注释以反映动效分层。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+按 Night Flight Archive 设计系统打磨通用 `Select` 组件视觉层次与控件质感。
+
+## 完成过程
+
+1. 对照 `DESIGN.md` Forms / Surfaces 约定，为 select 增加内嵌顶缘高光与 `--pl-text-data` 数据字色，hover/focus 时提亮为正文色。
+2. 新增右侧 `pl-select__affordance` 指示轨道（`--pl-surface-reference` + 发丝分隔），chevron 纳入轨道并在 hover/focus/disabled 下联动背景与描边；统一 SVG 线宽与顶栏控件。
+3. 保留既有动效分层与 `prefers-reduced-motion` 收窄；运行 `pnpm run build` 验证通过。
+
+## 修改具体文件
+
+- `src/components/Select/index.css`
+  - 数据字色、内嵌高光、affordance 轨道与状态联动样式。
+- `src/components/Select/index.tsx`
+  - 增加 affordance 包裹结构，微调 chevron SVG。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+美化 `Select` 选项列表：用自定义 listbox 替代系统原生下拉，统一 Night Flight Archive 选项行视觉。
+
+## 完成过程
+
+1. 将 `renderSelectOptions` 重构为 `normalizeSelectItems` + `SelectMenuOption` + `SelectOptionsMenu`，支持 `options` 与 legacy `children`（`<option>`）两种入参。
+2. `SelectControl` 改为 combobox（button + listbox）：键盘导航、外点关闭、选中勾号、展开 chevron 旋转；`onChange` 仍派发 synthetic `ChangeEvent<HTMLSelectElement>`。
+3. 新增 `pl-select-menu` 面板样式（档案型 surface、选中/高亮态、入场动画、`scroll-area-night`）；更新 `prefers-reduced-motion` 覆盖。
+4. 运行 `pnpm run build` 验证通过。
+
+## 修改具体文件
+
+- `src/components/Select/index.tsx`
+  - 自定义 listbox 选项渲染与 combobox 交互逻辑。
+- `src/components/Select/index.css`
+  - 下拉面板、选项行、展开态与 check 图标样式。
+- `src/components/Select/type.d.ts`
+  - 更新组件契约说明。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+修复个人页 `Select` 点击后选项面板无法保持打开的问题。
+
+## 完成过程
+
+1. 定位根因：`<label htmlFor>` 包裹 combobox `button` 时，点击冒泡会再次激活 button，导致 `openMenu` 与 `closeMenu` 同一次点击内连续触发。
+2. 将字段结构改为 `div.pl-select-field` + 独立 `label.pl-select-field__label`（`htmlFor` 关联触发器），listbox 不再位于 label 内，避免选项行触发 label 二次激活。
+3. 触发器 `click` 增加 `stopPropagation`；外点关闭改为 capture 阶段 `pointerdown`，减少与内部点击竞态。
+4. 运行 `pnpm run build` 验证通过。
+
+## 修改具体文件
+
+- `src/components/Select/index.tsx`
+  - 修正 label/控件 DOM 结构；触发器 click 阻止冒泡；外点监听使用 capture。
+- `src/components/Select/index.css`
+  - `pl-select-field__label` 改为 block 级可点击 label。
+- `taskRecord.md`
+  - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+修复 `Select` 下拉选项被父级 `overflow` 裁切遮挡的问题。
+
+## 完成过程
+
+1. 定位根因：首页 `.fleet-filters { overflow-x: auto }` 等祖先容器会裁切 `position: absolute` 的 listbox。
+2. 将选项面板通过 `createPortal` 挂载到 `document.body`，使用 `fixed` 定位并按触发器 `getBoundingClientRect` 计算坐标。
+3. scroll/resize 时重新定位；外点关闭逻辑同时覆盖 Portal 内的 listbox 节点。
+4. 运行 `pnpm run build` 验证通过。
+
+## 修改具体文件
+
+- `src/components/Select/index.tsx`
+  - Portal 渲染 listbox；`computeMenuPlacement` 与滚动/缩放重定位。
+- `src/components/Select/index.css`
+  - 新增 `pl-select-menu--portal` fixed 定位样式。
+- `taskRecord.md`
+  - 追加本次任务记录。

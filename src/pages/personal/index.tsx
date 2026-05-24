@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, MouseEvent, ReactElement } from "react";
 import { createPortal } from "react-dom";
 import AnnotatedWorldMap from "../../components/map";
+import { Select } from "../../components/Select";
 import {
     ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE,
     CHECKED_AIRPORTS,
@@ -264,34 +265,31 @@ const PersonalPage = (): ReactElement => {
                             className="aircraft-photo-filters"
                             aria-label="飞机照片目录筛选"
                         >
-                            <label className="aircraft-photo-filter">
-                                <span>照片目录</span>
-                                <select
-                                    value={selectedPhotoDirectory}
-                                    onChange={handlePhotoDirectoryChange}
+                            <Select
+                                label="照片目录"
+                                className="aircraft-photo-filter"
+                                value={selectedPhotoDirectory}
+                                onChange={handlePhotoDirectoryChange}
+                            >
+                                <option
+                                    value={ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE}
                                 >
-                                    <option
-                                        value={
-                                            ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE
-                                        }
-                                    >
-                                        全部目录（{aircraftPhotos.length}）
-                                    </option>
-                                    {aircraftPhotoDirectoryOptions.map(
-                                        (
-                                            directoryOption: AircraftPhotoDirectoryOption,
-                                        ): ReactElement => (
-                                            <option
-                                                key={directoryOption.value}
-                                                value={directoryOption.value}
-                                            >
-                                                {directoryOption.label}（
-                                                {directoryOption.photoCount}）
-                                            </option>
-                                        ),
-                                    )}
-                                </select>
-                            </label>
+                                    全部目录（{aircraftPhotos.length}）
+                                </option>
+                                {aircraftPhotoDirectoryOptions.map(
+                                    (
+                                        directoryOption: AircraftPhotoDirectoryOption,
+                                    ): ReactElement => (
+                                        <option
+                                            key={directoryOption.value}
+                                            value={directoryOption.value}
+                                        >
+                                            {directoryOption.label}（
+                                            {directoryOption.photoCount}）
+                                        </option>
+                                    ),
+                                )}
+                            </Select>
                             <p className="aircraft-photo-filters__summary">
                                 当前显示{" "}
                                 <strong>

@@ -14,6 +14,7 @@ import type {
     ManufacturerFleet,
     PassengerAircraftSortOrder,
 } from "./type";
+import { Select } from "../../components/Select";
 import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
 import {
     AIRPLANE_DATA_URL,
@@ -436,62 +437,58 @@ const HomePage = (): ReactElement => {
                             />
                         </label>
 
-                        <label className="fleet-filter">
-                            <span>机型制造商</span>
-                            <select
-                                value={selectedManufacturer}
-                                onChange={handleManufacturerChange}
-                            >
-                                <option value={ALL_MANUFACTURERS_VALUE}>
-                                    全部制造商
-                                </option>
-                                {manufacturerOptions.map(
-                                    (
-                                        manufacturerName: string,
-                                    ): ReactElement => (
-                                        <option
-                                            key={manufacturerName}
-                                            value={manufacturerName}
-                                        >
-                                            {manufacturerName}
-                                        </option>
-                                    ),
-                                )}
-                            </select>
-                        </label>
+                        <Select
+                            label="机型制造商"
+                            className="fleet-filter"
+                            value={selectedManufacturer}
+                            onChange={handleManufacturerChange}
+                        >
+                            <option value={ALL_MANUFACTURERS_VALUE}>
+                                全部制造商
+                            </option>
+                            {manufacturerOptions.map(
+                                (manufacturerName: string): ReactElement => (
+                                    <option
+                                        key={manufacturerName}
+                                        value={manufacturerName}
+                                    >
+                                        {manufacturerName}
+                                    </option>
+                                ),
+                            )}
+                        </Select>
 
-                        <label className="fleet-filter">
-                            <span>具体型号</span>
-                            <select
-                                value={selectedAircraftModel}
-                                onChange={handleAircraftModelChange}
-                            >
-                                <option value={ALL_AIRCRAFT_MODELS_VALUE}>
-                                    全部型号
-                                </option>
-                                {aircraftModelOptions.map(
-                                    (modelName: string): ReactElement => (
-                                        <option
-                                            key={modelName}
-                                            value={modelName}
-                                        >
-                                            {modelName}
-                                        </option>
-                                    ),
-                                )}
-                            </select>
-                        </label>
+                        <Select
+                            label="具体型号"
+                            className="fleet-filter"
+                            value={selectedAircraftModel}
+                            onChange={handleAircraftModelChange}
+                        >
+                            <option value={ALL_AIRCRAFT_MODELS_VALUE}>
+                                全部型号
+                            </option>
+                            {aircraftModelOptions.map(
+                                (modelName: string): ReactElement => (
+                                    <option
+                                        key={modelName}
+                                        value={modelName}
+                                    >
+                                        {modelName}
+                                    </option>
+                                ),
+                            )}
+                        </Select>
 
-                        <label className="fleet-filter">
-                            <span>客机数量排序</span>
-                            <select
-                                value={selectedSortOrder}
-                                onChange={handleSortOrderChange}
-                            >
-                                <option value="passenger-desc">由多到少</option>
-                                <option value="passenger-asc">由少到多</option>
-                            </select>
-                        </label>
+                        <Select
+                            label="客机数量排序"
+                            className="fleet-filter"
+                            value={selectedSortOrder}
+                            onChange={handleSortOrderChange}
+                            options={[
+                                { value: "passenger-desc", label: "由多到少" },
+                                { value: "passenger-asc", label: "由少到多" },
+                            ]}
+                        />
                     </div>
                 </div>
             ) : null}
