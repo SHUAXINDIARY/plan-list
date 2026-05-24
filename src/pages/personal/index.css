@@ -56,6 +56,74 @@
   font-size: 1.2rem;
 }
 
+.aircraft-photo-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.85rem 1rem;
+  margin-top: 1rem;
+}
+
+.aircraft-photo-filter {
+  display: grid;
+  flex: 1 1 12rem;
+  gap: 0.42rem;
+  min-width: 10rem;
+  max-width: 18rem;
+}
+
+.aircraft-photo-filter span {
+  color: var(--pl-text-meta);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.aircraft-photo-filter select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0.65rem 2rem 0.65rem 0.8rem;
+  color: var(--pl-text-body);
+  background-color: var(--pl-surface-input);
+  border: 1px solid var(--pl-border-input);
+  border-radius: 0.75rem;
+  outline: none;
+  transition:
+    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-standard) var(--motion-ease-out-quart),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quart);
+}
+
+.aircraft-photo-filter select:focus {
+  border-color: var(--pl-border-focus);
+  box-shadow: var(--pl-focus-glow);
+  transform: translate3d(0, -1px, 0);
+}
+
+.aircraft-photo-filters__summary {
+  margin: 0;
+  color: var(--pl-text-secondary);
+  font-size: 0.88rem;
+}
+
+.aircraft-photo-filters__summary strong {
+  color: var(--pl-text-emphasis);
+  font-size: 1rem;
+}
+
+.aircraft-photo-gallery__empty {
+  margin: 1rem 0 0;
+  padding: 1rem 1.1rem;
+  color: var(--pl-text-secondary);
+  background-color: var(--pl-surface-gallery);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.9rem;
+}
+
 .aircraft-photo-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));

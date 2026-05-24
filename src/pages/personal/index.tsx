@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { MouseEvent, ReactElement } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { ChangeEvent, MouseEvent, ReactElement } from "react";
 import { createPortal } from "react-dom";
 import AnnotatedWorldMap from "../../components/map";
 import {
+    ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE,
     CHECKED_AIRPORTS,
     MAP_ROUTES,
     PHOTO_PREVIEW_EXIT_DURATION_MS,
+    aircraftPhotoDirectoryOptions,
     aircraftPhotos,
     airportCountryGroups,
     airportMapMarkers,
@@ -13,6 +15,7 @@ import {
 } from "./constant";
 import type {
     AircraftPhoto,
+    AircraftPhotoDirectoryOption,
     AirportCountryGroup,
     CheckedAirport,
 } from "./type";
@@ -29,12 +32,26 @@ const PersonalPage = (): ReactElement => {
     const [expandedAirportCountries, setExpandedAirportCountries] = useState<
         ReadonlySet<string>
     >((): ReadonlySet<string> => new Set<string>());
+    const [selectedPhotoDirectory, setSelectedPhotoDirectory] =
+        useState<string>(ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE);
     const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
     const photoPreviewCloseTimerRef = useRef<number | null>(null);
+    const filteredAircraftPhotos = useMemo((): AircraftPhoto[] => {
+        if (
+            selectedPhotoDirectory === ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE
+        ) {
+            return aircraftPhotos;
+        }
+
+        return aircraftPhotos.filter(
+            (aircraftPhoto: AircraftPhoto): boolean =>
+                aircraftPhoto.directory === selectedPhotoDirectory,
+        );
+    }, [selectedPhotoDirectory]);
     const previewPhotoUrl =
         previewPhotoIndex === null
             ? null
-            : (aircraftPhotos[previewPhotoIndex]?.originalUrl ?? null);
+            : (filteredAircraftPhotos[previewPhotoIndex]?.originalUrl ?? null);
 
     // 清理延迟卸载计时器，避免快速开关图片时保留过期关闭任务。
     const clearPhotoPreviewCloseTimer = useCallback((): void => {
@@ -93,6 +110,14 @@ const PersonalPage = (): ReactElement => {
         };
     }, [clearPhotoPreviewCloseTimer]);
 
+    // 切换目录筛选时关闭预览，避免索引指向已不可见的照片。
+    useEffect((): void => {
+        clearPhotoPreviewCloseTimer();
+        setPreviewPhotoIndex(null);
+        setIsPhotoPreviewClosing(false);
+        setIsPreviewPhotoLoading(false);
+    }, [clearPhotoPreviewCloseTimer, selectedPhotoDirectory]);
+
     // 点击缩略图时记录索引，预览层会根据索引读取对应图片与序号文案。
     const openPhotoPreview = (aircraftPhotoIndex: number): void => {
         clearPhotoPreviewCloseTimer();
@@ -125,6 +150,13 @@ const PersonalPage = (): ReactElement => {
                 return nextExpandedAirportCountries;
             },
         );
+    };
+
+    // 更新相册目录筛选，仅展示所选路径下的缩略图列表。
+    const handlePhotoDirectoryChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        setSelectedPhotoDirectory(event.target.value);
     };
 
     // 只在用户点击遮罩本身时关闭，避免点击图片内容导致预览意外退出。
@@ -227,34 +259,87 @@ const PersonalPage = (): ReactElement => {
                         </p>
                         <h2 id="photo-aircraft-title">拍摄的飞机</h2>
                     </div>
-                    <ul
-                        className="aircraft-photo-gallery"
-                        aria-label="拍摄的飞机照片列表"
-                    >
-                        {aircraftPhotos.map(
-                            (
-                                aircraftPhoto: AircraftPhoto,
-                                aircraftPhotoIndex: number,
-                            ): ReactElement => (
-                                <li key={aircraftPhoto.originalUrl}>
-                                    <button
-                                        className="aircraft-photo-gallery__button"
-                                        type="button"
-                                        onClick={(): void =>
-                                            openPhotoPreview(aircraftPhotoIndex)
+                    {aircraftPhotoDirectoryOptions.length > 1 ? (
+                        <div
+                            className="aircraft-photo-filters"
+                            aria-label="飞机照片目录筛选"
+                        >
+                            <label className="aircraft-photo-filter">
+                                <span>照片目录</span>
+                                <select
+                                    value={selectedPhotoDirectory}
+                                    onChange={handlePhotoDirectoryChange}
+                                >
+                                    <option
+                                        value={
+                                            ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE
                                         }
-                                        aria-label={`全屏查看拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                                     >
-                                        <img
-                                            src={aircraftPhoto.previewUrl}
-                                            alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
-                                            loading="lazy"
-                                        />
-                                    </button>
-                                </li>
-                            ),
-                        )}
-                    </ul>
+                                        全部目录（{aircraftPhotos.length}）
+                                    </option>
+                                    {aircraftPhotoDirectoryOptions.map(
+                                        (
+                                            directoryOption: AircraftPhotoDirectoryOption,
+                                        ): ReactElement => (
+                                            <option
+                                                key={directoryOption.value}
+                                                value={directoryOption.value}
+                                            >
+                                                {directoryOption.label}（
+                                                {directoryOption.photoCount}）
+                                            </option>
+                                        ),
+                                    )}
+                                </select>
+                            </label>
+                            <p className="aircraft-photo-filters__summary">
+                                当前显示{" "}
+                                <strong>
+                                    {filteredAircraftPhotos.length}
+                                </strong>{" "}
+                                张
+                            </p>
+                        </div>
+                    ) : null}
+                    {filteredAircraftPhotos.length > 0 ? (
+                        <ul
+                            className="aircraft-photo-gallery"
+                            aria-label="拍摄的飞机照片列表"
+                        >
+                            {filteredAircraftPhotos.map(
+                                (
+                                    aircraftPhoto: AircraftPhoto,
+                                    aircraftPhotoIndex: number,
+                                ): ReactElement => (
+                                    <li key={aircraftPhoto.originalUrl}>
+                                        <button
+                                            className="aircraft-photo-gallery__button"
+                                            type="button"
+                                            onClick={(): void =>
+                                                openPhotoPreview(
+                                                    aircraftPhotoIndex,
+                                                )
+                                            }
+                                            aria-label={`全屏查看拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
+                                        >
+                                            <img
+                                                src={aircraftPhoto.previewUrl}
+                                                alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
+                                                loading="lazy"
+                                            />
+                                        </button>
+                                    </li>
+                                ),
+                            )}
+                        </ul>
+                    ) : (
+                        <p
+                            className="aircraft-photo-gallery__empty"
+                            role="status"
+                        >
+                            当前目录下暂无照片，请切换其他目录查看。
+                        </p>
+                    )}
                 </section>
 
                 <section

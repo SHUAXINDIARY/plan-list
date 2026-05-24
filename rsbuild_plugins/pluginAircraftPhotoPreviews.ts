@@ -33,7 +33,7 @@ const extractAircraftPhotoUrls = (constantSource: string): string[] => {
     .split('\n')
     .filter((line: string): boolean => !line.trim().startsWith('//'))
     .join('\n');
-  const photoUrlMatches = uncommentedImgsSource.matchAll(/'((?:https?:\/\/)[^']+)'/g);
+  const photoUrlMatches = uncommentedImgsSource.matchAll(/["']((?:https?:\/\/)[^"']+)["']/g);
 
   return Array.from(new Set(Array.from(photoUrlMatches, (photoUrlMatch: RegExpMatchArray): string => photoUrlMatch[1])));
 };
@@ -136,36 +136,47 @@ const writePhotoPreviewsModule = async (photoPreviewEntries: PhotoPreviewEntry[]
   await writeFile(PHOTO_PREVIEWS_MODULE_PATH, moduleSource);
 };
 
+// 读取 constant.ts 中的图片 URL，增量生成预览图映射并写入生成文件。
+const generateAircraftPhotoPreviews = async (): Promise<void> => {
+  const constantSource = await readFile(PERSONAL_CONSTANT_PATH, 'utf8');
+  const photoUrls = extractAircraftPhotoUrls(constantSource);
+
+  if (photoUrls.length === 0) {
+    console.warn('[photo-preview] 未从 constant.ts 解析到图片 URL，跳过预览图生成。');
+    return;
+  }
+
+  const existingPhotoPreviewRecord = await readExistingPhotoPreviewRecord();
+  const missingPhotoUrls = photoUrls.filter(
+    (photoUrl: string): boolean => existingPhotoPreviewRecord[photoUrl] === undefined,
+  );
+  const generatedPhotoPreviewEntries = await createPhotoPreviewEntries(missingPhotoUrls);
+  const generatedPhotoPreviewRecord = generatedPhotoPreviewEntries.reduce(
+    (previewRecord: Record<string, string>, photoPreviewEntry: PhotoPreviewEntry): Record<string, string> => ({
+      ...previewRecord,
+      [photoPreviewEntry.originalUrl]: photoPreviewEntry.previewDataUrl,
+    }),
+    {},
+  );
+  const photoPreviewEntries = photoUrls
+    .map((photoUrl: string): PhotoPreviewEntry | null => {
+      const previewDataUrl = existingPhotoPreviewRecord[photoUrl] ?? generatedPhotoPreviewRecord[photoUrl];
+
+      return previewDataUrl ? { originalUrl: photoUrl, previewDataUrl } : null;
+    })
+    .filter((photoPreviewEntry: PhotoPreviewEntry | null): photoPreviewEntry is PhotoPreviewEntry =>
+      Boolean(photoPreviewEntry),
+    );
+
+  await writePhotoPreviewsModule(photoPreviewEntries);
+};
+
 // 在生产构建前生成飞机照片预览图映射，页面端按该映射优先展示轻量缩略图。
 export const pluginAircraftPhotoPreviews = (): RsbuildPlugin => ({
   name: 'plugin-aircraft-photo-previews',
   setup(api): void {
     api.onBeforeBuild(async (): Promise<void> => {
-      const constantSource = await readFile(PERSONAL_CONSTANT_PATH, 'utf8');
-      const photoUrls = extractAircraftPhotoUrls(constantSource);
-      const existingPhotoPreviewRecord = await readExistingPhotoPreviewRecord();
-      const missingPhotoUrls = photoUrls.filter(
-        (photoUrl: string): boolean => existingPhotoPreviewRecord[photoUrl] === undefined,
-      );
-      const generatedPhotoPreviewEntries = await createPhotoPreviewEntries(missingPhotoUrls);
-      const generatedPhotoPreviewRecord = generatedPhotoPreviewEntries.reduce(
-        (previewRecord: Record<string, string>, photoPreviewEntry: PhotoPreviewEntry): Record<string, string> => ({
-          ...previewRecord,
-          [photoPreviewEntry.originalUrl]: photoPreviewEntry.previewDataUrl,
-        }),
-        {},
-      );
-      const photoPreviewEntries = photoUrls
-        .map((photoUrl: string): PhotoPreviewEntry | null => {
-          const previewDataUrl = existingPhotoPreviewRecord[photoUrl] ?? generatedPhotoPreviewRecord[photoUrl];
-
-          return previewDataUrl ? { originalUrl: photoUrl, previewDataUrl } : null;
-        })
-        .filter((photoPreviewEntry: PhotoPreviewEntry | null): photoPreviewEntry is PhotoPreviewEntry =>
-          Boolean(photoPreviewEntry),
-        );
-
-      await writePhotoPreviewsModule(photoPreviewEntries);
+      await generateAircraftPhotoPreviews();
     });
   },
 });

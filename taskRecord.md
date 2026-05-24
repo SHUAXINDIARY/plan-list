@@ -3038,3 +3038,30 @@
   - 调整参考资料概览胶囊内文本垂直对齐方式。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-24
+
+## 任务目的
+
+修复飞机照片预览图构建插件无法从 `constant.ts` 提取 URL、导致 `photoPreviews.generated.ts` 被写为空映射的问题。
+
+## 完成过程
+
+1. 排查 `photoPreviews.generated.ts` 为空，确认插件 `extractAircraftPhotoUrls` 仅匹配单引号 URL，而 `constant.ts` 已改为双引号字符串。
+2. 将 URL 提取正则改为同时支持单引号与双引号。
+3. 抽取 `generateAircraftPhotoPreviews` 并在解析不到 URL 时跳过写入，避免再次覆盖已有缓存。
+4. 运行 `pnpm run build` 重新生成预览图映射（30 张中 22 张成功，8 张因下载超时回退原图）。
+5. 使用 `ReadLints` 检查修改文件。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
+  - 修复 URL 提取正则；增加空结果保护；重构生成逻辑为独立函数。
+- `src/pages/personal/photoPreviews.generated.ts`
+  - 构建插件重新生成的预览图 data URL 映射。
+- `taskRecord.md`
+  - 追加本次任务记录。
