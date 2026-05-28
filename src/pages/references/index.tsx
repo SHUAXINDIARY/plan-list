@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
-import { AIRLINE_REFERENCE_SOURCES } from "../home/constant";
 import type { AirlineReferenceSource } from "../home/type";
 import "./index.css";
+import { AIRLINE_REFERENCE_SOURCES } from "./constant";
 
 // 统计全部来源链接数量，供页面概览与 aria 文案复用。
 const getReferenceUrlCount = (
