@@ -6,7 +6,8 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
         airlineName: '模型站点',
         urls: [
             "https://hikoukicyann.stores.jp/",
-            "https://www.geminijets.com/"
+            "https://www.geminijets.com/",
+            "https://www.sqwings.com/"
         ]
     },
     {
