@@ -48,7 +48,9 @@ export const imgs: string[] = [
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9778.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9781.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9814.JPG",
-    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9815.JPG"
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9815.JPG",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9853.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9854.jpg"
 ];
 
 /** 相册目录筛选「全部」选项值。 */
