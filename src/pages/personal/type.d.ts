@@ -1,6 +1,16 @@
-import type { CheckedAirport } from '../../constants/external-links';
+import type {
+  CheckedAirport,
+  FlightRecord,
+  FlightRouteKind,
+  FlightRouteSeparator,
+} from '../../constants/external-links';
 
-export type { CheckedAirport };
+export type {
+  CheckedAirport,
+  FlightRecord,
+  FlightRouteKind,
+  FlightRouteSeparator,
+};
 
 export interface AirportBounds {
   minLat: number;

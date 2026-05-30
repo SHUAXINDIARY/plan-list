@@ -3384,3 +3384,189 @@
 - `src/pages/personal/index.tsx`：机场区块 Suspense fallback 改为骨架。
 - `src/pages/personal/index.css`：国家列表骨架 shimmer 样式。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+在个人航空档案页的机场足迹区块后新增「乘坐过的航司与机型」列表，数据集中维护于 `external-links.ts`。
+
+## 完成过程
+
+1. 在 `external-links.ts` 定义 `FlightRecord` 类型与 32 条乘机记录常量 `FLIGHT_RECORDS`，覆盖航司、机型、航线与日期（含往返与箭头连接符）。
+2. 新建 `PersonalFlightRecordsSection` 组件，按时间倒序展示乘机列表并输出无障碍朗读文案。
+3. 在 `index.tsx` 机场区块与相册区块之间插入视口门控 + Suspense 懒加载挂载。
+4. 在 `index.css` 补充列表行样式，小屏下日期换行展示。
+5. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/constants/external-links.ts`：新增 `FlightRecord` 类型与 `FLIGHT_RECORDS` 数据。
+- `src/pages/personal/sections/PersonalFlightRecordsSection.tsx`：乘机记录展示组件（新建）。
+- `src/pages/personal/index.tsx`：挂载乘机记录区块。
+- `src/pages/personal/index.css`：乘机记录列表样式。
+- `src/pages/personal/type.d.ts`：导出乘机记录相关类型。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+基于 Night Flight Archive 主站风格，重构 `PersonalViewportSection` 占位体系与乘机记录展示 UI。
+
+## 完成过程
+
+1. 扩展 `PersonalViewportSection`：`flight-records` / `photos` 变体与对应档案风骨架，视口外占位与真实区块结构对齐。
+2. 新增 `PersonalFlightRecordsSectionSkeleton`、`PersonalPhotosSectionSkeleton`；升级 `PersonalSectionFallback` 为带标题层级的 shimmer 占位。
+3. 乘机记录改为 Fleet 台账式单面板：统计胶囊、按年分组、hairline 分隔的数据行与机型芯片。
+4. 新增 `flightRecordsSummary.ts` 聚合年份与航司/机型统计。
+5. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalViewportSection.tsx`：变体骨架路由与区块包装。
+- `src/pages/personal/sections/PersonalSectionFallback.tsx`：结构化加载占位。
+- `src/pages/personal/sections/PersonalFlightRecordsSectionSkeleton.tsx`：乘机台账骨架（新建）。
+- `src/pages/personal/sections/PersonalPhotosSectionSkeleton.tsx`：相册骨架（新建）。
+- `src/pages/personal/sections/PersonalFlightRecordsSection.tsx`：台账式乘机记录 UI。
+- `src/pages/personal/constants/flightRecordsSummary.ts`：年份分组与统计（新建）。
+- `src/pages/personal/index.tsx`：Suspense fallback 与变体对齐。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+压缩移动端乘机台账每行高度，避免四段纵向堆叠造成行距过大。
+
+## 完成过程
+
+1. 将 `@media (max-width: 640px)` 下 `.flight-ledger-row` 由单列四行改为两行两列：首行航司与日期，次行机型芯片与航线。
+2. 同步收紧行内 padding、机型芯片尺寸与骨架占位网格。
+
+## 修改具体文件
+
+- `src/pages/personal/index.css`：移动端 `.flight-ledger-row` 紧凑布局。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+向 `FLIGHT_RECORDS` 补充 18 条国内乘机记录（南航、东航、河北航空、海航、川航、长龙、长安等航司及对应航线）。
+
+## 完成过程
+
+1. 在 `external-links.ts` 的 `FLIGHT_RECORDS` 中按出发日期从新到旧插入 18 条记录，覆盖西安、北京、广州、上海、昆明、武汉、杭州、宜昌、西峰等航线。
+2. 将用户输入的 `731-81B` 修正为 `737-81B`；`海航` 与既有条目统一为 `海南航空`。
+3. 未提供具体出发日时，按列表顺序分配 2025 年占位日期以保持台账排序；用户可后续更正。
+4. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/constants/external-links.ts`：`FLIGHT_RECORDS` 新增 18 条乘机记录。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+修正乘机台账各列因文本长度不一导致的错位，统一为左对齐且列宽对齐。
+
+## 完成过程
+
+1. 在 `.flight-ledger-table` 定义四列网格模板，各行通过 `grid-template-columns: subgrid` 共享列宽，避免每行独立 `fr` 分配造成竖向不齐。
+2. 航司、机型、航线、日期四列均设为 `justify-self: start` 与 `text-align: left`；移除日期列右对齐。
+3. 移动端同样使用 subgrid 统一两列布局，骨架屏占位对齐方式同步调整。
+4. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/pages/personal/index.css`：乘机台账 subgrid 列对齐与左对齐样式。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+按用户提供的真实出发日期与航线，更新 19 条国内乘机记录并重新排序。
+
+## 完成过程
+
+1. 修正 18 条既有国内记录的 `departureDate`，将 2026 年西安/广州等行程与 2018–2021 年历史航班归入正确年份。
+2. 新增南航 `737-81B` 武汉—北京（2021-5-10）；`731-81B` 仍记为 `737-81B`；海航记为 `海南航空`。
+3. 全表按出发日期从新到旧重排，并修正 2024 年 5 月/4 月条目原有乱序。
+4. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/constants/external-links.ts`：更新乘机记录日期、航线与排序（共 51 条）。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+乘机台账日期列改为右对齐，便于纵向扫读对比。
+
+## 完成过程
+
+1. 桌面端 `.flight-ledger-row__date` 设置 `justify-self: end` 与 `text-align: right`。
+2. 移动端与骨架屏日期占位同步右对齐。
+
+## 修改具体文件
+
+- `src/pages/personal/index.css`：日期列右对齐样式。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+乘机台账按年份折叠展示，默认全部收起，减少首屏信息密度。
+
+## 完成过程
+
+1. `PersonalFlightRecordsSection` 增加年份展开状态（`ReadonlySet<number>`，初始为空即全折叠）与 `toggleFlightYear`。
+2. 各年份改为 `article` + 可聚焦按钮头（年份、次数、指示箭头）+ 可动画折叠体，对齐机场列表无障碍模式（`aria-expanded` / `aria-controls` / `aria-hidden`）。
+3. 补充 `.flight-year-block__*` 折叠样式；骨架屏同步年份头结构。
+4. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalFlightRecordsSection.tsx`：年份折叠面板交互。
+- `src/pages/personal/sections/PersonalFlightRecordsSectionSkeleton.tsx`：折叠头骨架结构。
+- `src/pages/personal/index.css`：年份折叠面板样式。
+- `taskRecord.md`：追加本次任务记录。

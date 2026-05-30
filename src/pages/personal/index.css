@@ -2,6 +2,18 @@
   width: min(100%, 72rem);
 }
 
+@keyframes archive-filter-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.45rem, 0) scale(0.995);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 .personal-section-fallback {
   padding: 1rem 1.1rem;
   margin-top: 1.5rem;
@@ -11,6 +23,81 @@
   border-radius: 0.9rem;
   animation: archive-reveal var(--motion-duration-standard)
     var(--motion-ease-out-quint) both;
+}
+
+.personal-viewport-section {
+  margin-top: 0.25rem;
+}
+
+.personal-section--loading .personal-section-fallback__status {
+  margin: 0.85rem 0 0;
+  color: var(--pl-text-secondary);
+  font-size: 0.88rem;
+}
+
+.personal-section-skeleton__panel {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.personal-section-skeleton__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.personal-section-skeleton__bar,
+.personal-section-skeleton__photo,
+.flight-ledger__skeleton-pill,
+.flight-ledger__skeleton-year,
+.flight-ledger__skeleton-cell {
+  background: linear-gradient(
+    90deg,
+    var(--pl-surface-personal-pill) 0%,
+    var(--pl-surface-route-loading) 50%,
+    var(--pl-surface-personal-pill) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 0.55rem;
+  animation: personal-airport-country-skeleton-shimmer 1.4s
+    var(--motion-ease-out-quart) infinite;
+}
+
+.personal-section-skeleton__bar {
+  display: block;
+  height: 2.15rem;
+}
+
+.personal-section-skeleton__bar--wide {
+  width: min(100%, 18rem);
+}
+
+.personal-section-skeleton__bar--medium {
+  width: min(100%, 12rem);
+}
+
+.personal-section-skeleton__bar--narrow {
+  width: min(100%, 8rem);
+}
+
+.personal-section-skeleton__photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.75rem;
+}
+
+.aircraft-photo-gallery--skeleton {
+  pointer-events: none;
+}
+
+.aircraft-photo-gallery--skeleton li {
+  overflow: hidden;
+  background-color: var(--pl-surface-gallery);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.9rem;
 }
 
 .personal-summary {
@@ -460,6 +547,14 @@
   .airport-country__skeleton-row {
     animation: none;
   }
+
+  .personal-section-skeleton__bar,
+  .personal-section-skeleton__photo,
+  .flight-ledger__skeleton-pill,
+  .flight-ledger__skeleton-year,
+  .flight-ledger__skeleton-cell {
+    animation: none;
+  }
 }
 
 .airport-country {
@@ -576,6 +671,286 @@
   font-size: 0.78rem;
 }
 
+.flight-ledger {
+  margin-top: 1rem;
+  overflow: hidden;
+  background-color: var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 1rem;
+  animation: archive-reveal var(--motion-duration-enter)
+    var(--motion-ease-out-quint) 80ms both;
+}
+
+.flight-ledger__toolbar {
+  padding: 1rem 1rem 0.85rem;
+  border-bottom: 1px solid var(--pl-border-divider);
+}
+
+.flight-ledger__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.flight-ledger__stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.15rem;
+  padding: 0 0.75rem;
+  color: var(--pl-text-secondary);
+  font-size: 0.86rem;
+  background-color: var(--pl-surface-pill);
+  border: 1px solid var(--pl-border-pill);
+  border-radius: 999px;
+}
+
+.flight-ledger__stats strong {
+  color: var(--pl-text-emphasis);
+  font-size: 0.95rem;
+}
+
+.flight-ledger__body {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1rem;
+}
+
+.flight-year-block {
+  min-width: 0;
+  border-top: 1px solid var(--pl-border-divider);
+}
+
+.flight-year-block:first-child {
+  border-top: 0;
+}
+
+.flight-year-block__header {
+  margin: 0;
+}
+
+.flight-year-block__toggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.flight-year-block__toggle:hover {
+  color: var(--pl-text-heading);
+}
+
+.flight-year-block__toggle:focus-visible {
+  outline: 2px solid oklch(0.78 0.105 222);
+  outline-offset: 2px;
+  border-radius: 0.35rem;
+}
+
+.flight-year-block__label {
+  margin: 0;
+  color: var(--pl-accent);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.flight-year-block__meta {
+  justify-self: end;
+  color: var(--pl-text-meta);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.flight-year-block__indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 1.5px solid var(--pl-text-meta);
+  border-bottom: 1.5px solid var(--pl-text-meta);
+  transform: rotate(45deg) translateY(-1px);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.flight-year-block--expanded .flight-year-block__indicator {
+  border-color: var(--pl-accent);
+  transform: rotate(225deg) translateY(-1px);
+}
+
+.flight-year-block__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translate3d(0, -0.25rem, 0);
+  transition:
+    grid-template-rows 220ms var(--motion-ease-out-quint),
+    opacity 180ms var(--motion-ease-out-quart),
+    transform 220ms var(--motion-ease-out-quint);
+}
+
+.flight-year-block--expanded .flight-year-block__body {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.flight-year-block__body .flight-ledger-table {
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0.15rem;
+}
+
+.flight-ledger-table {
+  display: grid;
+  grid-template-columns:
+    minmax(5.5rem, max-content)
+    minmax(5.25rem, max-content)
+    minmax(0, 1fr)
+    minmax(5rem, max-content);
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.flight-ledger-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  min-width: 0;
+  min-height: 2.85rem;
+  padding: 0.65rem 0;
+  color: var(--pl-text-emphasis);
+  border-bottom: 1px solid var(--pl-border-divider);
+  animation: archive-filter-swap var(--motion-duration-standard)
+    var(--motion-ease-out-quint) both;
+}
+
+.flight-ledger-row:nth-child(2) {
+  animation-delay: 24ms;
+}
+
+.flight-ledger-row:nth-child(3) {
+  animation-delay: 48ms;
+}
+
+.flight-ledger-row:nth-child(4) {
+  animation-delay: 72ms;
+}
+
+.flight-ledger-row:nth-child(n + 5) {
+  animation-delay: 96ms;
+}
+
+.flight-ledger-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.flight-ledger-row__airline {
+  justify-self: start;
+  min-width: 0;
+  color: var(--pl-text-heading);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.flight-ledger-row__aircraft {
+  justify-self: start;
+  padding: 0.34rem 0.52rem;
+  color: var(--pl-text-chip);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  background-color: var(--pl-surface-chip);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.55rem;
+}
+
+.flight-ledger-row__route {
+  justify-self: start;
+  min-width: 0;
+  color: var(--pl-text-secondary);
+  font-size: 0.88rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.flight-ledger-row__date {
+  justify-self: end;
+  color: var(--pl-text-meta);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.flight-ledger--skeleton {
+  pointer-events: none;
+}
+
+.flight-ledger__skeleton-pill {
+  width: 5.5rem;
+  height: 2.15rem;
+  border-radius: 999px;
+}
+
+.flight-ledger__skeleton-year {
+  width: 3.5rem;
+  height: 1rem;
+}
+
+.flight-ledger__skeleton-meta {
+  width: 2.5rem;
+  height: 0.85rem;
+  justify-self: end;
+}
+
+.flight-year-block__toggle--skeleton {
+  pointer-events: none;
+  cursor: default;
+}
+
+.flight-ledger-row--skeleton {
+  animation: none;
+}
+
+.flight-ledger__skeleton-cell {
+  display: block;
+  height: 0.95rem;
+}
+
+.flight-ledger__skeleton-cell--airline {
+  width: 4.5rem;
+}
+
+.flight-ledger__skeleton-cell--aircraft {
+  width: 4.75rem;
+}
+
+.flight-ledger__skeleton-cell--route {
+  width: min(100%, 9rem);
+}
+
+.flight-ledger__skeleton-cell--date {
+  width: 4.25rem;
+  justify-self: end;
+}
+
 @media (max-width: 640px) {
   .personal-summary {
     align-items: stretch;
@@ -619,6 +994,85 @@
 
   .airport-country-list {
     grid-template-columns: 1fr;
+  }
+
+  .flight-ledger-table {
+    grid-template-columns: minmax(0, 1fr) minmax(5rem, max-content);
+  }
+
+  .flight-year-block__toggle {
+    min-height: 2.5rem;
+    touch-action: manipulation;
+  }
+
+  .flight-ledger-row {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto;
+    gap: 0.2rem 0.65rem;
+    min-height: 0;
+    padding: 0.45rem 0;
+  }
+
+  .flight-ledger-row__airline {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .flight-ledger-row__date {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: baseline;
+    text-align: right;
+  }
+
+  .flight-ledger-row__aircraft {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    padding: 0.2rem 0.42rem;
+    font-size: 0.78rem;
+  }
+
+  .flight-ledger-row__route {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    font-size: 0.82rem;
+    text-align: left;
+  }
+
+  .flight-ledger-row--skeleton {
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto;
+    gap: 0.25rem 0.65rem;
+  }
+
+  .flight-ledger__skeleton-cell--airline {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .flight-ledger__skeleton-cell--date {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .flight-ledger__skeleton-cell--aircraft {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .flight-ledger__skeleton-cell--route {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    width: min(100%, 6.5rem);
   }
 
   .aircraft-photo-preview {

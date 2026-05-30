@@ -2,7 +2,8 @@ import { lazy, Suspense, type ReactElement } from "react";
 import { AIRCRAFT_PHOTO_COUNT } from "./constants/photoMeta";
 import { CHECKED_AIRPORTS, checkedCountryCount } from "./constants/summary";
 import { PersonalAirportSectionSkeleton } from "./sections/PersonalAirportSectionSkeleton";
-import { PersonalSectionFallback } from "./sections/PersonalSectionFallback";
+import { PersonalFlightRecordsSectionSkeleton } from "./sections/PersonalFlightRecordsSectionSkeleton";
+import { PersonalPhotosSectionSkeleton } from "./sections/PersonalPhotosSectionSkeleton";
 import { PersonalViewportSection } from "./sections/PersonalViewportSection";
 import "./index.css";
 
@@ -11,6 +12,14 @@ const PersonalAirportSection = lazy(
         import(
             /* webpackChunkName: "personal-airport" */
             "./sections/PersonalAirportSection"
+        ),
+);
+
+const PersonalFlightRecordsSection = lazy(
+    async () =>
+        import(
+            /* webpackChunkName: "personal-flight-records" */
+            "./sections/PersonalFlightRecordsSection"
         ),
 );
 
@@ -53,19 +62,21 @@ const PersonalPage = (): ReactElement => {
             </div>
 
             <PersonalViewportSection label="机场足迹" variant="airport">
-                <Suspense
-                    fallback={<PersonalAirportSectionSkeleton />}
-                >
+                <Suspense fallback={<PersonalAirportSectionSkeleton />}>
                     <PersonalAirportSection />
                 </Suspense>
             </PersonalViewportSection>
 
-            <PersonalViewportSection label="飞机照片相册" variant="photos">
+            <PersonalViewportSection label="乘机记录" variant="flight-records">
                 <Suspense
-                    fallback={
-                        <PersonalSectionFallback label="飞机照片相册" />
-                    }
+                    fallback={<PersonalFlightRecordsSectionSkeleton />}
                 >
+                    <PersonalFlightRecordsSection />
+                </Suspense>
+            </PersonalViewportSection>
+
+            <PersonalViewportSection label="飞机照片相册" variant="photos">
+                <Suspense fallback={<PersonalPhotosSectionSkeleton />}>
                     <PersonalAircraftPhotosSection />
                 </Suspense>
             </PersonalViewportSection>
