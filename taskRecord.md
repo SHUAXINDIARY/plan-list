@@ -3570,3 +3570,23 @@
 - `src/pages/personal/sections/PersonalFlightRecordsSectionSkeleton.tsx`：折叠头骨架结构。
 - `src/pages/personal/index.css`：年份折叠面板样式。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+乘机台账年份面板改为手风琴模式，同一时刻仅允许一个年份展开。
+
+## 完成过程
+
+1. 将 `expandedFlightYears`（`ReadonlySet<number>`）改为 `expandedFlightYear`（`number | undefined`）。
+2. `toggleFlightYear` 在点击已展开年份时折叠，点击其他年份时仅展开该年份并自动收起其余。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalFlightRecordsSection.tsx`：手风琴展开逻辑。
+- `taskRecord.md`：追加本次任务记录。

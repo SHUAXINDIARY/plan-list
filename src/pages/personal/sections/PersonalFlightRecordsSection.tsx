@@ -56,28 +56,18 @@ const formatFlightRecordAriaLabel = (flightRecord: FlightRecord): string => {
  * 个人档案乘机台账：按年份分组展示航司、机型、航线与日期。
  */
 const PersonalFlightRecordsSection = (): ReactElement => {
-    const [expandedFlightYears, setExpandedFlightYears] = useState<
-        ReadonlySet<number>
-    >((): ReadonlySet<number> => new Set<number>());
+    /** 当前展开的年份；`undefined` 表示全部折叠。 */
+    const [expandedFlightYear, setExpandedFlightYear] = useState<
+        number | undefined
+    >(undefined);
 
-    // 切换单个年份面板的展开状态；初始集合为空，即全部默认折叠。
+    // 手风琴切换：同一时刻仅保留一个展开年份，再次点击已展开项则折叠。
     const toggleFlightYear = (flightYear: number): void => {
-        setExpandedFlightYears(
-            (
-                currentExpandedFlightYears: ReadonlySet<number>,
-            ): ReadonlySet<number> => {
-                const nextExpandedFlightYears = new Set<number>(
-                    currentExpandedFlightYears,
-                );
-
-                if (nextExpandedFlightYears.has(flightYear)) {
-                    nextExpandedFlightYears.delete(flightYear);
-                    return nextExpandedFlightYears;
-                }
-
-                nextExpandedFlightYears.add(flightYear);
-                return nextExpandedFlightYears;
-            },
+        setExpandedFlightYear(
+            (currentExpandedFlightYear: number | undefined): number | undefined =>
+                currentExpandedFlightYear === flightYear
+                    ? undefined
+                    : flightYear,
         );
     };
 
@@ -116,7 +106,7 @@ const PersonalFlightRecordsSection = (): ReactElement => {
                     {flightRecordsByYear.map(
                         (flightYearGroup: FlightYearGroup): ReactElement => {
                             const isFlightYearExpanded =
-                                expandedFlightYears.has(flightYearGroup.year);
+                                expandedFlightYear === flightYearGroup.year;
                             const flightYearPanelId = `flight-year-panel-${flightYearGroup.year}`;
 
                             return (
