@@ -508,8 +508,21 @@ a {
     background-color: var(--pl-surface-route-loading);
     border: 1px solid var(--pl-border-input);
     border-radius: 0.9rem;
-    animation: archive-reveal var(--motion-duration-standard)
-        var(--motion-ease-out-quint) both;
+    animation:
+        archive-reveal var(--motion-duration-standard)
+            var(--motion-ease-out-quint) both,
+        route-loading-pulse 1.4s var(--motion-ease-out-quart) 0.12s infinite;
+}
+
+@keyframes route-loading-pulse {
+    0%,
+    100% {
+        opacity: 0.72;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 @media (max-width: 640px) {

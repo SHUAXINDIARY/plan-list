@@ -6,6 +6,7 @@ import {
     type ReactElement,
 } from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { RouteTransitionLayout } from "./components/route-transition";
 import { ThemeToggle } from "./components/theme-toggle";
 import "./App.css";
 import {
@@ -114,15 +115,17 @@ const App = (): ReactElement => {
                         }
                     >
                         <Routes>
-                            <Route path="/" element={<HomePage />} />
-                            <Route
-                                path="/personal"
-                                element={<PersonalPage />}
-                            />
-                            <Route
-                                path="/references"
-                                element={<ReferencesPage />}
-                            />
+                            <Route element={<RouteTransitionLayout />}>
+                                <Route path="/" element={<HomePage />} />
+                                <Route
+                                    path="/personal"
+                                    element={<PersonalPage />}
+                                />
+                                <Route
+                                    path="/references"
+                                    element={<ReferencesPage />}
+                                />
+                            </Route>
                         </Routes>
                     </Suspense>
                 </main>

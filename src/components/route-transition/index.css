@@ -1,0 +1,57 @@
+/* 路由级进入过渡：与 App 壳层 motion token 对齐，仅用 transform + opacity。 */
+.route-transition {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    animation: route-page-enter var(--motion-duration-standard)
+        var(--motion-ease-out-quint) both;
+}
+
+.route-transition[data-direction="forward"] {
+    animation-name: route-page-enter-forward;
+}
+
+.route-transition[data-direction="backward"] {
+    animation-name: route-page-enter-backward;
+}
+
+/* 路由切换时由外层承担进入动效，避免与 .page-panel 的 archive-reveal 叠加重影。 */
+.route-transition .page-panel {
+    animation: none;
+}
+
+@keyframes route-page-enter {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 0.5rem, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes route-page-enter-forward {
+    from {
+        opacity: 0;
+        transform: translate3d(0.65rem, 0.4rem, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes route-page-enter-backward {
+    from {
+        opacity: 0;
+        transform: translate3d(-0.65rem, 0.4rem, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}

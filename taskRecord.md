@@ -3252,3 +3252,29 @@
   - 新增 `pl-select-menu--portal` fixed 定位样式。
 - `taskRecord.md`
   - 追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+为应用内路由切换增加过渡动效，减轻页面瞬间替换的突兀感，并与 Night Flight Archive 现有 motion token 保持一致。
+
+## 完成过程
+
+1. 新增 `RouteTransitionLayout` 布局路由，以 `location.pathname` 为 key 触发单次进入动画。
+2. 按主导航顺序（`/` → `/personal` → `/references`）推断 `forward` / `backward` 方向，应用轻微横向位移 + 淡入。
+3. 在 `.route-transition` 内关闭 `.page-panel` 的 `archive-reveal`，避免与路由层动效叠加重影。
+4. 为 `route-loading` 增加与数据加载态一致的脉冲反馈。
+5. 运行 `pnpm run build` 验证通过；`prefers-reduced-motion` 继续由 `App.css` 全局收窄。
+
+## 修改具体文件
+
+- `src/components/route-transition/index.tsx`：布局出口与方向推断逻辑。
+- `src/components/route-transition/index.css`：路由进入 keyframes 与 page-panel 动画抑制。
+- `src/App.tsx`：嵌套布局路由包裹三个懒加载页面。
+- `src/App.css`：`route-loading-pulse` 加载态动效。
+- `taskRecord.md`：追加本次任务记录。
