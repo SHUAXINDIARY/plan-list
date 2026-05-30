@@ -6,6 +6,7 @@ import {
     type ReactNode,
 } from "react";
 import { PersonalSectionFallback } from "./PersonalSectionFallback";
+import { PersonalAirportSectionSkeleton } from "./PersonalAirportSectionSkeleton";
 
 /** 机场地图区块默认预加载边距。 */
 const DEFAULT_SECTION_VIEWPORT_ROOT_MARGIN = "160px 0px";
@@ -18,8 +19,8 @@ interface PersonalViewportSectionProps {
     label: string;
     /** 进入视口附近后渲染的子树（通常为 Suspense + lazy 区块）。 */
     children: ReactNode;
-    /** 为 `photos` 时使用更严格的视口门控，避免离屏拉取预览 chunk。 */
-    variant?: "default" | "photos";
+    /** 为 `photos` 时使用更严格的视口门控；为 `airport` 时使用机场区块骨架占位。 */
+    variant?: "default" | "photos" | "airport";
 }
 
 /**
@@ -77,13 +78,16 @@ export const PersonalViewportSection = ({
         };
     }, [shouldMountSection, viewportRootMargin]);
 
+    const viewportPlaceholder =
+        variant === "airport" ? (
+            <PersonalAirportSectionSkeleton />
+        ) : (
+            <PersonalSectionFallback label={label} />
+        );
+
     return (
         <div ref={sectionRef}>
-            {shouldMountSection ? (
-                children
-            ) : (
-                <PersonalSectionFallback label={label} />
-            )}
+            {shouldMountSection ? children : viewportPlaceholder}
         </div>
     );
 };

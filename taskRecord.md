@@ -3334,3 +3334,53 @@
 - `src/pages/personal/index.tsx`：机场/相册套视口门控，相册用严格模式。
 - `src/pages/personal/index.css`：待加载缩略图占位样式。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+为机场足迹地图 Suspense 边界增加与真实地图同尺寸的占位 loading，避免 chunk 加载完成前布局高度突变。
+
+## 完成过程
+
+1. 对照 `.annotated-world-map` 的 `aspect-ratio: 1200 / 650`、`margin-top` 与边框样式，新增 `PersonalAirportMapFallback` 占位组件。
+2. 占位内使用旋转指示器与 `role="status"` / `aria-busy`，文案对屏幕阅读器可见、视觉上 sr-only。
+3. `PersonalAirportSection` 的 `Suspense` fallback 由单行文字改为地图占位。
+4. `pnpm run build` 验证通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAirportMapFallback.tsx`：地图尺寸占位 loading（新建）。
+- `src/pages/personal/sections/PersonalAirportSection.tsx`：Suspense fallback 改用地图占位。
+- `src/pages/personal/index.css`：`.personal-airport-map-loading` 占位与动效样式。
+- `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+消除机场足迹区块在多层 Suspense / 视口门控下仍出现的布局抖动：外层单行占位未预留地图与国家列表高度。
+
+## 完成过程
+
+1. 确认抖动来自三层加载：视口门控占位、区块 chunk Suspense、地图 chunk Suspense；仅最内层 `PersonalAirportMapFallback` 有固定高度。
+2. 新增 `PersonalAirportSectionSkeleton`，同步渲染标题、地图比例占位与按 `airportCountryGroups` 数量的折叠列表骨架。
+3. `PersonalViewportSection` 增加 `variant="airport"`，视口外与 chunk 加载中均使用该骨架。
+4. `index.tsx` 外层 Suspense fallback 同步改为骨架，使整条加载链路尺寸一致。
+5. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAirportSectionSkeleton.tsx`：机场区块完整骨架（新建）。
+- `src/pages/personal/sections/PersonalViewportSection.tsx`：`variant="airport"` 使用骨架占位。
+- `src/pages/personal/index.tsx`：机场区块 Suspense fallback 改为骨架。
+- `src/pages/personal/index.css`：国家列表骨架 shimmer 样式。
+- `taskRecord.md`：追加本次任务记录。

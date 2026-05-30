@@ -67,6 +67,76 @@
   font-size: 1.2rem;
 }
 
+.personal-airport-map-loading {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1200 / 650;
+  margin-top: 1rem;
+  overflow: hidden;
+  color: var(--pl-map-legend-text);
+  background: var(--pl-map-bg);
+  border: 1px solid var(--pl-map-border);
+  border-radius: 1rem;
+  box-shadow: var(--pl-map-inset);
+  animation:
+    archive-reveal var(--motion-duration-standard)
+      var(--motion-ease-out-quint) both,
+    route-loading-pulse 1.4s var(--motion-ease-out-quart) 0.12s infinite;
+}
+
+.personal-airport-map-loading::before {
+  position: absolute;
+  inset: 1.25rem;
+  border: 1px solid var(--pl-map-frame);
+  border-radius: 0.8rem;
+  content: "";
+  pointer-events: none;
+}
+
+.personal-airport-map-loading__indicator {
+  position: relative;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--pl-map-legend-border);
+  border-top-color: var(--pl-map-marker-international-fill);
+  border-radius: 999px;
+  animation: personal-airport-map-loading-spin 0.9s linear infinite;
+}
+
+.personal-airport-map-loading__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+@keyframes personal-airport-map-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .personal-airport-map-loading::before {
+    inset: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personal-airport-map-loading,
+  .personal-airport-map-loading__indicator {
+    animation: none;
+  }
+}
+
 .aircraft-photo-filters {
   display: flex;
   flex-wrap: wrap;
@@ -349,6 +419,47 @@
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.airport-country-list--skeleton {
+  pointer-events: none;
+}
+
+.airport-country--skeleton {
+  background-color: var(--pl-surface-airport);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 1rem;
+}
+
+.airport-country__skeleton-row {
+  min-height: 3.35rem;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    var(--pl-surface-personal-pill) 0%,
+    var(--pl-surface-route-loading) 50%,
+    var(--pl-surface-personal-pill) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 1rem;
+  animation: personal-airport-country-skeleton-shimmer 1.4s
+    var(--motion-ease-out-quart) infinite;
+}
+
+@keyframes personal-airport-country-skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .airport-country__skeleton-row {
+    animation: none;
+  }
 }
 
 .airport-country {

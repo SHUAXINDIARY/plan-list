@@ -1,6 +1,7 @@
 import { lazy, Suspense, type ReactElement } from "react";
 import { AIRCRAFT_PHOTO_COUNT } from "./constants/photoMeta";
 import { CHECKED_AIRPORTS, checkedCountryCount } from "./constants/summary";
+import { PersonalAirportSectionSkeleton } from "./sections/PersonalAirportSectionSkeleton";
 import { PersonalSectionFallback } from "./sections/PersonalSectionFallback";
 import { PersonalViewportSection } from "./sections/PersonalViewportSection";
 import "./index.css";
@@ -51,9 +52,9 @@ const PersonalPage = (): ReactElement => {
                 </span>
             </div>
 
-            <PersonalViewportSection label="机场足迹">
+            <PersonalViewportSection label="机场足迹" variant="airport">
                 <Suspense
-                    fallback={<PersonalSectionFallback label="机场足迹" />}
+                    fallback={<PersonalAirportSectionSkeleton />}
                 >
                     <PersonalAirportSection />
                 </Suspense>

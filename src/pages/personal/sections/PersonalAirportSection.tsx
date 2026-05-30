@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, type ReactElement } from "react";
 import { MAP_ROUTES, airportMapMarkers } from "../constants/airportsMap";
 import { airportCountryGroups } from "../constants/summary";
 import type { AirportCountryGroup, CheckedAirport } from "../type";
-import { PersonalSectionFallback } from "./PersonalSectionFallback";
+import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 
 const AnnotatedWorldMap = lazy(
     async () => import("../../../components/map"),
@@ -47,11 +47,7 @@ const PersonalAirportSection = (): ReactElement => {
                     <p className="personal-section__eyebrow">Airport Check-ins</p>
                     <h2 id="airport-map-title">打卡过的机场</h2>
                 </div>
-                <Suspense
-                    fallback={
-                        <PersonalSectionFallback label="机场足迹地图" />
-                    }
-                >
+                <Suspense fallback={<PersonalAirportMapFallback />}>
                     <AnnotatedWorldMap
                         ariaLabel="机场打卡足迹示意图"
                         markers={airportMapMarkers}
