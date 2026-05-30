@@ -2,6 +2,17 @@
   width: min(100%, 72rem);
 }
 
+.personal-section-fallback {
+  padding: 1rem 1.1rem;
+  margin-top: 1.5rem;
+  color: var(--pl-text-data);
+  background-color: var(--pl-surface-route-loading);
+  border: 1px solid var(--pl-border-input);
+  border-radius: 0.9rem;
+  animation: archive-reveal var(--motion-duration-standard)
+    var(--motion-ease-out-quint) both;
+}
+
 .personal-summary {
   display: flex;
   flex-wrap: wrap;

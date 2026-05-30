@@ -65,3 +65,11 @@ export interface MapRoute {
   /** 国内或国际航迹，决定地图上的线型与颜色。 */
   scope: MapRouteScope;
 }
+
+/** 飞机相册 async chunk 导出的不可变数据包。 */
+export interface AircraftPhotosBundle {
+  /** 带预览 URL 的完整照片列表。 */
+  aircraftPhotos: readonly AircraftPhoto[];
+  /** 目录筛选项。 */
+  aircraftPhotoDirectoryOptions: readonly AircraftPhotoDirectoryOption[];
+}

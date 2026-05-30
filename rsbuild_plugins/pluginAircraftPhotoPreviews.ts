@@ -11,7 +11,10 @@ interface PhotoPreviewEntry {
 
 const PLUGIN_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(PLUGIN_DIR, '..');
-const PERSONAL_CONSTANT_PATH = join(PROJECT_ROOT, 'src/pages/personal/constant.ts');
+const PERSONAL_PHOTO_META_PATH = join(
+  PROJECT_ROOT,
+  'src/pages/personal/constants/photoMeta.ts',
+);
 const PHOTO_PREVIEWS_MODULE_PATH = join(PROJECT_ROOT, 'src/pages/personal/photoPreviews.generated.ts');
 const PREVIEW_BATCH_SIZE = 4;
 const PREVIEW_DOWNLOAD_TIMEOUT_MS = 12000;
@@ -23,7 +26,9 @@ const PREVIEW_IMAGE_EFFORT = 5;
 
 // 从个人页图片常量中提取启用的远程图片 URL，注释掉的图片不会参与构建期预览图生成。
 const extractAircraftPhotoUrls = (constantSource: string): string[] => {
-  const imgsDeclarationMatch = constantSource.match(/export const imgs: string\[\] = \[([\s\S]*?)\];/);
+  const imgsDeclarationMatch = constantSource.match(
+    /export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string\[\] = \[([\s\S]*?)\] as const;/,
+  );
 
   if (!imgsDeclarationMatch) {
     return [];
@@ -136,13 +141,13 @@ const writePhotoPreviewsModule = async (photoPreviewEntries: PhotoPreviewEntry[]
   await writeFile(PHOTO_PREVIEWS_MODULE_PATH, moduleSource);
 };
 
-// 读取 constant.ts 中的图片 URL，增量生成预览图映射并写入生成文件。
+// 读取 photoMeta.ts 中的图片 URL，增量生成预览图映射并写入生成文件。
 const generateAircraftPhotoPreviews = async (): Promise<void> => {
-  const constantSource = await readFile(PERSONAL_CONSTANT_PATH, 'utf8');
+  const constantSource = await readFile(PERSONAL_PHOTO_META_PATH, 'utf8');
   const photoUrls = extractAircraftPhotoUrls(constantSource);
 
   if (photoUrls.length === 0) {
-    console.warn('[photo-preview] 未从 constant.ts 解析到图片 URL，跳过预览图生成。');
+    console.warn('[photo-preview] 未从 photoMeta.ts 解析到图片 URL，跳过预览图生成。');
     return;
   }
 

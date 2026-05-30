@@ -3278,3 +3278,32 @@
 - `src/App.tsx`：嵌套布局路由包裹三个懒加载页面。
 - `src/App.css`：`route-loading-pulse` 加载态动效。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+拆分 `src/pages/personal` 打包体积，使进入个人页时首屏依赖的主 chunk 变小，地图与相册预览数据异步加载。
+
+## 完成过程
+
+1. 将原 `constant.ts` 拆为 `constants/photoMeta.ts`、`constants/summary.ts`、`constants/airportsMap.ts` 与 `data/aircraftPhotosData.ts`（含 `photoPreviews.generated.ts`）。
+2. 新增 `PersonalAirportSection`（`React.lazy` 地图组件）与 `PersonalAircraftPhotosSection`（`import()` 加载相册 bundle）。
+3. `index.tsx` 仅保留页头概览与两个 `Suspense` 边界；删除 `constant.ts`。
+4. 更新 `pluginAircraftPhotoPreviews` 从 `photoMeta.ts` 解析图片 URL。
+5. `pnpm run build`：个人页入口约 `127.*.js` 12KB（原单 chunk ~785KB）；预览数据在 `personal-aircraft-photos.*.js` 独立加载。
+
+## 修改具体文件
+
+- `src/pages/personal/index.tsx`：轻量壳层 + 分区懒加载。
+- `src/pages/personal/constants/*`、`data/aircraftPhotosData.ts`：常量与相册数据拆分。
+- `src/pages/personal/sections/*`：机场地图区、相册区组件。
+- `src/pages/personal/index.css`：区块加载占位样式。
+- `src/pages/personal/type.d.ts`：`AircraftPhotosBundle` 类型。
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：读取路径改为 `photoMeta.ts`。
+- 删除 `src/pages/personal/constant.ts`。
+- `taskRecord.md`：追加本次任务记录。
