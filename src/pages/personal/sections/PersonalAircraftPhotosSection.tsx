@@ -20,6 +20,7 @@ import type {
     AircraftPhotoDirectoryOption,
     AircraftPhotosBundle,
 } from "../type";
+import { AircraftPhotoGalleryImage } from "./AircraftPhotoGalleryImage";
 import { PersonalSectionFallback } from "./PersonalSectionFallback";
 
 /**
@@ -342,10 +343,9 @@ const PersonalAircraftPhotosSection = (): ReactElement => {
                                         }
                                         aria-label={`全屏查看拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                                     >
-                                        <img
-                                            src={aircraftPhoto.previewUrl}
+                                        <AircraftPhotoGalleryImage
+                                            previewUrl={aircraftPhoto.previewUrl}
                                             alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
-                                            loading="lazy"
                                         />
                                     </button>
                                 </li>

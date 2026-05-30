@@ -144,6 +144,10 @@
     transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
+.aircraft-photo-gallery__image--pending {
+  visibility: hidden;
+}
+
 .aircraft-photo-gallery li:hover img {
   filter: brightness(1.08);
   transform: scale(1.025);

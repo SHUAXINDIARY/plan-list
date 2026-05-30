@@ -3307,3 +3307,30 @@
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：读取路径改为 `photoMeta.ts`。
 - 删除 `src/pages/personal/constant.ts`。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+修复相册 base64 预览图在进入个人页、离屏时仍被全部解码的问题。
+
+## 完成过程
+
+1. 确认根因：预览图为 `data:` URI，原生 `loading="lazy"` 无法延迟解码；区块挂载后所有 `<img src>` 会立即占用内存。
+2. 新增 `AircraftPhotoGalleryImage`，以 `IntersectionObserver` 在缩略图接近视口时才写入 `src`。
+3. 恢复 `PersonalViewportSection`：相册区块使用 `variant="photos"`（`rootMargin: 0`），须进入视口才挂载 chunk。
+4. 未进入视口的缩略图保留占位背景（`aircraft-photo-gallery__image--pending`）。
+5. `pnpm run build` 通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：视口内才赋值 src（新建）。
+- `src/pages/personal/sections/PersonalViewportSection.tsx`：区块级视口门控（新建）。
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：改用 `AircraftPhotoGalleryImage`。
+- `src/pages/personal/index.tsx`：机场/相册套视口门控，相册用严格模式。
+- `src/pages/personal/index.css`：待加载缩略图占位样式。
+- `taskRecord.md`：追加本次任务记录。
