@@ -8,7 +8,8 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://hikoukicyann.stores.jp/",
             "https://www.geminijets.com/",
             "https://www.sqwings.com/",
-            "https://www.herpa.de/en/buy-products/wings"
+            "https://www.herpa.de/en/buy-products/wings",
+            "https://www.aviationmegastore.com/en/"
         ]
     },
     {
