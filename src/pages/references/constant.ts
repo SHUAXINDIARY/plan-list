@@ -3,14 +3,16 @@ import type { AirlineReferenceSource } from "../home/type";
 // 部分航司数据的补充参考来源，用于在页面底部集中展示外部出处。
 export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     {
-        airlineName: '模型站点',
+        airlineName: "模型站点",
         urls: [
             "https://hikoukicyann.stores.jp/",
             "https://www.geminijets.com/",
             "https://www.sqwings.com/",
             "https://www.herpa.de/en/buy-products/wings",
-            "https://www.aviationmegastore.com/en/"
-        ]
+            "https://www.aviationmegastore.com/en/",
+            "https://futurewingsmodel.com/",
+            "https://yywings.com/",
+        ],
     },
     {
         airlineName: "全局机队统计",
@@ -20,9 +22,7 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     },
     {
         airlineName: "sky team virtual",
-        urls: [
-            "https://skyteamvirtual.org/",
-        ],
+        urls: ["https://skyteamvirtual.org/"],
     },
     {
         airlineName: "民航休息小站",
@@ -310,5 +310,5 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.lufthansagroup.com/en/company/fleet/lufthansa-and-regional-partners.html",
             "https://en.wikipedia.org/wiki/Lufthansa_fleet",
         ],
-    }
+    },
 ];
