@@ -12,7 +12,8 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.aviationmegastore.com/en/",
             "https://futurewingsmodel.com/",
             "https://yywings.com/",
-            "https://top-gun.jp/zh"
+            "https://top-gun.jp/zh",
+            "https://www.jcwings.com/"
         ],
     },
     {
