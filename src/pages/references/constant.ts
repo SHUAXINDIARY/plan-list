@@ -314,4 +314,12 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://en.wikipedia.org/wiki/Lufthansa_fleet",
         ],
     },
+    {
+        airlineName: "日本航空",
+        urls: [
+            "https://www.jal.com/en/company/outline/aircraft.html",
+            "https://www.jal.com/en/investor/library/annualreport/",
+            "https://en.wikipedia.org/wiki/Japan_Airlines_fleet",
+        ],
+    },
 ];
