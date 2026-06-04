@@ -901,5 +901,142 @@
                 "Q300": "https://www.planespotters.net/photo/082013/zk-new-air-new-zealand-link-bombardier-dhc-8-311-dash-8-q300"
             }
         }
+    },
+    {
+        "airline": "大韩航空",
+        "airlineEnglishName": "Korean Air",
+        "passengerAircraftCount": 143,
+        "models": {
+            "Airbus": {
+                "A220-300": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A220-300_HL8314_(48946393983).jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Korean_Air,_D-AZAF_HL8529,_Airbus_A321-272NX_(52926266040).jpg",
+                "A330-200": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A330-200_MEL_Nazarinia.jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Airbus_A330-300_(Korean_Air)_(5777697634).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:Airbus_A350-900_Korean_Air.jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A380-800_HL7619.jpg"
+            },
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-800_(Korean_Air)_(6441129027).jpg",
+                "B737-900": "https://commons.wikimedia.org/wiki/File:Boeing_737-900_of_Korean_Air_at_Vladivostok_Airport_(8985457617).jpg",
+                "B737-900ER": "https://commons.wikimedia.org/wiki/File:Korean_air_Boeing_737-9B5ER_HL8249_20181127_165944.jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_Korean_Air_Boeing_737_MAX_8_HL8349_@_ZSPD_2025-12-23.jpg",
+                "B747-8I": "https://commons.wikimedia.org/wiki/File:Boeing_747-8I_Korean_Air.jpg",
+                "B777-200ER": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_777-200ER_Monty.jpg",
+                "B777-300": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_777-300_Prasertwit-1.jpg",
+                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Boeing_777-300ER_(Korean_Air)_HL7783_LHR_(12097180663).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_787-9_Dreamliner_Taxiing_in_TPE_HL8082.jpg",
+                "B787-10": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_787-10_HL8537_departing_San_Francisco_February_2026.jpg"
+            }
+        }
+    },
+    {
+        "airline": "韩亚航空",
+        "airlineEnglishName": "Asiana Airlines",
+        "passengerAircraftCount": 68,
+        "models": {
+            "Airbus": {
+                "A321-200": "https://commons.wikimedia.org/wiki/File:Asiana_Airlines_Airbus_A321-200.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:(KOR-Incheon)_Asiana_Airlines_Airbus_A321-251NX_HL8399_@_RKSI_2026-06-04.jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Asiana_Airlines,_A330-300,_HL7736_(18493752871).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:HL8383_Asiana_Airlines_Airbus_A350-941_@_CDG,_Oct_2024.jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:Asiana_Airlines_Airbus_A380-800_HL7625_NRT_(16213127745).jpg"
+            },
+            "Boeing": {
+                "B777-200ER": "https://commons.wikimedia.org/wiki/File:Asiana_Airlines_Boeing_777-200ER;_HL7742@HKG;31.07.2011_614fz_(6052589349).jpg"
+            }
+        }
+    },
+    {
+        "airline": "济州航空",
+        "airlineEnglishName": "Jeju Air",
+        "passengerAircraftCount": 46,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Jeju_Air_Boeing_737-800_HL8234.jpg",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:Jeju_Air_Boeing_737-8_MAX_HL8524_landing_at_Taoyuan_February_2026.jpg"
+            }
+        }
+    },
+    {
+        "airline": "真航空",
+        "airlineEnglishName": "Jin Air",
+        "passengerAircraftCount": 32,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Jin_Air_Boeing_737-800_HL8013_departing_Taoyuan_February_2026.jpg",
+                "B737-900": "https://www.planespotters.net/photo/1740905/hl7718-jin-air-boeing-737-9b5",
+                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(KOR-Incheon)_Jin_Air_Boeing_737_MAX_8_HL8353_@_RKSI_2026-06-04.jpg",
+                "B777-200ER": "https://commons.wikimedia.org/wiki/File:Jin_Air_Boeing_777-200ER_HL7743_landing_at_Taoyuan_February_2026.jpg"
+            }
+        }
+    },
+    {
+        "airline": "德威航空",
+        "airlineEnglishName": "T'way Air",
+        "passengerAircraftCount": 49,
+        "models": {
+            "Airbus": {
+                "A330-200": "https://commons.wikimedia.org/wiki/File:T%27way_Air,_HL8276,_Airbus_A330-223_(54163944348).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:T'way_Air_(HL8560)_Airbus_A330-343_arriving_at_Sydney_Airport.jpg"
+            },
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:T%27way_Air_HL8306_22.07.2018._Gimpo_International_Airport,_Seoul._A_Boeing_737-800.jpg",
+                "B737 MAX 8": "https://www.planespotters.net/photo/1899487/hl8752-tway-air-boeing-737-8-max",
+                "B777-300ER": "https://www.planespotters.net/photo/1911623/hl8707-tway-air-boeing-777-367er"
+            }
+        }
+    },
+    {
+        "airline": "釜山航空",
+        "airlineEnglishName": "Air Busan",
+        "passengerAircraftCount": 21,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Air_Busan,_A320-200,_HL7744_(19420517935).jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:Air_Busan,_A321-200,_HL7723_(18078303028).jpg",
+                "A321neo": "https://www.planespotters.net/photo/1934207/hl8526-air-busan-airbus-a321-251nx"
+            }
+        }
+    },
+    {
+        "airline": "首尔航空",
+        "airlineEnglishName": "Air Seoul",
+        "passengerAircraftCount": 6,
+        "models": {
+            "Airbus": {
+                "A321-200": "https://www.planespotters.net/photo/1658728/hl7789-air-seoul-airbus-a321-231"
+            }
+        }
+    },
+    {
+        "airline": "易斯达航空",
+        "airlineEnglishName": "Eastar Jet",
+        "passengerAircraftCount": 20,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photo/1917309/hl8507-eastar-jet-boeing-737-86n-wl",
+                "B737 MAX 8": "https://www.planespotters.net/photo/1601493/hl8542-eastar-jet-boeing-737-8-max"
+            }
+        }
+    },
+    {
+        "airline": "普莱米娅航空",
+        "airlineEnglishName": "Air Premia",
+        "passengerAircraftCount": 9,
+        "models": {
+            "Boeing": {
+                "B787-9": "https://www.planespotters.net/photo/1364704/hl8387-air-premia-boeing-787-9-dreamliner"
+            }
+        }
+    },
+    {
+        "airline": "Aero K航空",
+        "airlineEnglishName": "Aero K",
+        "passengerAircraftCount": 9,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photo/1934190/hl8563-aero-k-airbus-a320-214"
+            }
+        }
     }
 ]
