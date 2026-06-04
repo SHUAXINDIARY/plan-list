@@ -91,7 +91,17 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     },
     {
         airlineName: "春秋航空",
-        urls: ["https://en.wikipedia.org/wiki/Spring_Airlines"],
+        urls: [
+            "https://www.planespotters.net/airline/Spring-Airlines",
+            "https://en.wikipedia.org/wiki/Spring_Airlines",
+        ],
+    },
+    {
+        airlineName: "春秋航空日本",
+        urls: [
+            "https://www.planespotters.net/airline/Spring-Japan",
+            "https://en.wikipedia.org/wiki/Spring_Japan",
+        ],
     },
     {
         airlineName: "天津航空",

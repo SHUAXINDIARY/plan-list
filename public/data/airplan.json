@@ -207,12 +207,25 @@
     {
         "airline": "春秋航空",
         "airlineEnglishName": "Spring Airlines",
-        "passengerAircraftCount": 132,
+        "passengerAircraftCount": 134,
         "models": {
             "Airbus": {
                 "A320-200": "https://commons.wikimedia.org/wiki/File:B-6971_-_Spring_Airlines_-_Airbus_A320-214_-_SHA_(12437572033).jpg",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:B-306P_(8_Sept_2019).jpg",
                 "A321neo": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_Spring_Airlines_Airbus_A321-253NX_B-30FZ_@_ZSPD_2025-12-23.jpg"
+            }
+        }
+    },
+    {
+        "airline": "春秋航空日本",
+        "airlineEnglishName": "Spring Japan",
+        "passengerAircraftCount": 9,
+        "models": {
+            "Airbus": {
+                "A321-200/P2F": "https://www.planespotters.net/photo/1826908/ja83ya-yamato-transport-airbus-a321-231-p2f"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photo/1904905/ja01gr-spring-airlines-japan-boeing-737-81d-wl"
             }
         }
     },
