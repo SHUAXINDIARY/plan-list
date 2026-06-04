@@ -1038,5 +1038,133 @@
                 "A320-200": "https://www.planespotters.net/photo/1934190/hl8563-aero-k-airbus-a320-214"
             }
         }
+    },
+    {
+        "airline": "乐桃航空",
+        "airlineEnglishName": "Peach Aviation",
+        "passengerAircraftCount": 39,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Peach_Aviation,_Airbus_A320-200_JA813P_NRT_(24367137534).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Peach_Airbus_A320neo_JA210P_at_Taoyuan_February_2026_1.jpg",
+                "A321LR": "https://www.planespotters.net/photo/1779941/ja902p-peach-airbus-a321-251nx"
+            }
+        }
+    },
+    {
+        "airline": "捷星日本航空",
+        "airlineEnglishName": "Jetstar Japan",
+        "passengerAircraftCount": 22,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Jetstar_Japan,_A320-200,_JA14JJ_(20868953528).jpg",
+                "A321LR": "https://www.planespotters.net/photo/1830690/ja26lr-jetstar-japan-airbus-a321-251nx"
+            }
+        }
+    },
+    {
+        "airline": "天马航空",
+        "airlineEnglishName": "Skymark Airlines",
+        "passengerAircraftCount": 30,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Skymark_Airlines_Boeing_737-800_JA737Z_at_Kobe_Airport.jpg",
+                "B737 MAX 8": "https://www.planespotters.net/photo/1922337/ja738a-skymark-airlines-boeing-737-8-max"
+            }
+        }
+    },
+    {
+        "airline": "北海道国际航空",
+        "airlineEnglishName": "Air Do",
+        "passengerAircraftCount": 12,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/photo/1852687/ja14an-air-do-boeing-737-781-wl",
+                "B767-300ER": "https://www.planespotters.net/photo/1747646/ja607a-air-do-boeing-767-381er"
+            }
+        }
+    },
+    {
+        "airline": "索拉西德航空",
+        "airlineEnglishName": "Solaseed Air",
+        "passengerAircraftCount": 14,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://commons.wikimedia.org/wiki/File:Solaseed_Air_Boeing_737-800_JA804X_at_Kobe_Airport.jpg"
+            }
+        }
+    },
+    {
+        "airline": "星悦航空",
+        "airlineEnglishName": "StarFlyer",
+        "passengerAircraftCount": 10,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:StarFlyer_Airbus_A320-200_at_New_Kitakyushu_airport.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Starflyer_JA28MC_A320-251N_HND_26-09-2024.jpg"
+            }
+        }
+    },
+    {
+        "airline": "ZIPAIR东京",
+        "airlineEnglishName": "ZIPAIR Tokyo",
+        "passengerAircraftCount": 8,
+        "models": {
+            "Boeing": {
+                "B787-8": "https://commons.wikimedia.org/wiki/File:ZIPAIR_Boeing_787-8_JA824J_at_Vancouver_June_2025.jpg"
+            }
+        }
+    },
+    {
+        "airline": "富士梦幻航空",
+        "airlineEnglishName": "Fuji Dream Airlines",
+        "passengerAircraftCount": 15,
+        "models": {
+            "Embraer": {
+                "E170": "https://commons.wikimedia.org/wiki/File:Fuji_Dream_Airlines_Embraer_170.jpg",
+                "E175": "https://commons.wikimedia.org/wiki/File:JA05FJ_Embraer_175_FDA_Fuji_Dream_Airlines_(7595762616).jpg"
+            }
+        }
+    },
+    {
+        "airline": "IBEX航空",
+        "airlineEnglishName": "IBEX Airlines",
+        "passengerAircraftCount": 9,
+        "models": {
+            "Bombardier": {
+                "CRJ700": "https://commons.wikimedia.org/wiki/File:IBEX_Airlines_CRJ_CRJ700.JPG"
+            }
+        }
+    },
+    {
+        "airline": "东方空桥",
+        "airlineEnglishName": "Oriental Air Bridge",
+        "passengerAircraftCount": 2,
+        "models": {
+            "ATR": {
+                "ATR42-600": "https://www.planespotters.net/photo/1640901/ja10rc-oriental-air-bridge-atr-42-600-42-500"
+            }
+        }
+    },
+    {
+        "airline": "朱鹮航空",
+        "airlineEnglishName": "Toki Air",
+        "passengerAircraftCount": 3,
+        "models": {
+            "ATR": {
+                "ATR42-600": "https://www.planespotters.net/photo/1917460/ja03qq-toki-air-atr-42-600-42-500",
+                "ATR72-600": "https://commons.wikimedia.org/wiki/File:Toki_Air_ATR_72-600(72-212A)_JA02QQ_RJSN.jpg"
+            }
+        }
+    },
+    {
+        "airline": "天草航空",
+        "airlineEnglishName": "Amakusa Airlines",
+        "passengerAircraftCount": 1,
+        "models": {
+            "ATR": {
+                "ATR42-600": "https://commons.wikimedia.org/wiki/File:Amakusa_Airlines_ATR_42-600_(JA01AM).jpg"
+            }
+        }
     }
 ]
