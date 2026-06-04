@@ -51,14 +51,14 @@
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1241@PEK_(20200305134300).jpg",
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1122@URC_(20230922123436).jpg",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Boeing_777-300ER_(B-2009)_at_LAX_(22517456988).jpg",
-                "B777-F": "https://oneworldvirtual.org/fleet/models/china-southern-boeing-777-f1b",
+                "B777-F": "https://www.planespotters.net/photo/1883791/b-223g-china-southern-airlines-boeing-777-f",
                 "B787-8": "https://commons.wikimedia.org/wiki/File:Boeing_787-8_B-2725_China_Southern_(10497279394).jpg",
                 "B787-9": "https://commons.wikimedia.org/wiki/File:B-1243_31032019LHR_(47537921911).jpg"
             },
             "COMAC": {
                 "C909": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_Comac_Arj21-700_B651W_at_CAN.jpg",
                 "C919": "https://commons.wikimedia.org/wiki/File:China_Southern_Airline_C919_at_CAN.jpg",
-                "C919-700": ""
+                "C919-700": "https://www.planespotters.net/photo/1793356/b-657x-china-southern-airlines-comac-c919-100std"
             },
             "Embraer": {
                 "E190": "https://commons.wikimedia.org/wiki/File:China_Southern_Airlines_ERJ-190LR_B-3205_(8757127004).jpg"
@@ -95,7 +95,7 @@
             "COMAC": {
                 "C909": "https://commons.wikimedia.org/wiki/File:20251130_Comac_C909_of_Air_China_(B-656J)_taxiing_at_CGO.jpg",
                 "C919": "https://commons.wikimedia.org/wiki/File:B-919X@PEK_(20240829112235).jpg",
-                "C919-700ER": ""
+                "C919-700ER": "https://www.planespotters.net/photo/1880147/b-658q-air-china-comac-c919-100er"
             }
         }
     },
