@@ -37,7 +37,11 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     },
     {
         airlineName: "航机影像与开放媒体",
-        urls: ["https://www.jetphotos.com/", "https://commons.wikimedia.org/"],
+        urls: [
+            "https://www.jetphotos.com/",
+            "https://commons.wikimedia.org/",
+            "https://www.planespotters.net/",
+        ],
     },
     {
         airlineName: "中国东方航空",
@@ -320,6 +324,13 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.jal.com/en/company/outline/aircraft.html",
             "https://www.jal.com/en/investor/library/annualreport/",
             "https://en.wikipedia.org/wiki/Japan_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "新西兰航空",
+        urls: [
+            "https://www.airnewzealand.co.nz/fleet",
+            "https://en.wikipedia.org/wiki/Air_New_Zealand_fleet",
         ],
     },
 ];
