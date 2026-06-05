@@ -1184,5 +1184,171 @@
                 "E190": "https://www.planespotters.net/photo/1931441/cn-rgo-royal-air-maroc-embraer-erj-190ar-erj-190-100-igw"
             }
         }
+    },
+    {
+        "airline": "美国航空",
+        "airlineEnglishName": "American Airlines",
+        "passengerAircraftCount": 1022,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=airbus-a321neo",
+                "A321XLR": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=airbus-a321xlr"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-737-max-8",
+                "B777-200ER": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-777-200er",
+                "B777-300ER": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-777-300er",
+                "B787-8": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-787-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/American-Airlines/current?type=boeing-787-9"
+            }
+        }
+    },
+    {
+        "airline": "达美航空",
+        "airlineEnglishName": "Delta Air Lines",
+        "passengerAircraftCount": 989,
+        "models": {
+            "Airbus": {
+                "A220-100": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a220-100",
+                "A220-300": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a220-300",
+                "A319-100": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a330-200",
+                "A330-300": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a330-300",
+                "A330-900": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a330-900neo",
+                "A350-900": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=airbus-a350-900"
+            },
+            "Boeing": {
+                "B717-200": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-717",
+                "B737-800": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-737-800",
+                "B737-900ER": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-737-900er",
+                "B757-200": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-757-200",
+                "B757-300": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-757-300",
+                "B767-300ER": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-767-300er",
+                "B767-400ER": "https://www.planespotters.net/fleet/list/Delta-Air-Lines/current?type=boeing-767-400er"
+            }
+        }
+    },
+    {
+        "airline": "美国联合航空",
+        "airlineEnglishName": "United Airlines",
+        "passengerAircraftCount": 1090,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=airbus-a320",
+                "A321neo": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=airbus-a321neo"
+            },
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-800",
+                "B737-900": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-900",
+                "B737-900ER": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-900er",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-737-max-9",
+                "B757-200": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-757-200",
+                "B757-300": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-757-300",
+                "B767-300ER": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-767-300er",
+                "B767-400ER": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-767-400er",
+                "B777-200": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-777-200",
+                "B777-200ER": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-777-200er",
+                "B777-300ER": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-777-300er",
+                "B787-8": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-787-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-787-9",
+                "B787-10": "https://www.planespotters.net/fleet/list/United-Airlines/current?type=boeing-787-10"
+            }
+        }
+    },
+    {
+        "airline": "西南航空",
+        "airlineEnglishName": "Southwest Airlines",
+        "passengerAircraftCount": 803,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-max-8"
+            }
+        }
+    },
+    {
+        "airline": "阿拉斯加航空",
+        "airlineEnglishName": "Alaska Airlines",
+        "passengerAircraftCount": 337,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-737-800",
+                "B737-900ER": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-737-900er",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-737-max-9",
+                "B787-9": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=boeing-787-9"
+            },
+            "Embraer": {
+                "E175": "https://www.planespotters.net/fleet/list/Alaska-Airlines/current?type=embraer-erj-175"
+            }
+        }
+    },
+    {
+        "airline": "捷蓝航空",
+        "airlineEnglishName": "JetBlue Airways",
+        "passengerAircraftCount": 288,
+        "models": {
+            "Airbus": {
+                "A220-300": "https://www.planespotters.net/fleet/list/JetBlue-Airways/current?type=airbus-a220-300",
+                "A320-200": "https://www.planespotters.net/fleet/list/JetBlue-Airways/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/JetBlue-Airways/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/JetBlue-Airways/current?type=airbus-a321neo",
+                "A321LR": "https://www.planespotters.net/fleet/list/JetBlue-Airways/current?type=airbus-a321lr"
+            }
+        }
+    },
+    {
+        "airline": "边疆航空",
+        "airlineEnglishName": "Frontier Airlines",
+        "passengerAircraftCount": 176,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a320",
+                "A320neo": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a321neo"
+            }
+        }
+    },
+    {
+        "airline": "夏威夷航空",
+        "airlineEnglishName": "Hawaiian Airlines",
+        "passengerAircraftCount": 66,
+        "models": {
+            "Airbus": {
+                "A321neo": "https://www.planespotters.net/fleet/list/Hawaiian-Airlines/current?type=airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/fleet/list/Hawaiian-Airlines/current?type=airbus-a330-200"
+            },
+            "Boeing": {
+                "B717-200": "https://www.planespotters.net/fleet/list/Hawaiian-Airlines/current?type=boeing-717",
+                "B787-9": "https://www.planespotters.net/fleet/list/Hawaiian-Airlines/current?type=boeing-787-9"
+            }
+        }
+    },
+    {
+        "airline": "忠实航空",
+        "airlineEnglishName": "Allegiant Air",
+        "passengerAircraftCount": 119,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/Allegiant-Air/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/Allegiant-Air/current?type=airbus-a320"
+            },
+            "Boeing": {
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Allegiant-Air/current?type=boeing-737-max-8"
+            }
+        }
     }
 ]

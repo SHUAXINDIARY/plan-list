@@ -351,4 +351,76 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://en.wikipedia.org/wiki/Royal_Air_Maroc_fleet",
         ],
     },
+    {
+        airlineName: "美国航空",
+        urls: [
+            "https://www.aa.com/i18n/travel-info/experience/planes/planes.jsp",
+            "https://www.planespotters.net/airline/American-Airlines",
+            "https://en.wikipedia.org/wiki/American_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "达美航空",
+        urls: [
+            "https://www.delta.com/us/en/aircraft/overview",
+            "https://www.planespotters.net/airline/Delta-Air-Lines",
+            "https://en.wikipedia.org/wiki/Delta_Air_Lines_fleet",
+        ],
+    },
+    {
+        airlineName: "美国联合航空",
+        urls: [
+            "https://www.united.com/en/us/fly/company/aircraft.html",
+            "https://www.planespotters.net/airline/United-Airlines",
+            "https://en.wikipedia.org/wiki/United_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "西南航空",
+        urls: [
+            "https://www.southwest.com/aircraft/",
+            "https://www.planespotters.net/airline/Southwest-Airlines",
+            "https://en.wikipedia.org/wiki/Southwest_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "阿拉斯加航空",
+        urls: [
+            "https://news.alaskaair.com/fleet/",
+            "https://www.planespotters.net/airline/Alaska-Airlines",
+            "https://en.wikipedia.org/wiki/Alaska_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "捷蓝航空",
+        urls: [
+            "https://www.jetblue.com/flying-with-us/our-planes",
+            "https://www.planespotters.net/airline/JetBlue-Airways",
+            "https://en.wikipedia.org/wiki/JetBlue_fleet",
+        ],
+    },
+    {
+        airlineName: "边疆航空",
+        urls: [
+            "https://www.flyfrontier.com/plane-tails/airbus-a320/",
+            "https://www.planespotters.net/airline/Frontier-Airlines",
+            "https://en.wikipedia.org/wiki/Frontier_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "夏威夷航空",
+        urls: [
+            "https://www.hawaiianairlines.com/our-services/at-the-airport/our-fleet",
+            "https://www.planespotters.net/airline/Hawaiian-Airlines",
+            "https://en.wikipedia.org/wiki/Hawaiian_Airlines_fleet",
+        ],
+    },
+    {
+        airlineName: "忠实航空",
+        urls: [
+            "https://www.allegiantair.com/aircraft",
+            "https://www.planespotters.net/airline/Allegiant-Air",
+            "https://en.wikipedia.org/wiki/Allegiant_Air_fleet",
+        ],
+    },
 ];
