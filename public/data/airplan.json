@@ -1165,5 +1165,24 @@
                 "ATR42-600": "https://commons.wikimedia.org/wiki/File:Amakusa_Airlines_ATR_42-600_(JA01AM).jpg"
             }
         }
+    },
+    {
+        "airline": "摩洛哥皇家航空",
+        "airlineEnglishName": "Royal Air Maroc",
+        "passengerAircraftCount": 63,
+        "models": {
+            "ATR": {
+                "ATR72-600": "https://www.planespotters.net/photo/1138571/cn-coi-royal-air-maroc-express-atr-72-600-72-212a"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photo/1933068/cn-rgh-royal-air-maroc-boeing-737-86n-wl",
+                "B737 MAX 8": "https://www.planespotters.net/photo/1668969/cn-max-royal-air-maroc-boeing-737-8-max",
+                "B787-8": "https://www.planespotters.net/photo/1904328/cn-rgt-royal-air-maroc-boeing-787-8-dreamliner",
+                "B787-9": "https://www.planespotters.net/photo/1399936/cn-ram-royal-air-maroc-boeing-787-9-dreamliner"
+            },
+            "Embraer": {
+                "E190": "https://www.planespotters.net/photo/1931441/cn-rgo-royal-air-maroc-embraer-erj-190ar-erj-190-100-igw"
+            }
+        }
     }
 ]

@@ -343,4 +343,12 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://en.wikipedia.org/wiki/Air_New_Zealand_fleet",
         ],
     },
+    {
+        airlineName: "摩洛哥皇家航空",
+        urls: [
+            "https://pre.royalairmaroc.com/ma-fr/notre-flotte",
+            "https://www.planespotters.net/airline/Royal-Air-Maroc",
+            "https://en.wikipedia.org/wiki/Royal_Air_Maroc_fleet",
+        ],
+    },
 ];
