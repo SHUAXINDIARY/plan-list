@@ -457,11 +457,10 @@
         "passengerAircraftCount": 27,
         "models": {
             "Boeing": {
-                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5660_at_SZX_20190331_02.jpg",
-                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Hebei%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
+                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5660_at_SZX_20190331_02.jpg"
             },
             "Embraer": {
-                "E190": "https://www.jetphotos.com/showphotos.php?airline=Hebei%20Airlines&aircraft=Embraer%20190-100LR&width=1920&height=1080"
+                "E190": "https://www.planespotters.net/photo/395595/b-3140-hebei-airlines-embraer-erj-190lr-erj-190-100-lr"
             }
         }
     },
@@ -482,9 +481,9 @@
         "passengerAircraftCount": 25,
         "models": {
             "Boeing": {
-                "B737-700": "https://commons.wikimedia.org/wiki/File:%E6%98%86%E6%98%8E%E9%95%BF%E6%B0%B4%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA%E5%81%9C%E6%9C%BA%E5%9D%AA05.jpg",
-                "B737-800": "https://www.jetphotos.com/showphotos.php?airline=Ruili%20Airlines&aircraft=Boeing%20737-800&width=1920&height=1080",
-                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Ruili%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
+                "B737-700": "https://www.planespotters.net/photo/1912513/b-6109-ruili-airlines-boeing-737-76j-wl",
+                "B737-800": "https://www.planespotters.net/photo/1331028/b-1960-ruili-airlines-boeing-737-86j-wl",
+                "B737 MAX 8": ""
             }
         }
     },
@@ -498,7 +497,7 @@
                 "A320neo": "https://www.jetphotos.com/photo/11416068"
             },
             "Embraer": {
-                "E190": "https://commons.wikimedia.org/wiki/File:Emabraer190gxarrived.jpg"
+                "E190": "https://www.planespotters.net/photo/1930855/b-3125-gx-airlines-embraer-erj-190lr-erj-190-100-lr"
             }
         }
     },
@@ -522,7 +521,7 @@
         "models": {
             "Boeing": {
                 "B737-800": "https://commons.wikimedia.org/wiki/File:Xinzheng_Airport_(CGO).jpg",
-                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Donghai%20Airlines&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
+                "B737 MAX 8": "https://www.planespotters.net/photo/1931422/b-224a-donghai-airlines-boeing-737-8-max"
             }
         }
     },
@@ -533,8 +532,8 @@
         "models": {
             "Boeing": {
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1738@PEK_(20150822113232).JPG",
-                "B737-900ER": "https://www.jetphotos.com/showphotos.php?airline=Okay%20Airways&aircraft=Boeing%20737-900ER&width=1920&height=1080",
-                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Okay%20Airways&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
+                "B737-900ER": "https://www.planespotters.net/photo/1930461/b-1420-okay-airways-boeing-737-9kfer-wl",
+                "B737 MAX 8": "https://www.planespotters.net/photo/1402828/vp-czs-okay-airways-boeing-737-8-max"
             }
         }
     },
@@ -568,7 +567,7 @@
         "models": {
             "Boeing": {
                 "B737-800": "https://commons.wikimedia.org/wiki/File:Urumqi_Air_Boeing737-800.JPG",
-                "B737 MAX 8": "https://www.jetphotos.com/showphotos.php?airline=Urumqi%20Air&aircraft=Boeing%20737%20MAX%208&width=1920&height=1080"
+                "B737 MAX 8": "https://www.planespotters.net/photo/1011797/n5515x-urumqi-air-boeing-737-8-max"
             }
         }
     },
@@ -585,14 +584,14 @@
     },
     {
         "airline": "湖南航空",
-        "airlineEnglishName": "Hunan Airlines",
+        "airlineEnglishName": "Air Travel",
         "passengerAircraftCount": 16,
         "models": {
             "Airbus": {
-                "A319-100": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A319-100&width=1920&height=1080",
-                "A320-200": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A320-200&width=1920&height=1080",
-                "A320neo": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A320neo&width=1920&height=1080",
-                "A321neo": "https://www.jetphotos.com/showphotos.php?airline=Hunan%20Airlines&aircraft=Airbus%20A321neo&width=1920&height=1080"
+                "A319-100": "https://www.planespotters.net/photo/1754336/b-305l-air-travel-airbus-a319-115-wl",
+                "A320-200": "https://www.planespotters.net/photo/1303776/b-302y-air-travel-airbus-a320-214-wl",
+                "A320neo": "https://www.planespotters.net/photo/1918297/b-30eh-air-travel-airbus-a320-251n",
+                "A321neo": "https://www.planespotters.net/photo/1771284/b-8318-air-travel-airbus-a321-211-wl"
             }
         }
     },
@@ -613,18 +612,18 @@
         "models": {
             "Boeing": {
                 "B737-800": "https://commons.wikimedia.org/wiki/File:B-1571_at_CGO_20190426.jpg",
-                "B787-9": "https://www.jetphotos.com/showphotos.php?airline=Suparna%20Airlines&aircraft=Boeing%20787-9&width=1920&height=1080"
+                "B787-9": "https://www.planespotters.net/photo/1295159/b-20af-suparna-airlines-boeing-787-9-dreamliner"
             }
         }
     },
     {
         "airline": "桂林航空",
-        "airlineEnglishName": "Guilin Airlines",
+        "airlineEnglishName": "Air Guilin",
         "passengerAircraftCount": 10,
         "models": {
             "Airbus": {
-                "A319-100": "https://www.jetphotos.com/showphotos.php?airline=Guilin%20Airlines&aircraft=Airbus%20A319-100&width=1920&height=1080",
-                "A320-200": "https://www.jetphotos.com/showphotos.php?airline=Guilin%20Airlines&aircraft=Airbus%20A320-200&width=1920&height=1080"
+                "A319-100": "https://www.planespotters.net/photo/1903713/b-6193-air-guilin-airbus-a319-133",
+                "A320-200": "https://www.planespotters.net/photo/1695439/b-1061-air-guilin-airbus-a320-214-wl"
             }
         }
     },
@@ -1100,7 +1099,7 @@
         "passengerAircraftCount": 10,
         "models": {
             "Airbus": {
-                "A320-200": "https://commons.wikimedia.org/wiki/File:StarFlyer_Airbus_A320-200_at_New_Kitakyushu_airport.jpg",
+                "A320-200": "https://www.planespotters.net/photo/1931803/ja07mc-starflyer-airbus-a320-214",
                 "A320neo": "https://commons.wikimedia.org/wiki/File:Starflyer_JA28MC_A320-251N_HND_26-09-2024.jpg"
             }
         }
