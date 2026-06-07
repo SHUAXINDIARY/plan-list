@@ -764,6 +764,25 @@
         }
     },
     {
+        "airline": "酷航",
+        "airlineEnglishName": "Scoot",
+        "passengerAircraftCount": 63,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Scoot_Airbus_A320_9V-TRL_Singapore_2025_(03).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Scoot_Airbus_A320-271N_9V-TNJ_@_WSSS_2026-03-11.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:Scoot_Airbus_A321neo_9V-NCE_Singapore_2025_(02).jpg"
+            },
+            "Boeing": {
+                "B787-8": "https://commons.wikimedia.org/wiki/File:Scoot_Boeing_787_9V-OFN_Singapore_2025_(02).jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:Scoot_Boeing_787_9V-OJA_Singapore_2025_(04).jpg"
+            },
+            "Embraer": {
+                "E190-E2": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Scoot_Embraer_E190-E2_9V-THH_@_WSSS_2026-03-11.jpg"
+            }
+        }
+    },
+    {
         "airline": "泰国航空",
         "airlineEnglishName": "Thai Airways",
         "passengerAircraftCount": 85,
