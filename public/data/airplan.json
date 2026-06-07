@@ -783,6 +783,18 @@
         }
     },
     {
+        "airline": "纳斯航空",
+        "airlineEnglishName": "flynas",
+        "passengerAircraftCount": 67,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Flynas_A320-200_VP-CXR_DXB_2014-11-22.jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:Hamburg-Finkenwerder_Airport_flynas_Airbus_A320-251N_HZ-NS67_(DSC09769).jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:CS-TRI,_Airbus_A330-300_of_Flynas_at_Manchester_Airport,_2014_(49153222547).jpg"
+            }
+        }
+    },
+    {
         "airline": "泰国航空",
         "airlineEnglishName": "Thai Airways",
         "passengerAircraftCount": 85,
