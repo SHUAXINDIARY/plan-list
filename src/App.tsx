@@ -29,7 +29,7 @@ interface NavigationItem {
 // 应用主导航配置，后续新增页面时从这里扩展入口。
 const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "机型资料库", end: true },
-    { path: "/personal", label: "站长记录", end: false },
+    { path: "/personal", label: "飞行日志", end: false },
     { path: "/references", label: "参考资料", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
@@ -52,7 +52,8 @@ const getNavigationClassName = ({
 const App = (): ReactElement => {
     const [themePreference, setThemePreference] = useState<ThemePreference>(
         (): ThemePreference => {
-            const fromAttr = document.documentElement.getAttribute("data-theme");
+            const fromAttr =
+                document.documentElement.getAttribute("data-theme");
             if (fromAttr === "light" || fromAttr === "dark") {
                 return fromAttr;
             }
@@ -78,8 +79,9 @@ const App = (): ReactElement => {
                         <ThemeToggle
                             preference={themePreference}
                             onToggle={(): void => {
-                                setThemePreference((previous: ThemePreference) =>
-                                    previous === "dark" ? "light" : "dark",
+                                setThemePreference(
+                                    (previous: ThemePreference) =>
+                                        previous === "dark" ? "light" : "dark",
                                 );
                             }}
                         />

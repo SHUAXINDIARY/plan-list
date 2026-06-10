@@ -32,7 +32,7 @@ const PersonalAircraftPhotosSection = lazy(
 );
 
 /**
- * 个人航空档案页：壳层轻量同步渲染，地图与相册分块异步加载。
+ * 站长飞行日志页：壳层轻量同步渲染，地图与相册分块异步加载。
  */
 const PersonalPage = (): ReactElement => {
     return (
@@ -41,12 +41,12 @@ const PersonalPage = (): ReactElement => {
             aria-labelledby="personal-page-title"
         >
             <p className="page-eyebrow">Flight Log</p>
-            <h1 id="personal-page-title">个人航空档案</h1>
+            <h1 id="personal-page-title">站长飞行日志</h1>
             <p>
                 汇总拍摄过的飞机与打卡过的机场，把旅途记录整理成可回看的航空足迹。
             </p>
 
-            <div className="personal-summary" aria-label="个人航空档案概览">
+            <div className="personal-summary" aria-label="站长飞行日志概览">
                 <span>
                     <strong>{AIRCRAFT_PHOTO_COUNT}</strong>
                     拍摄飞机
@@ -68,9 +68,7 @@ const PersonalPage = (): ReactElement => {
             </PersonalViewportSection>
 
             <PersonalViewportSection label="乘机记录" variant="flight-records">
-                <Suspense
-                    fallback={<PersonalFlightRecordsSectionSkeleton />}
-                >
+                <Suspense fallback={<PersonalFlightRecordsSectionSkeleton />}>
                     <PersonalFlightRecordsSection />
                 </Suspense>
             </PersonalViewportSection>
