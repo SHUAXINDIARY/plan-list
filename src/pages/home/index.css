@@ -245,6 +245,22 @@
   font-size: 1.2rem;
 }
 
+.airline-entry__website {
+  color: var(--pl-text-meta);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: underline;
+  text-decoration-color: var(--pl-underline-model);
+  text-underline-offset: 0.12em;
+  white-space: nowrap;
+}
+
+.airline-entry__website:hover {
+  color: var(--pl-text-heading);
+  text-decoration-color: var(--pl-underline-model-hover);
+}
+
 .airline-entry__english-name {
   color: var(--pl-text-english);
   font-size: 0.78rem;

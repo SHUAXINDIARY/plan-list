@@ -3674,3 +3674,62 @@
 
 - `src/pages/personal/sections/PersonalAirportSection.tsx`：手风琴展开逻辑。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-10
+
+## 任务目的
+
+为 `airplan.json` 中全部航司补充官网链接，并新增独立字段 `airlineWebsite` 存放。
+
+## 完成过程
+
+1. 梳理 `airplan.json` 中 93 家航司清单，建立中文航司名称到官方网站的映射表。
+2. 为每条航司记录新增 `airlineWebsite` 字段，置于 `airlineEnglishName` 之后、`passengerAircraftCount` 之前。
+3. 同步更新 `AirplaneDataItem`、`AirlineFleet` 类型声明，并在首页数据转换逻辑中透传该字段。
+4. 运行 `pnpm run build` 验证类型与构建通过。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：93 家航司均新增 `airlineWebsite` 官网链接字段。
+- `src/pages/home/type.d.ts`：`AirplaneDataItem`、`AirlineFleet` 补充 `airlineWebsite` 类型与注释。
+- `src/pages/home/index.tsx`：`createAirlineFleets` 透传 `airlineWebsite`。
+- `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-10
+
+## 任务目的
+
+在首页航司列表的航司名称后展示「官网」链接，点击后于新窗口打开对应航司官网。
+
+## 完成过程
+
+1. 在 `airline-entry__heading` 中于航司中文名 `h2` 之后插入官网链接，复用 `isHttpOrHttpsUrl` 校验 `airlineWebsite` 有效性。
+2. 链接使用 `target="_blank"`、`rel="noreferrer"` 新窗口打开，并补充 `aria-label` 提升可访问性。
+3. 新增 `.airline-entry__website` 样式，与机型外链下划线风格保持一致。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：航司名称后渲染「官网」外链。
+- `src/pages/home/index.css`：新增 `.airline-entry__website` 链接样式。
+- `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-10
+
+## 任务目的
+
+将首页航司条目中「官网」链接位置调整至英文名之后。
+
+## 完成过程
+
+1. 在 `airline-entry__heading` 内将「官网」链接从中文名 `h2` 后移至 `airline-entry__english-name` 之后。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：调整「官网」链接渲染顺序。
+- `taskRecord.md`：追加本次任务记录。

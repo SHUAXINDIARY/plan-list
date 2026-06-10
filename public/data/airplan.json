@@ -2,6 +2,7 @@
     {
         "airline": "中国东方航空",
         "airlineEnglishName": "China Eastern Airlines",
+        "airlineWebsite": "https://www.ceair.com",
         "passengerAircraftCount": 672,
         "models": {
             "Airbus": {
@@ -32,6 +33,7 @@
     {
         "airline": "中国南方航空",
         "airlineEnglishName": "China Southern Airlines",
+        "airlineWebsite": "https://www.csair.com",
         "passengerAircraftCount": 685,
         "models": {
             "Airbus": {
@@ -68,6 +70,7 @@
     {
         "airline": "中国国际航空",
         "airlineEnglishName": "Air China",
+        "airlineWebsite": "https://www.airchina.com",
         "passengerAircraftCount": 529,
         "models": {
             "Airbus": {
@@ -102,6 +105,7 @@
     {
         "airline": "海南航空",
         "airlineEnglishName": "Hainan Airlines",
+        "airlineWebsite": "https://www.hainanairlines.com",
         "passengerAircraftCount": 220,
         "models": {
             "Airbus": {
@@ -122,6 +126,7 @@
     {
         "airline": "深圳航空",
         "airlineEnglishName": "Shenzhen Airlines",
+        "airlineWebsite": "https://www.shenzhenair.com",
         "passengerAircraftCount": 202,
         "models": {
             "Airbus": {
@@ -140,6 +145,7 @@
     {
         "airline": "四川航空",
         "airlineEnglishName": "Sichuan Airlines",
+        "airlineWebsite": "https://www.sichuanair.com",
         "passengerAircraftCount": 202,
         "models": {
             "Airbus": {
@@ -157,6 +163,7 @@
     {
         "airline": "厦门航空",
         "airlineEnglishName": "XiamenAir",
+        "airlineWebsite": "https://www.xiamenair.com",
         "passengerAircraftCount": 171,
         "models": {
             "Airbus": {
@@ -175,6 +182,7 @@
     {
         "airline": "国泰航空",
         "airlineEnglishName": "Cathay Pacific",
+        "airlineWebsite": "https://www.cathaypacific.com",
         "passengerAircraftCount": 159,
         "models": {
             "Airbus": {
@@ -195,6 +203,7 @@
     {
         "airline": "山东航空",
         "airlineEnglishName": "Shandong Airlines",
+        "airlineWebsite": "https://www.sda.cn",
         "passengerAircraftCount": 135,
         "models": {
             "Boeing": {
@@ -207,6 +216,7 @@
     {
         "airline": "春秋航空",
         "airlineEnglishName": "Spring Airlines",
+        "airlineWebsite": "https://www.ch.com",
         "passengerAircraftCount": 134,
         "models": {
             "Airbus": {
@@ -219,6 +229,7 @@
     {
         "airline": "春秋航空日本",
         "airlineEnglishName": "Spring Japan",
+        "airlineWebsite": "https://www.akijapan.com",
         "passengerAircraftCount": 9,
         "models": {
             "Airbus": {
@@ -232,6 +243,7 @@
     {
         "airline": "天津航空",
         "airlineEnglishName": "Tianjin Airlines",
+        "airlineWebsite": "https://www.tianjin-air.com",
         "passengerAircraftCount": 103,
         "models": {
             "Airbus": {
@@ -250,6 +262,7 @@
     {
         "airline": "吉祥航空",
         "airlineEnglishName": "Juneyao Air",
+        "airlineWebsite": "https://www.juneyaoair.com",
         "passengerAircraftCount": 102,
         "models": {
             "Airbus": {
@@ -266,6 +279,7 @@
     {
         "airline": "上海航空",
         "airlineEnglishName": "Shanghai Airlines",
+        "airlineWebsite": "https://www.shanghai-air.com",
         "passengerAircraftCount": 86,
         "models": {
             "Boeing": {
@@ -279,6 +293,7 @@
     {
         "airline": "成都航空",
         "airlineEnglishName": "Chengdu Airlines",
+        "airlineWebsite": "https://www.chengduair.cc",
         "passengerAircraftCount": 82,
         "models": {
             "Airbus": {
@@ -293,6 +308,7 @@
     {
         "airline": "首都航空",
         "airlineEnglishName": "Capital Airlines",
+        "airlineWebsite": "https://www.jdair.net",
         "passengerAircraftCount": 81,
         "models": {
             "Airbus": {
@@ -309,6 +325,7 @@
     {
         "airline": "华夏航空",
         "airlineEnglishName": "China Express Airlines",
+        "airlineWebsite": "https://www.chinaexpressair.com",
         "passengerAircraftCount": 77,
         "models": {
             "Airbus": {
@@ -325,6 +342,7 @@
     {
         "airline": "长龙航空",
         "airlineEnglishName": "Loong Air",
+        "airlineWebsite": "https://www.loongair.cn",
         "passengerAircraftCount": 73,
         "models": {
             "Airbus": {
@@ -337,6 +355,7 @@
     {
         "airline": "中国联合航空",
         "airlineEnglishName": "China United Airlines",
+        "airlineWebsite": "https://www.flycua.com",
         "passengerAircraftCount": 60,
         "models": {
             "Boeing": {
@@ -348,6 +367,7 @@
     {
         "airline": "祥鹏航空",
         "airlineEnglishName": "Lucky Air",
+        "airlineWebsite": "https://www.luckyair.net",
         "passengerAircraftCount": 50,
         "models": {
             "Airbus": {
@@ -366,6 +386,7 @@
     {
         "airline": "西藏航空",
         "airlineEnglishName": "Tibet Airlines",
+        "airlineWebsite": "https://www.tibetairlines.com.cn",
         "passengerAircraftCount": 47,
         "models": {
             "Airbus": {
@@ -380,6 +401,7 @@
     {
         "airline": "西部航空",
         "airlineEnglishName": "West Air",
+        "airlineWebsite": "https://www.westair.cn",
         "passengerAircraftCount": 46,
         "models": {
             "Airbus": {
@@ -393,6 +415,7 @@
     {
         "airline": "香港快运航空",
         "airlineEnglishName": "HK Express",
+        "airlineWebsite": "https://www.hkexpress.com",
         "passengerAircraftCount": 44,
         "models": {
             "Airbus": {
@@ -406,6 +429,7 @@
     {
         "airline": "青岛航空",
         "airlineEnglishName": "Qingdao Airlines",
+        "airlineWebsite": "https://www.qdair.com",
         "passengerAircraftCount": 38,
         "models": {
             "Airbus": {
@@ -418,6 +442,7 @@
     {
         "airline": "昆明航空",
         "airlineEnglishName": "Kunming Airlines",
+        "airlineWebsite": "https://www.airkunming.com",
         "passengerAircraftCount": 32,
         "models": {
             "Boeing": {
@@ -430,6 +455,7 @@
     {
         "airline": "香港航空",
         "airlineEnglishName": "Hong Kong Airlines",
+        "airlineWebsite": "https://www.hongkongairlines.com",
         "passengerAircraftCount": 31,
         "models": {
             "Airbus": {
@@ -442,6 +468,7 @@
     {
         "airline": "重庆航空",
         "airlineEnglishName": "Chongqing Airlines",
+        "airlineWebsite": "https://www.chongqingairlines.com",
         "passengerAircraftCount": 30,
         "models": {
             "Airbus": {
@@ -454,6 +481,7 @@
     {
         "airline": "河北航空",
         "airlineEnglishName": "Hebei Airlines",
+        "airlineWebsite": "https://www.hbhk.com.cn",
         "passengerAircraftCount": 27,
         "models": {
             "Boeing": {
@@ -467,6 +495,7 @@
     {
         "airline": "九元航空",
         "airlineEnglishName": "9 Air",
+        "airlineWebsite": "https://www.9air.com",
         "passengerAircraftCount": 27,
         "models": {
             "Boeing": {
@@ -478,6 +507,7 @@
     {
         "airline": "瑞丽航空",
         "airlineEnglishName": "Ruili Airlines",
+        "airlineWebsite": "https://www.rlair.net",
         "passengerAircraftCount": 25,
         "models": {
             "Boeing": {
@@ -490,6 +520,7 @@
     {
         "airline": "北部湾航空",
         "airlineEnglishName": "GX Airlines",
+        "airlineWebsite": "https://www.gxbair.com",
         "passengerAircraftCount": 24,
         "models": {
             "Airbus": {
@@ -504,6 +535,7 @@
     {
         "airline": "澳门航空",
         "airlineEnglishName": "Air Macau",
+        "airlineWebsite": "https://www.airmacau.com.mo",
         "passengerAircraftCount": 22,
         "models": {
             "Airbus": {
@@ -517,6 +549,7 @@
     {
         "airline": "东海航空",
         "airlineEnglishName": "Donghai Airlines",
+        "airlineWebsite": "https://www.donghaiair.com",
         "passengerAircraftCount": 21,
         "models": {
             "Boeing": {
@@ -528,6 +561,7 @@
     {
         "airline": "奥凯航空",
         "airlineEnglishName": "Okay Airways",
+        "airlineWebsite": "https://www.okair.net",
         "passengerAircraftCount": 21,
         "models": {
             "Boeing": {
@@ -540,6 +574,7 @@
     {
         "airline": "多彩贵州航空",
         "airlineEnglishName": "Colorful Guizhou Airlines",
+        "airlineWebsite": "https://www.cgzair.com",
         "passengerAircraftCount": 20,
         "models": {
             "Airbus": {
@@ -553,6 +588,7 @@
     {
         "airline": "江西航空",
         "airlineEnglishName": "Jiangxi Air",
+        "airlineWebsite": "https://www.airjiangxi.com",
         "passengerAircraftCount": 18,
         "models": {
             "Boeing": {
@@ -563,6 +599,7 @@
     {
         "airline": "乌鲁木齐航空",
         "airlineEnglishName": "Urumqi Air",
+        "airlineWebsite": "https://www.urumqi-air.com",
         "passengerAircraftCount": 17,
         "models": {
             "Boeing": {
@@ -574,6 +611,7 @@
     {
         "airline": "福州航空",
         "airlineEnglishName": "Fuzhou Airlines",
+        "airlineWebsite": "https://www.fuzhou-air.com",
         "passengerAircraftCount": 16,
         "models": {
             "Boeing": {
@@ -585,6 +623,7 @@
     {
         "airline": "湖南航空",
         "airlineEnglishName": "Air Travel",
+        "airlineWebsite": "https://www.a6air.com",
         "passengerAircraftCount": 16,
         "models": {
             "Airbus": {
@@ -598,6 +637,7 @@
     {
         "airline": "长安航空",
         "airlineEnglishName": "Air Chang'an",
+        "airlineWebsite": "https://www.airchangan.com",
         "passengerAircraftCount": 13,
         "models": {
             "Boeing": {
@@ -608,6 +648,7 @@
     {
         "airline": "金鹏航空",
         "airlineEnglishName": "Suparna Airlines",
+        "airlineWebsite": "https://www.yzr.com.cn",
         "passengerAircraftCount": 10,
         "models": {
             "Boeing": {
@@ -619,6 +660,7 @@
     {
         "airline": "桂林航空",
         "airlineEnglishName": "Air Guilin",
+        "airlineWebsite": "https://www.airguilin.com",
         "passengerAircraftCount": 10,
         "models": {
             "Airbus": {
@@ -630,6 +672,7 @@
     {
         "airline": "龙江航空",
         "airlineEnglishName": "Longjiang Airlines",
+        "airlineWebsite": "https://www.longjiangair.com",
         "passengerAircraftCount": 9,
         "models": {
             "Airbus": {
@@ -640,6 +683,7 @@
     {
         "airline": "大湾区航空",
         "airlineEnglishName": "Greater Bay Airlines",
+        "airlineWebsite": "https://www.greaterbay-airlines.com",
         "passengerAircraftCount": 8,
         "models": {
             "Boeing": {
@@ -651,6 +695,7 @@
     {
         "airline": "天骄航空",
         "airlineEnglishName": "Genghis Khan Airlines",
+        "airlineWebsite": "https://www.tianjiaoair.com",
         "passengerAircraftCount": 7,
         "models": {
             "COMAC": {
@@ -661,6 +706,7 @@
     {
         "airline": "大新华航空",
         "airlineEnglishName": "Grand China Air",
+        "airlineWebsite": "https://www.grandchinaair.com",
         "passengerAircraftCount": 3,
         "models": {
             "Boeing": {
@@ -671,6 +717,7 @@
     {
         "airline": "香港华民航空",
         "airlineEnglishName": "Air Hong Kong",
+        "airlineWebsite": "https://www.hkcargo.com",
         "passengerAircraftCount": 14,
         "models": {
             "Airbus": {
@@ -682,6 +729,7 @@
     {
         "airline": "瑞安航空",
         "airlineEnglishName": "Ryanair",
+        "airlineWebsite": "https://www.ryanair.com",
         "passengerAircraftCount": 647,
         "models": {
             "Airbus": {
@@ -696,6 +744,7 @@
     {
         "airline": "全日空",
         "airlineEnglishName": "All Nippon Airways (ANA)",
+        "airlineWebsite": "https://www.ana.co.jp",
         "passengerAircraftCount": 267,
         "models": {
             "Airbus": {
@@ -723,6 +772,7 @@
     {
         "airline": "阿联酋航空",
         "airlineEnglishName": "Emirates",
+        "airlineWebsite": "https://www.emirates.com",
         "passengerAircraftCount": 264,
         "models": {
             "Airbus": {
@@ -738,6 +788,7 @@
     {
         "airline": "亚洲航空",
         "airlineEnglishName": "AirAsia",
+        "airlineWebsite": "https://www.airasia.com",
         "passengerAircraftCount": 224,
         "models": {
             "Airbus": {
@@ -750,6 +801,7 @@
     {
         "airline": "新加坡航空",
         "airlineEnglishName": "Singapore Airlines",
+        "airlineWebsite": "https://www.singaporeair.com",
         "passengerAircraftCount": 148,
         "models": {
             "Airbus": {
@@ -766,6 +818,7 @@
     {
         "airline": "酷航",
         "airlineEnglishName": "Scoot",
+        "airlineWebsite": "https://www.flyscoot.com",
         "passengerAircraftCount": 63,
         "models": {
             "Airbus": {
@@ -785,6 +838,7 @@
     {
         "airline": "纳斯航空",
         "airlineEnglishName": "flynas",
+        "airlineWebsite": "https://www.flynas.com",
         "passengerAircraftCount": 67,
         "models": {
             "Airbus": {
@@ -797,6 +851,7 @@
     {
         "airline": "泰国航空",
         "airlineEnglishName": "Thai Airways",
+        "airlineWebsite": "https://www.thaiairways.com",
         "passengerAircraftCount": 85,
         "models": {
             "Airbus": {
@@ -816,6 +871,7 @@
     {
         "airline": "泛航航空",
         "airlineEnglishName": "Transavia",
+        "airlineWebsite": "https://www.transavia.com",
         "passengerAircraftCount": 50,
         "models": {
             "Airbus": {
@@ -829,6 +885,7 @@
     {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
+        "airlineWebsite": "https://www.lionairthai.com",
         "passengerAircraftCount": 28,
         "models": {
             "Boeing": {
@@ -840,6 +897,7 @@
     {
         "airline": "中华航空",
         "airlineEnglishName": "China Airlines",
+        "airlineWebsite": "https://www.china-airlines.com",
         "passengerAircraftCount": 83,
         "models": {
             "Airbus": {
@@ -856,33 +914,35 @@
         }
     },
     {
-      "airline": "汉莎航空",
-      "airlineEnglishName": "Lufthansa",
-      "passengerAircraftCount": 285,
-      "models": {
-        "Airbus": {
-          "A319-100": "https://commons.wikimedia.org/wiki/File:Lufthansa_A319-100_D-AILB_(8644000322).jpg",
-          "A320-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A320-200_(9214214645).jpg",
-          "A320neo": "https://commons.wikimedia.org/wiki/File:D-AIND_A320NEO_Lufthansa_(35673617915).jpg",
-          "A321-100": "https://commons.wikimedia.org/wiki/File:Lufthansa.a321-100.d-aire.arp.jpg",
-          "A321-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_a321-200_d-aisj_arp.jpg",
-          "A321neo": "https://commons.wikimedia.org/wiki/File:D-AIEB_Lufthansa_A321neo_%22Bielefeld%22.jpg",
-          "A330-300": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A330-300_D-AIKB_(7721065166)_(2).jpg",
-          "A340-300": "https://commons.wikimedia.org/wiki/File:D-AIGU_Airbus_A340-300_Lufthansa_FRA_2019-08-10_(19a).JPG",
-          "A340-600": "https://commons.wikimedia.org/wiki/File:Lufthansa_A340-600(D-AIHZ)_(4063195725).jpg",
-          "A350-900": "https://commons.wikimedia.org/wiki/File:Lufthansa_A350-900_D-AIXB.jpg",
-          "A380-800": "https://commons.wikimedia.org/wiki/File:Lufthansa_A380-800(D-AIMA)_(4692239502).jpg"
-        },
-        "Boeing": {
-          "B747-400": "https://commons.wikimedia.org/wiki/File:Lufthansa_-_D-ABVU_-_Boeing_747-400_-_San_Francisco_International_Airport-0389.jpg",
-          "B747-8": "https://commons.wikimedia.org/wiki/File:Boeing_747-8_(Lufthansa)_016.jpg",
-          "B787-9": "https://commons.wikimedia.org/wiki/File:Lufthansa,_D-ABPA,_Boeing_787-9_Dreamliner_(52660668116).jpg"
+        "airline": "汉莎航空",
+        "airlineEnglishName": "Lufthansa",
+        "airlineWebsite": "https://www.lufthansa.com",
+        "passengerAircraftCount": 285,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://commons.wikimedia.org/wiki/File:Lufthansa_A319-100_D-AILB_(8644000322).jpg",
+                "A320-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A320-200_(9214214645).jpg",
+                "A320neo": "https://commons.wikimedia.org/wiki/File:D-AIND_A320NEO_Lufthansa_(35673617915).jpg",
+                "A321-100": "https://commons.wikimedia.org/wiki/File:Lufthansa.a321-100.d-aire.arp.jpg",
+                "A321-200": "https://commons.wikimedia.org/wiki/File:Lufthansa_a321-200_d-aisj_arp.jpg",
+                "A321neo": "https://commons.wikimedia.org/wiki/File:D-AIEB_Lufthansa_A321neo_%22Bielefeld%22.jpg",
+                "A330-300": "https://commons.wikimedia.org/wiki/File:Lufthansa_Airbus_A330-300_D-AIKB_(7721065166)_(2).jpg",
+                "A340-300": "https://commons.wikimedia.org/wiki/File:D-AIGU_Airbus_A340-300_Lufthansa_FRA_2019-08-10_(19a).JPG",
+                "A340-600": "https://commons.wikimedia.org/wiki/File:Lufthansa_A340-600(D-AIHZ)_(4063195725).jpg",
+                "A350-900": "https://commons.wikimedia.org/wiki/File:Lufthansa_A350-900_D-AIXB.jpg",
+                "A380-800": "https://commons.wikimedia.org/wiki/File:Lufthansa_A380-800(D-AIMA)_(4692239502).jpg"
+            },
+            "Boeing": {
+                "B747-400": "https://commons.wikimedia.org/wiki/File:Lufthansa_-_D-ABVU_-_Boeing_747-400_-_San_Francisco_International_Airport-0389.jpg",
+                "B747-8": "https://commons.wikimedia.org/wiki/File:Boeing_747-8_(Lufthansa)_016.jpg",
+                "B787-9": "https://commons.wikimedia.org/wiki/File:Lufthansa,_D-ABPA,_Boeing_787-9_Dreamliner_(52660668116).jpg"
+            }
         }
-  }
-},
+    },
     {
         "airline": "日本航空",
         "airlineEnglishName": "Japan Airlines (JAL)",
+        "airlineWebsite": "https://www.jal.co.jp",
         "passengerAircraftCount": 234,
         "models": {
             "Airbus": {
@@ -913,6 +973,7 @@
     {
         "airline": "新西兰航空",
         "airlineEnglishName": "Air New Zealand",
+        "airlineWebsite": "https://www.airnewzealand.com",
         "passengerAircraftCount": 115,
         "models": {
             "Airbus": {
@@ -935,6 +996,7 @@
     {
         "airline": "大韩航空",
         "airlineEnglishName": "Korean Air",
+        "airlineWebsite": "https://www.koreanair.com",
         "passengerAircraftCount": 143,
         "models": {
             "Airbus": {
@@ -962,6 +1024,7 @@
     {
         "airline": "韩亚航空",
         "airlineEnglishName": "Asiana Airlines",
+        "airlineWebsite": "https://flyasiana.com",
         "passengerAircraftCount": 68,
         "models": {
             "Airbus": {
@@ -979,6 +1042,7 @@
     {
         "airline": "济州航空",
         "airlineEnglishName": "Jeju Air",
+        "airlineWebsite": "https://www.jejuair.net",
         "passengerAircraftCount": 46,
         "models": {
             "Boeing": {
@@ -990,6 +1054,7 @@
     {
         "airline": "真航空",
         "airlineEnglishName": "Jin Air",
+        "airlineWebsite": "https://www.jinair.com",
         "passengerAircraftCount": 32,
         "models": {
             "Boeing": {
@@ -1003,6 +1068,7 @@
     {
         "airline": "德威航空",
         "airlineEnglishName": "T'way Air",
+        "airlineWebsite": "https://www.twayair.com",
         "passengerAircraftCount": 49,
         "models": {
             "Airbus": {
@@ -1019,6 +1085,7 @@
     {
         "airline": "釜山航空",
         "airlineEnglishName": "Air Busan",
+        "airlineWebsite": "https://www.airbusan.com",
         "passengerAircraftCount": 21,
         "models": {
             "Airbus": {
@@ -1031,6 +1098,7 @@
     {
         "airline": "首尔航空",
         "airlineEnglishName": "Air Seoul",
+        "airlineWebsite": "https://flyairseoul.com",
         "passengerAircraftCount": 6,
         "models": {
             "Airbus": {
@@ -1041,6 +1109,7 @@
     {
         "airline": "易斯达航空",
         "airlineEnglishName": "Eastar Jet",
+        "airlineWebsite": "https://www.eastarjet.com",
         "passengerAircraftCount": 20,
         "models": {
             "Boeing": {
@@ -1052,6 +1121,7 @@
     {
         "airline": "普莱米娅航空",
         "airlineEnglishName": "Air Premia",
+        "airlineWebsite": "https://www.airpremia.com",
         "passengerAircraftCount": 9,
         "models": {
             "Boeing": {
@@ -1062,6 +1132,7 @@
     {
         "airline": "Aero K航空",
         "airlineEnglishName": "Aero K",
+        "airlineWebsite": "https://www.aerok.com",
         "passengerAircraftCount": 9,
         "models": {
             "Airbus": {
@@ -1072,6 +1143,7 @@
     {
         "airline": "乐桃航空",
         "airlineEnglishName": "Peach Aviation",
+        "airlineWebsite": "https://www.flypeach.com",
         "passengerAircraftCount": 39,
         "models": {
             "Airbus": {
@@ -1084,6 +1156,7 @@
     {
         "airline": "捷星日本航空",
         "airlineEnglishName": "Jetstar Japan",
+        "airlineWebsite": "https://www.jetstar.com/jp",
         "passengerAircraftCount": 22,
         "models": {
             "Airbus": {
@@ -1095,6 +1168,7 @@
     {
         "airline": "天马航空",
         "airlineEnglishName": "Skymark Airlines",
+        "airlineWebsite": "https://www.skymark.co.jp",
         "passengerAircraftCount": 30,
         "models": {
             "Boeing": {
@@ -1106,6 +1180,7 @@
     {
         "airline": "北海道国际航空",
         "airlineEnglishName": "Air Do",
+        "airlineWebsite": "https://www.airdo.jp",
         "passengerAircraftCount": 12,
         "models": {
             "Boeing": {
@@ -1117,6 +1192,7 @@
     {
         "airline": "索拉西德航空",
         "airlineEnglishName": "Solaseed Air",
+        "airlineWebsite": "https://www.solaseedair.jp",
         "passengerAircraftCount": 14,
         "models": {
             "Boeing": {
@@ -1127,6 +1203,7 @@
     {
         "airline": "星悦航空",
         "airlineEnglishName": "StarFlyer",
+        "airlineWebsite": "https://www.starflyer.jp",
         "passengerAircraftCount": 10,
         "models": {
             "Airbus": {
@@ -1138,6 +1215,7 @@
     {
         "airline": "ZIPAIR东京",
         "airlineEnglishName": "ZIPAIR Tokyo",
+        "airlineWebsite": "https://www.zipair.net",
         "passengerAircraftCount": 8,
         "models": {
             "Boeing": {
@@ -1148,6 +1226,7 @@
     {
         "airline": "富士梦幻航空",
         "airlineEnglishName": "Fuji Dream Airlines",
+        "airlineWebsite": "https://www.fujidream.co.jp",
         "passengerAircraftCount": 15,
         "models": {
             "Embraer": {
@@ -1159,6 +1238,7 @@
     {
         "airline": "IBEX航空",
         "airlineEnglishName": "IBEX Airlines",
+        "airlineWebsite": "https://www.ibexair.co.jp",
         "passengerAircraftCount": 9,
         "models": {
             "Bombardier": {
@@ -1169,6 +1249,7 @@
     {
         "airline": "东方空桥",
         "airlineEnglishName": "Oriental Air Bridge",
+        "airlineWebsite": "https://www.orc-air.co.jp",
         "passengerAircraftCount": 2,
         "models": {
             "ATR": {
@@ -1179,6 +1260,7 @@
     {
         "airline": "朱鹮航空",
         "airlineEnglishName": "Toki Air",
+        "airlineWebsite": "https://toki-air.com",
         "passengerAircraftCount": 3,
         "models": {
             "ATR": {
@@ -1190,6 +1272,7 @@
     {
         "airline": "天草航空",
         "airlineEnglishName": "Amakusa Airlines",
+        "airlineWebsite": "https://amakusa-air.com",
         "passengerAircraftCount": 1,
         "models": {
             "ATR": {
@@ -1200,6 +1283,7 @@
     {
         "airline": "摩洛哥皇家航空",
         "airlineEnglishName": "Royal Air Maroc",
+        "airlineWebsite": "https://www.royalairmaroc.com",
         "passengerAircraftCount": 63,
         "models": {
             "ATR": {
@@ -1219,6 +1303,7 @@
     {
         "airline": "美国航空",
         "airlineEnglishName": "American Airlines",
+        "airlineWebsite": "https://www.aa.com",
         "passengerAircraftCount": 1022,
         "models": {
             "Airbus": {
@@ -1241,6 +1326,7 @@
     {
         "airline": "达美航空",
         "airlineEnglishName": "Delta Air Lines",
+        "airlineWebsite": "https://www.delta.com",
         "passengerAircraftCount": 989,
         "models": {
             "Airbus": {
@@ -1269,6 +1355,7 @@
     {
         "airline": "美国联合航空",
         "airlineEnglishName": "United Airlines",
+        "airlineWebsite": "https://www.united.com",
         "passengerAircraftCount": 1090,
         "models": {
             "Airbus": {
@@ -1299,6 +1386,7 @@
     {
         "airline": "西南航空",
         "airlineEnglishName": "Southwest Airlines",
+        "airlineWebsite": "https://www.southwest.com",
         "passengerAircraftCount": 803,
         "models": {
             "Boeing": {
@@ -1311,6 +1399,7 @@
     {
         "airline": "阿拉斯加航空",
         "airlineEnglishName": "Alaska Airlines",
+        "airlineWebsite": "https://www.alaskaair.com",
         "passengerAircraftCount": 337,
         "models": {
             "Boeing": {
@@ -1329,6 +1418,7 @@
     {
         "airline": "捷蓝航空",
         "airlineEnglishName": "JetBlue Airways",
+        "airlineWebsite": "https://www.jetblue.com",
         "passengerAircraftCount": 288,
         "models": {
             "Airbus": {
@@ -1343,6 +1433,7 @@
     {
         "airline": "边疆航空",
         "airlineEnglishName": "Frontier Airlines",
+        "airlineWebsite": "https://www.flyfrontier.com",
         "passengerAircraftCount": 176,
         "models": {
             "Airbus": {
@@ -1356,6 +1447,7 @@
     {
         "airline": "夏威夷航空",
         "airlineEnglishName": "Hawaiian Airlines",
+        "airlineWebsite": "https://www.hawaiianairlines.com",
         "passengerAircraftCount": 66,
         "models": {
             "Airbus": {
@@ -1371,6 +1463,7 @@
     {
         "airline": "忠实航空",
         "airlineEnglishName": "Allegiant Air",
+        "airlineWebsite": "https://www.allegiantair.com",
         "passengerAircraftCount": 119,
         "models": {
             "Airbus": {
