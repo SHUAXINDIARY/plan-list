@@ -218,6 +218,20 @@ export const CHECKED_AIRPORTS: CheckedAirport[] = [
     type: 'airport',
     description: '泰国清迈府清迈国际机场',
   },
+  {
+    name: '新加坡樟宜机场',
+    lat: 1.36442,
+    lng: 103.991531,
+    type: 'airport',
+    description: '新加坡樟宜机场',
+  },
+  {
+    name: '悉尼机场',
+    lat: -33.939922,
+    lng: 151.175276,
+    type: 'airport',
+    description: '澳大利亚悉尼机场（SYD）',
+  },
 ];
 
 /** 航程类型：单程或往返。 */
@@ -248,6 +262,38 @@ export interface FlightRecord {
 
 /** 当前个人档案中的乘机记录，按出发日期从新到旧排列。 */
 export const FLIGHT_RECORDS: FlightRecord[] = [
+  {
+    airline: '新加坡航空',
+    aircraft: '787-10',
+    origin: '新加坡',
+    destination: '北京',
+    routeKind: 'one-way',
+    departureDate: '2026-10-8',
+  },
+  {
+    airline: '新加坡航空',
+    aircraft: '380-800',
+    origin: '悉尼',
+    destination: '新加坡',
+    routeKind: 'one-way',
+    departureDate: '2026-10-7',
+  },
+  {
+    airline: '新加坡航空',
+    aircraft: '380-800',
+    origin: '新加坡',
+    destination: '悉尼',
+    routeKind: 'one-way',
+    departureDate: '2026-10-2',
+  },
+  {
+    airline: '新加坡航空',
+    aircraft: '777-300ER',
+    origin: '北京',
+    destination: '新加坡',
+    routeKind: 'one-way',
+    departureDate: '2026-10-1',
+  },
   {
     airline: '全日空',
     aircraft: '777-300ER',

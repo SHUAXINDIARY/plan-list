@@ -13,7 +13,7 @@ import type {
 // 根据机场描述前缀推断国家或地区，与 `summary` 中列表分组规则一致。
 const getAirportCountryName = (airport: CheckedAirport): string => {
     const countryNameMatch = airport.description.match(
-        /^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国)/,
+        /^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国|新加坡|澳大利亚)/,
     );
 
     return countryNameMatch ? countryNameMatch[1] : "其他地区";
@@ -30,6 +30,8 @@ const AIRPORT_COUNTRY_FLAG_BY_NAME: Record<string, string> = {
     法国: "🇫🇷",
     摩洛哥: "🇲🇦",
     韩国: "🇰🇷",
+    新加坡: "🇸🇬",
+    澳大利亚: "🇦🇺",
 };
 
 /** 将机场业务数据整理为通用地图组件可消费的标注数据。 */
@@ -53,12 +55,12 @@ export const airportMapMarkers: WorldMapMarker[] = CHECKED_AIRPORTS.map(
     },
 );
 
-// 足迹图使用固定地理范围，覆盖欧洲、北非、东亚和东南亚，避免按点位自动缩放后缺少地图语境。
+// 足迹图使用固定地理范围，覆盖欧洲、北非、东亚、东南亚与澳新，避免按点位自动缩放后缺少地图语境。
 export const AIRPORT_MAP_BOUNDS: AirportBounds = {
-    minLat: 4,
+    minLat: -36,
     maxLat: 52,
     minLng: -12,
-    maxLng: 145,
+    maxLng: 155,
 };
 
 // 简化陆地区块只承担示意功能，不替代真实地图底图。
@@ -133,6 +135,18 @@ export const MAP_LANDMASSES: MapLandmass[] = [
             { lat: 31, lng: 135 },
         ],
     },
+    {
+        name: "澳大利亚",
+        points: [
+            { lat: -12, lng: 115 },
+            { lat: -18, lng: 122 },
+            { lat: -28, lng: 130 },
+            { lat: -36, lng: 140 },
+            { lat: -34, lng: 152 },
+            { lat: -24, lng: 154 },
+            { lat: -16, lng: 145 },
+        ],
+    },
 ];
 
 // 区域标签帮助用户快速建立机场点位所处的大致地理位置。
@@ -143,6 +157,8 @@ export const MAP_REGION_LABELS: MapRegionLabel[] = [
     { name: "日本", coordinate: { lat: 38, lng: 139 } },
     { name: "东南亚", coordinate: { lat: 14, lng: 101 } },
     { name: "韩国", coordinate: { lat: 38, lng: 127 } },
+    { name: "新加坡", coordinate: { lat: 2, lng: 104 } },
+    { name: "澳大利亚", coordinate: { lat: -28, lng: 135 } },
 ];
 
 /**
@@ -430,6 +446,30 @@ export const MAP_ROUTES: MapRoute[] = [
         "清迈至曼谷（素万那普）",
         "清迈国际机场",
         "曼谷素万那普国际机场",
+        "international",
+    ),
+    createMapRoute(
+        "首都至新加坡（樟宜）",
+        "北京首都国际机场",
+        "新加坡樟宜机场",
+        "international",
+    ),
+    createMapRoute(
+        "新加坡（樟宜）至悉尼",
+        "新加坡樟宜机场",
+        "悉尼机场",
+        "international",
+    ),
+    createMapRoute(
+        "悉尼至新加坡（樟宜）",
+        "悉尼机场",
+        "新加坡樟宜机场",
+        "international",
+    ),
+    createMapRoute(
+        "新加坡（樟宜）至首都",
+        "新加坡樟宜机场",
+        "北京首都国际机场",
         "international",
     ),
 ];

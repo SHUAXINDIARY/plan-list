@@ -6,7 +6,7 @@ export { CHECKED_AIRPORTS };
 // 根据描述中的国家前缀提取分组名称，让机场列表保持地理层级。
 const getAirportCountryName = (airport: CheckedAirport): string => {
     const countryNameMatch = airport.description.match(
-        /^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国)/,
+        /^(中国|日本|泰国|西班牙|意大利|法国|摩洛哥|韩国|新加坡|澳大利亚)/,
     );
 
     return countryNameMatch ? countryNameMatch[1] : "其他地区";
