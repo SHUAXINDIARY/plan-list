@@ -12,28 +12,18 @@ const AnnotatedWorldMap = lazy(
  * 机场打卡地图与按国家折叠的机场列表，单独 async chunk 加载地图组件。
  */
 const PersonalAirportSection = (): ReactElement => {
-    const [expandedAirportCountries, setExpandedAirportCountries] = useState<
-        ReadonlySet<string>
-    >((): ReadonlySet<string> => new Set<string>());
+    /** 当前展开的国家或地区名；`undefined` 表示全部折叠。 */
+    const [expandedAirportCountry, setExpandedAirportCountry] = useState<
+        string | undefined
+    >(undefined);
 
-    // 切换单个国家或地区的机场列表展开状态，默认集合为空即全部折叠。
+    // 手风琴切换：同一时刻仅保留一个展开国家，再次点击已展开项则折叠。
     const toggleAirportCountry = (countryName: string): void => {
-        setExpandedAirportCountries(
-            (
-                currentExpandedAirportCountries: ReadonlySet<string>,
-            ): ReadonlySet<string> => {
-                const nextExpandedAirportCountries = new Set<string>(
-                    currentExpandedAirportCountries,
-                );
-
-                if (nextExpandedAirportCountries.has(countryName)) {
-                    nextExpandedAirportCountries.delete(countryName);
-                    return nextExpandedAirportCountries;
-                }
-
-                nextExpandedAirportCountries.add(countryName);
-                return nextExpandedAirportCountries;
-            },
+        setExpandedAirportCountry(
+            (currentExpandedAirportCountry: string | undefined): string | undefined =>
+                currentExpandedAirportCountry === countryName
+                    ? undefined
+                    : countryName,
         );
     };
 
@@ -67,9 +57,8 @@ const PersonalAirportSection = (): ReactElement => {
                     ): ReactElement =>
                         (() => {
                             const isAirportCountryExpanded =
-                                expandedAirportCountries.has(
-                                    airportCountryGroup.countryName,
-                                );
+                                expandedAirportCountry ===
+                                airportCountryGroup.countryName;
                             const airportCountryPanelId = `airport-country-airports-${airportCountryGroupIndex}`;
 
                             return (

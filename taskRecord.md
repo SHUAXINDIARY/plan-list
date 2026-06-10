@@ -3654,3 +3654,23 @@
 
 - `src/constants/external-links.ts`：新加坡航空四段日期。
 - `taskRecord.md`：追加本次任务记录。
+
+---
+
+## 日期
+
+2026-05-30
+
+## 任务目的
+
+机场打卡国家列表改为手风琴模式，同一时刻仅允许一个国家展开。
+
+## 完成过程
+
+1. 将 `expandedAirportCountries`（`ReadonlySet<string>`）改为 `expandedAirportCountry`（`string | undefined`）。
+2. `toggleAirportCountry` 在点击已展开国家时折叠，点击其他国家时仅展开该项并自动收起其余。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAirportSection.tsx`：手风琴展开逻辑。
+- `taskRecord.md`：追加本次任务记录。
