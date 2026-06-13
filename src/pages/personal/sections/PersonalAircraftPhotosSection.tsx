@@ -18,10 +18,16 @@ import {
 import type {
     AircraftPhoto,
     AircraftPhotoDirectoryOption,
+    AircraftPhotosHeadingLevel,
     AircraftPhotosBundle,
 } from "../type";
 import { AircraftPhotoGalleryImage } from "./AircraftPhotoGalleryImage";
 import { PersonalSectionFallback } from "./PersonalSectionFallback";
+
+interface PersonalAircraftPhotosSectionProps {
+    /** 相册标题层级，独立页面用 h1，嵌入个人页区块时用 h2。 */
+    headingLevel?: AircraftPhotosHeadingLevel;
+}
 
 /**
  * 异步加载含预览图数据的相册 bundle，独立为 `personal-aircraft-photos` chunk。
@@ -37,7 +43,9 @@ const loadAircraftPhotosBundle = async (): Promise<AircraftPhotosBundle> => {
 /**
  * 拍摄的飞机相册与全屏预览，预览图数据与 Select 控件随本区块 chunk 加载。
  */
-const PersonalAircraftPhotosSection = (): ReactElement => {
+const PersonalAircraftPhotosSection = ({
+    headingLevel = "h2",
+}: PersonalAircraftPhotosSectionProps): ReactElement => {
     const [photosBundle, setPhotosBundle] = useState<AircraftPhotosBundle | null>(
         null,
     );
@@ -55,6 +63,7 @@ const PersonalAircraftPhotosSection = (): ReactElement => {
         useState<string>(ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE);
     const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
     const photoPreviewCloseTimerRef = useRef<number | null>(null);
+    const HeadingTag = headingLevel;
 
     useEffect((): (() => void) => {
         let isCancelled = false;
@@ -200,7 +209,9 @@ const PersonalAircraftPhotosSection = (): ReactElement => {
             >
                 <div className="personal-section__header">
                     <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <h2 id="photo-aircraft-title">拍摄的飞机</h2>
+                    <HeadingTag id="photo-aircraft-title">
+                        拍摄的飞机
+                    </HeadingTag>
                 </div>
                 <p className="data-state data-state--error" role="alert">
                     {photosBundleError}
@@ -217,7 +228,9 @@ const PersonalAircraftPhotosSection = (): ReactElement => {
             >
                 <div className="personal-section__header">
                     <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <h2 id="photo-aircraft-title">拍摄的飞机</h2>
+                    <HeadingTag id="photo-aircraft-title">
+                        拍摄的飞机
+                    </HeadingTag>
                 </div>
                 <PersonalSectionFallback label="飞机照片相册" />
             </section>
@@ -288,7 +301,9 @@ const PersonalAircraftPhotosSection = (): ReactElement => {
             >
                 <div className="personal-section__header">
                     <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <h2 id="photo-aircraft-title">拍摄的飞机</h2>
+                    <HeadingTag id="photo-aircraft-title">
+                        拍摄的飞机
+                    </HeadingTag>
                 </div>
                 {aircraftPhotoDirectoryOptions.length > 1 ? (
                     <div

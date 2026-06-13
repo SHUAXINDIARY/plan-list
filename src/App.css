@@ -467,8 +467,8 @@ a {
     justify-self: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 1.55rem;
-    padding: 0.68rem 2.05rem 0.58rem;
+    gap: 1.18rem;
+    padding: 0.68rem 1.55rem 0.58rem;
     background-color: var(--pl-surface-nav);
     border: 1px solid var(--pl-border-default);
     border-radius: 999px;

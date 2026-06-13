@@ -30,6 +30,7 @@ interface NavigationItem {
 const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "机型资料库", end: true },
     { path: "/personal", label: "飞行日志", end: false },
+    { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
@@ -37,6 +38,7 @@ const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
 const PersonalPage = lazy(async () => import("./pages/personal"));
+const PhotosPage = lazy(async () => import("./pages/photos"));
 const ReferencesPage = lazy(async () => import("./pages/references"));
 
 // 根据路由激活状态生成导航类名，保持当前页面入口高亮。
@@ -137,6 +139,10 @@ const App = (): ReactElement => {
                                 <Route
                                     path="/personal"
                                     element={<PersonalPage />}
+                                />
+                                <Route
+                                    path="/photos"
+                                    element={<PhotosPage />}
                                 />
                                 <Route
                                     path="/references"

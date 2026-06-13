@@ -3774,3 +3774,34 @@
 - `CODEX.md`：新增 Codex 项目规则桥接文件，引用 Cursor 基础规则并补充 Codex 执行说明。
 - `AGENTS.md`：更新为 Codex 入口说明，要求任务开始前读取 `CODEX.md`。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-13
+
+## 任务目的
+
+将个人飞行日志页中的飞机照片相册拆分为独立页面展示，并在顶部导航新增照片页入口。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md`、`DESIGN.md`、项目 `impeccable` skill、当前路由与个人页照片组件，确认相册已有独立懒加载组件。
+2. 新增 `/photos` 路由与导航项“飞机照片”，创建 `src/pages/photos/` 页面模块，复用原照片相册组件、目录筛选和全屏预览逻辑。
+3. 从 `src/pages/personal/index.tsx` 移除照片相册区块，并将飞行日志页概览统计改为乘机记录、打卡机场、国家或地区。
+4. 为照片相册组件和相册骨架增加标题层级参数，使独立照片页使用页面级 `h1`。
+5. 清理个人页视口门控中不再使用的相册占位分支，微调顶部导航间距以容纳新增入口。
+6. 运行 `pnpm run build` 与 `git diff --check` 验证通过，并在浏览器检查 `/photos`、`/personal` 以及 390px 移动宽度下无横向溢出。
+
+## 修改具体文件
+
+- `src/App.tsx`：新增“飞机照片”导航入口与 `/photos` 路由。
+- `src/App.css`：调整顶部导航间距以适配新增入口。
+- `src/pages/photos/index.tsx`：新增飞机照片独立页面，复用照片相册组件。
+- `src/pages/photos/index.css`：新增照片页容器、标题与响应式网格样式。
+- `src/pages/personal/index.tsx`：移除照片相册区块，并调整飞行日志页概览统计。
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：新增 `headingLevel` 参数，支持页面级标题。
+- `src/pages/personal/sections/PersonalPhotosSectionSkeleton.tsx`：新增 `headingLevel` 参数，保持照片页加载骨架语义一致。
+- `src/pages/personal/sections/PersonalViewportSection.tsx`：删除不再使用的照片区块视口门控分支。
+- `src/pages/personal/type.d.ts`：新增照片相册标题层级类型。
+- `DESIGN.md`：同步项目路由结构，新增 `/photos` 照片页说明。
+- `taskRecord.md`：追加本次任务记录。
