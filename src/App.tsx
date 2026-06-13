@@ -6,6 +6,7 @@ import {
     type ReactElement,
 } from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { BackToTop } from "./components/back-to-top";
 import { RouteTransitionLayout } from "./components/route-transition";
 import { ThemeToggle } from "./components/theme-toggle";
 import "./App.css";
@@ -152,6 +153,7 @@ const App = (): ReactElement => {
                         </Routes>
                     </Suspense>
                 </main>
+                <BackToTop />
             </div>
         </BrowserRouter>
     );

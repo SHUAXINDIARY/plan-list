@@ -3805,3 +3805,28 @@
 - `src/pages/personal/type.d.ts`：新增照片相册标题层级类型。
 - `DESIGN.md`：同步项目路由结构，新增 `/photos` 照片页说明。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-13
+
+## 任务目的
+
+全局新增返回顶部按钮，帮助用户在长列表、照片相册等长页面中快速回到页面顶部。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md`、`DESIGN.md` 与 `impeccable` skill，确认全站视觉与可访问性约束。
+2. 新增 `BackToTop` 全局组件，监听文档滚动距离，在离开首屏后显示返回顶部按钮，并使用 `requestAnimationFrame` 降低滚动监听开销。
+3. 为按钮新增独立样式，复用当前主题 surface、hairline border、阴影与动效 token，并适配移动端 safe area。
+4. 将 `BackToTop` 挂载到 `App` 根壳层，确保所有路由均可使用。
+5. 同步 `DESIGN.md` 的 Application Shell 组件说明，补充全局返回顶部控件规范。
+6. 运行 `pnpm run build` 与 `git diff --check` 验证通过，并在浏览器检查 `/photos` 桌面与 390px 移动宽度下按钮出现、点击回顶及无横向溢出。
+
+## 修改具体文件
+
+- `src/components/back-to-top/index.tsx`：新增全局返回顶部按钮组件。
+- `src/components/back-to-top/index.css`：新增返回顶部按钮视觉、动效、响应式与 safe-area 样式。
+- `src/App.tsx`：在应用壳层中挂载 `BackToTop`。
+- `DESIGN.md`：补充 Application Shell 中的 Back To Top 组件规范。
+- `taskRecord.md`：追加本次任务记录。

@@ -141,6 +141,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 | **Header** | 左品牌（kicker + title），右为 **主题切换**（`ThemeToggle`）与 `NavLink` 主导航；小屏纵向堆叠、链接全宽约定触摸高度 `2.75rem`。 |
 | **Nav Pill** | 默认幽灵边线；`**--active`** 浅青底 + 亮边；`**--cta**`（若使用）更高亮青的浅填充。外链（如「联系作者」）与路由链视觉同级。 |
 | **Main** | 单列 `grid` 居中承接页面模块；Wiki 与个人页自控内部 max-width。 |
+| **Back To Top** | 全局固定圆形图标按钮，离开首屏后浮现；使用主题 surface、hairline border 与 `prefers-reduced-motion` 友好的滚动反馈。 |
 
 ### Wiki / Fleet 区域（首页）
 
