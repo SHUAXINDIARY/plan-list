@@ -7,19 +7,14 @@ import {
 } from "react";
 import { PersonalAirportSectionSkeleton } from "./PersonalAirportSectionSkeleton";
 import { PersonalFlightRecordsSectionSkeleton } from "./PersonalFlightRecordsSectionSkeleton";
-import { PersonalPhotosSectionSkeleton } from "./PersonalPhotosSectionSkeleton";
 import { PersonalSectionFallback } from "./PersonalSectionFallback";
 
 /** 机场与乘机记录区块默认预加载边距。 */
 const DEFAULT_SECTION_VIEWPORT_ROOT_MARGIN = "160px 0px";
 
-/** 相册区块不使用预加载边距，须真正接近视口才挂载。 */
-const PHOTOS_SECTION_VIEWPORT_ROOT_MARGIN = "0px 0px";
-
 /** 视口门控区块的视觉与占位变体。 */
 export type PersonalViewportSectionVariant =
     | "default"
-    | "photos"
     | "airport"
     | "flight-records";
 
@@ -32,7 +27,7 @@ interface PersonalViewportSectionProps {
     eyebrow?: string;
     /** 占位骨架与目标区块一致的 H2 文案。 */
     title?: string;
-    /** 为 `photos` 时使用更严格视口门控；其余变体使用对应档案风骨架。 */
+    /** 区块占位骨架样式。 */
     variant?: PersonalViewportSectionVariant;
 }
 
@@ -51,10 +46,6 @@ const resolveViewportPlaceholder = (
 
     if (variant === "flight-records") {
         return <PersonalFlightRecordsSectionSkeleton />;
-    }
-
-    if (variant === "photos") {
-        return <PersonalPhotosSectionSkeleton />;
     }
 
     return (
@@ -78,10 +69,6 @@ export const PersonalViewportSection = ({
 }: PersonalViewportSectionProps): ReactElement => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [shouldMountSection, setShouldMountSection] = useState<boolean>(false);
-    const viewportRootMargin =
-        variant === "photos"
-            ? PHOTOS_SECTION_VIEWPORT_ROOT_MARGIN
-            : DEFAULT_SECTION_VIEWPORT_ROOT_MARGIN;
 
     useEffect((): (() => void) | undefined => {
         if (shouldMountSection) {
@@ -113,7 +100,7 @@ export const PersonalViewportSection = ({
                 setShouldMountSection(true);
                 intersectionObserver.disconnect();
             },
-            { rootMargin: viewportRootMargin },
+            { rootMargin: DEFAULT_SECTION_VIEWPORT_ROOT_MARGIN },
         );
 
         intersectionObserver.observe(sectionElement);
@@ -121,7 +108,7 @@ export const PersonalViewportSection = ({
         return (): void => {
             intersectionObserver.disconnect();
         };
-    }, [shouldMountSection, viewportRootMargin]);
+    }, [shouldMountSection]);
 
     const viewportPlaceholder = resolveViewportPlaceholder(
         variant,

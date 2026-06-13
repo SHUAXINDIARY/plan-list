@@ -83,3 +83,6 @@ export interface AircraftPhotosBundle {
   /** 目录筛选项。 */
   aircraftPhotoDirectoryOptions: readonly AircraftPhotoDirectoryOption[];
 }
+
+/** 飞机照片相册标题的语义层级，独立页面使用 h1，嵌入区块使用 h2。 */
+export type AircraftPhotosHeadingLevel = 'h1' | 'h2';

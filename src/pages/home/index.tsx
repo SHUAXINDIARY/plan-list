@@ -4,6 +4,7 @@ import {
     useRef,
     useState,
     type ChangeEvent,
+    type CSSProperties,
     type ReactElement,
 } from "react";
 import type {
@@ -18,11 +19,17 @@ import { Select } from "../../components/Select";
 import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
 import {
     AIRPLANE_DATA_URL,
+    AIRLINE_BRAND_COLORS,
     ALL_AIRCRAFT_MODELS_VALUE,
     ALL_MANUFACTURERS_VALUE,
+    DEFAULT_AIRLINE_BRAND_COLOR,
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
 } from "./constant";
 import "./index.css";
+
+type AirlineEntryStyle = CSSProperties & {
+    "--airline-brand-color": string;
+};
 
 // 判断下拉值是否为受支持的客机数量排序方式，避免直接信任 DOM 字符串。
 const isPassengerAircraftSortOrder = (
@@ -43,6 +50,18 @@ const isHttpOrHttpsUrl = (value: string): boolean => {
     } catch {
         return false;
     }
+};
+
+const getAirlineBrandColor = (airlineEnglishName: string): string => {
+    return (
+        AIRLINE_BRAND_COLORS[airlineEnglishName] ?? DEFAULT_AIRLINE_BRAND_COLOR
+    );
+};
+
+const createAirlineEntryStyle = (brandColor: string): AirlineEntryStyle => {
+    return {
+        "--airline-brand-color": brandColor,
+    };
 };
 
 // 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。
@@ -77,6 +96,9 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
                 airlineName: airplaneDataItem.airline,
                 airlineEnglishName: airplaneDataItem.airlineEnglishName,
                 airlineWebsite: airplaneDataItem.airlineWebsite,
+                brandColor: getAirlineBrandColor(
+                    airplaneDataItem.airlineEnglishName,
+                ),
                 passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
                 manufacturerCount: formattedManufacturers.length,
                 aircraftCount,
@@ -395,9 +417,13 @@ const HomePage = (): ReactElement => {
             className="page-panel aircraft-wiki"
             aria-labelledby="home-page-title"
         >
-            <p className="page-eyebrow">Aircraft Wiki</p>
-            <h1 id="home-page-title">航司机型资料库</h1>
-            <p>按航司浏览当前机队中的制造商与机型。</p>
+            <div className="aircraft-wiki__hero">
+                <div className="aircraft-wiki__intro">
+                    <p className="page-eyebrow">Aircraft Wiki</p>
+                    <h1 id="home-page-title">航司机型资料库</h1>
+                    <p>按航司浏览当前机队中的制造商与机型。</p>
+                </div>
+            </div>
 
             {isLoading ? (
                 <p className="data-state data-state--loading">
@@ -413,9 +439,20 @@ const HomePage = (): ReactElement => {
                 <div className="fleet-toolbar" aria-label="机型数据筛选与概览">
                     <div className="fleet-summary" aria-label="机型数据概览">
                         <div className="fleet-summary__stats">
-                            <span>{filteredAirlineFleets.length} 家航司</span>
-                            <span>{totalPassengerAircraftCount} 架客机</span>
-                            <span>{totalAircraftCount} 个机型记录</span>
+                            <span>
+                                <strong>{filteredAirlineFleets.length}</strong>
+                                家航司
+                            </span>
+                            <span>
+                                <strong>
+                                    {totalPassengerAircraftCount}
+                                </strong>
+                                架客机
+                            </span>
+                            <span>
+                                <strong>{totalAircraftCount}</strong>
+                                个机型记录
+                            </span>
                         </div>
                         <a
                             className="fleet-summary__cta app-nav__link app-nav__link--cta"
@@ -521,6 +558,9 @@ const HomePage = (): ReactElement => {
                                     <article
                                         className="airline-entry"
                                         key={airlineFleet.airlineName}
+                                        style={createAirlineEntryStyle(
+                                            airlineFleet.brandColor,
+                                        )}
                                     >
                                         <header className="airline-entry__header">
                                             <div className="airline-entry__title">

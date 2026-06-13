@@ -15,6 +15,8 @@ export interface AirlineFleet {
   airlineEnglishName: string;
   /** 航司官方网站链接，用于跳转至航司官网。 */
   airlineWebsite: string;
+  /** 航司当前 logo 的主色调，用于列表卡片顶部识别色条。 */
+  brandColor: string;
   passengerAircraftCount: number;
   manufacturerCount: number;
   aircraftCount: number;

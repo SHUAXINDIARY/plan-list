@@ -6,6 +6,7 @@ import {
     type ReactElement,
 } from "react";
 import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { BackToTop } from "./components/back-to-top";
 import { RouteTransitionLayout } from "./components/route-transition";
 import { ThemeToggle } from "./components/theme-toggle";
 import "./App.css";
@@ -30,6 +31,7 @@ interface NavigationItem {
 const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "机型资料库", end: true },
     { path: "/personal", label: "飞行日志", end: false },
+    { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
@@ -37,6 +39,7 @@ const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
 const PersonalPage = lazy(async () => import("./pages/personal"));
+const PhotosPage = lazy(async () => import("./pages/photos"));
 const ReferencesPage = lazy(async () => import("./pages/references"));
 
 // 根据路由激活状态生成导航类名，保持当前页面入口高亮。
@@ -71,9 +74,24 @@ const App = (): ReactElement => {
         <BrowserRouter>
             <div className="app-shell">
                 <header className="app-header">
-                    <div>
-                        <p className="app-kicker">Night Flight Archive</p>
-                        <p className="app-title">Plane List</p>
+                    <div className="app-brand" aria-label="Aircraft Wiki">
+                        <span className="app-brand__mark" aria-hidden="true">
+                            <svg
+                                className="app-brand__icon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M10.7 14.1 4.6 20.2l-1.8-1.8 3.7-6.1-3.7-2.2 1.4-1.4 4.8.8 3.1-3.1c2.8-2.8 5.7-4.6 7-3.3 1.3 1.3-.5 4.2-3.3 7l-3.1 3.1.8 4.8-1.4 1.4-2.2-3.7Z"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2.2"
+                                />
+                            </svg>
+                        </span>
+                        <span className="app-brand__name">Aircraft Wiki</span>
                     </div>
                     <div className="app-header__actions">
                         <ThemeToggle
@@ -124,6 +142,10 @@ const App = (): ReactElement => {
                                     element={<PersonalPage />}
                                 />
                                 <Route
+                                    path="/photos"
+                                    element={<PhotosPage />}
+                                />
+                                <Route
                                     path="/references"
                                     element={<ReferencesPage />}
                                 />
@@ -131,6 +153,7 @@ const App = (): ReactElement => {
                         </Routes>
                     </Suspense>
                 </main>
+                <BackToTop />
             </div>
         </BrowserRouter>
     );

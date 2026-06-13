@@ -18,6 +18,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 |-----------------|------------|------|
 | `/`             | 机型资料库 | 航司机队列表与机型芯片；数据来源 `public/data/airplan.json`。 |
 | `/personal`     | 个人记录   | 乘机足迹、地图与机场/机型可视化（页面自有样式承接同一壳层 token）。 |
+| `/photos`       | 飞机照片   | 独立飞机照片相册，复用个人页相册数据、目录筛选与全屏预览能力。 |
 | `/references`   | 参考资料   | 航司官网、公开年报、百科与航空资料站集中索引，供机队数据校对。 |
 
 **Key Characteristics**
@@ -140,6 +141,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 | **Header** | 左品牌（kicker + title），右为 **主题切换**（`ThemeToggle`）与 `NavLink` 主导航；小屏纵向堆叠、链接全宽约定触摸高度 `2.75rem`。 |
 | **Nav Pill** | 默认幽灵边线；`**--active`** 浅青底 + 亮边；`**--cta**`（若使用）更高亮青的浅填充。外链（如「联系作者」）与路由链视觉同级。 |
 | **Main** | 单列 `grid` 居中承接页面模块；Wiki 与个人页自控内部 max-width。 |
+| **Back To Top** | 全局固定圆形图标按钮，离开首屏后浮现；使用主题 surface、hairline border 与 `prefers-reduced-motion` 友好的滚动反馈。 |
 
 ### Wiki / Fleet 区域（首页）
 
