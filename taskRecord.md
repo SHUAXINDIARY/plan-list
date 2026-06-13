@@ -3753,3 +3753,24 @@
 
 - `.cursor/rules/project-base-rules.mdc`：追加 Agent 执行流程、依赖管理、安全隐私、React 实现、数据容错、前端验收、变更边界、Git 保护、质量验证、注释规则和任务记录补充约定。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-13
+
+## 任务目的
+
+新增 Codex 可读取的项目规则入口，让 Cursor 规则文件中的项目规范在 Codex 执行任务时同样生效。
+
+## 完成过程
+
+1. 阅读 `.cursor/rules/project-base-rules.mdc`、`AGENTS.md`、`PRODUCT.md`、`DESIGN.md` 和 `taskRecord.md`，确认现有规则来源与记录格式。
+2. 尝试创建 `.codex/rules/` 目录，因该路径在当前环境中无写入权限，改用仓库根目录的 `CODEX.md` 作为 Codex 桥接文件。
+3. 新增 `CODEX.md`，声明 Codex 任务需读取并遵守 `.cursor/rules/project-base-rules.mdc`，并补充项目上下文、执行、验证和任务记录要求。
+4. 更新 `AGENTS.md`，将 `CODEX.md` 设为 Codex 必读规则入口，并保留项目常用命令与文档链接。
+
+## 修改具体文件
+
+- `CODEX.md`：新增 Codex 项目规则桥接文件，引用 Cursor 基础规则并补充 Codex 执行说明。
+- `AGENTS.md`：更新为 Codex 入口说明，要求任务开始前读取 `CODEX.md`。
+- `taskRecord.md`：追加本次任务记录。
