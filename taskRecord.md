@@ -3733,3 +3733,23 @@
 
 - `src/pages/home/index.tsx`：调整「官网」链接渲染顺序。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-13
+
+## 任务目的
+
+为 Cursor 项目基础规则补充 Agent 执行流程、依赖管理、安全隐私、React 实现、数据容错、前端验收、变更边界、Git 保护、质量验证、注释规则和任务记录约定。
+
+## 完成过程
+
+1. 阅读 `AGENTS.md`、`PRODUCT.md`、`DESIGN.md`、现有 `.cursor/rules/project-base-rules.mdc` 和 `taskRecord.md`，确认规则文件已有结构与任务记录格式。
+2. 检查工作区状态，确认修改前没有未提交改动。
+3. 将用户提供的补充规则追加到 `.cursor/rules/project-base-rules.mdc`。
+4. 本次仅修改规则与任务记录文档，未运行构建命令。
+
+## 修改具体文件
+
+- `.cursor/rules/project-base-rules.mdc`：追加 Agent 执行流程、依赖管理、安全隐私、React 实现、数据容错、前端验收、变更边界、Git 保护、质量验证、注释规则和任务记录补充约定。
+- `taskRecord.md`：追加本次任务记录。
