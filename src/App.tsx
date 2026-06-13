@@ -71,9 +71,12 @@ const App = (): ReactElement => {
         <BrowserRouter>
             <div className="app-shell">
                 <header className="app-header">
-                    <div>
-                        <p className="app-kicker">Night Flight Archive</p>
-                        <p className="app-title">Plane List</p>
+                    <div className="app-brand">
+                        <span className="app-brand__mark" aria-hidden="true" />
+                        <div>
+                            <p className="app-kicker">Aircraft Wiki</p>
+                            <p className="app-title">Plane List</p>
+                        </div>
                     </div>
                     <div className="app-header__actions">
                         <ThemeToggle

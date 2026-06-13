@@ -395,9 +395,13 @@ const HomePage = (): ReactElement => {
             className="page-panel aircraft-wiki"
             aria-labelledby="home-page-title"
         >
-            <p className="page-eyebrow">Aircraft Wiki</p>
-            <h1 id="home-page-title">航司机型资料库</h1>
-            <p>按航司浏览当前机队中的制造商与机型。</p>
+            <div className="aircraft-wiki__hero">
+                <div className="aircraft-wiki__intro">
+                    <p className="page-eyebrow">Aircraft Wiki</p>
+                    <h1 id="home-page-title">航司机型资料库</h1>
+                    <p>按航司浏览当前机队中的制造商与机型。</p>
+                </div>
+            </div>
 
             {isLoading ? (
                 <p className="data-state data-state--loading">
@@ -413,9 +417,20 @@ const HomePage = (): ReactElement => {
                 <div className="fleet-toolbar" aria-label="机型数据筛选与概览">
                     <div className="fleet-summary" aria-label="机型数据概览">
                         <div className="fleet-summary__stats">
-                            <span>{filteredAirlineFleets.length} 家航司</span>
-                            <span>{totalPassengerAircraftCount} 架客机</span>
-                            <span>{totalAircraftCount} 个机型记录</span>
+                            <span>
+                                <strong>{filteredAirlineFleets.length}</strong>
+                                家航司
+                            </span>
+                            <span>
+                                <strong>
+                                    {totalPassengerAircraftCount}
+                                </strong>
+                                架客机
+                            </span>
+                            <span>
+                                <strong>{totalAircraftCount}</strong>
+                                个机型记录
+                            </span>
                         </div>
                         <a
                             className="fleet-summary__cta app-nav__link app-nav__link--cta"

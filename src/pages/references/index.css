@@ -6,7 +6,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: clamp(1.25rem, 4vw, 3rem);
+  gap: 2rem;
 }
 
 .reference-archive__summary {
@@ -22,10 +22,12 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  min-height: 2.25rem;
-  padding: 0 0.75rem;
+  min-height: 2.05rem;
+  padding: 0 0.7rem;
   color: var(--pl-text-meta);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   background-color: var(--pl-surface-pill);
   border: 1px solid var(--pl-border-pill);
   border-radius: 999px;
@@ -33,13 +35,14 @@
 
 .reference-archive__summary strong {
   color: var(--pl-text-emphasis);
-  font-size: 1rem;
+  font-family: var(--pl-font-display);
+  font-size: 0.98rem;
 }
 
 .reference-archive__list {
   display: grid;
   gap: 0;
-  margin-top: 2rem;
+  margin-top: 1.6rem;
   background-color: var(--pl-surface-reference);
   border: 1px solid var(--pl-border-divider);
   border-radius: 1rem;
@@ -50,8 +53,8 @@
 .reference-entry {
   display: grid;
   grid-template-columns: minmax(13rem, 0.75fr) minmax(0, 1fr);
-  gap: clamp(0.9rem, 3vw, 1.75rem);
-  padding: 1rem 1.1rem;
+  gap: 1.5rem;
+  padding: 0.95rem 1rem;
   border-bottom: 1px solid var(--pl-border-divider);
   transition:
     background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
@@ -81,6 +84,7 @@
   width: 2.2rem;
   min-height: 2.2rem;
   color: var(--pl-accent);
+  font-family: var(--pl-font-mono);
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -98,6 +102,7 @@
 .reference-entry h2 {
   margin: 0;
   color: var(--pl-text-heading);
+  font-family: var(--pl-font-display);
   font-size: 1rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -105,6 +110,7 @@
 
 .reference-entry__title span {
   color: var(--pl-text-meta);
+  font-family: var(--pl-font-mono);
   font-size: 0.8rem;
 }
 
@@ -122,10 +128,11 @@
   grid-template-columns: 2.25rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
-  min-height: 2.15rem;
+  min-height: 2.1rem;
   padding: 0 0.45rem;
   color: var(--pl-text-secondary);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
+  font-weight: 600;
   border: 1px solid transparent;
   border-radius: 0.6rem;
   transition:
@@ -149,6 +156,7 @@
 
 .reference-entry__link-index {
   color: var(--pl-text-meta);
+  font-family: var(--pl-font-mono);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
