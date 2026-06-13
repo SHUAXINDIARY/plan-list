@@ -301,24 +301,8 @@
   right: 0;
   left: 0;
   height: 0.42rem;
-  background-color: var(--pl-airline-stripe-1);
+  background-color: var(--airline-brand-color, var(--pl-airline-stripe-1));
   content: "";
-}
-
-.airline-entry:nth-child(2)::before {
-  background-color: var(--pl-airline-stripe-2);
-}
-
-.airline-entry:nth-child(3)::before {
-  background-color: var(--pl-airline-stripe-3);
-}
-
-.airline-entry:nth-child(4)::before {
-  background-color: var(--pl-airline-stripe-4);
-}
-
-.airline-entry:nth-child(n + 5)::before {
-  background-color: var(--pl-airline-stripe-5);
 }
 
 .airline-entry:nth-child(2) {

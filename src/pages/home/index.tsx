@@ -4,6 +4,7 @@ import {
     useRef,
     useState,
     type ChangeEvent,
+    type CSSProperties,
     type ReactElement,
 } from "react";
 import type {
@@ -18,11 +19,17 @@ import { Select } from "../../components/Select";
 import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
 import {
     AIRPLANE_DATA_URL,
+    AIRLINE_BRAND_COLORS,
     ALL_AIRCRAFT_MODELS_VALUE,
     ALL_MANUFACTURERS_VALUE,
+    DEFAULT_AIRLINE_BRAND_COLOR,
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
 } from "./constant";
 import "./index.css";
+
+type AirlineEntryStyle = CSSProperties & {
+    "--airline-brand-color": string;
+};
 
 // 判断下拉值是否为受支持的客机数量排序方式，避免直接信任 DOM 字符串。
 const isPassengerAircraftSortOrder = (
@@ -43,6 +50,18 @@ const isHttpOrHttpsUrl = (value: string): boolean => {
     } catch {
         return false;
     }
+};
+
+const getAirlineBrandColor = (airlineEnglishName: string): string => {
+    return (
+        AIRLINE_BRAND_COLORS[airlineEnglishName] ?? DEFAULT_AIRLINE_BRAND_COLOR
+    );
+};
+
+const createAirlineEntryStyle = (brandColor: string): AirlineEntryStyle => {
+    return {
+        "--airline-brand-color": brandColor,
+    };
 };
 
 // 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。
@@ -77,6 +96,9 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
                 airlineName: airplaneDataItem.airline,
                 airlineEnglishName: airplaneDataItem.airlineEnglishName,
                 airlineWebsite: airplaneDataItem.airlineWebsite,
+                brandColor: getAirlineBrandColor(
+                    airplaneDataItem.airlineEnglishName,
+                ),
                 passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
                 manufacturerCount: formattedManufacturers.length,
                 aircraftCount,
@@ -536,6 +558,9 @@ const HomePage = (): ReactElement => {
                                     <article
                                         className="airline-entry"
                                         key={airlineFleet.airlineName}
+                                        style={createAirlineEntryStyle(
+                                            airlineFleet.brandColor,
+                                        )}
                                     >
                                         <header className="airline-entry__header">
                                             <div className="airline-entry__title">
