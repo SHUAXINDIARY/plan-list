@@ -45,12 +45,12 @@
     --pl-border-loading-ring: rgba(154, 90, 26, 0.2);
     --pl-border-error: rgba(242, 118, 118, 0.5);
 
-    --pl-surface-panel: rgba(255, 255, 252, 0.62);
-    --pl-surface-toolbar: rgba(255, 255, 252, 0.42);
+    --pl-surface-panel: rgba(255, 255, 252, 0.72);
+    --pl-surface-toolbar: rgba(255, 255, 252, 0.72);
     --pl-surface-entry: rgba(255, 255, 252, 0.8);
     --pl-surface-entry-hover: rgba(255, 255, 252, 0.96);
-    --pl-surface-input: rgba(255, 255, 252, 0.82);
-    --pl-surface-chip: rgba(255, 255, 252, 0.9);
+    --pl-surface-input: rgba(255, 255, 252, 0.92);
+    --pl-surface-chip: rgba(255, 255, 252, 0.95);
     --pl-surface-reference: rgba(255, 255, 252, 0.52);
     --pl-surface-reference-hover: rgba(255, 255, 252, 0.82);
     --pl-surface-data-state: rgba(255, 255, 252, 0.8);
@@ -83,7 +83,33 @@
     --pl-surface-nav: rgba(255, 255, 252, 0.68);
     --pl-surface-nav-item: rgba(250, 247, 239, 0.8);
     --pl-shadow-shell: 0 0.2rem 0.9rem rgba(99, 88, 67, 0.1);
+    --pl-shadow-brand: 0 0.28rem 0.85rem rgba(99, 88, 67, 0.15),
+        0 1px 3px rgba(99, 88, 67, 0.12),
+        inset 0 1px 0 rgba(255, 255, 252, 0.78);
     --pl-shadow-panel: 0 1.25rem 2.25rem rgba(99, 88, 67, 0.13);
+    --pl-shadow-control: 0 0.6rem 1.15rem rgba(99, 88, 67, 0.12),
+        0 2px 5px rgba(99, 88, 67, 0.1);
+    --pl-shadow-card: 0 1px 2px rgba(99, 88, 67, 0.07),
+        inset 0 1px 0 rgba(255, 255, 252, 0.72);
+    --pl-shadow-card-hover: 0 0.3rem 0.8rem rgba(99, 88, 67, 0.08),
+        0 1px 2px rgba(99, 88, 67, 0.08);
+    --pl-shadow-chip: 0 1px 2px rgba(99, 88, 67, 0.12);
+
+    --pl-stat-blue-bg: rgba(239, 246, 255, 0.92);
+    --pl-stat-blue-border: rgba(147, 197, 253, 0.72);
+    --pl-stat-blue-text: #2563eb;
+    --pl-stat-teal-bg: rgba(236, 253, 245, 0.92);
+    --pl-stat-teal-border: rgba(94, 234, 212, 0.58);
+    --pl-stat-teal-text: #0f766e;
+    --pl-stat-orange-bg: rgba(255, 247, 237, 0.94);
+    --pl-stat-orange-border: rgba(253, 186, 116, 0.72);
+    --pl-stat-orange-text: #b45309;
+
+    --pl-airline-stripe-1: #2563eb;
+    --pl-airline-stripe-2: #94a3b8;
+    --pl-airline-stripe-3: #dc2626;
+    --pl-airline-stripe-4: #f2b400;
+    --pl-airline-stripe-5: #16a34a;
 
     --pl-error-text: #b42318;
 
@@ -204,7 +230,26 @@ html[data-theme="dark"] {
     --pl-surface-nav: rgba(10, 21, 33, 0.66);
     --pl-surface-nav-item: rgba(15, 31, 48, 0.44);
     --pl-shadow-shell: 0 1.6rem 4rem rgba(2, 8, 18, 0.28);
+    --pl-shadow-brand: 0 0.55rem 1.35rem rgba(2, 8, 18, 0.34),
+        0 1px 3px rgba(2, 8, 18, 0.28),
+        inset 0 1px 0 rgba(164, 188, 201, 0.08);
     --pl-shadow-panel: 0 1.5rem 4rem rgba(2, 8, 18, 0.24);
+    --pl-shadow-control: 0 0.65rem 1.35rem rgba(2, 8, 18, 0.32),
+        0 2px 5px rgba(2, 8, 18, 0.24);
+    --pl-shadow-card: 0 1px 2px rgba(2, 8, 18, 0.24),
+        inset 0 1px 0 rgba(164, 188, 201, 0.05);
+    --pl-shadow-card-hover: 0 0.35rem 0.95rem rgba(2, 8, 18, 0.28),
+        0 1px 2px rgba(2, 8, 18, 0.24);
+    --pl-shadow-chip: 0 1px 2px rgba(2, 8, 18, 0.28);
+    --pl-stat-blue-bg: rgba(37, 99, 235, 0.16);
+    --pl-stat-blue-border: rgba(96, 165, 250, 0.34);
+    --pl-stat-blue-text: #93c5fd;
+    --pl-stat-teal-bg: rgba(20, 184, 166, 0.16);
+    --pl-stat-teal-border: rgba(94, 234, 212, 0.3);
+    --pl-stat-teal-text: #5eead4;
+    --pl-stat-orange-bg: rgba(245, 158, 11, 0.15);
+    --pl-stat-orange-border: rgba(251, 191, 36, 0.3);
+    --pl-stat-orange-text: #fbbf24;
     --pl-error-text: #ffd3d3;
     --pl-summary-chevron: #9ed8f2;
     --scroll-area-track-bg: rgba(15, 31, 48, 0.55);
@@ -324,34 +369,29 @@ a {
     justify-self: start;
     gap: 0.72rem;
     width: fit-content;
-    min-height: 2.5rem;
-    padding: 0.35rem 0.8rem 0.35rem 0.48rem;
-    background-color: var(--pl-surface-header);
+    min-height: 3rem;
+    padding: 0.35rem 1.25rem 0.35rem 1rem;
+    color: var(--pl-text-heading);
+    background-color: var(--pl-surface-entry-hover);
     border: 1px solid var(--pl-border-default);
     border-radius: 999px;
-    box-shadow: var(--pl-shadow-shell);
+    box-shadow: var(--pl-shadow-brand);
 }
 
 .app-brand__mark {
-    position: relative;
     display: inline-flex;
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1.75rem;
+    height: 1.75rem;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pl-accent);
-    background-color: var(--pl-surface-pill);
-    border: 1px solid var(--pl-border-pill);
-    border-radius: 999px;
+    color: var(--pl-text-emphasis);
 }
 
-.app-brand__mark::before {
-    width: 0.88rem;
-    height: 0.88rem;
-    background-color: currentColor;
-    clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 60%, 50% 100%, 38% 60%, 0 50%, 38% 38%);
-    content: "";
+.app-brand__icon {
+    display: block;
+    width: 1.72rem;
+    height: 1.72rem;
 }
 
 .app-header__actions {
@@ -413,21 +453,12 @@ a {
     display: block;
 }
 
-.app-kicker {
-    margin: 0 0 0.1rem;
-    color: var(--pl-text-kicker);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-}
-
-.app-title {
-    margin: 0;
+.app-brand__name {
     color: var(--pl-text-heading);
     font-family: var(--pl-font-display);
-    font-size: 0.86rem;
-    font-weight: 700;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
     letter-spacing: 0;
 }
 
