@@ -3830,3 +3830,23 @@
 - `src/App.tsx`：在应用壳层中挂载 `BackToTop`。
 - `DESIGN.md`：补充 Application Shell 中的 Back To Top 组件规范。
 - `taskRecord.md`：追加本次任务记录。
+
+## 日期
+
+2026-06-14
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充大连航空数据，使航司机型资料库覆盖该航司。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据文件维护、验证和任务记录要求。
+2. 读取 `public/data/airplan.json`，确认现有航司数据字段与按客机数量排列的中文航司区块位置。
+3. 查询公开资料确认大连航空官网、客机数量和现役机型信息。
+4. 在长安航空之后新增大连航空条目，补充中文名、英文名、官网、客机数量和 Boeing 737-800 机型链接。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增大连航空记录，包含官网、13 架客机数量与 Boeing 737-800 机型映射。
+- `taskRecord.md`：追加本次数据维护任务记录。

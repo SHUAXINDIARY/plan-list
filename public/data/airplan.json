@@ -646,6 +646,17 @@
         }
     },
     {
+        "airline": "大连航空",
+        "airlineEnglishName": "Dalian Airlines",
+        "airlineWebsite": "https://www.dalianair-china.com",
+        "passengerAircraftCount": 13,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/fleet/list/Dalian-Airlines/current?type=boeing-737-800"
+            }
+        }
+    },
+    {
         "airline": "金鹏航空",
         "airlineEnglishName": "Suparna Airlines",
         "airlineWebsite": "https://www.yzr.com.cn",
