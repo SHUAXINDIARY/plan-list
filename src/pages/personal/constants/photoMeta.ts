@@ -32,6 +32,11 @@ export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0107.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0108.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0110.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0967.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0634.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0796.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0915.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/PANA0930.jpg",
 
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/dblack%202026-03-30%201852465D953797B18F.JPG",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9814.JPG",
@@ -44,6 +49,8 @@ export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9966.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9898.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9899.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA0237.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA0248.jpg",
 ] as const;
 
 /** 相册目录筛选「全部」选项值。 */

@@ -3850,3 +3850,43 @@
 
 - `public/data/airplan.json`：新增大连航空记录，包含官网、13 架客机数量与 Boeing 737-800 机型映射。
 - `taskRecord.md`：追加本次数据维护任务记录。
+
+## 日期
+
+2026-06-15
+
+## 任务目的
+
+为飞机照片相册原图 URL 常量补充 5 张新增照片，确保照片页统计与异步相册数据包含新图片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码常量维护、验证和任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 使用统一 R2 前缀加文件名的 URL 列表。
+3. 按用户提供文件名补齐 5 条同前缀照片 URL，并保持原数组结构和相邻 PANA 照片分组。
+4. 更新 `taskRecord.md`，记录本次照片常量维护过程。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 追加 5 条新照片原图 URL。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-15
+
+## 任务目的
+
+继续为飞机照片相册原图 URL 常量补充 2 张 `plane-model` 目录下的新照片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码常量维护、验证和任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `plane-model` 分组照片 URL 使用独立目录前缀。
+3. 按用户提供文件名和 `plane-model` 前缀补齐 2 条照片 URL，并追加在现有 `plane-model` 照片分组末尾。
+4. 更新 `taskRecord.md`，记录本次继续补充照片 URL 的过程。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组追加 2 条新照片原图 URL。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
