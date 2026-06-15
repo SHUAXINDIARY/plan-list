@@ -3890,3 +3890,23 @@
 
 - `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组追加 2 条新照片原图 URL。
 - `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-15
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充星宇航空与长荣航空数据，使台湾主要航司资料更加完整。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认静态数据维护、JSON 校验和任务记录要求。
+2. 读取 `public/data/airplan.json`，确认现有中华航空位于台湾航司相关位置，星宇航空与长荣航空尚未收录。
+3. 查询公开资料确认星宇航空、长荣航空官网、机队数量与现役主要机型。
+4. 在中华航空附近补充长荣航空与星宇航空条目，保持 `airline`、`airlineEnglishName`、`airlineWebsite`、`passengerAircraftCount`、`models` 的既有结构。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增长荣航空与星宇航空记录，补充官网、机队数量和机型映射。
+- `taskRecord.md`：追加本次航司数据维护任务记录。
