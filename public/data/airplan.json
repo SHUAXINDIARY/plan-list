@@ -797,6 +797,25 @@
         }
     },
     {
+        "airline": "阿提哈德航空",
+        "airlineEnglishName": "Etihad Airways",
+        "airlineWebsite": "https://www.etihad.com",
+        "passengerAircraftCount": 115,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a321",
+                "A350-1000": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a350-1000",
+                "A380-800": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a380"
+            },
+            "Boeing": {
+                "B777-300ER": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-777-300er",
+                "B787-9": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-787-9",
+                "B787-10": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-787-10"
+            }
+        }
+    },
+    {
         "airline": "亚洲航空",
         "airlineEnglishName": "AirAsia",
         "airlineWebsite": "https://www.airasia.com",
@@ -1484,6 +1503,21 @@
                 "A320neo": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a320neo",
                 "A321-200": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a321",
                 "A321neo": "https://www.planespotters.net/fleet/list/Frontier-Airlines/current?type=airbus-a321neo"
+            }
+        }
+    },
+    {
+        "airline": "墨西哥航空",
+        "airlineEnglishName": "Aeromexico",
+        "airlineWebsite": "https://aeromexico.com",
+        "passengerAircraftCount": 132,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/fleet/list/Aeromexico/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Aeromexico/current?type=boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/fleet/list/Aeromexico/current?type=boeing-737-max-9",
+                "B787-8": "https://www.planespotters.net/fleet/list/Aeromexico/current?type=boeing-787-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/Aeromexico/current?type=boeing-787-9"
             }
         }
     },

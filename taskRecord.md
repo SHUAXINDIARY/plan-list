@@ -3910,3 +3910,43 @@
 
 - `public/data/airplan.json`：新增长荣航空与星宇航空记录，补充官网、机队数量和机型映射。
 - `taskRecord.md`：追加本次航司数据维护任务记录。
+
+## 日期
+
+2026-06-16
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充墨西哥航空数据，使北美航司资料覆盖 Aeromexico。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认静态数据维护、JSON 校验和任务记录要求。
+2. 读取 `public/data/airplan.json`，确认墨西哥航空尚未收录，并查看北美航司区块的字段和链接风格。
+3. 查询公开资料确认墨西哥航空官网、主线机队数量与现役 Boeing 机型。
+4. 在北美航司区块补充墨西哥航空条目，保持既有 `airline`、`airlineEnglishName`、`airlineWebsite`、`passengerAircraftCount`、`models` 结构。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增墨西哥航空记录，补充官网、机队数量和 Boeing 机型映射。
+- `taskRecord.md`：追加本次航司数据维护任务记录。
+
+## 日期
+
+2026-06-16
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充阿提哈德航空数据，使中东大型航司资料更加完整。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认静态数据维护、JSON 校验和任务记录要求。
+2. 读取 `public/data/airplan.json`，确认阿提哈德航空尚未收录，并查看阿联酋航空附近的中东航司数据位置。
+3. 查询公开资料确认阿提哈德航空官网、客运机队数量与现役主要 Airbus、Boeing 机型。
+4. 在阿联酋航空之后补充阿提哈德航空条目，保持既有字段结构和机型链接风格。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增阿提哈德航空记录，补充官网、客运机队数量和 Airbus、Boeing 机型映射。
+- `taskRecord.md`：追加本次航司数据维护任务记录。
