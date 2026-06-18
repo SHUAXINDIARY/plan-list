@@ -3990,3 +3990,23 @@
 - `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 追加 3 条 PANA 系列照片原图 URL。
 - `src/pages/personal/photoPreviews.generated.ts`：构建时自动刷新预览图映射。
 - `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-13
+
+## 任务目的
+
+为飞机照片相册原图 URL 常量补充 5 张 IMG 系列新照片。
+
+## 完成过程
+
+1. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 IMG 系列照片使用统一 R2 前缀。
+2. 按用户提供文件名在 IMG 分组末尾追加 `IMG_3584.jpeg` 至 `IMG_3599.jpeg` 共 5 条原图 URL。
+3. 运行 `pnpm run build` 刷新 `photoPreviews.generated.ts`，构建通过。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 追加 5 条 IMG 系列照片原图 URL。
+- `src/pages/personal/photoPreviews.generated.ts`：构建时自动刷新预览图映射。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
