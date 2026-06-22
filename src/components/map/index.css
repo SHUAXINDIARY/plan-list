@@ -9,6 +9,10 @@
   --pl-map-marker-international-stroke: oklch(0.96 0.012 92 / 0.98);
   --pl-map-marker-international-fill-active: oklch(0.68 0.14 72 / 0.98);
   --pl-map-marker-international-stroke-active: oklch(0.99 0.01 92 / 1);
+  --pl-map-tooltip-bg: oklch(0.97 0.012 92 / 0.96);
+  --pl-map-tooltip-border: oklch(0.56 0.1 72 / 0.34);
+  --pl-map-tooltip-text: oklch(0.28 0.052 72 / 0.96);
+  --pl-map-tooltip-shadow: 0 0.75rem 1.45rem oklch(0.42 0.035 78 / 0.18);
   position: relative;
   aspect-ratio: 1200 / 650;
   margin-top: 1rem;
@@ -31,6 +35,10 @@
   --pl-map-marker-international-stroke: oklch(0.94 0.03 220 / 0.96);
   --pl-map-marker-international-fill-active: oklch(0.86 0.12 222 / 0.98);
   --pl-map-marker-international-stroke-active: oklch(0.98 0.02 220 / 1);
+  --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
+  --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
+  --pl-map-tooltip-text: var(--pl-text-emphasis);
+  --pl-map-tooltip-shadow: var(--pl-shadow-map-tooltip);
 }
 
 .annotated-world-map--zoomed {
@@ -81,7 +89,7 @@
   will-change: left, top;
   max-width: min(12rem, calc(100% - 2rem));
   padding: 0.45rem 0.62rem;
-  color: var(--pl-text-emphasis);
+  color: var(--pl-map-tooltip-text);
   font-size: 0.78rem;
   font-weight: 800;
   line-height: 1.2;
@@ -91,7 +99,7 @@
   background-color: var(--pl-map-tooltip-bg);
   border: 1px solid var(--pl-map-tooltip-border);
   border-radius: 999px;
-  box-shadow: var(--pl-shadow-map-tooltip);
+  box-shadow: var(--pl-map-tooltip-shadow);
   transform: translate3d(-50%, calc(-100% - 0.72rem), 0);
 }
 
@@ -106,6 +114,23 @@
   border-bottom: 1px solid var(--pl-map-tooltip-border);
   content: '';
   transform: translateX(-50%) rotate(45deg);
+}
+
+.annotated-world-map__tooltip--domestic {
+  --pl-map-tooltip-bg: var(--pl-map-marker-domestic-fill-active);
+  --pl-map-tooltip-border: var(--pl-map-marker-domestic-stroke-active);
+  --pl-map-tooltip-text: oklch(0.22 0.058 72 / 0.98);
+}
+
+.annotated-world-map__tooltip--international {
+  --pl-map-tooltip-bg: var(--pl-map-marker-international-fill-active);
+  --pl-map-tooltip-border: var(--pl-map-marker-international-stroke-active);
+  --pl-map-tooltip-text: oklch(0.99 0.01 92 / 1);
+}
+
+.annotated-world-map--theme-dark .annotated-world-map__tooltip--domestic,
+.annotated-world-map--theme-dark .annotated-world-map__tooltip--international {
+  --pl-map-tooltip-text: oklch(0.98 0.02 220 / 1);
 }
 
 .annotated-world-map__flag-cursor {

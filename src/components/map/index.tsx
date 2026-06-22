@@ -795,7 +795,7 @@ const AnnotatedWorldMap = ({
         />
         {tooltipMarker && markerTooltipStyle ? (
           <div
-            className="annotated-world-map__tooltip"
+            className={`annotated-world-map__tooltip annotated-world-map__tooltip--${tooltipMarker.scope}`}
             style={markerTooltipStyle}
             role="tooltip"
           >

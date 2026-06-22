@@ -3917,6 +3917,45 @@
 
 ## 任务目的
 
+让个人机场地图标记点 Tooltip 进一步跟随国内 / 国际标记类型适配颜色。
+
+## 完成过程
+
+1. 读取 `src/components/map/index.tsx` 与 `src/components/map/index.css`，确认 Tooltip 当前只按主题读取统一颜色变量。
+2. 为 Tooltip 追加基于 `tooltipMarker.scope` 的国内 / 国际修饰类。
+3. 在样式中将国内 Tooltip 映射到国内标记点高亮色，将国际 Tooltip 映射到国际标记点高亮色，并补充深色主题下的可读文字色。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`：Tooltip class 增加国内 / 国际标记类型修饰符。
+- `src/components/map/index.css`：新增国内 / 国际 Tooltip 颜色规则，让 Tooltip 颜色和当前标记点类型一致。
+- `taskRecord.md`：追加本次标记点 Tooltip 类型色适配任务记录。
+
+## 日期
+
+2026-06-22
+
+## 任务目的
+
+根据主站当前主题色，适配个人机场地图标记点 Tooltip 的视觉颜色。
+
+## 完成过程
+
+1. 读取 `src/components/map/index.css` 中 Tooltip、图例和地图主题修饰类的现有样式，确认 Tooltip 使用地图局部变量最贴合当前实现。
+2. 为亮色地图补充浅色纸面 Tooltip 背景、琥珀边框、深琥珀文字和轻量阴影。
+3. 为深色地图补充深舱 Tooltip 背景、青蓝边框、亮色文字和既有阴影，使 Tooltip 与标记点、航线主题保持一致。
+
+## 修改具体文件
+
+- `src/components/map/index.css`：补充 Tooltip 主题变量，并将 Tooltip 文字与阴影改为读取地图局部变量。
+- `taskRecord.md`：追加本次地图 Tooltip 主题色适配任务记录。
+
+## 日期
+
+2026-06-22
+
+## 任务目的
+
 根据主站当前主题色，适配个人机场地图上的 Canvas 标记点、航线与图例颜色。
 
 ## 完成过程
