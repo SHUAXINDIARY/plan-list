@@ -221,6 +221,7 @@ const AnnotatedWorldMap = ({
         };
   const mapClassName = [
     'annotated-world-map',
+    `annotated-world-map--theme-${worldMapTheme}`,
     isMapZoomed ? 'annotated-world-map--zoomed' : '',
     isDraggingMap ? 'annotated-world-map--dragging' : '',
   ]

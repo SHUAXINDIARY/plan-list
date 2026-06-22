@@ -3913,6 +3913,47 @@
 
 ## 日期
 
+2026-06-22
+
+## 任务目的
+
+根据主站当前主题色，适配个人机场地图上的 Canvas 标记点、航线与图例颜色。
+
+## 完成过程
+
+1. 读取 `src/components/map/index.tsx`、`src/components/map/index.css` 与 `src/components/map/canvasMap.ts`，确认标记点和航线由 Canvas 读取 CSS 变量绘制，图例由 CSS 伪元素绘制。
+2. 在地图根容器增加当前主题修饰类，使亮色与深色主题可以拥有独立的地图绘制变量。
+3. 在地图组件样式中为亮色主题定义温暖纸感下的琥珀标记点、航线与高亮态，并保留深色主题的青蓝夜航标记体系。
+
+## 修改具体文件
+
+- `src/components/map/index.tsx`：为地图容器追加基于当前主题的 class，供 Canvas 读取对应 CSS 变量。
+- `src/components/map/index.css`：补充亮色默认与深色主题下的地图标记点、航线、激活态配色变量，图例与 Canvas 绘制同步生效。
+- `taskRecord.md`：追加本次地图标记点主题色适配任务记录。
+
+## 日期
+
+2026-06-22
+
+## 任务目的
+
+根据主站当前亮色与深色主题色，适配个人机场地图底图 SVG 的配色。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md`、`DESIGN.md` 与项目 `impeccable` skill，确认视觉与任务记录要求。
+2. 检查 `src/App.css` 中实际生效的主题 token，确认当前主站为亮色默认、深色通过 `html[data-theme="dark"]` 覆写。
+3. 读取 `src/components/map` 地图组件实现，确认 `map.svg` 与 `map-light.svg` 以 `?url` 方式作为 Canvas 底图加载，因此需要在 SVG 内部写入主题对应配色。
+4. 调整两份 SVG 顶部配色定义，使亮色底图贴合温暖纸感与琥珀强调色，深色底图贴合夜航深蓝与青蓝信号色。
+
+## 修改具体文件
+
+- `src/components/map/map-light.svg`：将亮色地图从冷灰蓝调整为主站亮色的温暖纸面、柔和陆地与琥珀信号描边。
+- `src/components/map/map.svg`：微调深色地图的海面、陆地、边界、经纬网与标签颜色，使其更贴合当前深色主题 token。
+- `taskRecord.md`：追加本次 SVG 主题色适配任务记录。
+
+## 日期
+
 2026-06-16
 
 ## 任务目的
