@@ -4033,6 +4033,67 @@
 
 ## 日期
 
+2026-06-23
+
+## 任务目的
+
+根据用户提供的截图文件名，继续为飞机照片相册原图 URL 常量补充新增照片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码常量维护、验证和任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 现有 R2 前缀照片分组与已存在文件名。
+3. 对照截图文件名，保留已存在的 URL，补充尚缺的 5 条照片 URL，避免重复写入已有照片。
+4. 更新 `taskRecord.md`，记录本次照片 URL 补充过程。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 补充 5 条截图中尚未存在的照片原图 URL。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-23
+
+## 任务目的
+
+从飞机照片相册原图 URL 常量中删除指定的 `PANA1053.jpg` 原图链接。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码常量维护、验证和任务记录要求。
+2. 使用搜索确认 `PANA1053.jpg` 与 `PANA1053_副本.jpg` 均存在，且本次只删除用户指定的 `PANA1053.jpg`。
+3. 从 `src/pages/personal/constants/photoMeta.ts` 的 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中移除指定 URL，保留 `PANA1053_副本.jpg`。
+4. 更新 `taskRecord.md`，记录本次照片 URL 删除过程。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：删除 `PANA1053.jpg` 原图 URL，保留其他照片 URL。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-23
+
+## 任务目的
+
+根据用户提供的截图文件名，继续为飞机照片相册原图 URL 常量补充 8 张新增照片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码常量维护、验证和任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 现有 IMG 与 PANA 照片分组。
+3. 搜索确认截图中的 8 个文件名尚未存在，按统一 R2 前缀补充 8 条照片 URL。
+4. 更新 `taskRecord.md`，记录本次照片 URL 补充过程。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 补充 8 条截图中的照片原图 URL。
+- `src/pages/personal/photoPreviews.generated.ts`：构建时刷新相册预览映射，新增照片按现有逻辑回退原图。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
 2026-06-13
 
 ## 任务目的
