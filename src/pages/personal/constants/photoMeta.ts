@@ -73,6 +73,8 @@ export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9854.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA0025.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA0022.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9950.jpg",
+    "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9957.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9964.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9966.jpg",
     "https://pub-23c984317bc14b5e8baf70b04eb7f902.r2.dev/plane-model/PANA9898.jpg",

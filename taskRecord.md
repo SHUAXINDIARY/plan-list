@@ -4174,3 +4174,24 @@
 - `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：新增缩略图加载完成状态和渲染前骨架占位。
 - `src/pages/personal/index.css`：补充缩略图媒体槽、骨架层和淡入样式。
 - `taskRecord.md`：追加本次照片页骨架屏任务记录。
+
+## 日期
+
+2026-06-23
+
+## 任务目的
+
+根据用户提供的截图文件名，为飞机模型照片目录补充 2 张新增照片原图 URL。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据维护、验证和任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `plane-model` 目录照片使用统一 R2 子目录前缀。
+3. 搜索确认 `PANA9950.jpg` 与 `PANA9957.jpg` 尚未存在，按 `plane-model` 前缀补充 2 条照片 URL。
+4. 使用脚本校验照片 URL 总数与重复项，确认新增链接存在且没有重复 URL。
+5. 运行 `pnpm run build` 验证构建通过；新增照片预览生成超时后按现有逻辑回退原图。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组补充 2 条照片原图 URL。
+- `taskRecord.md`：追加本次照片数据维护任务记录。
