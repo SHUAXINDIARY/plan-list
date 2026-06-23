@@ -4151,3 +4151,26 @@
 - `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 追加 5 条 IMG 系列照片原图 URL。
 - `src/pages/personal/photoPreviews.generated.ts`：构建时自动刷新预览图映射。
 - `taskRecord.md`：追加本次照片数据维护任务记录。
+
+## 日期
+
+2026-06-23
+
+## 任务目的
+
+为 `/photos` 照片页面在照片渲染前补充更贴近实际相册布局的骨架屏。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md` 与 `DESIGN.md` 上下文，确认照片页属于产品型深色档案界面。
+2. 读取 `src/pages/photos/index.tsx`、个人页相册组件与现有骨架样式，确认页面级 `Suspense` 已有骨架，但相册数据加载和单张缩略图渲染前仍存在空白感。
+3. 将相册数据加载态改为复用 `PersonalPhotosSectionSkeleton`，保证照片列表可渲染前显示标题、筛选栏和网格占位。
+4. 为单张缩略图增加固定比例媒体槽和图片加载骨架，图片完成加载后再淡入，减少滚动时的空白与布局跳动。
+5. 运行 `pnpm run build` 验证构建通过。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：相册数据 bundle 加载期间复用照片相册骨架屏。
+- `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：新增缩略图加载完成状态和渲染前骨架占位。
+- `src/pages/personal/index.css`：补充缩略图媒体槽、骨架层和淡入样式。
+- `taskRecord.md`：追加本次照片页骨架屏任务记录。

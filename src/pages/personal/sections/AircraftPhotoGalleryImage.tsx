@@ -22,9 +22,14 @@ export const AircraftPhotoGalleryImage = ({
     const [resolvedPreviewUrl, setResolvedPreviewUrl] = useState<string | null>(
         null,
     );
+    const [isPreviewImageReady, setIsPreviewImageReady] =
+        useState<boolean>(false);
+    const isPreviewPending =
+        resolvedPreviewUrl === null || !isPreviewImageReady;
 
     useEffect((): (() => void) | undefined => {
         setResolvedPreviewUrl(null);
+        setIsPreviewImageReady(false);
 
         const imageElement = imageRef.current;
 
@@ -62,16 +67,30 @@ export const AircraftPhotoGalleryImage = ({
         };
     }, [previewUrl]);
 
+    const markPreviewImageReady = (): void => {
+        setIsPreviewImageReady(true);
+    };
+
     return (
-        <img
-            ref={imageRef}
-            src={resolvedPreviewUrl ?? undefined}
-            alt={alt}
-            className={
-                resolvedPreviewUrl === null
-                    ? "aircraft-photo-gallery__image--pending"
-                    : undefined
-            }
-        />
+        <span className="aircraft-photo-gallery__image-frame">
+            {isPreviewPending ? (
+                <span
+                    className="aircraft-photo-gallery__image-skeleton"
+                    aria-hidden="true"
+                />
+            ) : null}
+            <img
+                ref={imageRef}
+                src={resolvedPreviewUrl ?? undefined}
+                alt={alt}
+                className={
+                    isPreviewPending
+                        ? "aircraft-photo-gallery__image--pending"
+                        : undefined
+                }
+                onLoad={markPreviewImageReady}
+                onError={markPreviewImageReady}
+            />
+        </span>
     );
 };

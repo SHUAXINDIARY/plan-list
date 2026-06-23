@@ -22,7 +22,7 @@ import type {
     AircraftPhotosBundle,
 } from "../type";
 import { AircraftPhotoGalleryImage } from "./AircraftPhotoGalleryImage";
-import { PersonalSectionFallback } from "./PersonalSectionFallback";
+import { PersonalPhotosSectionSkeleton } from "./PersonalPhotosSectionSkeleton";
 
 interface PersonalAircraftPhotosSectionProps {
     /** 相册标题层级，独立页面用 h1，嵌入个人页区块时用 h2。 */
@@ -221,20 +221,7 @@ const PersonalAircraftPhotosSection = ({
     }
 
     if (photosBundle === null) {
-        return (
-            <section
-                className="personal-section"
-                aria-labelledby="photo-aircraft-title"
-            >
-                <div className="personal-section__header">
-                    <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <HeadingTag id="photo-aircraft-title">
-                        拍摄的飞机
-                    </HeadingTag>
-                </div>
-                <PersonalSectionFallback label="飞机照片相册" />
-            </section>
-        );
+        return <PersonalPhotosSectionSkeleton headingLevel={headingLevel} />;
     }
 
     const { aircraftPhotoDirectoryOptions } = photosBundle;
