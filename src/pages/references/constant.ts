@@ -3,6 +3,12 @@ import type { AirlineReferenceSource } from "../home/type";
 // 部分航司数据的补充参考来源，用于在页面底部集中展示外部出处。
 export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     {
+        airlineName: "flightradar24",
+        urls: [
+            "https://www.flightradar24.com/"
+        ]
+    },
+    {
         airlineName: "模型站点",
         urls: [
             "https://hikoukicyann.stores.jp/",
