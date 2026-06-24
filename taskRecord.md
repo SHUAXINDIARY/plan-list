@@ -4174,6 +4174,18 @@
 - `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：新增缩略图加载完成状态和渲染前骨架占位。
 - `src/pages/personal/index.css`：补充缩略图媒体槽、骨架层和淡入样式。
 - `taskRecord.md`：追加本次照片页骨架屏任务记录。
+整理一份基于 VueUse `useIdle` 的站点用户活跃时长统计 Hook 技术方案文档，便于直接复制、评审和后续实现。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认文档输出目录、任务记录和文件修改要求。
+2. 阅读现有 `docs/map.md`，参考项目文档的 Markdown 组织方式。
+3. 新增活跃时长统计技术方案文档，覆盖 Hook 职责、参数返回值、生命周期事件、上报策略、参考实现和验收建议。
+
+## 修改具体文件
+
+- `docs/active-duration-reporter.md`：新增基于 VueUse `useIdle` 的站点用户活跃时长统计 Hook 技术方案。
+- `taskRecord.md`：追加本次技术方案文档整理任务记录。
 
 ## 日期
 
@@ -4181,17 +4193,53 @@
 
 ## 任务目的
 
-根据用户提供的截图文件名，为飞机模型照片目录补充 2 张新增照片原图 URL。
+完善基于 VueUse `useIdle` 的站点用户活跃时长统计技术方案，补充可落地实现中的边界场景与可靠性设计。
 
 ## 完成过程
 
-1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据维护、验证和任务记录要求。
-2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `plane-model` 目录照片使用统一 R2 子目录前缀。
-3. 搜索确认 `PANA9950.jpg` 与 `PANA9957.jpg` 尚未存在，按 `plane-model` 前缀补充 2 条照片 URL。
-4. 使用脚本校验照片 URL 总数与重复项，确认新增链接存在且没有重复 URL。
-5. 运行 `pnpm run build` 验证构建通过；新增照片预览生成超时后按现有逻辑回退原图。
+1. 复查 `docs/active-duration-reporter.md`，确认原方案中的 Hook 参数、状态判断、生命周期事件和参考实现。
+2. 将优化建议并入原技术文档，补充 `segmentId` 幂等、串行上报、失败补报、SPA 路由切换、最大区间保护和 idle 事件范围说明。
+3. 更新参考实现，移除非响应式浏览器状态上的 `computed` 判断，改为普通函数并补充区间 ID 与上报队列。
 
 ## 修改具体文件
 
-- `src/pages/personal/constants/photoMeta.ts`：向 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组补充 2 条照片原图 URL。
-- `taskRecord.md`：追加本次照片数据维护任务记录。
+- `docs/active-duration-reporter.md`：完善活跃时长统计方案的可靠性、边界处理、数据结构和验收场景。
+- `taskRecord.md`：追加本次技术方案完善任务记录。
+
+## 日期
+
+2026-06-24
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充芬兰航空数据，使航司机型资料库覆盖 Finnair。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据文件修改、JSON 校验与任务记录要求。
+2. 读取 `public/data/airplan.json`，确认航司条目字段为 `airline`、`airlineEnglishName`、`airlineWebsite`、`passengerAircraftCount` 与 `models`。
+3. 按现有格式新增芬兰航空条目，补充官网、客机数量以及 Airbus、ATR、Embraer 机型映射。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增芬兰航空记录，包含官网、77 架客机数量与 A319/A320/A321/A330/A350、ATR 72-500、E190 机型映射。
+- `taskRecord.md`：追加本次数据维护任务记录。
+
+## 日期
+
+2026-06-24
+
+## 任务目的
+
+将 `public/data/airplan.json` 中芬兰航空的机型资料链接统一替换为 Planespotters 数据来源。
+
+## 完成过程
+
+1. 读取 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据文件修改与任务记录要求。
+2. 搜索现有 `airplan.json` 中 Planespotters 机型筛选链接写法，沿用 `fleet/list/{airline}/current?type={model}` 格式。
+3. 保留芬兰航空现有字段、机型名与客机数量，仅将各机型链接替换为 Planespotters 对应页面。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：将芬兰航空 A319/A320/A321/A330/A350、ATR 72-500、E190 的机型链接改为 Planespotters 来源。
+- `taskRecord.md`：追加本次数据来源调整任务记录。

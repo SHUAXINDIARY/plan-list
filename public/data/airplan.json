@@ -913,6 +913,27 @@
         }
     },
     {
+        "airline": "芬兰航空",
+        "airlineEnglishName": "Finnair",
+        "airlineWebsite": "https://www.finnair.com",
+        "passengerAircraftCount": 77,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/Finnair/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/Finnair/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/Finnair/current?type=airbus-a321",
+                "A330-300": "https://www.planespotters.net/fleet/list/Finnair/current?type=airbus-a330-300",
+                "A350-900": "https://www.planespotters.net/fleet/list/Finnair/current?type=airbus-a350-900"
+            },
+            "ATR": {
+                "ATR 72-500": "https://www.planespotters.net/fleet/list/Finnair/current?type=atr-72"
+            },
+            "Embraer": {
+                "E190": "https://www.planespotters.net/fleet/list/Finnair/current?type=embraer-erj-190"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "airlineWebsite": "https://www.lionairthai.com",
