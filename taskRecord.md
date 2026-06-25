@@ -4243,3 +4243,22 @@
 
 - `public/data/airplan.json`：将芬兰航空 A319/A320/A321/A330/A350、ATR 72-500、E190 的机型链接改为 Planespotters 来源。
 - `taskRecord.md`：追加本次数据来源调整任务记录。
+
+## 日期
+
+2026-06-25
+
+## 任务目的
+
+为个人页飞机照片原图列表补充新增的 PANA 系列照片 URL。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码修改、验证与任务记录要求。
+2. 读取 `src/pages/personal/constants/photoMeta.ts`，确认 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 使用完整 R2 资源 URL 列表维护。
+3. 按截图文件名和指定 R2 前缀补充 9 条 PANA 照片原图 URL。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：新增 PANA1012、PANA1025、PANA1300、PANA1301、PANA1302、PANA1305、PANA1307、PANA1310、PANA1317 照片 URL。
+- `taskRecord.md`：追加本次照片 URL 补充任务记录。
