@@ -200,11 +200,17 @@ const filterAirlineFleets = (
     const normalizedSearchTerm = airlineSearchTerm.trim().toLocaleLowerCase();
 
     const filteredAirlineFleets = airlineFleets
-        .filter((airlineFleet: AirlineFleet): boolean =>
-            airlineFleet.airlineName
-                .toLocaleLowerCase()
-                .includes(normalizedSearchTerm),
-        )
+        .filter((airlineFleet: AirlineFleet): boolean => {
+            const normalizedAirlineName =
+                airlineFleet.airlineName.toLocaleLowerCase();
+            const normalizedAirlineEnglishName =
+                airlineFleet.airlineEnglishName.toLocaleLowerCase();
+
+            return (
+                normalizedAirlineName.includes(normalizedSearchTerm) ||
+                normalizedAirlineEnglishName.includes(normalizedSearchTerm)
+            );
+        })
         .map((airlineFleet: AirlineFleet): AirlineFleet => {
             // 制造商筛选只影响每家航司内部的制造商分组，不破坏原始数据。
             const manufacturerFiltered =
@@ -471,7 +477,7 @@ const HomePage = (): ReactElement => {
                                 type="search"
                                 value={airlineSearchTerm}
                                 onChange={handleAirlineSearchChange}
-                                placeholder="输入航司名称"
+                                placeholder="输入中英文航司名称"
                             />
                         </label>
 

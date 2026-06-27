@@ -4262,3 +4262,43 @@
 
 - `src/pages/personal/constants/photoMeta.ts`：新增 PANA1012、PANA1025、PANA1300、PANA1301、PANA1302、PANA1305、PANA1307、PANA1310、PANA1317 照片 URL。
 - `taskRecord.md`：追加本次照片 URL 补充任务记录。
+
+## 日期
+
+2026-06-27
+
+## 任务目的
+
+为 `public/data/airplan.json` 补充美洲知名航司数据，扩展航司机型资料库覆盖范围。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认数据文件修改、JSON 校验与任务记录要求。
+2. 读取现有 `public/data/airplan.json`，确认航司条目字段、Planespotters 机型链接格式与美洲航司现有追加位置。
+3. 补充 Air Canada、WestJet、LATAM Airlines、Avianca、Copa Airlines、GOL、Azul Brazilian Airlines、Spirit Airlines 8 家航司的官网、客机数量与主要客运机型映射。
+4. 使用 `jq` 校验 JSON 合法性，并核对新增条目已写入。
+5. 使用本地 Rsbuild 二进制执行构建验证；`pnpm run build` 在依赖恢复阶段触发 pnpm 安装脚本审批拦截，未进入实际构建。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增 8 家美洲航司及对应 Airbus、Boeing、ATR、Embraer 机型链接数据。
+- `taskRecord.md`：追加本次美洲航司数据补充任务记录。
+
+## 日期
+
+2026-06-27
+
+## 任务目的
+
+让首页航司搜索输入框支持按英文航司名称搜索。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码修改、验证与任务记录要求。
+2. 读取 `src/pages/home/index.tsx`，确认当前 `filterAirlineFleets` 仅使用中文航司名参与搜索。
+3. 将航司筛选条件扩展为同时匹配中文航司名与英文航司名，并同步调整输入框占位文案。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：航司搜索支持匹配 `airlineEnglishName`，输入框提示改为中英文航司名称。
+- `taskRecord.md`：追加本次首页航司搜索能力补充任务记录。

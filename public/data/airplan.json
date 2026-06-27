@@ -1572,5 +1572,140 @@
                 "B737 MAX 8": "https://www.planespotters.net/fleet/list/Allegiant-Air/current?type=boeing-737-max-8"
             }
         }
+    },
+    {
+        "airline": "加拿大航空",
+        "airlineEnglishName": "Air Canada",
+        "airlineWebsite": "https://www.aircanada.com",
+        "passengerAircraftCount": 216,
+        "models": {
+            "Airbus": {
+                "A220-300": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=airbus-a220-300",
+                "A320-200": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=airbus-a320",
+                "A321-200": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=airbus-a321",
+                "A321XLR": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=airbus-a321xlr",
+                "A330-300": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=airbus-a330-300"
+            },
+            "Boeing": {
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=boeing-737-max-8",
+                "B777-200LR": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=boeing-777-200lr",
+                "B777-300ER": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=boeing-777-300er",
+                "B787-8": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=boeing-787-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/Air-Canada/current?type=boeing-787-9"
+            }
+        }
+    },
+    {
+        "airline": "西捷航空",
+        "airlineEnglishName": "WestJet",
+        "airlineWebsite": "https://www.westjet.com",
+        "passengerAircraftCount": 157,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/WestJet/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/WestJet/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/WestJet/current?type=boeing-737-max-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/WestJet/current?type=boeing-787-9"
+            }
+        }
+    },
+    {
+        "airline": "拉塔姆航空",
+        "airlineEnglishName": "LATAM Airlines",
+        "airlineWebsite": "https://www.latamairlines.com",
+        "passengerAircraftCount": 348,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=airbus-a320",
+                "A320neo": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=airbus-a321neo"
+            },
+            "Boeing": {
+                "B767-300ER": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=boeing-767-300er",
+                "B777-300ER": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=boeing-777-300er",
+                "B787-8": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=boeing-787-8",
+                "B787-9": "https://www.planespotters.net/fleet/list/LATAM-Airlines/current?type=boeing-787-9"
+            }
+        }
+    },
+    {
+        "airline": "阿维安卡航空",
+        "airlineEnglishName": "Avianca",
+        "airlineWebsite": "https://www.avianca.com",
+        "passengerAircraftCount": 128,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/fleet/list/Avianca/current?type=airbus-a319",
+                "A320-200": "https://www.planespotters.net/fleet/list/Avianca/current?type=airbus-a320",
+                "A320neo": "https://www.planespotters.net/fleet/list/Avianca/current?type=airbus-a320neo"
+            },
+            "Boeing": {
+                "B787-8": "https://www.planespotters.net/fleet/list/Avianca/current?type=boeing-787-8"
+            }
+        }
+    },
+    {
+        "airline": "巴拿马航空",
+        "airlineEnglishName": "Copa Airlines",
+        "airlineWebsite": "https://www.copaair.com",
+        "passengerAircraftCount": 105,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/Copa-Airlines/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/Copa-Airlines/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Copa-Airlines/current?type=boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/fleet/list/Copa-Airlines/current?type=boeing-737-max-9"
+            }
+        }
+    },
+    {
+        "airline": "巴西高尔航空",
+        "airlineEnglishName": "GOL",
+        "airlineWebsite": "https://www.voegol.com.br",
+        "passengerAircraftCount": 136,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/fleet/list/GOL-Linhas-Aereas/current?type=boeing-737-700",
+                "B737-800": "https://www.planespotters.net/fleet/list/GOL-Linhas-Aereas/current?type=boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/fleet/list/GOL-Linhas-Aereas/current?type=boeing-737-max-8"
+            }
+        }
+    },
+    {
+        "airline": "巴西蔚蓝航空",
+        "airlineEnglishName": "Azul Brazilian Airlines",
+        "airlineWebsite": "https://www.voeazul.com.br",
+        "passengerAircraftCount": 189,
+        "models": {
+            "Airbus": {
+                "A320neo": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=airbus-a320neo",
+                "A321neo": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=airbus-a330-200",
+                "A330-900": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=airbus-a330-900neo"
+            },
+            "ATR": {
+                "ATR72-600": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=atr-72-600"
+            },
+            "Embraer": {
+                "E195": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=embraer-erj-195",
+                "E195-E2": "https://www.planespotters.net/fleet/list/Azul-Brazilian-Airlines/current?type=embraer-erj-195-e2"
+            }
+        }
+    },
+    {
+        "airline": "精神航空",
+        "airlineEnglishName": "Spirit Airlines",
+        "airlineWebsite": "https://www.spirit.com",
+        "passengerAircraftCount": 131,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/fleet/list/Spirit-Airlines/current?type=airbus-a320",
+                "A320neo": "https://www.planespotters.net/fleet/list/Spirit-Airlines/current?type=airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/fleet/list/Spirit-Airlines/current?type=airbus-a321",
+                "A321neo": "https://www.planespotters.net/fleet/list/Spirit-Airlines/current?type=airbus-a321neo"
+            }
+        }
     }
 ]
