@@ -65,11 +65,6 @@
     --pl-surface-preview-loading: rgba(255, 255, 252, 0.9);
     --pl-surface-preview-img: rgba(255, 255, 252, 0.88);
 
-    --pl-nav-cta-bg: rgba(234, 245, 249, 0.82);
-    --pl-nav-cta-border: rgba(167, 190, 199, 0.55);
-    --pl-nav-cta-bg-hover: rgba(219, 239, 247, 0.95);
-    --pl-nav-cta-border-hover: rgba(136, 169, 183, 0.75);
-
     --pl-body-gradient: linear-gradient(to bottom, #f7f6f2, #ebe8df);
     --pl-shell-bg:
         radial-gradient(circle at 80% 20%, rgba(230, 227, 218, 0.72), transparent 31rem),
@@ -214,10 +209,6 @@ html[data-theme="dark"] {
     --pl-surface-preview-btn-hover: rgba(25, 49, 72, 0.92);
     --pl-surface-preview-loading: rgba(7, 17, 29, 0.88);
     --pl-surface-preview-img: rgba(7, 17, 29, 0.72);
-    --pl-nav-cta-bg: rgba(124, 200, 235, 0.14);
-    --pl-nav-cta-border: rgba(124, 200, 235, 0.38);
-    --pl-nav-cta-bg-hover: rgba(124, 200, 235, 0.24);
-    --pl-nav-cta-border-hover: rgba(124, 200, 235, 0.58);
     --pl-body-gradient: linear-gradient(to bottom, #020917, #101725);
     --pl-shell-bg:
         radial-gradient(circle at 86% 16%, rgba(235, 203, 139, 0.1), transparent 30rem),
@@ -519,25 +510,6 @@ a {
     height: 2px;
     background-color: var(--pl-accent);
     content: "";
-}
-
-/* 主导航内突出次要行动：跳转外部资料补充表单。 */
-.app-nav__link--cta {
-    color: var(--pl-text-heading);
-    background-color: var(--pl-nav-cta-bg);
-    border: 1px solid var(--pl-nav-cta-border);
-    border-radius: 999px;
-    border-color: var(--pl-nav-cta-border);
-}
-
-.app-nav__link--cta::after {
-    display: none;
-}
-
-.app-nav__link--cta:hover,
-.app-nav__link--cta:focus-visible {
-    background-color: var(--pl-nav-cta-bg-hover);
-    border-color: var(--pl-nav-cta-border-hover);
 }
 
 .app-main {

@@ -4346,3 +4346,27 @@
 - `src/pages/home/FleetResultsSkeleton.tsx`：新增可复用的航司卡片骨架屏与首页懒加载骨架页。
 - `src/pages/home/index.tsx`：复用 `FleetResultsSkeleton` 替代页面内数据加载文案。
 - `taskRecord.md`：追加本次首页路由加载态替换任务记录。
+
+## 日期
+
+2026-06-28
+
+## 任务目的
+
+移除首页机型资料库中的「补充资料」按钮及其外部表单链接相关逻辑。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc` 与项目 `impeccable` 规则，确认 UI 清理、引用删除和任务记录要求。
+2. 搜索 `CONTRIBUTION_FORM_URL`、`补充资料`、`fleet-summary__cta`、`app-nav__link--cta` 与 `pl-nav-cta`，定位按钮、外部表单常量和样式 token 的全部源码引用。
+3. 删除首页概览区「补充资料」链接与 `CONTRIBUTION_FORM_URL` 导入，调整统计概览为单侧自然排列。
+4. 删除外部表单 URL 常量、首页 CTA 样式、导航 CTA 样式和不再使用的 CTA 颜色变量。
+5. 运行 `node_modules/.bin/tsc --noEmit` 做类型检查；检查未通过，报错仍来自既有的 `src/pages/home/constant.ts` 未使用类型导入，以及 `src/pages/personal/data/aircraftPhotosData.ts` 预览图索引类型问题，非本次改动新增。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：移除「补充资料」链接和外部表单 URL 导入。
+- `src/pages/home/index.css`：删除 `fleet-summary__cta` 样式，统计概览改为左侧自然排列。
+- `src/constants/external-links.ts`：删除 `CONTRIBUTION_FORM_URL` 常量并更新文件说明。
+- `src/App.css`：删除不再使用的导航 CTA 样式和相关主题变量。
+- `taskRecord.md`：追加本次按钮与链接逻辑移除任务记录。

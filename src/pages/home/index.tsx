@@ -16,7 +16,6 @@ import type {
     PassengerAircraftSortOrder,
 } from "./type";
 import { Select } from "../../components/Select";
-import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
 import { FleetResultsSkeleton } from "./FleetResultsSkeleton";
 import {
     AIRPLANE_DATA_URL,
@@ -457,14 +456,6 @@ const HomePage = (): ReactElement => {
                                 个机型记录
                             </span>
                         </div>
-                        <a
-                            className="fleet-summary__cta app-nav__link app-nav__link--cta"
-                            href={CONTRIBUTION_FORM_URL}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            补充资料
-                        </a>
                     </div>
 
                     <div className="fleet-filters">

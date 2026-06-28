@@ -1,10 +1,6 @@
 /**
- * 全站集中维护的静态常量：外部页面链接与个人档案原始数据。
+ * 全站集中维护的静态常量：个人档案原始数据。
  */
-
-/** 飞书多维表格资料征集表单，供用户提交机型与资料补充信息。 */
-export const CONTRIBUTION_FORM_URL =
-  'https://rqqmslsz9y.feishu.cn/share/base/form/shrcnmQ4MrK1bcvypjprRVKtPxg';
 
 /** 个人档案中已打卡的机场条目，供地图标注与列表分组消费。 */
 export interface CheckedAirport {

@@ -113,7 +113,7 @@
 .fleet-summary {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0.65rem 1rem;
   padding: 0;
@@ -126,16 +126,6 @@
   flex-wrap: wrap;
   gap: 0.65rem;
   min-width: 0;
-}
-
-.fleet-summary__cta {
-  flex-shrink: 0;
-  min-height: 2.3rem;
-  padding: 0 0.95rem;
-  text-transform: none;
-  background-color: var(--pl-nav-cta-bg);
-  border: 1px solid var(--pl-nav-cta-border);
-  border-radius: 999px;
 }
 
 .fleet-filters {
@@ -609,16 +599,6 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
-  }
-
-  .fleet-summary__cta {
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.75rem;
-    width: 100%;
-    touch-action: manipulation;
   }
 
   .fleet-summary__stats span {
