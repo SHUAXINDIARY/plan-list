@@ -5,10 +5,17 @@ import {
     useState,
     type ReactElement,
 } from "react";
-import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import {
+    BrowserRouter,
+    NavLink,
+    Route,
+    Routes,
+    useLocation,
+} from "react-router";
 import { BackToTop } from "./components/back-to-top";
 import { RouteTransitionLayout } from "./components/route-transition";
 import { ThemeToggle } from "./components/theme-toggle";
+import { HomePageLoadingFallback } from "./pages/home/FleetResultsSkeleton";
 import "./App.css";
 import {
     applyThemePreference,
@@ -49,6 +56,17 @@ const getNavigationClassName = ({
     isActive: boolean;
 }): string => {
     return isActive ? "app-nav__link app-nav__link--active" : "app-nav__link";
+};
+
+// 根据当前路由选择懒加载 fallback：首页沿用机型资料库骨架屏，其他页面保留轻量状态提示。
+const RouteLoadingFallback = (): ReactElement => {
+    const location = useLocation();
+
+    if (location.pathname === "/") {
+        return <HomePageLoadingFallback />;
+    }
+
+    return <p className="route-loading">正在载入页面...</p>;
 };
 
 // 应用根组件负责装配导航、路由和页面级懒加载边界。
@@ -129,11 +147,7 @@ const App = (): ReactElement => {
                 </header>
 
                 <main className="app-main">
-                    <Suspense
-                        fallback={
-                            <p className="route-loading">正在载入页面...</p>
-                        }
-                    >
+                    <Suspense fallback={<RouteLoadingFallback />}>
                         <Routes>
                             <Route element={<RouteTransitionLayout />}>
                                 <Route path="/" element={<HomePage />} />

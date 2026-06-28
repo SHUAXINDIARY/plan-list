@@ -17,6 +17,7 @@ import type {
 } from "./type";
 import { Select } from "../../components/Select";
 import { CONTRIBUTION_FORM_URL } from "../../constants/external-links";
+import { FleetResultsSkeleton } from "./FleetResultsSkeleton";
 import {
     AIRPLANE_DATA_URL,
     AIRLINE_BRAND_COLORS,
@@ -431,15 +432,11 @@ const HomePage = (): ReactElement => {
                 </div>
             </div>
 
-            {isLoading ? (
-                <p className="data-state data-state--loading">
-                    正在载入机型数据...
-                </p>
-            ) : null}
-
             {errorMessage ? (
                 <p className="data-state data-state--error">{errorMessage}</p>
             ) : null}
+
+            {isLoading && !errorMessage ? <FleetResultsSkeleton /> : null}
 
             {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
                 <div className="fleet-toolbar" aria-label="机型数据筛选与概览">

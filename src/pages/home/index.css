@@ -21,6 +21,16 @@
   }
 }
 
+@keyframes fleet-skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
 .aircraft-wiki {
   width: min(100%, 72rem);
 }
@@ -62,6 +72,22 @@
   height: auto;
   margin-top: 1.5rem;
   overflow: visible;
+}
+
+.fleet-results--loading {
+  min-height: 30rem;
+}
+
+.fleet-results__loading-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
 }
 
 .fleet-results > .data-state {
@@ -283,6 +309,10 @@
   animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
+.airline-list--skeleton {
+  animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) both;
+}
+
 .airline-entry {
   position: relative;
   padding: 1.3rem 1.1rem 1.25rem;
@@ -307,6 +337,24 @@
   height: 0.42rem;
   background-color: var(--airline-brand-color, var(--pl-airline-stripe-1));
   content: "";
+}
+
+.airline-entry--skeleton {
+  --airline-brand-color: rgba(124, 200, 235, 0.36);
+  min-height: 9.75rem;
+  pointer-events: none;
+}
+
+.airline-entry--skeleton:nth-child(2) {
+  --airline-brand-color: rgba(164, 188, 201, 0.48);
+}
+
+.airline-entry--skeleton:nth-child(3) {
+  --airline-brand-color: rgba(245, 62, 79, 0.42);
+}
+
+.airline-entry--skeleton:nth-child(4) {
+  --airline-brand-color: rgba(80, 111, 220, 0.44);
 }
 
 .airline-entry:nth-child(2) {
@@ -353,6 +401,10 @@
   flex-wrap: wrap;
   gap: 0.55rem;
   min-width: 0;
+}
+
+.airline-entry__heading--skeleton {
+  align-items: center;
 }
 
 .airline-entry__header h2 {
@@ -420,6 +472,10 @@
   text-transform: uppercase;
 }
 
+.manufacturer-block--skeleton {
+  min-height: 1.55rem;
+}
+
 .aircraft-model-list {
   display: flex;
   flex-wrap: wrap;
@@ -427,6 +483,10 @@
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.aircraft-model-list--skeleton {
+  align-items: center;
 }
 
 .aircraft-model-list li {
@@ -453,6 +513,69 @@
   border-color: var(--pl-border-chip-hover);
   box-shadow: var(--pl-shadow-card-hover);
   transform: none;
+}
+
+.fleet-skeleton-line,
+.aircraft-model-list__skeleton-chip {
+  display: inline-flex;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(164, 188, 201, 0.08) 0%,
+      rgba(164, 188, 201, 0.2) 42%,
+      rgba(164, 188, 201, 0.08) 78%
+    );
+  background-size: 220% 100%;
+  border-radius: 999px;
+  animation: fleet-skeleton-shimmer 1.45s var(--motion-ease-out-quart) infinite;
+}
+
+.fleet-skeleton-line--title {
+  width: clamp(6.8rem, 20vw, 9.5rem);
+  height: 1.45rem;
+  border-radius: 0.35rem;
+}
+
+.fleet-skeleton-line--english {
+  width: clamp(7.2rem, 18vw, 11rem);
+  height: 0.9rem;
+}
+
+.fleet-skeleton-line--website {
+  width: 1.9rem;
+  height: 0.86rem;
+}
+
+.fleet-skeleton-line--meta {
+  width: clamp(10rem, 26vw, 15rem);
+  height: 0.9rem;
+}
+
+.fleet-skeleton-line--manufacturer {
+  width: 4.4rem;
+  height: 0.78rem;
+  margin-top: 0.35rem;
+}
+
+.aircraft-model-list__skeleton-chip {
+  min-height: 1.38rem;
+  box-sizing: border-box;
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.55rem;
+  box-shadow: var(--pl-shadow-chip);
+}
+
+.aircraft-model-list__skeleton-chip--narrow {
+  width: 4.9rem;
+}
+
+.aircraft-model-list__skeleton-chip--medium {
+  width: 5.8rem;
+}
+
+.aircraft-model-list__skeleton-chip--wide {
+  width: 6.9rem;
 }
 
 /* 机型映射值为 http(s) URL 时渲染为外链，与芯片文字对齐并保持可辨认。 */
@@ -535,6 +658,11 @@
     height: 30rem;
   }
 
+  .fleet-results--loading {
+    height: auto;
+    min-height: 30rem;
+  }
+
   .airline-entry__header {
     align-items: flex-start;
     flex-direction: column;
@@ -554,4 +682,23 @@
     white-space: normal;
   }
 
+  .fleet-skeleton-line--title {
+    width: min(12rem, 70%);
+  }
+
+  .fleet-skeleton-line--english {
+    width: min(10rem, 58%);
+  }
+
+  .fleet-skeleton-line--meta {
+    width: min(14rem, 84%);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fleet-skeleton-line,
+  .aircraft-model-list__skeleton-chip {
+    animation: none;
+  }
 }

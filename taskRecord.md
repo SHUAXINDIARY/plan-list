@@ -4302,3 +4302,47 @@
 
 - `src/pages/home/index.tsx`：航司搜索支持匹配 `airlineEnglishName`，输入框提示改为中英文航司名称。
 - `taskRecord.md`：追加本次首页航司搜索能力补充任务记录。
+
+## 日期
+
+2026-06-28
+
+## 任务目的
+
+将首页机型资料库加载态限定在航司卡片列表区域，并改为与真实数据卡片一致风格的骨架屏。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md` / `DESIGN.md` 与项目 `impeccable` 规则，确认首页 UI 修改、样式约束与任务记录要求。
+2. 读取 `src/pages/home/index.tsx` 与 `src/pages/home/index.css`，确认原加载态为页面标题下的一行 `data-state` 文案。
+3. 新增 `FleetResultsSkeleton`，让加载态只渲染在 `fleet-results` 列表区域，并以航司卡片、制造商行、机型芯片的结构展示骨架占位。
+4. 补充骨架屏样式，使其复用现有航司卡片的背景、边框、顶部分色条、间距与芯片轮廓，并支持减少动态偏好。
+5. 按用户要求未运行构建、未启动本地服务，由用户自行验证页面效果。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：移除全局文案加载态，新增列表区域骨架屏组件与占位配置。
+- `src/pages/home/index.css`：新增航司卡片式骨架屏、shimmer 动效、响应式和减少动态样式。
+- `taskRecord.md`：追加本次首页加载态样式调整任务记录。
+
+## 日期
+
+2026-06-28
+
+## 任务目的
+
+将首页路由懒加载阶段的 `正在载入页面...` 提示替换为机型资料库卡片骨架屏。
+
+## 完成过程
+
+1. 根据截图定位到居中 loading 来自 `src/App.tsx` 的 Suspense fallback，而非首页数据请求 loading。
+2. 将首页骨架屏抽为 `FleetResultsSkeleton` 复用组件，并新增 `HomePageLoadingFallback` 承接首页路由懒加载阶段。
+3. 在 `src/App.tsx` 中新增按当前路径选择 fallback 的逻辑：首页 `/` 使用机型资料库骨架屏，其他页面保留原轻量加载提示。
+4. 运行 `node_modules/.bin/tsc --noEmit` 做类型检查；检查未通过，报错来自既有的 `src/pages/home/constant.ts` 未使用类型导入，以及 `src/pages/personal/data/aircraftPhotosData.ts` 预览图索引类型问题，非本次改动新增。
+
+## 修改具体文件
+
+- `src/App.tsx`：首页路由 Suspense fallback 改为机型资料库骨架屏，其他路由保留原加载提示。
+- `src/pages/home/FleetResultsSkeleton.tsx`：新增可复用的航司卡片骨架屏与首页懒加载骨架页。
+- `src/pages/home/index.tsx`：复用 `FleetResultsSkeleton` 替代页面内数据加载文案。
+- `taskRecord.md`：追加本次首页路由加载态替换任务记录。
