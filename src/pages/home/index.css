@@ -78,7 +78,7 @@
   gap: 1.85rem;
   padding: 0;
   margin-top: 1.1rem;
-  background-color: var(--pl-surface-toolbar);
+  background-color: transparent;
   border: 0;
   border-radius: 0;
   animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) 80ms both;
@@ -120,10 +120,14 @@
   width: 100%;
   min-width: 0;
   padding: 0.75rem;
-  background-color: var(--pl-surface-toolbar);
+  background:
+    linear-gradient(180deg, rgba(244, 248, 251, 0.035), transparent 72%),
+    var(--pl-surface-toolbar);
   border: 1px solid var(--pl-border-muted);
   border-radius: 1rem;
-  box-shadow: var(--pl-shadow-control);
+  box-shadow:
+    inset 0 1px 0 rgba(164, 188, 201, 0.06),
+    var(--pl-shadow-control);
 }
 
 .fleet-summary__stats span {
@@ -469,7 +473,7 @@
   }
 
   .fleet-toolbar {
-    padding: 0.85rem 0.75rem;
+    padding: 0;
   }
 
   .fleet-summary {
