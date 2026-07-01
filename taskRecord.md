@@ -4370,3 +4370,60 @@
 - `src/constants/external-links.ts`：删除 `CONTRIBUTION_FORM_URL` 常量并更新文件说明。
 - `src/App.css`：删除不再使用的导航 CTA 样式和相关主题变量。
 - `taskRecord.md`：追加本次按钮与链接逻辑移除任务记录。
+
+## 日期
+
+2026-07-01
+
+## 任务目的
+
+在个人页飞机照片原图 URL 列表中补充两张 `plane-model` 目录下的图片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码数据修改、验证与任务记录要求。
+2. 查看 `src/pages/personal/constants/photoMeta.ts`，确认 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中现有 `plane-model` URL 的排列方式。
+3. 根据用户截图中的文件名与指定链接前缀，追加 `PANA1494.jpg` 和 `PANA1502.jpg` 两条原图 URL。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中新增两条 `plane-model` 图片 URL。
+- `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
+
+## 日期
+
+2026-07-01
+
+## 任务目的
+
+在个人页飞机照片原图 URL 列表中继续补充六张 `plane-model` 目录下的图片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码数据修改、验证与任务记录要求。
+2. 查看 `src/pages/personal/constants/photoMeta.ts`，确认上一轮新增 URL 位于 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组末尾。
+3. 根据用户三张截图中的文件名与同一链接前缀，追加 `DSC_0972.jpg`、`DSC_0975.jpg`、`PANA1521.jpg`、`PANA1525.jpg`、`PANA1460.jpg` 和 `PANA1461.jpg` 六条原图 URL。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中新增六条 `plane-model` 图片 URL。
+- `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
+
+## 日期
+
+2026-07-01
+
+## 任务目的
+
+在个人页飞机照片原图 URL 列表中继续补充两张 `plane-model` 目录下的图片。
+
+## 完成过程
+
+1. 阅读 `CODEX.md` 与 `.cursor/rules/project-base-rules.mdc`，确认源码数据修改、验证与任务记录要求。
+2. 查看 `src/pages/personal/constants/photoMeta.ts`，确认当前 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 的 `plane-model` 分组末尾。
+3. 根据用户截图中的文件名与同一链接前缀，追加 `DSC_0861.jpg` 和 `DSC_0884.jpg` 两条原图 URL。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中新增两条 `plane-model` 图片 URL。
+- `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
