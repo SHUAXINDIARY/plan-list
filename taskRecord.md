@@ -4243,6 +4243,7 @@
 
 - `public/data/airplan.json`：将芬兰航空 A319/A320/A321/A330/A350、ATR 72-500、E190 的机型链接改为 Planespotters 来源。
 - `taskRecord.md`：追加本次数据来源调整任务记录。
+<<<<<<< HEAD
 
 ## 日期
 
@@ -4427,3 +4428,5 @@
 
 - `src/pages/personal/constants/photoMeta.ts`：在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中新增两条 `plane-model` 图片 URL。
 - `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
+=======
+>>>>>>> 66185a4 (feat: add air line data)
