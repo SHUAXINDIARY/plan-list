@@ -4430,3 +4430,66 @@
 - `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
 =======
 >>>>>>> 66185a4 (feat: add air line data)
+
+## 日期
+
+2026-07-04
+
+## 任务目的
+
+根据桌面提示文件 `Aircraft-Log-UI-Improvement-Prompt.md` 优化站点 UI，使站点更贴近 Aircraft Log 航空摄影与飞机日志体验。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md` / `DESIGN.md` 语境和项目 `impeccable`、`rsbuild-best-practices` skill，确认深色档案型产品界面、Rsbuild 配置和验证要求。
+2. 阅读桌面提示文件，提取 Hero、深色卡片、统计仪表、照片 overlay、Recent Spotting 时间线、Flight Map 和飞机 marker 等优化方向。
+3. 将默认主题调整为深色 Aircraft Log 语境，同步顶部品牌、页面 title、description 与 theme-color。
+4. 重构首页首屏为 Aircraft Log Hero，加入 Aircraft / Airlines / Airports / Countries 统计、Browse Aircraft / Flight Map CTA、Fleet Intelligence 仪表盘、首页航迹地图和更清晰的机队筛选入口。
+5. 优化航司条目和机型 chip：加入统一尺寸品牌占位 logo、hover 轻微上浮、制造商品牌色 chip，并保持现有数据结构不变。
+6. 优化照片页相册：为缩略图增加目录和编号 overlay，强化 hover zoom / shadow，同时保留懒加载与全屏预览。
+7. 优化个人飞行日志：在摘要后增加 Recent Spotting 航程时间线，并将地图 canvas marker 与图例改成小飞机符号。
+8. 修正 `pnpm-workspace.yaml` 中 `sharp` 构建脚本许可占位，保证项目照片预览依赖可正常安装和构建。
+9. 运行 `CI=true pnpm run build`，构建通过；启动本地 dev server 并用浏览器检查桌面、移动首页、照片页 overlay、个人页时间线与地图，无控制台错误或横向溢出。
+
+## 修改具体文件
+
+- `src/App.tsx`：顶部品牌从 Aircraft Wiki 调整为 Aircraft Log。
+- `src/App.css`：更新主题变量说明，保持默认深色运行时语义一致。
+- `src/utils/themePreference.ts`：默认主题回落改为深色 Night Flight Archive。
+- `rsbuild.config.ts`：更新页面 title、description、keywords、theme-color 和首屏主题注入脚本。
+- `pnpm-workspace.yaml`：将 `sharp` 的 `allowBuilds` 占位设为 `true`。
+- `src/pages/home/index.tsx`：新增首页 Hero 统计、仪表盘、航迹地图、Recent Spotting 摘录、航司 logo 占位和制造商 chip 分类。
+- `src/pages/home/index.css`：新增首页 Hero、统计图、地图区、航司卡片、机型 chip 与响应式样式。
+- `src/pages/personal/index.tsx`：新增个人页 Recent Spotting 航程时间线。
+- `src/pages/personal/index.css`：新增时间线样式，强化照片相册 overlay、hover zoom 与移动端布局。
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：为照片缩略图输出目录与编号 overlay 文案。
+- `src/components/map/canvasMap.ts`：将地图 marker 绘制为小飞机符号。
+- `src/components/map/index.css`：将地图图例 marker 同步为小飞机形状。
+- `taskRecord.md`：追加本次 UI 优化任务记录。
+
+## 日期
+
+2026-07-04
+
+## 任务目的
+
+检查并修复站点浅色主题适配问题，重点解决首页 Aircraft Log 首屏在浅色下仍显示深色航图背景、文字对比不足的问题。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md` / `DESIGN.md` 语境和项目 `impeccable` skill，确认浅色主题、对比度、响应式和任务记录要求。
+2. 根据用户截图定位首页 Hero 使用硬编码深色 OKLCH / rgba 背景、文字和统计卡色值，导致浅色主题下黑字压在深色背景上。
+3. 为首页 Hero 增加局部浅色 / 深色主题 token，浅色使用冷灰蓝日间航图背景，深色保留 Night Flight Archive 夜航质感。
+4. 将浅色全局语义色从偏暖米色调整为冷灰蓝 Daylight Archive，并同步浅色地图背景、图例、滚动条、边框和 focus / hover token。
+5. 调整地图组件浅色路线、机场 marker 和 tooltip 色值，使其与新的浅色底图和全局主题一致。
+6. 修正主题切换按钮月亮图标的 React SVG 属性命名，清除浅色验收时出现的控制台 warning。
+7. 运行 `CI=true pnpm run build`，构建通过；使用浏览器在浅色主题下检查首页桌面、首页移动端、个人页、照片页和参考页，均无横向溢出，控制台无站点 warning / error。
+
+## 修改具体文件
+
+- `src/App.css`：更新浅色主题全局语义色、surface、边框、地图背景和滚动条 token。
+- `src/pages/home/index.css`：为 Aircraft Log Hero 增加浅色 / 深色局部主题 token，并修正标题、按钮、统计卡在浅色下的颜色。
+- `src/components/map/index.css`：更新浅色地图路线、marker 与 tooltip 色值。
+- `src/components/theme-toggle/index.tsx`：修正月亮图标 SVG 属性为 React JSX 命名。
+- `src/utils/themePreference.ts`：同步浅色 theme-color 到新的冷灰蓝壳层。
+- `taskRecord.md`：追加本次浅色适配修复任务记录。

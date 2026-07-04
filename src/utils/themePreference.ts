@@ -2,7 +2,7 @@
  * 全站主题偏好：与 `App.css` 中 `data-theme` 及构建期注入脚本共用同一约定。
  */
 
-/** 用户界面主题：亮色为默认「AeroWiki 工作台」，深色保留为夜间阅读环境。 */
+/** 用户界面主题：深色为默认「Night Flight Archive」，亮色保留为日间阅读环境。 */
 export type ThemePreference = "dark" | "light";
 
 /** localStorage 键名；须与 `rsbuild.config.ts` 内嵌脚本保持一致。 */
@@ -12,17 +12,17 @@ export const THEME_STORAGE_KEY = "plane-list-theme";
  * 将存储或其它来源的字符串规范化为可识别的主题值。
  *
  * @param raw 取自 `localStorage` 或 `data-theme` 的原始字符串，可能为 `null`。
- * @returns 识别成功返回对应主题，否则回落为亮色以贴近参考工作台视觉。
+ * @returns 识别成功返回对应主题，否则回落为深色以贴近 Night Flight Archive 视觉。
  */
 export function normalizeThemePreference(raw: string | null): ThemePreference {
     if (raw === "light" || raw === "dark") {
         return raw;
     }
-    return "light";
+    return "dark";
 }
 
 /**
- * 从 `localStorage` 读取用户上次选择的主题；不可用或异常时回落亮色。
+ * 从 `localStorage` 读取用户上次选择的主题；不可用或异常时回落深色。
  */
 export function readThemePreferenceFromStorage(): ThemePreference {
     try {
@@ -30,7 +30,7 @@ export function readThemePreferenceFromStorage(): ThemePreference {
             window.localStorage.getItem(THEME_STORAGE_KEY),
         );
     } catch {
-        return "light";
+        return "dark";
     }
 }
 
@@ -62,7 +62,7 @@ export function applyThemePreference(preference: ThemePreference): void {
 export const THEME_COLOR_DARK = "#07111d";
 
 /** 亮色模式下地址栏/系统 UI 用 theme-color，与壳层渐变末端对齐。 */
-export const THEME_COLOR_LIGHT = "#f7f6f2";
+export const THEME_COLOR_LIGHT = "#f3f8fb";
 
 /**
  * 更新文档中 `theme-color` meta，便于移动端浏览器顶栏与主题一致。

@@ -30,6 +30,9 @@ export const MAP_ZOOM_STEP = 1.18;
 /** 标记点在屏幕（CSS 像素）下的绘制半径，不随画布缩放变化。 */
 export const MARKER_RADIUS = 5.6;
 
+/** 飞机标记的统一朝向角度，让点位更像航迹符号而非默认地图 pin。 */
+export const AIRCRAFT_MARKER_ROTATION_RADIANS = -Math.PI / 9;
+
 /** 指针命中检测在屏幕坐标下的半径（像素）。 */
 export const MARKER_HIT_RADIUS_PX = 14;
 
@@ -334,6 +337,34 @@ const resolveMarkerPaintStyles = (
 };
 
 /**
+ * 在已平移到标记中心的画布坐标系中绘制小飞机符号。
+ */
+const paintAircraftMarkerGlyph = (
+  context: CanvasRenderingContext2D,
+  radius: number,
+  markerPaint: { fillStyle: string; strokeStyle: string; lineWidth: number },
+): void => {
+  context.beginPath();
+  context.moveTo(0, -radius * 1.45);
+  context.lineTo(radius * 0.36, -radius * 0.16);
+  context.lineTo(radius * 1.3, radius * 0.26);
+  context.lineTo(radius * 0.9, radius * 0.64);
+  context.lineTo(radius * 0.24, radius * 0.42);
+  context.lineTo(0, radius * 1.18);
+  context.lineTo(-radius * 0.24, radius * 0.42);
+  context.lineTo(-radius * 0.9, radius * 0.64);
+  context.lineTo(-radius * 1.3, radius * 0.26);
+  context.lineTo(-radius * 0.36, -radius * 0.16);
+  context.closePath();
+  context.fillStyle = markerPaint.fillStyle;
+  context.fill();
+  context.strokeStyle = markerPaint.strokeStyle;
+  context.lineWidth = markerPaint.lineWidth;
+  context.lineJoin = 'round';
+  context.stroke();
+};
+
+/**
  * 绘制单段航迹弧线，国内实线、国际虚线，色相均落在 Night Flight 冷青体系内。
  */
 const paintMapRouteArc = (
@@ -414,7 +445,7 @@ export const paintMapBaseLayer = (
 };
 
 /**
- * 在屏幕坐标下绘制标记点，半径不随缩放变化。
+ * 在屏幕坐标下绘制飞机标记，命中半径不随缩放变化。
  */
 export const paintMapMarkers = (
   context: CanvasRenderingContext2D,
@@ -438,13 +469,11 @@ export const paintMapMarkers = (
     const radius = isActive ? MARKER_RADIUS * 1.12 : MARKER_RADIUS;
     const markerPaint = resolveMarkerPaintStyles(palette, marker.scope, isActive);
 
-    context.beginPath();
-    context.arc(screenPosition.left, screenPosition.top, radius, 0, Math.PI * 2);
-    context.fillStyle = markerPaint.fillStyle;
-    context.fill();
-    context.strokeStyle = markerPaint.strokeStyle;
-    context.lineWidth = markerPaint.lineWidth;
-    context.stroke();
+    context.save();
+    context.translate(screenPosition.left, screenPosition.top);
+    context.rotate(AIRCRAFT_MARKER_ROTATION_RADIANS);
+    paintAircraftMarkerGlyph(context, radius, markerPaint);
+    context.restore();
   });
 };
 

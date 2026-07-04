@@ -92,7 +92,7 @@ const App = (): ReactElement => {
         <BrowserRouter>
             <div className="app-shell">
                 <header className="app-header">
-                    <div className="app-brand" aria-label="Aircraft Wiki">
+                    <div className="app-brand" aria-label="Aircraft Log">
                         <span className="app-brand__mark" aria-hidden="true">
                             <svg
                                 className="app-brand__icon"
@@ -109,7 +109,7 @@ const App = (): ReactElement => {
                                 />
                             </svg>
                         </span>
-                        <span className="app-brand__name">Aircraft Wiki</span>
+                        <span className="app-brand__name">Aircraft Log</span>
                     </div>
                     <div className="app-header__actions">
                         <ThemeToggle

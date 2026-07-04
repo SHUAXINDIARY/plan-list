@@ -1,4 +1,4 @@
-/* ========= 全站语义色（亮色为默认，深色见 `html[data-theme="dark"]`）========= */
+/* ========= 全站语义色（:root 存放亮色变量；运行时默认深色见 `html[data-theme="dark"]`）========= */
 :root {
     color-scheme: light;
 
@@ -7,88 +7,88 @@
     --pl-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
     /* 正文与标题 */
-    --pl-text-body: #333333;
-    --pl-text-heading: #1f1e1b;
-    --pl-text-secondary: #64615a;
-    --pl-text-kicker: #7a7468;
-    --pl-text-meta: #817b71;
-    --pl-text-placeholder: #a8a39a;
-    --pl-text-emphasis: #243848;
-    --pl-text-data: #37352f;
-    --pl-text-english: #8a857c;
-    --pl-text-chip: #33312c;
+    --pl-text-body: #283a49;
+    --pl-text-heading: #172535;
+    --pl-text-secondary: #5a6f80;
+    --pl-text-kicker: #657a8c;
+    --pl-text-meta: #6d8191;
+    --pl-text-placeholder: #9aabb8;
+    --pl-text-emphasis: #123a56;
+    --pl-text-data: #23394a;
+    --pl-text-english: #687d8f;
+    --pl-text-chip: #263948;
 
-    --pl-accent: #a06b18;
-    --pl-link: #7d5a19;
-    --pl-link-decoration: rgba(125, 90, 25, 0.4);
-    --pl-link-hover: #5d4313;
-    --pl-link-hover-decoration: rgba(93, 67, 19, 0.75);
-    --pl-underline-model: rgba(154, 90, 26, 0.34);
-    --pl-underline-model-hover: rgba(31, 30, 27, 0.7);
+    --pl-accent: #0f6f98;
+    --pl-link: #0b6e9e;
+    --pl-link-decoration: rgba(11, 110, 158, 0.36);
+    --pl-link-hover: #084f76;
+    --pl-link-hover-decoration: rgba(8, 79, 118, 0.68);
+    --pl-underline-model: rgba(15, 111, 152, 0.34);
+    --pl-underline-model-hover: rgba(23, 37, 53, 0.68);
 
-    --pl-border-default: rgba(198, 191, 176, 0.52);
-    --pl-border-muted: rgba(214, 209, 198, 0.74);
-    --pl-border-divider: rgba(216, 211, 200, 0.72);
-    --pl-border-divider-mid: rgba(210, 204, 192, 0.82);
-    --pl-border-input: rgba(214, 209, 198, 0.72);
-    --pl-border-strong: rgba(184, 175, 158, 0.54);
-    --pl-border-nav-hover: rgba(154, 90, 26, 0.42);
-    --pl-border-nav-active: rgba(154, 90, 26, 0.62);
-    --pl-nav-active-bg: rgba(255, 255, 252, 0.82);
-    --pl-border-focus: rgba(154, 90, 26, 0.58);
-    --pl-focus-glow: 0 0 0 3px rgba(154, 90, 26, 0.14);
-    --pl-border-accent-soft: rgba(154, 90, 26, 0.22);
-    --pl-border-entry-hover: rgba(154, 90, 26, 0.28);
-    --pl-border-chip-hover: rgba(154, 90, 26, 0.36);
-    --pl-border-pill: rgba(198, 191, 176, 0.58);
-    --pl-border-preview-btn-hover: rgba(154, 90, 26, 0.42);
-    --pl-border-loading-ring: rgba(154, 90, 26, 0.2);
+    --pl-border-default: rgba(112, 142, 166, 0.38);
+    --pl-border-muted: rgba(130, 158, 179, 0.32);
+    --pl-border-divider: rgba(145, 169, 188, 0.32);
+    --pl-border-divider-mid: rgba(126, 154, 176, 0.42);
+    --pl-border-input: rgba(123, 151, 174, 0.44);
+    --pl-border-strong: rgba(92, 120, 145, 0.46);
+    --pl-border-nav-hover: rgba(15, 111, 152, 0.42);
+    --pl-border-nav-active: rgba(15, 111, 152, 0.62);
+    --pl-nav-active-bg: rgba(236, 247, 252, 0.86);
+    --pl-border-focus: rgba(15, 111, 152, 0.58);
+    --pl-focus-glow: 0 0 0 3px rgba(15, 111, 152, 0.14);
+    --pl-border-accent-soft: rgba(15, 111, 152, 0.22);
+    --pl-border-entry-hover: rgba(15, 111, 152, 0.28);
+    --pl-border-chip-hover: rgba(15, 111, 152, 0.36);
+    --pl-border-pill: rgba(112, 142, 166, 0.42);
+    --pl-border-preview-btn-hover: rgba(15, 111, 152, 0.42);
+    --pl-border-loading-ring: rgba(15, 111, 152, 0.2);
     --pl-border-error: rgba(242, 118, 118, 0.5);
 
-    --pl-surface-panel: rgba(255, 255, 252, 0.72);
-    --pl-surface-toolbar: rgba(255, 255, 252, 0.72);
-    --pl-surface-entry: rgba(255, 255, 252, 0.8);
-    --pl-surface-entry-hover: rgba(255, 255, 252, 0.96);
-    --pl-surface-input: rgba(255, 255, 252, 0.92);
-    --pl-surface-chip: rgba(255, 255, 252, 0.95);
-    --pl-surface-reference: rgba(255, 255, 252, 0.52);
-    --pl-surface-reference-hover: rgba(255, 255, 252, 0.82);
-    --pl-surface-data-state: rgba(255, 255, 252, 0.8);
-    --pl-surface-route-loading: rgba(255, 255, 252, 0.82);
-    --pl-surface-pill: rgba(255, 255, 252, 0.62);
-    --pl-surface-personal-pill: rgba(255, 255, 252, 0.64);
-    --pl-surface-gallery: rgba(255, 255, 252, 0.68);
-    --pl-surface-image: rgba(239, 236, 225, 0.78);
-    --pl-surface-airport: rgba(255, 255, 252, 0.74);
-    --pl-surface-preview-btn: rgba(255, 255, 252, 0.9);
-    --pl-surface-preview-btn-hover: rgba(250, 247, 239, 0.96);
-    --pl-surface-preview-loading: rgba(255, 255, 252, 0.9);
-    --pl-surface-preview-img: rgba(255, 255, 252, 0.88);
+    --pl-surface-panel: rgba(248, 252, 254, 0.76);
+    --pl-surface-toolbar: rgba(248, 252, 254, 0.74);
+    --pl-surface-entry: rgba(248, 252, 254, 0.84);
+    --pl-surface-entry-hover: rgba(248, 252, 254, 0.98);
+    --pl-surface-input: rgba(248, 252, 254, 0.94);
+    --pl-surface-chip: rgba(248, 252, 254, 0.96);
+    --pl-surface-reference: rgba(248, 252, 254, 0.56);
+    --pl-surface-reference-hover: rgba(248, 252, 254, 0.84);
+    --pl-surface-data-state: rgba(248, 252, 254, 0.82);
+    --pl-surface-route-loading: rgba(248, 252, 254, 0.86);
+    --pl-surface-pill: rgba(239, 247, 251, 0.72);
+    --pl-surface-personal-pill: rgba(239, 247, 251, 0.74);
+    --pl-surface-gallery: rgba(248, 252, 254, 0.72);
+    --pl-surface-image: rgba(227, 237, 245, 0.78);
+    --pl-surface-airport: rgba(248, 252, 254, 0.78);
+    --pl-surface-preview-btn: rgba(248, 252, 254, 0.9);
+    --pl-surface-preview-btn-hover: rgba(239, 247, 251, 0.96);
+    --pl-surface-preview-loading: rgba(248, 252, 254, 0.92);
+    --pl-surface-preview-img: rgba(248, 252, 254, 0.9);
 
-    --pl-body-gradient: linear-gradient(to bottom, #f7f6f2, #ebe8df);
+    --pl-body-gradient: linear-gradient(to bottom, #f3f8fb, #e3edf5);
     --pl-shell-bg:
-        radial-gradient(circle at 80% 20%, rgba(230, 227, 218, 0.72), transparent 31rem),
-        radial-gradient(circle at 10% 82%, rgba(239, 236, 225, 0.82), transparent 28rem),
-        linear-gradient(135deg, #f7f6f2 0%, #f0eee7 48%, #e7e3d7 100%);
+        radial-gradient(circle at 80% 20%, rgba(205, 225, 238, 0.72), transparent 31rem),
+        radial-gradient(circle at 10% 82%, rgba(226, 238, 246, 0.84), transparent 28rem),
+        linear-gradient(135deg, #f5f9fc 0%, #ebf3f8 48%, #dde9f1 100%);
     --pl-shell-overlay:
-        radial-gradient(circle at 86% 16%, rgba(235, 203, 139, 0.12), transparent 26rem),
-        radial-gradient(circle at 4% 86%, rgba(163, 190, 140, 0.1), transparent 25rem),
-        linear-gradient(115deg, transparent 58%, rgba(235, 203, 139, 0.08) 70%, transparent 84%);
-    --pl-surface-header: rgba(255, 255, 252, 0.7);
-    --pl-surface-nav: rgba(255, 255, 252, 0.68);
-    --pl-surface-nav-item: rgba(250, 247, 239, 0.8);
-    --pl-shadow-shell: 0 0.2rem 0.9rem rgba(99, 88, 67, 0.1);
-    --pl-shadow-brand: 0 0.28rem 0.85rem rgba(99, 88, 67, 0.15),
-        0 1px 3px rgba(99, 88, 67, 0.12),
-        inset 0 1px 0 rgba(255, 255, 252, 0.78);
-    --pl-shadow-panel: 0 1.25rem 2.25rem rgba(99, 88, 67, 0.13);
-    --pl-shadow-control: 0 0.6rem 1.15rem rgba(99, 88, 67, 0.12),
-        0 2px 5px rgba(99, 88, 67, 0.1);
-    --pl-shadow-card: 0 1px 2px rgba(99, 88, 67, 0.07),
-        inset 0 1px 0 rgba(255, 255, 252, 0.72);
-    --pl-shadow-card-hover: 0 0.3rem 0.8rem rgba(99, 88, 67, 0.08),
-        0 1px 2px rgba(99, 88, 67, 0.08);
-    --pl-shadow-chip: 0 1px 2px rgba(99, 88, 67, 0.12);
+        radial-gradient(circle at 86% 16%, rgba(15, 111, 152, 0.1), transparent 26rem),
+        radial-gradient(circle at 4% 86%, rgba(80, 133, 158, 0.08), transparent 25rem),
+        linear-gradient(115deg, transparent 58%, rgba(15, 111, 152, 0.06) 70%, transparent 84%);
+    --pl-surface-header: rgba(248, 252, 254, 0.72);
+    --pl-surface-nav: rgba(248, 252, 254, 0.72);
+    --pl-surface-nav-item: rgba(239, 247, 251, 0.82);
+    --pl-shadow-shell: 0 0.2rem 0.9rem rgba(48, 72, 91, 0.1);
+    --pl-shadow-brand: 0 0.28rem 0.85rem rgba(48, 72, 91, 0.14),
+        0 1px 3px rgba(48, 72, 91, 0.12),
+        inset 0 1px 0 rgba(248, 252, 254, 0.78);
+    --pl-shadow-panel: 0 1.25rem 2.25rem rgba(48, 72, 91, 0.13);
+    --pl-shadow-control: 0 0.6rem 1.15rem rgba(48, 72, 91, 0.12),
+        0 2px 5px rgba(48, 72, 91, 0.1);
+    --pl-shadow-card: 0 1px 2px rgba(48, 72, 91, 0.07),
+        inset 0 1px 0 rgba(248, 252, 254, 0.72);
+    --pl-shadow-card-hover: 0 0.3rem 0.8rem rgba(48, 72, 91, 0.08),
+        0 1px 2px rgba(48, 72, 91, 0.08);
+    --pl-shadow-chip: 0 1px 2px rgba(48, 72, 91, 0.12);
 
     --pl-stat-blue-bg: rgba(239, 246, 255, 0.92);
     --pl-stat-blue-border: rgba(147, 197, 253, 0.72);
@@ -114,21 +114,21 @@
     --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
 
     --pl-map-bg:
-        radial-gradient(circle at 72% 28%, oklch(0.68 0.085 225 / 0.14), transparent 12rem),
-        radial-gradient(circle at 18% 18%, oklch(0.58 0.07 218 / 0.12), transparent 10rem),
-        linear-gradient(135deg, oklch(0.16 0.022 248 / 0.96), oklch(0.22 0.026 230 / 0.82));
-    --pl-map-border: rgba(164, 188, 201, 0.16);
-    --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.04);
-    --pl-map-frame: rgba(124, 200, 235, 0.1);
+        radial-gradient(circle at 72% 28%, oklch(0.9 0.036 225 / 0.6), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.93 0.025 218 / 0.62), transparent 10rem),
+        linear-gradient(135deg, oklch(0.95 0.012 238 / 0.98), oklch(0.86 0.024 225 / 0.94));
+    --pl-map-border: rgba(92, 122, 145, 0.26);
+    --pl-map-inset: inset 0 0 0 1px rgba(248, 252, 254, 0.68);
+    --pl-map-frame: rgba(92, 122, 145, 0.2);
     --pl-map-vignette:
-        linear-gradient(to right, rgba(7, 17, 29, 0.42), transparent 18%, transparent 82%, rgba(7, 17, 29, 0.38)),
-        linear-gradient(to bottom, rgba(7, 17, 29, 0.3), transparent 28%, rgba(7, 17, 29, 0.26));
+        linear-gradient(to right, rgba(39, 63, 82, 0.1), transparent 18%, transparent 82%, rgba(39, 63, 82, 0.08)),
+        linear-gradient(to bottom, rgba(39, 63, 82, 0.08), transparent 28%, rgba(39, 63, 82, 0.1));
 
-    --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
-    --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
-    --pl-map-legend-bg: rgba(7, 17, 29, 0.72);
-    --pl-map-legend-text: rgba(217, 231, 238, 0.78);
-    --pl-map-legend-border: rgba(164, 188, 201, 0.14);
+    --pl-map-tooltip-bg: oklch(0.97 0.012 235 / 0.96);
+    --pl-map-tooltip-border: rgba(47, 105, 139, 0.28);
+    --pl-map-legend-bg: rgba(248, 252, 254, 0.84);
+    --pl-map-legend-text: rgba(31, 52, 70, 0.78);
+    --pl-map-legend-border: rgba(95, 124, 145, 0.22);
     --pl-map-route-international: oklch(0.78 0.105 222 / 0.58);
     --pl-map-route-domestic: oklch(0.68 0.055 228 / 0.44);
     --pl-map-marker-domestic-fill: oklch(0.56 0.045 232 / 0.9);
@@ -144,13 +144,13 @@
         radial-gradient(circle at 50% 20%, oklch(0.32 0.045 225 / 0.34), transparent 22rem),
         oklch(0.1 0.018 245 / 0.94);
 
-    --pl-summary-chevron: #8f7a55;
+    --pl-summary-chevron: #2f7194;
 
     /* Night Flight Archive 纵向滚动轨道 token */
     --scroll-area-size: 10px;
-    --scroll-area-track-bg: rgba(229, 224, 211, 0.74);
-    --scroll-area-thumb: rgba(154, 90, 26, 0.28);
-    --scroll-area-thumb-hover: rgba(154, 90, 26, 0.42);
+    --scroll-area-track-bg: rgba(224, 235, 243, 0.78);
+    --scroll-area-thumb: rgba(15, 111, 152, 0.28);
+    --scroll-area-thumb-hover: rgba(15, 111, 152, 0.42);
 }
 
 html[data-theme="dark"] {

@@ -41,6 +41,21 @@ const loadAircraftPhotosBundle = async (): Promise<AircraftPhotosBundle> => {
 };
 
 /**
+ * 根据目录值查找展示标签，缺失时回落到目录值本身。
+ */
+const getPhotoDirectoryLabel = (
+    directoryOptions: readonly AircraftPhotoDirectoryOption[],
+    directoryValue: string,
+): string => {
+    const matchedDirectoryOption = directoryOptions.find(
+        (directoryOption: AircraftPhotoDirectoryOption): boolean =>
+            directoryOption.value === directoryValue,
+    );
+
+    return matchedDirectoryOption?.label ?? directoryValue;
+};
+
+/**
  * 拍摄的飞机相册与全屏预览，预览图数据与 Select 控件随本区块 chunk 加载。
  */
 const PersonalAircraftPhotosSection = ({
@@ -335,23 +350,47 @@ const PersonalAircraftPhotosSection = ({
                             (
                                 aircraftPhoto: AircraftPhoto,
                                 aircraftPhotoIndex: number,
-                            ): ReactElement => (
-                                <li key={aircraftPhoto.originalUrl}>
-                                    <button
-                                        className="aircraft-photo-gallery__button"
-                                        type="button"
-                                        onClick={(): void =>
-                                            openPhotoPreview(aircraftPhotoIndex)
-                                        }
-                                        aria-label={`全屏查看拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
-                                    >
-                                        <AircraftPhotoGalleryImage
-                                            previewUrl={aircraftPhoto.previewUrl}
-                                            alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
-                                        />
-                                    </button>
-                                </li>
-                            ),
+                            ): ReactElement => {
+                                const directoryLabel = getPhotoDirectoryLabel(
+                                    aircraftPhotoDirectoryOptions,
+                                    aircraftPhoto.directory,
+                                );
+
+                                return (
+                                    <li key={aircraftPhoto.originalUrl}>
+                                        <button
+                                            className="aircraft-photo-gallery__button"
+                                            type="button"
+                                            onClick={(): void =>
+                                                openPhotoPreview(
+                                                    aircraftPhotoIndex,
+                                                )
+                                            }
+                                            aria-label={`全屏查看 ${directoryLabel} 目录下的飞机照片 ${aircraftPhotoIndex + 1}`}
+                                        >
+                                            <AircraftPhotoGalleryImage
+                                                previewUrl={
+                                                    aircraftPhoto.previewUrl
+                                                }
+                                                alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
+                                            />
+                                            <span
+                                                className="aircraft-photo-gallery__overlay"
+                                                aria-hidden="true"
+                                            >
+                                                <span>Aircraft Photo</span>
+                                                <strong>
+                                                    {directoryLabel}
+                                                </strong>
+                                                <small>
+                                                    #
+                                                    {aircraftPhotoIndex + 1}
+                                                </small>
+                                            </span>
+                                        </button>
+                                    </li>
+                                );
+                            },
                         )}
                     </ul>
                 ) : (

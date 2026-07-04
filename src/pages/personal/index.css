@@ -130,6 +130,118 @@
   line-height: 1;
 }
 
+.personal-timeline {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+  padding: 1rem;
+  background:
+    linear-gradient(180deg, rgba(244, 248, 251, 0.035), transparent 68%),
+    var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 1rem;
+  box-shadow: var(--pl-shadow-card);
+}
+
+.personal-timeline__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.personal-timeline__header h2 {
+  margin: 0.3rem 0 0;
+  color: var(--pl-text-heading);
+  font-family: var(--pl-font-display);
+  font-size: 1.16rem;
+}
+
+.personal-timeline__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.personal-timeline__list li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.85rem;
+  background-color: var(--pl-surface-entry);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.85rem;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.personal-timeline__list li:hover {
+  background-color: var(--pl-surface-entry-hover);
+  border-color: var(--pl-border-entry-hover);
+  transform: translate3d(0, -2px, 0);
+}
+
+.personal-timeline__list li::before {
+  position: absolute;
+  top: 1.05rem;
+  right: 0.85rem;
+  width: 0.58rem;
+  height: 0.58rem;
+  background-color: var(--pl-accent);
+  border-radius: 999px;
+  content: "";
+}
+
+.personal-timeline__list time {
+  color: var(--pl-text-meta);
+  font-family: var(--pl-font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.personal-timeline__list div {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.personal-timeline__list strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--pl-text-heading);
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personal-timeline__list span {
+  flex: 0 0 auto;
+  padding: 0.22rem 0.42rem;
+  color: var(--pl-text-chip);
+  font-family: var(--pl-font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  background-color: var(--pl-surface-chip);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.48rem;
+}
+
+.personal-timeline__list p {
+  margin: 0;
+  color: var(--pl-text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
 .personal-section {
   margin-top: 1.65rem;
 }
@@ -274,14 +386,27 @@
 }
 
 .aircraft-photo-gallery li {
+  position: relative;
   min-width: 0;
   overflow: hidden;
   background-color: var(--pl-surface-gallery);
   border: 1px solid var(--pl-border-divider-mid);
   border-radius: 0.85rem;
+  box-shadow: var(--pl-shadow-card);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-photo-gallery li:hover {
+  border-color: var(--pl-border-entry-hover);
+  box-shadow: var(--pl-shadow-card-hover);
+  transform: translate3d(0, -2px, 0);
 }
 
 .aircraft-photo-gallery__button {
+  position: relative;
   display: block;
   width: 100%;
   padding: 0;
@@ -333,7 +458,57 @@
 
 .aircraft-photo-gallery li:hover img {
   filter: brightness(1.08);
-  transform: scale(1.025);
+  transform: scale(1.05);
+}
+
+.aircraft-photo-gallery__overlay {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  display: grid;
+  gap: 0.18rem;
+  min-height: 42%;
+  box-sizing: border-box;
+  padding: 2rem 0.72rem 0.65rem;
+  color: oklch(0.96 0.018 225);
+  text-align: left;
+  background: linear-gradient(to top, rgba(2, 8, 18, 0.78), rgba(2, 8, 18, 0));
+  opacity: 0.88;
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-photo-gallery__overlay span {
+  color: oklch(0.82 0.095 222);
+  font-family: var(--pl-font-mono);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.aircraft-photo-gallery__overlay strong {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aircraft-photo-gallery__overlay small {
+  color: oklch(0.85 0.025 232 / 0.82);
+  font-family: var(--pl-font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.aircraft-photo-gallery li:hover .aircraft-photo-gallery__overlay,
+.aircraft-photo-gallery__button:focus-visible .aircraft-photo-gallery__overlay {
+  opacity: 1;
+  transform: translate3d(0, -0.12rem, 0);
 }
 
 @keyframes photo-preview-backdrop-enter {
@@ -1000,6 +1175,19 @@
     width: 100%;
     min-height: 2.75rem;
     touch-action: manipulation;
+  }
+
+  .personal-timeline {
+    padding: 0.75rem;
+  }
+
+  .personal-timeline__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .personal-timeline__list {
+    grid-template-columns: 1fr;
   }
 
   .personal-section__header {

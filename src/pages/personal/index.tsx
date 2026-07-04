@@ -1,9 +1,13 @@
 import { lazy, Suspense, type ReactElement } from "react";
-import { FLIGHT_RECORD_COUNT } from "./constants/flightRecordsSummary";
+import {
+    FLIGHT_RECORD_COUNT,
+    flightRecordsByYear,
+} from "./constants/flightRecordsSummary";
 import { CHECKED_AIRPORTS, checkedCountryCount } from "./constants/summary";
 import { PersonalAirportSectionSkeleton } from "./sections/PersonalAirportSectionSkeleton";
 import { PersonalFlightRecordsSectionSkeleton } from "./sections/PersonalFlightRecordsSectionSkeleton";
 import { PersonalViewportSection } from "./sections/PersonalViewportSection";
+import type { FlightRecord } from "../../constants/external-links";
 import "./index.css";
 
 const PersonalAirportSection = lazy(
@@ -21,6 +25,34 @@ const PersonalFlightRecordsSection = lazy(
             "./sections/PersonalFlightRecordsSection"
         ),
 );
+
+/** 个人页时间线展示的最近航程数量。 */
+const PERSONAL_TIMELINE_RECORD_LIMIT = 4;
+
+/** 个人页时间线数据，从年度分组中取前几条，避免额外维护一份 Recent 数据。 */
+const PERSONAL_TIMELINE_RECORDS: FlightRecord[] = flightRecordsByYear
+    .flatMap((flightYearGroup): FlightRecord[] => flightYearGroup.records)
+    .slice(0, PERSONAL_TIMELINE_RECORD_LIMIT);
+
+/**
+ * 将个人航程记录压缩为时间线里的一行航线文案。
+ */
+const formatPersonalTimelineRoute = (flightRecord: FlightRecord): string => {
+    if (flightRecord.routeKind === "round-trip") {
+        return `${flightRecord.origin} ↔ ${flightRecord.destination}`;
+    }
+
+    return `${flightRecord.origin} → ${flightRecord.destination}`;
+};
+
+/**
+ * 将 `YYYY-M-D` 补齐为可用于 `<time dateTime>` 的日期格式。
+ */
+const formatPersonalTimelineDateTime = (departureDate: string): string => {
+    const [year, month, day] = departureDate.split("-");
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
 
 /**
  * 站长飞行日志页：壳层轻量同步渲染，机场足迹与乘机台账分块异步加载。
@@ -51,6 +83,43 @@ const PersonalPage = (): ReactElement => {
                     国家或地区
                 </span>
             </div>
+
+            <section
+                className="personal-timeline"
+                aria-labelledby="personal-timeline-title"
+            >
+                <header className="personal-timeline__header">
+                    <p className="personal-section__eyebrow">Recent Spotting</p>
+                    <h2 id="personal-timeline-title">航程时间线</h2>
+                </header>
+                <ol className="personal-timeline__list">
+                    {PERSONAL_TIMELINE_RECORDS.map(
+                        (
+                            flightRecord: FlightRecord,
+                            flightRecordIndex: number,
+                        ): ReactElement => (
+                            <li
+                                key={`${flightRecord.airline}-${flightRecord.aircraft}-${flightRecord.departureDate}-${flightRecordIndex}`}
+                            >
+                                <time
+                                    dateTime={formatPersonalTimelineDateTime(
+                                        flightRecord.departureDate,
+                                    )}
+                                >
+                                    {flightRecord.departureDate}
+                                </time>
+                                <div>
+                                    <strong>{flightRecord.airline}</strong>
+                                    <span>{flightRecord.aircraft}</span>
+                                </div>
+                                <p>
+                                    {formatPersonalTimelineRoute(flightRecord)}
+                                </p>
+                            </li>
+                        ),
+                    )}
+                </ol>
+            </section>
 
             <PersonalViewportSection label="机场足迹" variant="airport">
                 <Suspense fallback={<PersonalAirportSectionSkeleton />}>
