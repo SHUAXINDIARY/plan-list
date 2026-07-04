@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
     <title id="title">Daylight Archive world map</title>
-    <desc id="desc">A low-detail world map from Natural Earth 1:110m country polygons, tinted for Plane List Daylight Archive (warm paper ocean, muted continental landmasses, amber archive signals).</desc>
+    <desc id="desc">A low-detail world map from Natural Earth 1:110m country polygons, tinted for Plane List Daylight Archive (cool blue-gray ocean, quiet slate landmasses, cyan archive signals).</desc>
     <defs>
       <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="oklch(0.96 0.012 92)"/>
-        <stop offset="1" stop-color="oklch(0.91 0.018 86)"/>
+        <stop offset="0" stop-color="oklch(0.96 0.012 228)"/>
+        <stop offset="1" stop-color="oklch(0.9 0.022 225)"/>
       </linearGradient>
       <filter id="landShadow" x="-4%" y="-4%" width="108%" height="112%">
-        <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="oklch(0.42 0.035 78)" flood-opacity="0.12"/>
+        <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="oklch(0.38 0.034 232)" flood-opacity="0.12"/>
       </filter>
       <style>
         :root {
@@ -18,13 +18,13 @@
         }
         .frame {
           fill: none;
-          stroke: oklch(0.55 0.1 72 / 0.34);
+          stroke: oklch(0.58 0.07 224 / 0.34);
           stroke-width: 1.2;
           opacity: 1;
         }
         .graticule path {
           fill: none;
-          stroke: oklch(0.72 0.035 82 / 0.4);
+          stroke: oklch(0.72 0.032 226 / 0.34);
           stroke-width: 0.75;
           opacity: 1;
         }
@@ -32,28 +32,28 @@
           filter: url(#landShadow);
         }
         .country {
-          stroke: oklch(0.74 0.025 83 / 0.62);
+          stroke: oklch(0.67 0.032 226 / 0.5);
           stroke-width: 0.62;
           stroke-linejoin: round;
           stroke-linecap: round;
           vector-effect: non-scaling-stroke;
         }
         .country:hover {
-          fill: oklch(0.68 0.12 75);
-          stroke: oklch(0.42 0.085 72 / 0.82);
+          fill: oklch(0.74 0.065 220);
+          stroke: oklch(0.42 0.075 224 / 0.82);
           stroke-width: 1.2;
         }
-        .north-america { fill: oklch(0.79 0.035 80); }
-        .south-america { fill: oklch(0.76 0.04 105); }
-        .europe { fill: oklch(0.81 0.032 68); }
-        .africa { fill: oklch(0.75 0.045 72); }
-        .asia { fill: oklch(0.78 0.034 58); }
-        .oceania { fill: oklch(0.8 0.038 130); }
-        .antarctica { fill: oklch(0.89 0.014 88); }
-        .other { fill: oklch(0.76 0.032 82); }
+        .north-america { fill: oklch(0.82 0.026 226); }
+        .south-america { fill: oklch(0.79 0.034 205); }
+        .europe { fill: oklch(0.84 0.024 232); }
+        .africa { fill: oklch(0.78 0.03 220); }
+        .asia { fill: oklch(0.81 0.026 214); }
+        .oceania { fill: oklch(0.83 0.034 196); }
+        .antarctica { fill: oklch(0.9 0.012 224); }
+        .other { fill: oklch(0.8 0.026 226); }
         .outline {
           fill: none;
-          stroke: oklch(0.52 0.1 72 / 0.84);
+          stroke: oklch(0.48 0.075 224 / 0.78);
           stroke-width: 1.12;
           stroke-linejoin: round;
           stroke-linecap: round;
@@ -65,10 +65,10 @@
           font-size: 16px;
           font-weight: 700;
           letter-spacing: 0.02em;
-          fill: oklch(0.42 0.055 72 / 0.72);
+          fill: oklch(0.4 0.054 224 / 0.74);
           opacity: 1;
           paint-order: stroke;
-          stroke: oklch(0.97 0.01 92 / 0.88);
+          stroke: oklch(0.97 0.01 226 / 0.9);
           stroke-width: 4px;
           stroke-linejoin: round;
         }
@@ -77,7 +77,7 @@
           font-size: 12px;
           font-weight: 600;
           letter-spacing: 0.01em;
-          fill: oklch(0.5 0.055 72 / 0.66);
+          fill: oklch(0.46 0.052 224 / 0.64);
           opacity: 1;
         }
       </style>

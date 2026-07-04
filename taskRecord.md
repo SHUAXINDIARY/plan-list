@@ -4493,3 +4493,29 @@
 - `src/components/theme-toggle/index.tsx`：修正月亮图标 SVG 属性为 React JSX 命名。
 - `src/utils/themePreference.ts`：同步浅色 theme-color 到新的冷灰蓝壳层。
 - `taskRecord.md`：追加本次浅色适配修复任务记录。
+
+## 日期
+
+2026-07-04
+
+## 任务目的
+
+针对站点地图在深色和浅色模式下的色系做完整适配，使底图、航迹、飞机标记、图例和外层容器与当前主题一致。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc` 和项目 `impeccable` skill，确认地图配色适配、可访问性、验证与任务记录要求。
+2. 检查 `src/components/map/map-light.svg`、`src/components/map/map.svg`、`src/components/map/index.css` 与 `src/App.css`，定位浅色底图仍使用 warm paper / amber 色系，深色模式缺少对应地图容器变量覆写的问题。
+3. 将浅色世界地图 SVG 调整为冷灰蓝海面、slate 陆地、蓝灰边界与标签，使其贴合 Daylight Archive 主题。
+4. 将深色世界地图 SVG 调整为更深的夜间雷达海图风格，降低陆地亮度并强化青蓝边界与标签对比。
+5. 更新全局地图 token，分别为浅色和深色提供地图背景、边框、frame、vignette、tooltip 与图例颜色。
+6. 更新地图组件内的航迹和飞机 marker CSS 变量，让国内 / 国际航迹与机场标记在两套主题下都有独立的可读色阶。
+7. 运行 `CI=true pnpm run build`，构建通过；使用浏览器检查浅色桌面地图、深色桌面地图、移动端浅色 / 深色地图，无横向溢出且控制台无 warning / error。
+
+## 修改具体文件
+
+- `src/components/map/map-light.svg`：将浅色底图从米棕 Natural Earth 色系调整为冷灰蓝 Daylight Archive 色系。
+- `src/components/map/map.svg`：优化深色底图的海面、陆地、边界、标签和阴影色值。
+- `src/components/map/index.css`：更新浅色和深色模式下的航迹、飞机 marker、tooltip 色值。
+- `src/App.css`：补齐深色地图容器变量，并微调浅色地图背景、边框、frame、图例与 tooltip token。
+- `taskRecord.md`：追加本次地图主题色适配任务记录。

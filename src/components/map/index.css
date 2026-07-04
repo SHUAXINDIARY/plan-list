@@ -1,14 +1,14 @@
 .annotated-world-map {
-  --pl-map-route-international: oklch(0.5 0.1 222 / 0.62);
-  --pl-map-route-domestic: oklch(0.47 0.052 226 / 0.48);
-  --pl-map-marker-domestic-fill: oklch(0.64 0.06 226 / 0.92);
-  --pl-map-marker-domestic-stroke: oklch(0.38 0.058 230 / 0.82);
-  --pl-map-marker-domestic-fill-active: oklch(0.68 0.085 222 / 0.98);
-  --pl-map-marker-domestic-stroke-active: oklch(0.27 0.06 232 / 0.96);
-  --pl-map-marker-international-fill: oklch(0.52 0.115 218 / 0.94);
-  --pl-map-marker-international-stroke: oklch(0.96 0.012 224 / 0.98);
-  --pl-map-marker-international-fill-active: oklch(0.6 0.13 216 / 0.98);
-  --pl-map-marker-international-stroke-active: oklch(0.98 0.012 224 / 1);
+  --pl-map-route-international: oklch(0.48 0.105 218 / 0.56);
+  --pl-map-route-domestic: oklch(0.44 0.052 226 / 0.42);
+  --pl-map-marker-domestic-fill: oklch(0.48 0.062 228 / 0.9);
+  --pl-map-marker-domestic-stroke: oklch(0.93 0.016 226 / 0.94);
+  --pl-map-marker-domestic-fill-active: oklch(0.56 0.09 224 / 0.98);
+  --pl-map-marker-domestic-stroke-active: oklch(0.98 0.012 226 / 1);
+  --pl-map-marker-international-fill: oklch(0.58 0.13 214 / 0.94);
+  --pl-map-marker-international-stroke: oklch(0.97 0.014 220 / 0.98);
+  --pl-map-marker-international-fill-active: oklch(0.66 0.145 212 / 0.98);
+  --pl-map-marker-international-stroke-active: oklch(0.99 0.01 220 / 1);
   --pl-map-tooltip-bg: oklch(0.97 0.012 235 / 0.96);
   --pl-map-tooltip-border: oklch(0.5 0.09 222 / 0.34);
   --pl-map-tooltip-text: oklch(0.25 0.045 235 / 0.96);
@@ -25,16 +25,16 @@
 }
 
 .annotated-world-map--theme-dark {
-  --pl-map-route-international: oklch(0.78 0.105 222 / 0.58);
-  --pl-map-route-domestic: oklch(0.68 0.055 228 / 0.44);
-  --pl-map-marker-domestic-fill: oklch(0.56 0.045 232 / 0.9);
-  --pl-map-marker-domestic-stroke: oklch(0.8 0.06 225 / 0.88);
-  --pl-map-marker-domestic-fill-active: oklch(0.72 0.075 225 / 0.96);
-  --pl-map-marker-domestic-stroke-active: oklch(0.94 0.03 220 / 0.96);
-  --pl-map-marker-international-fill: oklch(0.76 0.1 222 / 0.94);
-  --pl-map-marker-international-stroke: oklch(0.94 0.03 220 / 0.96);
-  --pl-map-marker-international-fill-active: oklch(0.86 0.12 222 / 0.98);
-  --pl-map-marker-international-stroke-active: oklch(0.98 0.02 220 / 1);
+  --pl-map-route-international: oklch(0.78 0.11 218 / 0.62);
+  --pl-map-route-domestic: oklch(0.68 0.06 226 / 0.48);
+  --pl-map-marker-domestic-fill: oklch(0.6 0.058 228 / 0.92);
+  --pl-map-marker-domestic-stroke: oklch(0.86 0.055 222 / 0.88);
+  --pl-map-marker-domestic-fill-active: oklch(0.74 0.09 222 / 0.98);
+  --pl-map-marker-domestic-stroke-active: oklch(0.96 0.03 220 / 0.98);
+  --pl-map-marker-international-fill: oklch(0.78 0.12 214 / 0.94);
+  --pl-map-marker-international-stroke: oklch(0.96 0.03 218 / 0.96);
+  --pl-map-marker-international-fill-active: oklch(0.88 0.135 212 / 0.98);
+  --pl-map-marker-international-stroke-active: oklch(0.99 0.02 218 / 1);
   --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
   --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
   --pl-map-tooltip-text: var(--pl-text-emphasis);

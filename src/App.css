@@ -114,21 +114,21 @@
     --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
 
     --pl-map-bg:
-        radial-gradient(circle at 72% 28%, oklch(0.9 0.036 225 / 0.6), transparent 12rem),
-        radial-gradient(circle at 18% 18%, oklch(0.93 0.025 218 / 0.62), transparent 10rem),
-        linear-gradient(135deg, oklch(0.95 0.012 238 / 0.98), oklch(0.86 0.024 225 / 0.94));
-    --pl-map-border: rgba(92, 122, 145, 0.26);
-    --pl-map-inset: inset 0 0 0 1px rgba(248, 252, 254, 0.68);
-    --pl-map-frame: rgba(92, 122, 145, 0.2);
+        radial-gradient(circle at 72% 28%, oklch(0.91 0.04 222 / 0.62), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.94 0.026 226 / 0.64), transparent 10rem),
+        linear-gradient(135deg, oklch(0.96 0.012 230 / 0.98), oklch(0.88 0.024 224 / 0.94));
+    --pl-map-border: rgba(82, 116, 142, 0.3);
+    --pl-map-inset: inset 0 0 0 1px rgba(248, 252, 254, 0.72);
+    --pl-map-frame: rgba(82, 116, 142, 0.22);
     --pl-map-vignette:
-        linear-gradient(to right, rgba(39, 63, 82, 0.1), transparent 18%, transparent 82%, rgba(39, 63, 82, 0.08)),
-        linear-gradient(to bottom, rgba(39, 63, 82, 0.08), transparent 28%, rgba(39, 63, 82, 0.1));
+        linear-gradient(to right, rgba(31, 58, 78, 0.08), transparent 18%, transparent 82%, rgba(31, 58, 78, 0.06)),
+        linear-gradient(to bottom, rgba(31, 58, 78, 0.06), transparent 28%, rgba(31, 58, 78, 0.08));
 
     --pl-map-tooltip-bg: oklch(0.97 0.012 235 / 0.96);
-    --pl-map-tooltip-border: rgba(47, 105, 139, 0.28);
-    --pl-map-legend-bg: rgba(248, 252, 254, 0.84);
-    --pl-map-legend-text: rgba(31, 52, 70, 0.78);
-    --pl-map-legend-border: rgba(95, 124, 145, 0.22);
+    --pl-map-tooltip-border: rgba(31, 105, 145, 0.3);
+    --pl-map-legend-bg: rgba(247, 252, 254, 0.88);
+    --pl-map-legend-text: rgba(24, 48, 66, 0.8);
+    --pl-map-legend-border: rgba(82, 116, 142, 0.24);
     --pl-map-route-international: oklch(0.78 0.105 222 / 0.58);
     --pl-map-route-domestic: oklch(0.68 0.055 228 / 0.44);
     --pl-map-marker-domestic-fill: oklch(0.56 0.045 232 / 0.9);
@@ -242,6 +242,21 @@ html[data-theme="dark"] {
     --pl-stat-orange-border: rgba(251, 191, 36, 0.3);
     --pl-stat-orange-text: #fbbf24;
     --pl-error-text: #ffd3d3;
+    --pl-map-bg:
+        radial-gradient(circle at 72% 28%, oklch(0.32 0.065 222 / 0.18), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.27 0.052 232 / 0.18), transparent 10rem),
+        linear-gradient(135deg, oklch(0.14 0.024 248 / 0.98), oklch(0.2 0.03 232 / 0.92));
+    --pl-map-border: rgba(124, 200, 235, 0.16);
+    --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.06);
+    --pl-map-frame: rgba(124, 200, 235, 0.12);
+    --pl-map-vignette:
+        linear-gradient(to right, rgba(2, 8, 18, 0.46), transparent 18%, transparent 82%, rgba(2, 8, 18, 0.42)),
+        linear-gradient(to bottom, rgba(2, 8, 18, 0.36), transparent 28%, rgba(2, 8, 18, 0.34));
+    --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
+    --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
+    --pl-map-legend-bg: rgba(7, 17, 29, 0.76);
+    --pl-map-legend-text: rgba(217, 231, 238, 0.8);
+    --pl-map-legend-border: rgba(164, 188, 201, 0.16);
     --pl-summary-chevron: #9ed8f2;
     --scroll-area-track-bg: rgba(15, 31, 48, 0.55);
     --scroll-area-thumb: rgba(124, 200, 235, 0.42);
