@@ -2,7 +2,8 @@
 :root {
     color-scheme: light;
 
-    --pl-font-display: "Space Grotesk", Inter, Avenir, Helvetica, Arial, sans-serif;
+    --pl-font-display:
+        "Space Grotesk", Inter, Avenir, Helvetica, Arial, sans-serif;
     --pl-font-sans: Inter, Avenir, Helvetica, Arial, sans-serif;
     --pl-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
@@ -67,27 +68,50 @@
 
     --pl-body-gradient: linear-gradient(to bottom, #f3f8fb, #e3edf5);
     --pl-shell-bg:
-        radial-gradient(circle at 80% 20%, rgba(205, 225, 238, 0.72), transparent 31rem),
-        radial-gradient(circle at 10% 82%, rgba(226, 238, 246, 0.84), transparent 28rem),
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(205, 225, 238, 0.72),
+            transparent 31rem
+        ),
+        radial-gradient(
+            circle at 10% 82%,
+            rgba(226, 238, 246, 0.84),
+            transparent 28rem
+        ),
         linear-gradient(135deg, #f5f9fc 0%, #ebf3f8 48%, #dde9f1 100%);
     --pl-shell-overlay:
-        radial-gradient(circle at 86% 16%, rgba(15, 111, 152, 0.1), transparent 26rem),
-        radial-gradient(circle at 4% 86%, rgba(80, 133, 158, 0.08), transparent 25rem),
-        linear-gradient(115deg, transparent 58%, rgba(15, 111, 152, 0.06) 70%, transparent 84%);
+        radial-gradient(
+            circle at 86% 16%,
+            rgba(15, 111, 152, 0.1),
+            transparent 26rem
+        ),
+        radial-gradient(
+            circle at 4% 86%,
+            rgba(80, 133, 158, 0.08),
+            transparent 25rem
+        ),
+        linear-gradient(
+            115deg,
+            transparent 58%,
+            rgba(15, 111, 152, 0.06) 70%,
+            transparent 84%
+        );
     --pl-surface-header: rgba(248, 252, 254, 0.72);
     --pl-surface-nav: rgba(248, 252, 254, 0.72);
     --pl-surface-nav-item: rgba(239, 247, 251, 0.82);
     --pl-shadow-shell: 0 0.2rem 0.9rem rgba(48, 72, 91, 0.1);
-    --pl-shadow-brand: 0 0.28rem 0.85rem rgba(48, 72, 91, 0.14),
+    --pl-shadow-brand:
+        0 0.28rem 0.85rem rgba(48, 72, 91, 0.14),
         0 1px 3px rgba(48, 72, 91, 0.12),
         inset 0 1px 0 rgba(248, 252, 254, 0.78);
     --pl-shadow-panel: 0 1.25rem 2.25rem rgba(48, 72, 91, 0.13);
-    --pl-shadow-control: 0 0.6rem 1.15rem rgba(48, 72, 91, 0.12),
-        0 2px 5px rgba(48, 72, 91, 0.1);
-    --pl-shadow-card: 0 1px 2px rgba(48, 72, 91, 0.07),
+    --pl-shadow-control:
+        0 0.6rem 1.15rem rgba(48, 72, 91, 0.12), 0 2px 5px rgba(48, 72, 91, 0.1);
+    --pl-shadow-card:
+        0 1px 2px rgba(48, 72, 91, 0.07),
         inset 0 1px 0 rgba(248, 252, 254, 0.72);
-    --pl-shadow-card-hover: 0 0.3rem 0.8rem rgba(48, 72, 91, 0.08),
-        0 1px 2px rgba(48, 72, 91, 0.08);
+    --pl-shadow-card-hover:
+        0 0.3rem 0.8rem rgba(48, 72, 91, 0.08), 0 1px 2px rgba(48, 72, 91, 0.08);
     --pl-shadow-chip: 0 1px 2px rgba(48, 72, 91, 0.12);
 
     --pl-stat-blue-bg: rgba(239, 246, 255, 0.92);
@@ -114,15 +138,38 @@
     --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
 
     --pl-map-bg:
-        radial-gradient(circle at 72% 28%, oklch(0.91 0.04 222 / 0.62), transparent 12rem),
-        radial-gradient(circle at 18% 18%, oklch(0.94 0.026 226 / 0.64), transparent 10rem),
-        linear-gradient(135deg, oklch(0.96 0.012 230 / 0.98), oklch(0.88 0.024 224 / 0.94));
+        radial-gradient(
+            circle at 72% 28%,
+            oklch(0.91 0.04 222 / 0.62),
+            transparent 12rem
+        ),
+        radial-gradient(
+            circle at 18% 18%,
+            oklch(0.94 0.026 226 / 0.64),
+            transparent 10rem
+        ),
+        linear-gradient(
+            135deg,
+            oklch(0.96 0.012 230 / 0.98),
+            oklch(0.88 0.024 224 / 0.94)
+        );
     --pl-map-border: rgba(82, 116, 142, 0.3);
     --pl-map-inset: inset 0 0 0 1px rgba(248, 252, 254, 0.72);
     --pl-map-frame: rgba(82, 116, 142, 0.22);
     --pl-map-vignette:
-        linear-gradient(to right, rgba(31, 58, 78, 0.08), transparent 18%, transparent 82%, rgba(31, 58, 78, 0.06)),
-        linear-gradient(to bottom, rgba(31, 58, 78, 0.06), transparent 28%, rgba(31, 58, 78, 0.08));
+        linear-gradient(
+            to right,
+            rgba(31, 58, 78, 0.08),
+            transparent 18%,
+            transparent 82%,
+            rgba(31, 58, 78, 0.06)
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(31, 58, 78, 0.06),
+            transparent 28%,
+            rgba(31, 58, 78, 0.08)
+        );
 
     --pl-map-tooltip-bg: oklch(0.97 0.012 235 / 0.96);
     --pl-map-tooltip-border: rgba(31, 105, 145, 0.3);
@@ -141,7 +188,11 @@
     --pl-map-marker-international-stroke-active: oklch(0.98 0.02 220 / 1);
 
     --pl-preview-backdrop:
-        radial-gradient(circle at 50% 20%, oklch(0.32 0.045 225 / 0.34), transparent 22rem),
+        radial-gradient(
+            circle at 50% 20%,
+            oklch(0.32 0.045 225 / 0.34),
+            transparent 22rem
+        ),
         oklch(0.1 0.018 245 / 0.94);
 
     --pl-summary-chevron: #2f7194;
@@ -211,26 +262,38 @@ html[data-theme="dark"] {
     --pl-surface-preview-img: rgba(7, 17, 29, 0.72);
     --pl-body-gradient: linear-gradient(to bottom, #020917, #101725);
     --pl-shell-bg:
-        radial-gradient(circle at 86% 16%, rgba(235, 203, 139, 0.1), transparent 30rem),
-        radial-gradient(circle at 8% 82%, rgba(124, 200, 235, 0.14), transparent 28rem),
+        radial-gradient(
+            circle at 86% 16%,
+            rgba(235, 203, 139, 0.1),
+            transparent 30rem
+        ),
+        radial-gradient(
+            circle at 8% 82%,
+            rgba(124, 200, 235, 0.14),
+            transparent 28rem
+        ),
         linear-gradient(135deg, #07111d 0%, #0b1421 48%, #111827 100%);
     --pl-shell-overlay:
         linear-gradient(135deg, rgba(244, 248, 251, 0.035), transparent 35%),
-        radial-gradient(circle at 68% 5%, rgba(124, 200, 235, 0.055), transparent 20rem);
+        radial-gradient(
+            circle at 68% 5%,
+            rgba(124, 200, 235, 0.055),
+            transparent 20rem
+        );
     --pl-surface-header: rgba(7, 17, 29, 0.64);
     --pl-surface-nav: rgba(10, 21, 33, 0.66);
     --pl-surface-nav-item: rgba(15, 31, 48, 0.44);
     --pl-shadow-shell: 0 1.6rem 4rem rgba(2, 8, 18, 0.28);
-    --pl-shadow-brand: 0 0.55rem 1.35rem rgba(2, 8, 18, 0.34),
-        0 1px 3px rgba(2, 8, 18, 0.28),
+    --pl-shadow-brand:
+        0 0.55rem 1.35rem rgba(2, 8, 18, 0.34), 0 1px 3px rgba(2, 8, 18, 0.28),
         inset 0 1px 0 rgba(164, 188, 201, 0.08);
     --pl-shadow-panel: 0 1.5rem 4rem rgba(2, 8, 18, 0.24);
-    --pl-shadow-control: 0 0.65rem 1.35rem rgba(2, 8, 18, 0.32),
-        0 2px 5px rgba(2, 8, 18, 0.24);
-    --pl-shadow-card: 0 1px 2px rgba(2, 8, 18, 0.24),
-        inset 0 1px 0 rgba(164, 188, 201, 0.05);
-    --pl-shadow-card-hover: 0 0.35rem 0.95rem rgba(2, 8, 18, 0.28),
-        0 1px 2px rgba(2, 8, 18, 0.24);
+    --pl-shadow-control:
+        0 0.65rem 1.35rem rgba(2, 8, 18, 0.32), 0 2px 5px rgba(2, 8, 18, 0.24);
+    --pl-shadow-card:
+        0 1px 2px rgba(2, 8, 18, 0.24), inset 0 1px 0 rgba(164, 188, 201, 0.05);
+    --pl-shadow-card-hover:
+        0 0.35rem 0.95rem rgba(2, 8, 18, 0.28), 0 1px 2px rgba(2, 8, 18, 0.24);
     --pl-shadow-chip: 0 1px 2px rgba(2, 8, 18, 0.28);
     --pl-stat-blue-bg: rgba(37, 99, 235, 0.16);
     --pl-stat-blue-border: rgba(96, 165, 250, 0.34);
@@ -243,15 +306,38 @@ html[data-theme="dark"] {
     --pl-stat-orange-text: #fbbf24;
     --pl-error-text: #ffd3d3;
     --pl-map-bg:
-        radial-gradient(circle at 72% 28%, oklch(0.32 0.065 222 / 0.18), transparent 12rem),
-        radial-gradient(circle at 18% 18%, oklch(0.27 0.052 232 / 0.18), transparent 10rem),
-        linear-gradient(135deg, oklch(0.14 0.024 248 / 0.98), oklch(0.2 0.03 232 / 0.92));
+        radial-gradient(
+            circle at 72% 28%,
+            oklch(0.32 0.065 222 / 0.18),
+            transparent 12rem
+        ),
+        radial-gradient(
+            circle at 18% 18%,
+            oklch(0.27 0.052 232 / 0.18),
+            transparent 10rem
+        ),
+        linear-gradient(
+            135deg,
+            oklch(0.14 0.024 248 / 0.98),
+            oklch(0.2 0.03 232 / 0.92)
+        );
     --pl-map-border: rgba(124, 200, 235, 0.16);
     --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.06);
     --pl-map-frame: rgba(124, 200, 235, 0.12);
     --pl-map-vignette:
-        linear-gradient(to right, rgba(2, 8, 18, 0.46), transparent 18%, transparent 82%, rgba(2, 8, 18, 0.42)),
-        linear-gradient(to bottom, rgba(2, 8, 18, 0.36), transparent 28%, rgba(2, 8, 18, 0.34));
+        linear-gradient(
+            to right,
+            rgba(2, 8, 18, 0.46),
+            transparent 18%,
+            transparent 82%,
+            rgba(2, 8, 18, 0.42)
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(2, 8, 18, 0.36),
+            transparent 28%,
+            rgba(2, 8, 18, 0.34)
+        );
     --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
     --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
     --pl-map-legend-bg: rgba(7, 17, 29, 0.76);
@@ -272,7 +358,8 @@ body {
     color: var(--pl-text-body);
     font-family: var(--pl-font-sans);
     background-image: var(--pl-body-gradient);
-    transition: background-color 240ms var(--motion-ease-out-quart),
+    transition:
+        background-color 240ms var(--motion-ease-out-quart),
         color 240ms var(--motion-ease-out-quart);
 }
 
@@ -564,7 +651,11 @@ a {
     z-index: -1;
     background:
         linear-gradient(180deg, rgba(244, 248, 251, 0.055), transparent 18rem),
-        radial-gradient(circle at 94% 0, rgba(235, 203, 139, 0.075), transparent 18rem);
+        radial-gradient(
+            circle at 94% 0,
+            rgba(235, 203, 139, 0.075),
+            transparent 18rem
+        );
     content: "";
     pointer-events: none;
 }
@@ -589,7 +680,7 @@ a {
 }
 
 .page-panel p:not(.page-eyebrow) {
-    max-width: 42rem;
+    max-width: 100%;
     margin: 0.8rem 0 0;
     color: var(--pl-text-secondary);
     font-size: 0.95rem;

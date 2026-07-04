@@ -592,10 +592,16 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
+/* 结果窗使用固定视口高度承载筛选变化，避免页面随匹配数量反复跳动。 */
 .fleet-results {
-  height: auto;
+  box-sizing: border-box;
+  height: clamp(32rem, 68vh, 52rem);
+  min-height: 30rem;
+  padding: 0.15rem 0.35rem 0.15rem 0;
   margin-top: 1.5rem;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .fleet-results--loading {
@@ -614,12 +620,15 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   clip: rect(0, 0, 0, 0);
 }
 
-.fleet-results > .data-state {
+.fleet-results__empty {
   display: grid;
   min-height: 100%;
   place-items: center;
   box-sizing: border-box;
-  margin-top: 0;
+  padding: 1rem;
+  margin: 0;
+  color: var(--pl-text-meta);
+  font-weight: 700;
   text-align: center;
 }
 
@@ -1273,12 +1282,14 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .fleet-results {
-    height: 30rem;
+    height: min(30rem, 70vh);
+    min-height: 24rem;
+    padding-right: 0;
   }
 
   .fleet-results--loading {
-    height: auto;
-    min-height: 30rem;
+    height: min(30rem, 70vh);
+    min-height: 24rem;
   }
 
   .airline-entry__header {

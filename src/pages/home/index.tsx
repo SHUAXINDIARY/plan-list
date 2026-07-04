@@ -1034,11 +1034,14 @@ const HomePage = (): ReactElement => {
                 <div
                     className="fleet-results scroll-area-night"
                     ref={fleetResultsRef}
+                    role="region"
+                    aria-label="航司机型筛选结果"
                     aria-live="polite"
+                    tabIndex={0}
                 >
                     {filteredAirlineFleets.length === 0 ? (
                         <p
-                            className="data-state data-state--filtered-empty"
+                            className="fleet-results__empty data-state--filtered-empty"
                             key={`empty-${filteredViewKey}`}
                         >
                             没有匹配当前筛选条件的航司或机型。

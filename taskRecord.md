@@ -4519,3 +4519,25 @@
 - `src/components/map/index.css`：更新浅色和深色模式下的航迹、飞机 marker、tooltip 色值。
 - `src/App.css`：补齐深色地图容器变量，并微调浅色地图背景、边框、frame、图例与 tooltip token。
 - `taskRecord.md`：追加本次地图主题色适配任务记录。
+
+## 日期
+
+2026-07-04
+
+## 任务目的
+
+修复航司搜索时结果列表高度随匹配数量忽高忽低的问题，让筛选体验保持稳定。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md`、`DESIGN.md` 和项目 `impeccable` skill，确认产品 UI、滚动区、可访问性、验证与任务记录要求。
+2. 检查首页航司筛选区域的 JSX 与 CSS，确认 `.fleet-results` 已挂载 `scroll-area-night`，但桌面样式仍为 `height: auto` 和 `overflow: visible`，会随结果数量改变页面高度。
+3. 将航司结果区改为响应式固定高度的内部滚动容器，并保留滚动条 gutter、横向溢出防护和移动端稳定高度。
+4. 为结果区补充 `role="region"`、`aria-label` 与 `tabIndex`，让键盘用户可以聚焦并滚动筛选结果区域。
+5. 运行 `CI=true pnpm run build`，构建通过；启动 dev server 后用浏览器检查桌面与移动端默认列表、单条搜索结果、空结果和清空搜索路径，结果区高度稳定且无横向溢出，控制台无 warning / error。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：为航司筛选结果容器补充可访问区域语义与键盘聚焦能力。
+- `src/pages/home/index.css`：将航司结果列表改为稳定高度的内部滚动区域，并同步移动端高度规则。
+- `taskRecord.md`：追加本次航司搜索列表高度稳定性修复任务记录。
