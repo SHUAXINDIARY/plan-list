@@ -212,7 +212,25 @@
 }
 
 .reference-toolbar__controls {
+  display: grid;
+  justify-items: end;
+}
+
+.reference-toolbar__region-control {
+  width: min(100%, 19rem);
+  min-width: 0;
+}
+
+.reference-toolbar__region-control .reference-select {
+  width: 100%;
+}
+
+.reference-toolbar__actions {
+  display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  min-width: 0;
 }
 
 .reference-chip,
@@ -762,7 +780,8 @@
   }
 
   .reference-toolbar__controls {
-    justify-content: flex-start;
+    justify-self: end;
+    width: min(100%, 32rem);
   }
 
   .reference-card-list {
@@ -805,12 +824,15 @@
 
   .reference-toolbar__controls {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     width: 100%;
   }
 
-  .reference-toolbar__controls .reference-select {
-    grid-column: 1 / -1;
+  .reference-toolbar__region-control {
+    width: 100%;
+  }
+
+  .reference-toolbar__actions {
+    width: 100%;
   }
 
   .reference-section__header {

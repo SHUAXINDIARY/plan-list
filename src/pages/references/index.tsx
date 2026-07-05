@@ -961,34 +961,41 @@ const ReferencesPage = (): ReactElement => {
                 </div>
 
                 <div className="reference-toolbar__controls">
-                    <Select
-                        label="地区"
-                        className="reference-select"
-                        value={selectedRegion}
-                        onChange={handleRegionSelectChange}
-                        options={REGION_OPTIONS}
-                    />
-                    <button
-                        type="button"
-                        className="reference-toolbar__button"
-                        onClick={handleExpandAll}
+                    <div className="reference-toolbar__region-control">
+                        <Select
+                            label="地区"
+                            className="reference-select"
+                            value={selectedRegion}
+                            onChange={handleRegionSelectChange}
+                            options={REGION_OPTIONS}
+                        />
+                    </div>
+                    <div
+                        className="reference-toolbar__actions"
+                        aria-label="参考资料分组操作"
                     >
-                        展开全部
-                    </button>
-                    <button
-                        type="button"
-                        className="reference-toolbar__button"
-                        onClick={handleCollapseAll}
-                    >
-                        折叠全部
-                    </button>
-                    <button
-                        type="button"
-                        className="reference-toolbar__button"
-                        onClick={handleResetFilters}
-                    >
-                        重置
-                    </button>
+                        <button
+                            type="button"
+                            className="reference-toolbar__button"
+                            onClick={handleExpandAll}
+                        >
+                            展开全部
+                        </button>
+                        <button
+                            type="button"
+                            className="reference-toolbar__button"
+                            onClick={handleCollapseAll}
+                        >
+                            折叠全部
+                        </button>
+                        <button
+                            type="button"
+                            className="reference-toolbar__button"
+                            onClick={handleResetFilters}
+                        >
+                            重置
+                        </button>
+                    </div>
                 </div>
 
                 <p className="reference-toolbar__result" aria-live="polite">
