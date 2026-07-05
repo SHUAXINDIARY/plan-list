@@ -4541,3 +4541,48 @@
 - `src/pages/home/index.tsx`：为航司筛选结果容器补充可访问区域语义与键盘聚焦能力。
 - `src/pages/home/index.css`：将航司结果列表改为稳定高度的内部滚动区域，并同步移动端高度规则。
 - `taskRecord.md`：追加本次航司搜索列表高度稳定性修复任务记录。
+
+## 日期
+
+2026-07-05
+
+## 任务目的
+
+调整航司筛选无匹配结果的空状态，让文案居中展示并移除结果区内部的额外提示容器边框。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc` 和项目 `impeccable` skill，确认空状态、可访问性、验证与任务记录要求。
+2. 根据用户截图定位筛选空状态仍复用 `data-state` 通用提示卡样式，导致固定结果区内出现额外大边框容器。
+3. 将筛选空状态改为 `fleet-results__empty` 专用文案类，保留文案居中、去除内部背景与边框。
+4. 运行 `CI=true pnpm run build`，构建通过。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：将筛选空结果文案从通用 `data-state` 改为专用空态类。
+- `src/pages/home/index.css`：为 `fleet-results__empty` 增加居中、无边框、无背景的空态样式。
+- `taskRecord.md`：追加本次航司筛选空状态调整任务记录。
+
+## 日期
+
+2026-07-05
+
+## 任务目的
+
+根据桌面 `References-Page-UI-Redesign-Prompt.md` 重设计 `/references` 页面，将长列表升级为现代深色数据目录页。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md` / `DESIGN.md` 语境和项目 `impeccable` skill，确认产品型 UI、深浅色 token、可访问性、验证与任务记录要求。
+2. 阅读桌面 Redesign Prompt，提取标题区、统计条、搜索筛选、Section + Card List、复制 toast、空状态、移动端单列和长列表优化要求。
+3. 保留 `AIRLINE_REFERENCE_SOURCES` 原始数据不变，在页面层派生类型、地区、域名、最近添加、使用频率和分组视图模型。
+4. 将 `/references` 从单一长列表重构为顶部搜索/筛选/排序、四项统计、sticky filter bar、类型分组、参考资料卡片、展开全部 / 折叠全部和复制域名 toast。
+5. 为搜索结果增加实时过滤、命中文案高亮、结果数量展示和空状态提示；移动端改为单列卡片并避免横向滚动。
+6. 为长列表卡片加入分组折叠与 `content-visibility`，默认展开前三个分组，降低首屏和滚动压力。
+7. 运行 `CI=true pnpm run build`，构建通过；启动 dev server 后用浏览器检查桌面和移动端布局、搜索、类型筛选、展开折叠、空状态、复制 toast，无横向溢出且控制台无 warning / error。
+
+## 修改具体文件
+
+- `src/pages/references/index.tsx`：重构参考资料页结构，新增搜索、筛选、排序、统计、分组卡片、命中高亮和复制 toast。
+- `src/pages/references/index.css`：重写参考资料页布局与视觉样式，支持 sticky filter bar、桌面双列卡片、移动端单列卡片和深浅色 token。
+- `taskRecord.md`：追加本次参考资料页 UI 重设计任务记录。
