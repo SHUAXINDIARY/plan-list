@@ -4586,3 +4586,24 @@
 - `src/pages/references/index.tsx`：重构参考资料页结构，新增搜索、筛选、排序、统计、分组卡片、命中高亮和复制 toast。
 - `src/pages/references/index.css`：重写参考资料页布局与视觉样式，支持 sticky filter bar、桌面双列卡片、移动端单列卡片和深浅色 token。
 - `taskRecord.md`：追加本次参考资料页 UI 重设计任务记录。
+
+## 日期
+
+2026-07-05
+
+## 任务目的
+
+为 `/references` 参考资料页补充 purposeful 动效，增强页面入场编排、分组折叠过渡、筛选反馈与微交互，不改变业务逻辑与布局结构。
+
+## 完成过程
+
+1. 阅读 `PRODUCT.md`、`DESIGN.md` 与 animate / frontend-design skill，确认产品为克制档案型气质，动效应以 160–480ms transform + opacity 为主并尊重 `prefers-reduced-motion`。
+2. 在 `index.css` 增加页面入场 stagger（intro、统计卡、sticky toolbar、分组 section）、`archive-filter-swap` 结果数与空状态过渡、分组 `grid-template-rows` 折叠展开、展开后卡片错峰 reveal，以及 chip / 按钮按压与主操作外链图标微位移反馈。
+3. 在 `index.tsx` 做最小结构改动：分组 panel 常驻 DOM 以承载折叠动画，筛选结果数用 `key` 触发轻量 swap 动画；折叠态加 `aria-hidden` / `inert` 保持可访问性。
+4. 运行 `pnpm run build`，构建通过。
+
+## 修改具体文件
+
+- `src/pages/references/index.css`：新增入场 stagger、折叠 panel、卡片 reveal、筛选结果 swap、空状态与微交互动效。
+- `src/pages/references/index.tsx`：分组 panel 结构改为可动画折叠，筛选结果数包裹 `reference-toolbar__result-value` 以触发动画。
+- `taskRecord.md`：追加本次参考资料页动效任务记录。

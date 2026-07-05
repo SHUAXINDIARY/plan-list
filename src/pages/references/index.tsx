@@ -203,7 +203,7 @@ const getReferenceUrlPathLabel = (referenceUrl: string): string => {
         const pathSegments = parsedReferenceUrl.pathname
             .split("/")
             .filter(Boolean);
-        const lastSegment = pathSegments.at(-1);
+        const lastSegment = pathSegments[pathSegments.length - 1];
 
         if (!lastSegment) {
             return "主页";
@@ -992,8 +992,13 @@ const ReferencesPage = (): ReactElement => {
                 </div>
 
                 <p className="reference-toolbar__result" aria-live="polite">
-                    显示 {filteredItems.length} 个来源 / {filteredLinkCount}{" "}
-                    条链接
+                    <span
+                        key={`${filteredItems.length}-${filteredLinkCount}`}
+                        className="reference-toolbar__result-value"
+                    >
+                        显示 {filteredItems.length} 个来源 / {filteredLinkCount}{" "}
+                        条链接
+                    </span>
                 </p>
             </div>
 
@@ -1016,7 +1021,11 @@ const ReferencesPage = (): ReactElement => {
 
                             return (
                                 <section
-                                    className="reference-section"
+                                    className={
+                                        isExpanded
+                                            ? "reference-section reference-section--expanded"
+                                            : "reference-section"
+                                    }
                                     key={sectionGroup.id}
                                     aria-labelledby={`reference-section-${sectionGroup.id}`}
                                 >
@@ -1046,27 +1055,35 @@ const ReferencesPage = (): ReactElement => {
                                         <IconChevron />
                                     </button>
 
-                                    {isExpanded ? (
-                                        <div
-                                            id={`reference-section-panel-${sectionGroup.id}`}
-                                            className="reference-card-list"
-                                        >
-                                            {sectionGroup.items.map(
-                                                (
-                                                    referenceItem: ReferenceDirectoryItem,
-                                                ): ReactElement => (
-                                                    <ReferenceCard
-                                                        key={referenceItem.name}
-                                                        item={referenceItem}
-                                                        searchTerm={searchTerm}
-                                                        onCopyDomain={
-                                                            handleCopyDomain
-                                                        }
-                                                    />
-                                                ),
-                                            )}
+                                    <div
+                                        id={`reference-section-panel-${sectionGroup.id}`}
+                                        className="reference-section__panel"
+                                        aria-hidden={!isExpanded}
+                                        inert={!isExpanded}
+                                    >
+                                        <div className="reference-section__panel-inner">
+                                            <div className="reference-card-list">
+                                                {sectionGroup.items.map(
+                                                    (
+                                                        referenceItem: ReferenceDirectoryItem,
+                                                    ): ReactElement => (
+                                                        <ReferenceCard
+                                                            key={
+                                                                referenceItem.name
+                                                            }
+                                                            item={referenceItem}
+                                                            searchTerm={
+                                                                searchTerm
+                                                            }
+                                                            onCopyDomain={
+                                                                handleCopyDomain
+                                                            }
+                                                        />
+                                                    ),
+                                                )}
+                                            </div>
                                         </div>
-                                    ) : null}
+                                    </div>
                                 </section>
                             );
                         },
