@@ -1,5 +1,8 @@
 .personal-archive {
   width: min(100%, 72rem);
+  --personal-motion-feedback: 140ms;
+  --personal-motion-state: 220ms;
+  --personal-motion-panel: 260ms;
 }
 
 @keyframes archive-filter-swap {
@@ -11,6 +14,30 @@
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes personal-section-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes personal-card-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.4rem, 0) scale3d(0.992, 0.992, 1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
   }
 }
 
@@ -27,6 +54,16 @@
 
 .personal-viewport-section {
   margin-top: 0.25rem;
+}
+
+.personal-viewport-section > .personal-section,
+.personal-viewport-section > .airport-country-list {
+  animation: personal-section-settle var(--personal-motion-state)
+    var(--motion-ease-out-quint) both;
+}
+
+.personal-viewport-section > .airport-country-list {
+  animation-delay: 40ms;
 }
 
 .personal-section--loading .personal-section-fallback__status {
@@ -179,12 +216,14 @@
   transition:
     background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
     border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
     transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
 .personal-timeline__list li:hover {
   background-color: var(--pl-surface-entry-hover);
   border-color: var(--pl-border-entry-hover);
+  box-shadow: var(--pl-shadow-card-hover);
   transform: translate3d(0, -2px, 0);
 }
 
@@ -764,6 +803,18 @@
   background-color: var(--pl-surface-airport);
   border: 1px solid var(--pl-border-divider-mid);
   border-radius: 0.95rem;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-country:hover,
+.airport-country--expanded {
+  background-color: var(--pl-surface-entry);
+  border-color: var(--pl-border-entry-hover);
+  box-shadow: var(--pl-shadow-card-hover);
 }
 
 .airport-country__header {
@@ -785,7 +836,8 @@
   border: 0;
   transition:
     background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
 }
 
 .airport-country__toggle:hover {
@@ -795,6 +847,10 @@
 .airport-country__toggle:focus-visible {
   outline: 2px solid oklch(0.78 0.105 222);
   outline-offset: -3px;
+}
+
+.airport-country__toggle:active {
+  transform: scale3d(0.995, 0.995, 1);
 }
 
 .airport-country__title {
@@ -836,9 +892,9 @@
   opacity: 0;
   transform: translate3d(0, -0.25rem, 0);
   transition:
-    grid-template-rows 220ms var(--motion-ease-out-quint),
-    opacity 180ms var(--motion-ease-out-quart),
-    transform 220ms var(--motion-ease-out-quint);
+    grid-template-rows var(--personal-motion-panel) var(--motion-ease-out-quint),
+    opacity var(--personal-motion-state) var(--motion-ease-out-quart),
+    transform var(--personal-motion-panel) var(--motion-ease-out-quint);
 }
 
 .airport-country--expanded .airport-country__body {
@@ -862,6 +918,23 @@
   display: grid;
   gap: 0.2rem;
   min-width: 0;
+}
+
+.airport-country--expanded li {
+  animation: archive-filter-swap var(--personal-motion-state)
+    var(--motion-ease-out-quint) both;
+}
+
+.airport-country--expanded li:nth-child(2) {
+  animation-delay: 24ms;
+}
+
+.airport-country--expanded li:nth-child(3) {
+  animation-delay: 48ms;
+}
+
+.airport-country--expanded li:nth-child(n + 4) {
+  animation-delay: 72ms;
 }
 
 .airport-country li span {
@@ -925,6 +998,8 @@
 .flight-year-block {
   min-width: 0;
   border-top: 1px solid var(--pl-border-divider);
+  transition: border-color var(--motion-duration-fast)
+    var(--motion-ease-out-quart);
 }
 
 .flight-year-block:first-child {
@@ -950,7 +1025,8 @@
   border: 0;
   transition:
     background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
 }
 
 .flight-year-block__toggle:hover {
@@ -961,6 +1037,14 @@
   outline: 2px solid oklch(0.78 0.105 222);
   outline-offset: 2px;
   border-radius: 0.35rem;
+}
+
+.flight-year-block__toggle:active {
+  transform: scale3d(0.995, 0.995, 1);
+}
+
+.flight-year-block--expanded {
+  border-color: var(--pl-border-entry-hover);
 }
 
 .flight-year-block__label {
@@ -1002,9 +1086,9 @@
   opacity: 0;
   transform: translate3d(0, -0.25rem, 0);
   transition:
-    grid-template-rows 220ms var(--motion-ease-out-quint),
-    opacity 180ms var(--motion-ease-out-quart),
-    transform 220ms var(--motion-ease-out-quint);
+    grid-template-rows var(--personal-motion-panel) var(--motion-ease-out-quint),
+    opacity var(--personal-motion-state) var(--motion-ease-out-quart),
+    transform var(--personal-motion-panel) var(--motion-ease-out-quint);
 }
 
 .flight-year-block--expanded .flight-year-block__body {
@@ -1045,6 +1129,16 @@
   border-bottom: 1px solid var(--pl-border-divider);
   animation: archive-filter-swap var(--motion-duration-standard)
     var(--motion-ease-out-quint) both;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.flight-ledger-row:hover {
+  background-color: var(--pl-surface-entry-hover);
+  border-color: var(--pl-border-entry-hover);
+  transform: translate3d(0.18rem, 0, 0);
 }
 
 .flight-ledger-row:nth-child(2) {
@@ -1322,5 +1416,36 @@
     max-width: calc(100vw - 1.5rem);
     max-height: calc(100vh - 1.5rem);
     max-height: calc(100dvh - 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personal-section-fallback,
+  .personal-viewport-section > .personal-section,
+  .personal-viewport-section > .airport-country-list,
+  .airport-country--expanded li,
+  .flight-ledger,
+  .flight-ledger-row {
+    animation: none !important;
+  }
+
+  .personal-timeline__list li,
+  .personal-timeline__list li:hover,
+  .airport-country,
+  .airport-country:hover,
+  .airport-country__toggle,
+  .airport-country__toggle:active,
+  .airport-country__body,
+  .flight-year-block__toggle,
+  .flight-year-block__toggle:active,
+  .flight-year-block__body,
+  .flight-ledger-row,
+  .flight-ledger-row:hover {
+    transform: none !important;
+  }
+
+  .airport-country__body,
+  .flight-year-block__body {
+    transition-duration: 0.01ms;
   }
 }

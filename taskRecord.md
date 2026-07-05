@@ -4607,3 +4607,25 @@
 - `src/pages/references/index.css`：新增入场 stagger、折叠 panel、卡片 reveal、筛选结果 swap、空状态与微交互动效。
 - `src/pages/references/index.tsx`：分组 panel 结构改为可动画折叠，筛选结果数包裹 `reference-toolbar__result-value` 以触发动画。
 - `taskRecord.md`：追加本次参考资料页动效任务记录。
+
+## 日期
+
+2026-07-05
+
+## 任务目的
+
+使用 animate skill 优化 `/personal` 站长飞行日志页的动效过渡，让懒加载区块、时间线、机场列表和乘机记录展开反馈更连贯且保留减少动态偏好适配。
+
+## 完成过程
+
+1. 阅读 `CODEX.md`、`.cursor/rules/project-base-rules.mdc`、`PRODUCT.md`、`DESIGN.md`、项目 `impeccable` skill，以及 animate / frontend-design skill，确认产品型界面应使用克制、短时、状态导向的动效。
+2. 检查 `/personal` 页面结构与 `src/pages/personal/index.css`，确认机场足迹与乘机记录采用 lazy viewport section 和手风琴展开，适合补充轻量区块进入、展开状态与 hover / active 反馈。
+3. 为 personal 页增加局部 motion token、`personal-section-settle` 与 `personal-card-settle` keyframes，并让懒加载区块替换时以 transform + opacity 进入。
+4. 优化时间线卡片、机场国家列表和乘机记录台账的 hover、active、展开态与行级 reveal 过渡，统一折叠面板 `grid-template-rows`、opacity 和 transform 的时间曲线。
+5. 增加 `prefers-reduced-motion: reduce` 兜底，关闭新增 reveal 与位移动效，并保留布局状态可读。
+6. 运行 `CI=true pnpm run build`，构建通过；启动 dev server 后用浏览器检查桌面和移动端 `/personal`，验证无横向溢出、国家与年份手风琴可展开、动效属性生效且控制台无项目 warning / error。
+
+## 修改具体文件
+
+- `src/pages/personal/index.css`：新增 personal 页局部 motion token、懒加载区块进入、时间线 hover、机场列表展开、乘机记录展开与 reduced-motion 动效适配。
+- `taskRecord.md`：追加本次 personal 页动效优化任务记录。
