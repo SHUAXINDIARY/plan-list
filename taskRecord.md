@@ -4629,3 +4629,23 @@
 
 - `src/pages/personal/index.css`：新增 personal 页局部 motion token、懒加载区块进入、时间线 hover、机场列表展开、乘机记录展开与 reduced-motion 动效适配。
 - `taskRecord.md`：追加本次 personal 页动效优化任务记录。
+
+## 日期
+
+2026-07-12
+
+## 任务目的
+
+将飞机相册目录改为从图片链接的 `key` 参数提取：仅含文件名的图片归入根目录，包含目录层级的图片归入对应完整目录路径。
+
+## 完成过程
+
+1. 检查飞机照片原图链接、相册数据适配逻辑和目录字段定义，确认旧逻辑错误地依据 URL 域名与请求路径生成目录。
+2. 改为通过 `URLSearchParams` 读取并解码 `key` 参数；无目录层级时返回根目录键，有目录层级时移除文件名并保留完整目录路径。
+3. 同步调整根目录识别、目录标签和排序逻辑，并更新 `AircraftPhoto.directory` 字段注释。
+
+## 修改具体文件
+
+- `src/pages/personal/data/aircraftPhotosData.ts`：从链接 `key` 参数提取相册目录，并按新目录键生成标签及排序。
+- `src/pages/personal/type.d.ts`：更新飞机照片目录字段的语义说明。
+- `taskRecord.md`：追加本次相册目录提取逻辑调整记录。

@@ -6,33 +6,31 @@ import type {
     AircraftPhotosBundle,
 } from "../type";
 
-// 根据图片 URL 的域名与文件名前是否存在路径段，生成稳定的目录键供筛选复用。
+/** `key` 仅含文件名时使用的根目录筛选键。 */
+const AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY = "root";
+
+// 从图片链接的 key 参数提取文件所属目录，保留完整目录层级供筛选复用。
 const getAircraftPhotoDirectoryKey = (originalUrl: string): string => {
     const parsedUrl = new URL(originalUrl);
-    const pathSegments = parsedUrl.pathname
+    const objectKey = parsedUrl.searchParams.get("key") ?? "";
+    const keySegments = objectKey
         .split("/")
-        .filter((pathSegment: string): boolean => pathSegment.length > 0);
-    const directoryPath =
-        pathSegments.length <= 1
-            ? ""
-            : pathSegments.slice(0, -1).join("/");
+        .filter((keySegment: string): boolean => keySegment.length > 0);
 
-    if (directoryPath.length === 0) {
-        return parsedUrl.hostname;
+    if (keySegments.length <= 1) {
+        return AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
     }
 
-    return `${parsedUrl.hostname}/${directoryPath}`;
+    return keySegments.slice(0, -1).join("/");
 };
 
-// 将目录键转为可读标签：根目录仅含域名，子目录展示路径段名称。
+// 将目录键转为可读标签，根目录展示固定文案，子目录展示完整层级。
 const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
-    const directoryPathSeparatorIndex = directoryKey.indexOf("/");
-
-    if (directoryPathSeparatorIndex === -1) {
+    if (directoryKey === AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY) {
         return "根目录";
     }
 
-    return directoryKey.slice(directoryPathSeparatorIndex + 1);
+    return directoryKey;
 };
 
 // 列表使用构建期生成的小体积预览图，未生成时回退到原图以保证开发环境可用。
@@ -65,9 +63,10 @@ const aircraftPhotoDirectoryOptions: AircraftPhotoDirectoryOption[] =
                     [secondDirectoryKey]: [string, number],
                 ): number => {
                     const isFirstDirectoryRoot =
-                        !firstDirectoryKey.includes("/");
+                        firstDirectoryKey === AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
                     const isSecondDirectoryRoot =
-                        !secondDirectoryKey.includes("/");
+                        secondDirectoryKey ===
+                        AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
 
                     if (isFirstDirectoryRoot && !isSecondDirectoryRoot) {
                         return -1;

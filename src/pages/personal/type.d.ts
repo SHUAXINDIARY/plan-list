@@ -36,7 +36,7 @@ export interface AircraftPhoto {
   originalUrl: string;
   /** 列表缩略图 URL，构建期生成或回退原图。 */
   previewUrl: string;
-  /** 相册目录键：无子路径时为域名，否则为「域名/路径段」。 */
+  /** 相册目录键：`key` 仅含文件名时为根目录，否则为文件名前的完整目录路径。 */
   directory: string;
 }
 
