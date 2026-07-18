@@ -351,13 +351,18 @@
   cursor: pointer;
   transition:
     background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform 100ms var(--motion-ease-out-quart);
 }
 
 .reference-section__header:focus-visible {
   color: var(--pl-text-heading);
   background-color: var(--pl-surface-reference-hover);
   outline: none;
+}
+
+.reference-section__header:active {
+  transform: scale(0.995);
 }
 
 .reference-section__header:focus-visible {
@@ -563,6 +568,10 @@
 .reference-card__links a:focus-visible,
 .reference-card__action:focus-visible {
   box-shadow: var(--pl-focus-glow);
+}
+
+.reference-card__links a:active {
+  transform: scale(0.99);
 }
 
 .reference-card__link-index {
@@ -775,6 +784,11 @@
 
   .reference-card__action-content--changing {
     filter: none;
+  }
+
+  .reference-section__header:active,
+  .reference-card__links a:active {
+    transform: none;
   }
 }
 

@@ -93,6 +93,12 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 | **控件** | 顶栏右侧、`主导航` 左侧：`ThemeToggle` 圆角按钮，图标太阳（当前深色时可切浅色）/ 月亮（当前亮色时可切深色），`aria-pressed` 为真表示亮色激活；`meta[name=theme-color]` 随主题切换。 |
 | **色票倾向** | 壳层：浅冷灰蓝渐变（`#dfeaf3`～`#e8f0f7` 系）；正文墨蓝灰（`#243848` 系）；强调与外链改为偏深的钢青（`#1a6f9a` / `#0b6e9e` 系），仍保持单冷色accent 体系。 |
 
+### 2.5 系统辅助偏好
+
+- `prefers-reduced-motion: reduce`：移除位移、缩放和长时过渡，保留帮助理解状态的短 opacity 反馈。
+- `prefers-reduced-transparency: reduce`：将顶栏、导航、面板、工具条、输入框和资料表面提升为近实色，避免内容透叠降低辨识度。
+- `prefers-contrast: more`：提升正文次级信息、分割线、输入边界与焦点环对比度；深浅主题分别使用对应的高对比 token 覆写。
+
 ## 3. Typography
 
 **当前字体栈（实现）**：`Inter, Avenir, Helvetica, Arial, sans-serif` —— 全部为系统友好 sans，不使用装饰性 display 字体；「档案编辑感」由字重、字距与大标题比例承担，不靠换字体族。

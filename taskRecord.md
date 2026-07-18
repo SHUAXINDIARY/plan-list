@@ -4720,3 +4720,28 @@
 - `src/components/back-to-top/index.css`：增加返回顶部按钮按压反馈。
 - `plans/*.md`、`plans/README.md`：将五项动效计划及索引状态更新为 DONE。
 - `taskRecord.md`：追加本次动效计划实施记录。
+
+## 日期
+
+2026-07-18
+
+## 任务目的
+
+使用 `apple-design` skill 对全部页面进行响应、可预测性与辅助偏好优化，让共享交互在指针按下时即时反馈，并覆盖透明度和高对比系统偏好。
+
+## 完成过程
+
+1. 审查全站壳层、导航、Select、参考资料控件、相册与地图手势，确认地图已具备 Pointer Capture、1:1 拖拽、缩放锚点和可中断 rAF 重绘。
+2. 为全站按钮与链接增加 `touch-action: manipulation`，并为导航、Select、参考资料分组与资料链接补充克制的 pointer-down 缩放反馈。
+3. 将导航 hover 位移限制在精细指针设备，键盘 focus 保持高对比状态但不位移；减少动态偏好下取消新增缩放。
+4. 为 `prefers-reduced-transparency: reduce` 提供深浅主题近实色表面 token，为 `prefers-contrast: more` 提供强化文字、边界和焦点 token。
+5. 增加全站 `font-optical-sizing: auto` 与文本缩放适配，保持系统字号调整时的可读性。
+6. 运行 `CI=true pnpm run build`，构建通过；浏览器检查桌面和 390x844 下四条路由，无横向溢出且控制台无 warning / error。
+
+## 修改具体文件
+
+- `src/App.css`：增加全站触控响应、导航按压反馈、光学字号、减少透明度与高对比偏好 token。
+- `src/components/Select/index.css`：增强共享 Select 的 pointer-down 缩放反馈。
+- `src/pages/references/index.css`：增加资料分组与资料链接按压反馈及 reduced-motion 兜底。
+- `DESIGN.md`：记录三类系统辅助偏好的全站设计约定。
+- `taskRecord.md`：追加本次 Apple 风格全站体验优化记录。
