@@ -9,18 +9,6 @@
   }
 }
 
-@keyframes archive-filter-swap {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 0.45rem, 0) scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 @keyframes fleet-skeleton-shimmer {
   from {
     background-position: 100% 0;
@@ -215,6 +203,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 .aircraft-wiki__hero-action--primary:focus-visible {
   color: var(--aircraft-hero-primary-hover-text);
   background-color: var(--aircraft-hero-primary-hover-bg);
+}
+
+.aircraft-wiki__hero-action:active {
+  transform: scale(0.97);
 }
 
 .aircraft-wiki__hero-stats {
@@ -588,10 +580,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   border-color: var(--pl-border-error);
 }
 
-.data-state--filtered-empty {
-  animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
-}
-
 /* 结果窗使用固定视口高度承载筛选变化，避免页面随匹配数量反复跳动。 */
 .fleet-results {
   box-sizing: border-box;
@@ -829,7 +817,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 .airline-list {
   display: grid;
   gap: 1rem;
-  animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
 .airline-list--skeleton {
@@ -844,12 +831,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   border: 1px solid var(--pl-border-muted);
   border-radius: 1rem;
   box-shadow: var(--pl-shadow-card);
-  animation: archive-filter-swap var(--motion-duration-standard) var(--motion-ease-out-quint) both;
-  transition:
-    background-color var(--motion-duration-standard) var(--motion-ease-out-quart),
-    border-color var(--motion-duration-standard) var(--motion-ease-out-quart),
-    box-shadow var(--motion-duration-standard) var(--motion-ease-out-quart),
-    transform var(--motion-duration-standard) var(--motion-ease-out-quart);
 }
 
 .airline-entry::before {
@@ -878,29 +859,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .airline-entry--skeleton:nth-child(4) {
   --airline-brand-color: rgba(80, 111, 220, 0.44);
-}
-
-.airline-entry:nth-child(2) {
-  animation-delay: 24ms;
-}
-
-.airline-entry:nth-child(3) {
-  animation-delay: 48ms;
-}
-
-.airline-entry:nth-child(4) {
-  animation-delay: 72ms;
-}
-
-.airline-entry:nth-child(n + 5) {
-  animation-delay: 96ms;
-}
-
-.airline-entry:hover {
-  background-color: var(--pl-surface-entry-hover);
-  border-color: var(--pl-border-entry-hover);
-  box-shadow: var(--pl-shadow-card-hover);
-  transform: translate3d(0, -2px, 0);
 }
 
 .airline-entry__header {
@@ -937,16 +895,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   border-radius: 0.45rem;
   box-shadow: var(--pl-shadow-chip);
   opacity: 0.76;
-  transition:
-    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    opacity var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
-}
-
-.airline-entry:hover .airline-entry__logo {
-  border-color: color-mix(in oklch, var(--airline-brand-color) 78%, rgba(164, 188, 201, 0.24));
-  opacity: 1;
-  transform: translate3d(0, -1px, 0);
 }
 
 .airline-entry__title {
@@ -1061,12 +1009,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   border: 1px solid var(--pl-border-divider-mid);
   border-radius: 0.55rem;
   box-shadow: var(--pl-shadow-chip);
-  transition:
-    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
-    color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
 .aircraft-model-list__chip--airbus {
@@ -1087,13 +1029,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 .aircraft-model-list__chip--regional {
   background-color: oklch(0.72 0.12 78 / 0.16);
   border-color: oklch(0.78 0.1 78 / 0.34);
-}
-
-.aircraft-model-list__chip:hover {
-  color: var(--pl-text-heading);
-  border-color: var(--pl-border-chip-hover);
-  box-shadow: var(--pl-shadow-card-hover);
-  transform: translate3d(0, -1px, 0);
 }
 
 .fleet-skeleton-line,

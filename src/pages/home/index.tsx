@@ -686,7 +686,7 @@ const HomePage = (): ReactElement => {
         return createTopAircraftModelStats(filteredAirlineFleets);
     }, [filteredAirlineFleets]);
 
-    // 将筛选条件组合成视图 key，让结果区在数据切换时执行进入过渡。
+    // 将筛选条件组合成视图 key，仅用于在结果变化后重置内嵌滚动位置。
     const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}-${selectedAircraftModel}-${selectedSortOrder}`;
 
     useEffect((): void => {
@@ -1040,17 +1040,11 @@ const HomePage = (): ReactElement => {
                     tabIndex={0}
                 >
                     {filteredAirlineFleets.length === 0 ? (
-                        <p
-                            className="fleet-results__empty data-state--filtered-empty"
-                            key={`empty-${filteredViewKey}`}
-                        >
+                        <p className="fleet-results__empty">
                             没有匹配当前筛选条件的航司或机型。
                         </p>
                     ) : (
-                        <div
-                            className="airline-list"
-                            key={`list-${filteredViewKey}`}
-                        >
+                        <div className="airline-list">
                             {filteredAirlineFleets.map(
                                 (airlineFleet: AirlineFleet): ReactElement => (
                                     <article

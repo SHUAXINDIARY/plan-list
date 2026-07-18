@@ -5,18 +5,6 @@
   --personal-motion-panel: 260ms;
 }
 
-@keyframes archive-filter-swap {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 0.45rem, 0) scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 @keyframes personal-section-settle {
   from {
     opacity: 0;
@@ -213,18 +201,6 @@
   background-color: var(--pl-surface-entry);
   border: 1px solid var(--pl-border-divider-mid);
   border-radius: 0.85rem;
-  transition:
-    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
-}
-
-.personal-timeline__list li:hover {
-  background-color: var(--pl-surface-entry-hover);
-  border-color: var(--pl-border-entry-hover);
-  box-shadow: var(--pl-shadow-card-hover);
-  transform: translate3d(0, -2px, 0);
 }
 
 .personal-timeline__list li::before {
@@ -438,12 +414,6 @@
     transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
-.aircraft-photo-gallery li:hover {
-  border-color: var(--pl-border-entry-hover);
-  box-shadow: var(--pl-shadow-card-hover);
-  transform: translate3d(0, -2px, 0);
-}
-
 .aircraft-photo-gallery__button {
   position: relative;
   display: block;
@@ -453,6 +423,12 @@
   cursor: zoom-in;
   background: transparent;
   border: 0;
+  transition: transform var(--personal-motion-feedback)
+    var(--motion-ease-out-quart);
+}
+
+.aircraft-photo-gallery__button:active {
+  transform: scale(0.98);
 }
 
 .aircraft-photo-gallery__button:focus-visible {
@@ -493,11 +469,6 @@
 
 .aircraft-photo-gallery__image--pending {
   opacity: 0;
-}
-
-.aircraft-photo-gallery li:hover img {
-  filter: brightness(1.08);
-  transform: scale(1.05);
 }
 
 .aircraft-photo-gallery__overlay {
@@ -544,7 +515,6 @@
   font-weight: 800;
 }
 
-.aircraft-photo-gallery li:hover .aircraft-photo-gallery__overlay,
 .aircraft-photo-gallery__button:focus-visible .aircraft-photo-gallery__overlay {
   opacity: 1;
   transform: translate3d(0, -0.12rem, 0);
@@ -678,15 +648,13 @@
     transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
-.aircraft-photo-preview__header button:hover {
-  background-color: var(--pl-surface-preview-btn-hover);
-  border-color: var(--pl-border-preview-btn-hover);
-  transform: translateY(-1px);
-}
-
 .aircraft-photo-preview__header button:focus-visible {
   outline: 2px solid oklch(0.78 0.105 222);
   outline-offset: 3px;
+}
+
+.aircraft-photo-preview__header button:active {
+  transform: scale(0.97);
 }
 
 .aircraft-photo-preview__loading {
@@ -810,7 +778,6 @@
     transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
-.airport-country:hover,
 .airport-country--expanded {
   background-color: var(--pl-surface-entry);
   border-color: var(--pl-border-entry-hover);
@@ -840,17 +807,13 @@
     transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
 }
 
-.airport-country__toggle:hover {
-  background-color: var(--pl-surface-personal-pill);
-}
-
 .airport-country__toggle:focus-visible {
   outline: 2px solid oklch(0.78 0.105 222);
   outline-offset: -3px;
 }
 
 .airport-country__toggle:active {
-  transform: scale3d(0.995, 0.995, 1);
+  transform: scale3d(0.98, 0.98, 1);
 }
 
 .airport-country__title {
@@ -892,7 +855,6 @@
   opacity: 0;
   transform: translate3d(0, -0.25rem, 0);
   transition:
-    grid-template-rows var(--personal-motion-panel) var(--motion-ease-out-quint),
     opacity var(--personal-motion-state) var(--motion-ease-out-quart),
     transform var(--personal-motion-panel) var(--motion-ease-out-quint);
 }
@@ -918,23 +880,6 @@
   display: grid;
   gap: 0.2rem;
   min-width: 0;
-}
-
-.airport-country--expanded li {
-  animation: archive-filter-swap var(--personal-motion-state)
-    var(--motion-ease-out-quint) both;
-}
-
-.airport-country--expanded li:nth-child(2) {
-  animation-delay: 24ms;
-}
-
-.airport-country--expanded li:nth-child(3) {
-  animation-delay: 48ms;
-}
-
-.airport-country--expanded li:nth-child(n + 4) {
-  animation-delay: 72ms;
 }
 
 .airport-country li span {
@@ -1029,10 +974,6 @@
     transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
 }
 
-.flight-year-block__toggle:hover {
-  color: var(--pl-text-heading);
-}
-
 .flight-year-block__toggle:focus-visible {
   outline: 2px solid oklch(0.78 0.105 222);
   outline-offset: 2px;
@@ -1040,7 +981,7 @@
 }
 
 .flight-year-block__toggle:active {
-  transform: scale3d(0.995, 0.995, 1);
+  transform: scale3d(0.98, 0.98, 1);
 }
 
 .flight-year-block--expanded {
@@ -1086,7 +1027,6 @@
   opacity: 0;
   transform: translate3d(0, -0.25rem, 0);
   transition:
-    grid-template-rows var(--personal-motion-panel) var(--motion-ease-out-quint),
     opacity var(--personal-motion-state) var(--motion-ease-out-quart),
     transform var(--personal-motion-panel) var(--motion-ease-out-quint);
 }
@@ -1127,34 +1067,6 @@
   padding: 0.65rem 0;
   color: var(--pl-text-emphasis);
   border-bottom: 1px solid var(--pl-border-divider);
-  animation: archive-filter-swap var(--motion-duration-standard)
-    var(--motion-ease-out-quint) both;
-  transition:
-    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
-}
-
-.flight-ledger-row:hover {
-  background-color: var(--pl-surface-entry-hover);
-  border-color: var(--pl-border-entry-hover);
-  transform: translate3d(0.18rem, 0, 0);
-}
-
-.flight-ledger-row:nth-child(2) {
-  animation-delay: 24ms;
-}
-
-.flight-ledger-row:nth-child(3) {
-  animation-delay: 48ms;
-}
-
-.flight-ledger-row:nth-child(4) {
-  animation-delay: 72ms;
-}
-
-.flight-ledger-row:nth-child(n + 5) {
-  animation-delay: 96ms;
 }
 
 .flight-ledger-row:last-child {
@@ -1254,6 +1166,44 @@
 .flight-ledger__skeleton-cell--date {
   width: 4.25rem;
   justify-self: end;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aircraft-photo-gallery li:hover {
+    border-color: var(--pl-border-entry-hover);
+    box-shadow: var(--pl-shadow-card-hover);
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .aircraft-photo-gallery li:hover img {
+    filter: brightness(1.08);
+    transform: scale(1.05);
+  }
+
+  .aircraft-photo-gallery li:hover .aircraft-photo-gallery__overlay {
+    opacity: 1;
+    transform: translate3d(0, -0.12rem, 0);
+  }
+
+  .aircraft-photo-preview__header button:hover {
+    background-color: var(--pl-surface-preview-btn-hover);
+    border-color: var(--pl-border-preview-btn-hover);
+    transform: translateY(-1px);
+  }
+
+  .airport-country:hover {
+    background-color: var(--pl-surface-entry);
+    border-color: var(--pl-border-entry-hover);
+    box-shadow: var(--pl-shadow-card-hover);
+  }
+
+  .airport-country__toggle:hover {
+    background-color: var(--pl-surface-personal-pill);
+  }
+
+  .flight-year-block__toggle:hover {
+    color: var(--pl-text-heading);
+  }
 }
 
 @media (max-width: 640px) {
@@ -1430,7 +1380,6 @@
   }
 
   .personal-timeline__list li,
-  .personal-timeline__list li:hover,
   .airport-country,
   .airport-country:hover,
   .airport-country__toggle,
@@ -1439,8 +1388,7 @@
   .flight-year-block__toggle,
   .flight-year-block__toggle:active,
   .flight-year-block__body,
-  .flight-ledger-row,
-  .flight-ledger-row:hover {
+  .flight-ledger-row {
     transform: none !important;
   }
 

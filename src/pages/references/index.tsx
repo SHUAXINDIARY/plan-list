@@ -999,10 +999,7 @@ const ReferencesPage = (): ReactElement => {
                 </div>
 
                 <p className="reference-toolbar__result" aria-live="polite">
-                    <span
-                        key={`${filteredItems.length}-${filteredLinkCount}`}
-                        className="reference-toolbar__result-value"
-                    >
+                    <span className="reference-toolbar__result-value">
                         显示 {filteredItems.length} 个来源 / {filteredLinkCount}{" "}
                         条链接
                     </span>
