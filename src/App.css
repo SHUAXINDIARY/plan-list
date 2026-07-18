@@ -523,12 +523,14 @@ a {
     order: 2;
 }
 
-.theme-toggle:hover,
 .theme-toggle:focus-visible {
     color: var(--pl-text-heading);
     border-color: var(--pl-border-nav-hover);
     outline: none;
-    transform: translate3d(0, -1px, 0);
+}
+
+.theme-toggle:active {
+    transform: scale(0.97);
 }
 
 .theme-toggle[aria-pressed="true"] {
@@ -540,6 +542,20 @@ a {
 .theme-toggle__icon {
     display: inline-flex;
     line-height: 0;
+    animation: theme-icon-enter var(--motion-duration-fast)
+        var(--motion-ease-out-quart) both;
+}
+
+@keyframes theme-icon-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.92) rotate(-12deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
 }
 
 .theme-toggle__svg {
@@ -783,6 +799,14 @@ a {
     }
 }
 
+@media (hover: hover) and (pointer: fine) {
+    .theme-toggle:hover {
+        color: var(--pl-text-heading);
+        border-color: var(--pl-border-nav-hover);
+        transform: translate3d(0, -1px, 0);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -791,5 +815,24 @@ a {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+
+    .theme-toggle:active {
+        transform: none;
+    }
+
+    .theme-toggle__icon {
+        animation-duration: 120ms !important;
+        animation-name: theme-icon-fade-enter;
+    }
+}
+
+@keyframes theme-icon-fade-enter {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }

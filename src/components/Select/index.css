@@ -174,8 +174,16 @@ button.pl-select {
   border: 1px solid var(--pl-border-strong);
   border-radius: 0.75rem;
   box-shadow: var(--pl-shadow-control);
-  animation: pl-select-menu-enter var(--motion-duration-standard)
-    var(--motion-ease-out-quint) both;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--motion-duration-standard) var(--motion-ease-out-quint),
+    transform var(--motion-duration-standard) var(--motion-ease-out-quint);
+
+  @starting-style {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
 }
 
 .pl-select-menu--portal {
@@ -183,16 +191,12 @@ button.pl-select {
   box-sizing: border-box;
 }
 
-@keyframes pl-select-menu-enter {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -4px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
+.pl-select-menu--closing {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, -4px, 0);
+  transition-duration: var(--motion-duration-fast);
+  transition-timing-function: var(--motion-ease-out-quart);
 }
 
 .pl-select-menu__option {
@@ -266,7 +270,14 @@ button.pl-select {
   }
 
   .pl-select-menu {
-    animation: none;
+    transform: none;
+    transition:
+      opacity 120ms var(--motion-ease-out-quart);
+  }
+
+  .pl-select-menu--closing {
+    opacity: 0;
+    transform: none;
   }
 
   .pl-select:focus-visible,

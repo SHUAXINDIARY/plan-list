@@ -30,7 +30,11 @@ export const ThemeToggle = ({
             aria-label={nextLabel}
             title={nextLabel}
         >
-            <span className="theme-toggle__icon" aria-hidden>
+            <span
+                className="theme-toggle__icon"
+                key={preference}
+                aria-hidden
+            >
                 {isDark ? <IconSun /> : <IconMoon />}
             </span>
         </button>

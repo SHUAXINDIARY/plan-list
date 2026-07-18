@@ -27,6 +27,9 @@ const SELECT_MENU_GAP_PX = 6;
 /** 下拉面板 z-index，需高于 Fleet 工具条与地图浮层。 */
 const SELECT_MENU_Z_INDEX = 100;
 
+/** 下拉面板退出完成后卸载 Portal 的等待时间（ms），与 fast motion token 对齐。 */
+const SELECT_MENU_EXIT_DURATION_MS = 160;
+
 /** `children` 中 `<option>` 元素的 props 形状，供归一化提取时使用。 */
 interface NativeOptionElementProps {
     /** 选项提交值。 */
@@ -73,6 +76,8 @@ interface SelectOptionsMenuProps {
     menuRef: RefObject<HTMLUListElement | null>;
     /** Portal 面板的 fixed 定位与宽度。 */
     placement: SelectMenuPlacement;
+    /** 是否正在执行退出过渡；退出阶段面板保留挂载但不可交互。 */
+    isClosing: boolean;
 }
 
 /** Portal 下拉面板相对视口的定位（fixed 坐标与宽度）。 */
@@ -306,6 +311,7 @@ const SelectOptionsMenu = ({
     onSelect,
     menuRef,
     placement,
+    isClosing,
 }: SelectOptionsMenuProps): ReactElement => {
     const menuStyle: CSSProperties = {
         top: placement.top,
@@ -318,9 +324,15 @@ const SelectOptionsMenu = ({
         <ul
             ref={menuRef}
             id={listboxId}
-            className="pl-select-menu pl-select-menu--portal scroll-area-night"
+            className={
+                isClosing
+                    ? "pl-select-menu pl-select-menu--portal pl-select-menu--closing scroll-area-night"
+                    : "pl-select-menu pl-select-menu--portal scroll-area-night"
+            }
             role="listbox"
             style={menuStyle}
+            aria-hidden={isClosing}
+            inert={isClosing}
             aria-activedescendant={`${listboxId}-option-${highlightedIndex}`}
         >
             {items.map((option: SelectOption, index: number): ReactElement => (
@@ -356,7 +368,9 @@ const SelectControl = ({
     const listboxId = useId();
     const wrapRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLUListElement>(null);
+    const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isClosing, setIsClosing] = useState<boolean>(false);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
     const [menuPlacement, setMenuPlacement] =
         useState<SelectMenuPlacement | null>(null);
@@ -379,6 +393,14 @@ const SelectControl = ({
         ? "pl-select-wrap pl-select-wrap--open"
         : "pl-select-wrap";
 
+    /** 清理尚未完成的退出计时，供快速重开与组件卸载复用。 */
+    const clearCloseTimer = useCallback((): void => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+        }
+    }, []);
+
     /**
      * 读取触发器位置并更新 Portal 面板坐标；滚动/缩放时复用。
      */
@@ -393,12 +415,19 @@ const SelectControl = ({
      * 关闭面板并将高亮复位到当前选中项，供 Esc、外点与选中后复用。
      */
     const closeMenu = useCallback((): void => {
+        clearCloseTimer();
         setIsOpen(false);
-        setMenuPlacement(null);
+        setIsClosing(true);
         setHighlightedIndex(
             selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
         );
-    }, [items, selectedIndex]);
+
+        closeTimerRef.current = setTimeout((): void => {
+            setIsClosing(false);
+            setMenuPlacement(null);
+            closeTimerRef.current = null;
+        }, SELECT_MENU_EXIT_DURATION_MS);
+    }, [clearCloseTimer, items, selectedIndex]);
 
     /**
      * 提交新值：构造 synthetic change event，关闭面板。
@@ -408,16 +437,17 @@ const SelectControl = ({
             if (nextValue !== value) {
                 onChange(createSelectChangeEvent(nextValue));
             }
-            setIsOpen(false);
-            setMenuPlacement(null);
+            closeMenu();
         },
-        [onChange, value],
+        [closeMenu, onChange, value],
     );
 
     /**
      * 打开面板时把高亮对齐到当前选中项（或首个可选项），并同步 Portal 坐标。
      */
     const openMenu = useCallback((): void => {
+        clearCloseTimer();
+        setIsClosing(false);
         setHighlightedIndex(
             selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
         );
@@ -425,7 +455,7 @@ const SelectControl = ({
             setMenuPlacement(computeMenuPlacement(wrapRef.current));
         }
         setIsOpen(true);
-    }, [items, selectedIndex]);
+    }, [clearCloseTimer, items, selectedIndex]);
 
     /**
      * 点击触发器：切换面板开闭；阻止冒泡，避免外层字段容器重复收到激活事件。
@@ -516,6 +546,12 @@ const SelectControl = ({
         }
     }, [isOpen, items, selectedIndex]);
 
+    useEffect((): (() => void) => {
+        return (): void => {
+            clearCloseTimer();
+        };
+    }, [clearCloseTimer]);
+
     /** 面板打开后在 scroll/resize 时重新定位 Portal。 */
     useEffect((): (() => void) | void => {
         if (!isOpen) {
@@ -581,7 +617,7 @@ const SelectControl = ({
             <span className="pl-select__affordance" aria-hidden>
                 <SelectChevron />
             </span>
-            {isOpen && menuPlacement
+            {(isOpen || isClosing) && menuPlacement
                 ? createPortal(
                       <SelectOptionsMenu
                           listboxId={listboxId}
@@ -592,6 +628,7 @@ const SelectControl = ({
                           onSelect={commitSelection}
                           menuRef={menuRef}
                           placement={menuPlacement}
+                          isClosing={isClosing}
                       />,
                       document.body,
                   )

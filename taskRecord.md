@@ -4693,3 +4693,30 @@
 - `src/pages/references/index.tsx`：取消筛选统计的 keyed remount。
 - `src/pages/references/index.css`：移除高频筛选与非交互卡片动效，隔离触控 hover 并优化折叠反馈。
 - `taskRecord.md`：追加本次剩余页面设计工程优化记录。
+
+## 日期
+
+2026-07-18
+
+## 任务目的
+
+实现 `plans/` 中的五项动效改进计划，补全共享下拉退出、主题切换、复制反馈、地图 tooltip 与返回顶部按钮的局部状态反馈。
+
+## 完成过程
+
+1. 为共享 `Select` 增加 160ms 延迟卸载与可中断的 opacity / transform 退出，关闭阶段立即撤销展开语义和指针交互，并保留 reduced-motion 淡出。
+2. 为主题切换图标增加 160ms 局部状态进入和 0.97 按压反馈，将 hover 位移限制到精细指针设备。
+3. 为参考资料复制按钮增加原位淡化与 2px blur 的“已复制”成功状态，保留原有 toast 和失败反馈，并稳定按钮尺寸。
+4. 为地图指针触发的 tooltip 增加精细指针限定的 160ms opacity / scale 进入，方向键触发继续保持即时。
+5. 为返回顶部按钮增加 0.97 按压反馈，并在 reduced-motion 下保持静止。
+6. 运行 `CI=true pnpm run build`，构建通过；浏览器检查桌面和 390x844 移动布局、Select、主题、地图键盘路径及复制失败路径，四条路由无横向溢出且控制台无 warning / error。浏览器环境拒绝剪贴板写入，因此复制成功路径未能在该环境实际触发。
+
+## 修改具体文件
+
+- `src/components/Select/index.tsx`、`src/components/Select/index.css`：增加共享下拉的退出状态、延迟卸载与 reduced-motion 处理。
+- `src/components/theme-toggle/index.tsx`、`src/App.css`：增加主题图标状态进入、按压反馈与 hover 输入方式隔离。
+- `src/pages/references/index.tsx`、`src/pages/references/index.css`：增加复制按钮的局部成功状态与稳定交叉淡化。
+- `src/components/map/index.tsx`、`src/components/map/index.css`：区分指针和键盘 tooltip，并仅动画指针入口。
+- `src/components/back-to-top/index.css`：增加返回顶部按钮按压反馈。
+- `plans/*.md`、`plans/README.md`：将五项动效计划及索引状态更新为 DONE。
+- `taskRecord.md`：追加本次动效计划实施记录。

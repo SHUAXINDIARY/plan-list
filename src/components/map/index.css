@@ -128,6 +128,25 @@
   --pl-map-tooltip-text: oklch(0.98 0.012 224 / 1);
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .annotated-world-map__tooltip--pointer {
+    animation: map-tooltip-enter var(--motion-duration-fast)
+      var(--motion-ease-out-quart) both;
+  }
+}
+
+@keyframes map-tooltip-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(1);
+  }
+}
+
 .annotated-world-map--theme-dark .annotated-world-map__tooltip--domestic,
 .annotated-world-map--theme-dark .annotated-world-map__tooltip--international {
   --pl-map-tooltip-text: oklch(0.98 0.02 220 / 1);
@@ -226,5 +245,22 @@
     white-space: normal;
     text-align: center;
     line-height: 1.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annotated-world-map__tooltip--pointer {
+    animation-duration: 120ms;
+    animation-name: map-tooltip-fade-enter;
+  }
+}
+
+@keyframes map-tooltip-fade-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

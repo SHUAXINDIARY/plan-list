@@ -34,6 +34,11 @@
     transform: translate3d(0, 0, 0) scale(1);
 }
 
+.back-to-top--visible:active {
+    transform: translate3d(0, 0, 0) scale(0.97);
+    transition-duration: var(--motion-duration-fast);
+}
+
 .back-to-top:hover,
 .back-to-top:focus-visible {
     color: var(--pl-text-heading);
@@ -71,5 +76,9 @@
 @media (prefers-reduced-motion: reduce) {
     .back-to-top {
         transition: none;
+    }
+
+    .back-to-top--visible:active {
+        transform: translate3d(0, 0, 0) scale(1);
     }
 }

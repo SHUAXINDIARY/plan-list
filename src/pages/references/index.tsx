@@ -100,6 +100,8 @@ interface ReferenceFilterOption {
 
 const LAST_UPDATED_DATE = "2026-07-05";
 const RECENT_SOURCE_COUNT = 6;
+const COPY_FEEDBACK_TRANSITION_DURATION_MS = 160;
+const COPY_FEEDBACK_VISIBLE_DURATION_MS = 800;
 
 const CATEGORY_OPTIONS: ReferenceFilterOption[] = [
     { value: "all", label: "全部类型" },
@@ -571,6 +573,12 @@ const IconCopy = (): ReactElement => (
     </svg>
 );
 
+const IconCheck = (): ReactElement => (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m5 12.5 4.2 4.2L19 7" />
+    </svg>
+);
+
 const IconExternal = (): ReactElement => (
     <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M8 16 16 8" />
@@ -591,7 +599,11 @@ interface ReferenceCardProps {
     /** 当前搜索词，用于命中文案高亮。 */
     searchTerm: string;
     /** 复制主域名。 */
-    onCopyDomain: (domain: string) => void;
+    onCopyDomain: (sourceIndex: number, domain: string) => void;
+    /** 当前卡片是否处于复制成功展示阶段。 */
+    isCopied: boolean;
+    /** 当前卡片内容是否正在淡出以切换复制状态。 */
+    isCopyFeedbackChanging: boolean;
 }
 
 // 单个参考资料卡片：主域名、类型/地区标签、链接列表与访问/复制操作。
@@ -599,9 +611,11 @@ const ReferenceCard = ({
     item,
     searchTerm,
     onCopyDomain,
+    isCopied,
+    isCopyFeedbackChanging,
 }: ReferenceCardProps): ReactElement => {
     const handleCopyClick = (): void => {
-        onCopyDomain(item.primaryDomain);
+        onCopyDomain(item.sourceIndex, item.primaryDomain);
     };
 
     return (
@@ -677,10 +691,22 @@ const ReferenceCard = ({
                     type="button"
                     className="reference-card__action"
                     onClick={handleCopyClick}
-                    aria-label={`复制 ${item.primaryDomain} 域名`}
+                    aria-label={
+                        isCopied
+                            ? `已复制 ${item.primaryDomain} 域名`
+                            : `复制 ${item.primaryDomain} 域名`
+                    }
                 >
-                    <IconCopy />
-                    复制
+                    <span
+                        className={
+                            isCopyFeedbackChanging
+                                ? "reference-card__action-content reference-card__action-content--changing"
+                                : "reference-card__action-content"
+                        }
+                    >
+                        {isCopied ? <IconCheck /> : <IconCopy />}
+                        {isCopied ? "已复制" : "复制"}
+                    </span>
                 </button>
             </footer>
         </article>
@@ -709,7 +735,20 @@ const ReferencesPage = (): ReactElement => {
         ReferenceCategory[]
     >(CATEGORY_ORDER.slice(0, 3));
     const [toastMessage, setToastMessage] = useState<string>("");
+    const [copyFeedbackSourceIndex, setCopyFeedbackSourceIndex] = useState<
+        number | null
+    >(null);
+    const [isCopyFeedbackChanging, setIsCopyFeedbackChanging] =
+        useState<boolean>(false);
+    const [showsCopiedFeedback, setShowsCopiedFeedback] =
+        useState<boolean>(false);
     const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const copyFeedbackTransitionTimerRef = useRef<
+        ReturnType<typeof setTimeout> | null
+    >(null);
+    const copyFeedbackVisibleTimerRef = useRef<
+        ReturnType<typeof setTimeout> | null
+    >(null);
 
     const filteredItems = useMemo((): ReferenceDirectoryItem[] => {
         return sortReferenceItems(
@@ -760,6 +799,12 @@ const ReferencesPage = (): ReactElement => {
         return (): void => {
             if (toastTimerRef.current) {
                 clearTimeout(toastTimerRef.current);
+            }
+            if (copyFeedbackTransitionTimerRef.current) {
+                clearTimeout(copyFeedbackTransitionTimerRef.current);
+            }
+            if (copyFeedbackVisibleTimerRef.current) {
+                clearTimeout(copyFeedbackVisibleTimerRef.current);
             }
         };
     }, []);
@@ -848,16 +893,52 @@ const ReferencesPage = (): ReactElement => {
         });
     };
 
-    const handleCopyDomain = async (domain: string): Promise<void> => {
+    const handleCopyDomain = async (
+        sourceIndex: number,
+        domain: string,
+    ): Promise<void> => {
         if (toastTimerRef.current) {
             clearTimeout(toastTimerRef.current);
+        }
+        if (copyFeedbackTransitionTimerRef.current) {
+            clearTimeout(copyFeedbackTransitionTimerRef.current);
+        }
+        if (copyFeedbackVisibleTimerRef.current) {
+            clearTimeout(copyFeedbackVisibleTimerRef.current);
         }
 
         try {
             await copyTextToClipboard(domain);
             setToastMessage("已复制域名");
+            setCopyFeedbackSourceIndex(sourceIndex);
+            setShowsCopiedFeedback(false);
+            setIsCopyFeedbackChanging(true);
+
+            copyFeedbackTransitionTimerRef.current = setTimeout((): void => {
+                setShowsCopiedFeedback(true);
+                setIsCopyFeedbackChanging(false);
+                copyFeedbackTransitionTimerRef.current = null;
+
+                copyFeedbackVisibleTimerRef.current = setTimeout((): void => {
+                    setIsCopyFeedbackChanging(true);
+
+                    copyFeedbackTransitionTimerRef.current = setTimeout(
+                        (): void => {
+                            setCopyFeedbackSourceIndex(null);
+                            setShowsCopiedFeedback(false);
+                            setIsCopyFeedbackChanging(false);
+                            copyFeedbackTransitionTimerRef.current = null;
+                        },
+                        COPY_FEEDBACK_TRANSITION_DURATION_MS,
+                    );
+                    copyFeedbackVisibleTimerRef.current = null;
+                }, COPY_FEEDBACK_VISIBLE_DURATION_MS);
+            }, COPY_FEEDBACK_TRANSITION_DURATION_MS);
         } catch {
             setToastMessage("复制失败，请手动复制域名");
+            setCopyFeedbackSourceIndex(null);
+            setShowsCopiedFeedback(false);
+            setIsCopyFeedbackChanging(false);
         }
 
         toastTimerRef.current = setTimeout((): void => {
@@ -1081,6 +1162,16 @@ const ReferencesPage = (): ReactElement => {
                                                             }
                                                             onCopyDomain={
                                                                 handleCopyDomain
+                                                            }
+                                                            isCopied={
+                                                                copyFeedbackSourceIndex ===
+                                                                    referenceItem.sourceIndex &&
+                                                                showsCopiedFeedback
+                                                            }
+                                                            isCopyFeedbackChanging={
+                                                                copyFeedbackSourceIndex ===
+                                                                    referenceItem.sourceIndex &&
+                                                                isCopyFeedbackChanging
                                                             }
                                                         />
                                                     ),

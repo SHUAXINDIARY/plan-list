@@ -637,6 +637,24 @@
   transition: transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
+.reference-card__action-content {
+  display: inline-flex;
+  min-width: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart),
+    filter var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.reference-card__action-content--changing {
+  opacity: 0;
+  filter: blur(2px);
+}
+
 .reference-card__action:focus-visible {
   color: var(--pl-text-heading);
   background-color: var(--pl-surface-entry-hover);
@@ -746,6 +764,17 @@
 
   .reference-card-list {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reference-card__action-content {
+    filter: none;
+    transition: opacity 120ms var(--motion-ease-out-quart);
+  }
+
+  .reference-card__action-content--changing {
+    filter: none;
   }
 }
 
