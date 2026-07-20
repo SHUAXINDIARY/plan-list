@@ -291,6 +291,22 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-10-1',
   },
   {
+    airline: '大韩航空',
+    aircraft: '321',
+    origin: '首尔',
+    destination: '北京',
+    routeKind: 'one-way',
+    departureDate: '2026-9-6',
+  },
+  {
+    airline: '大韩航空',
+    aircraft: '321',
+    origin: '北京',
+    destination: '首尔',
+    routeKind: 'one-way',
+    departureDate: '2026-9-4',
+  },
+  {
     airline: '全日空',
     aircraft: '777-300ER',
     origin: '东京',
