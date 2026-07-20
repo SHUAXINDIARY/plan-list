@@ -9,6 +9,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@xyflow/react": "^12.11.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router": "^7.15.1"
