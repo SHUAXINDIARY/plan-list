@@ -323,7 +323,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-6-17',
   },
   {
-    airline: '泰航',
+    airline: '泰国航空',
     aircraft: '350-941',
     origin: '曼谷',
     destination: '北京',
@@ -331,7 +331,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-5-5',
   },
   {
-    airline: '泰航',
+    airline: '泰国航空',
     aircraft: '320-232',
     origin: '清迈',
     destination: '曼谷',
@@ -339,7 +339,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-5-2',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '737-800',
     origin: '昆明',
     destination: '清迈',
@@ -347,7 +347,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-4-29',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '321-231',
     origin: '北京',
     destination: '昆明',
@@ -355,7 +355,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-4-29',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '321-251',
     origin: '西安',
     destination: '北京',
@@ -363,7 +363,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-3-30',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '321-251',
     origin: '北京',
     destination: '西安',
@@ -371,7 +371,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-3-27',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '321-253',
     origin: '广州',
     destination: '北京',
@@ -379,7 +379,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-2-20',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '737-81B',
     origin: '西安',
     destination: '广州',
@@ -395,7 +395,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-2-15',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '330-343',
     origin: '首尔',
     destination: '北京',
@@ -403,7 +403,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-1-4',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '737-89L',
     origin: '北京',
     destination: '首尔',
@@ -411,7 +411,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-1-1',
   },
   {
-    airline: '泛航',
+    airline: '泛航航空',
     aircraft: '320-252',
     origin: '罗马',
     destination: '巴黎',
@@ -427,7 +427,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-10-6',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '350-941',
     origin: '上海',
     destination: '巴塞罗那',
@@ -435,7 +435,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-10-3',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '321-251',
     origin: '北京',
     destination: '上海',
@@ -443,7 +443,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-10-2',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '737-89L',
     origin: '名古屋',
     destination: '北京',
@@ -452,7 +452,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     returnDate: '8-31',
   },
   {
-    airline: '泰航',
+    airline: '泰国航空',
     aircraft: '350-941',
     origin: '曼谷',
     destination: '北京',
@@ -476,7 +476,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-5-1',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '321-211',
     origin: '北京',
     destination: '上海',
@@ -493,7 +493,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     returnDate: '3-24',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '321-213',
     origin: '首尔',
     destination: '北京',
@@ -501,7 +501,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-2-16',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '737-89L',
     origin: '北京',
     destination: '首尔',
@@ -509,7 +509,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-2-14',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: 'C919',
     origin: '西安',
     destination: '北京',
@@ -525,7 +525,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2025-1-28',
   },
   {
-    airline: '泰航',
+    airline: '泰国航空',
     aircraft: '350-900',
     origin: '曼谷',
     destination: '北京',
@@ -533,7 +533,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-10-6',
   },
   {
-    airline: '泰国国际航空',
+    airline: '泰国航空',
     aircraft: '320',
     origin: '普吉岛',
     destination: '曼谷',
@@ -542,7 +542,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-10-2',
   },
   {
-    airline: '亚航',
+    airline: '亚洲航空',
     aircraft: '320-200',
     origin: '曼谷',
     destination: '普吉岛',
@@ -550,7 +550,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-9-28',
   },
   {
-    airline: '亚航',
+    airline: '亚洲航空',
     aircraft: '320-CEO',
     origin: '北京',
     destination: '曼谷',
@@ -558,7 +558,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-9-28',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '330-343',
     origin: '上海',
     destination: '北京',
@@ -566,7 +566,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-5-5',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '330-243',
     origin: '北京',
     destination: '上海',
@@ -574,7 +574,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-5-2',
   },
   {
-    airline: '春秋航空',
+    airline: '春秋航空日本',
     aircraft: '737-800',
     origin: '东京',
     destination: '天津',
@@ -582,7 +582,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-4-7',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '330',
     origin: '北京',
     destination: '东京',
@@ -590,7 +590,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-4-3',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '321-253',
     origin: '西安',
     destination: '北京',
@@ -614,7 +614,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2024-1-1',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '321-251',
     origin: '北京',
     destination: '上海',
@@ -630,7 +630,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2023-10-5',
   },
   {
-    airline: '春秋',
+    airline: '春秋航空日本',
     aircraft: '737-800',
     origin: '天津',
     destination: '东京',
@@ -646,7 +646,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2023-4-4',
   },
   {
-    airline: '国航',
+    airline: '中国国际航空',
     aircraft: '320-243',
     origin: '北京',
     destination: '三亚',
@@ -654,7 +654,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2023-4-1',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '737-81B',
     origin: '武汉',
     destination: '北京',
@@ -670,7 +670,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2021-2-26',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '737-89P',
     origin: '西安',
     destination: '昆明',
@@ -678,7 +678,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2021-2-22',
   },
   {
-    airline: '东航',
+    airline: '中国东方航空',
     aircraft: '321-211',
     origin: '北京',
     destination: '西安',
@@ -686,7 +686,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2021-1-26',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '321-231',
     origin: '武汉',
     destination: '北京',
@@ -694,7 +694,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2020-12-8',
   },
   {
-    airline: '南航',
+    airline: '中国南方航空',
     aircraft: '737-86FN',
     origin: '北京',
     destination: '武汉',
