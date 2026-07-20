@@ -70,6 +70,10 @@ export type MapRouteScope = 'domestic' | 'international';
 
 export interface MapRoute {
   name: string;
+  /** 航段起飞机场名称，与 `CHECKED_AIRPORTS` 的 `name` 对应。 */
+  sourceAirportName: CheckedAirport['name'];
+  /** 航段到达机场名称，与 `CHECKED_AIRPORTS` 的 `name` 对应。 */
+  targetAirportName: CheckedAirport['name'];
   start: MapCoordinate;
   end: MapCoordinate;
   /** 国内或国际航迹，决定地图上的线型与颜色。 */

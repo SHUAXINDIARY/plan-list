@@ -192,6 +192,8 @@ function createMapRoute(
 ): MapRoute {
     return {
         name: label,
+        sourceAirportName: startAirport,
+        targetAirportName: endAirport,
         start: coordinateOfCheckedAirport(startAirport),
         end: coordinateOfCheckedAirport(endAirport),
         scope,

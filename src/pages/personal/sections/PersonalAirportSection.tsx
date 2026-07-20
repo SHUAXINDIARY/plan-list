@@ -7,6 +7,12 @@ import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 const AnnotatedWorldMap = lazy(
     async () => import("../../../components/map"),
 );
+const PersonalAirportFlow = lazy(
+    async () => import("./PersonalAirportFlow"),
+);
+
+/** 机场足迹主视图的展示模式。 */
+type AirportVisualizationMode = "map" | "flow";
 
 /**
  * 机场打卡地图与按国家折叠的机场列表，单独 async chunk 加载地图组件。
@@ -16,6 +22,9 @@ const PersonalAirportSection = (): ReactElement => {
     const [expandedAirportCountry, setExpandedAirportCountry] = useState<
         string | undefined
     >(undefined);
+    /** 当前机场足迹可视化模式，默认保留原有地图体验。 */
+    const [visualizationMode, setVisualizationMode] =
+        useState<AirportVisualizationMode>("map");
 
     // 手风琴切换：同一时刻仅保留一个展开国家，再次点击已展开项则折叠。
     const toggleAirportCountry = (countryName: string): void => {
@@ -34,15 +43,43 @@ const PersonalAirportSection = (): ReactElement => {
                 aria-labelledby="airport-map-title"
             >
                 <div className="personal-section__header">
-                    <p className="personal-section__eyebrow">Airport Check-ins</p>
-                    <h2 id="airport-map-title">打卡过的机场</h2>
+                    <div>
+                        <p className="personal-section__eyebrow">Airport Check-ins</p>
+                        <h2 id="airport-map-title">打卡过的机场</h2>
+                    </div>
+                    <div
+                        className="airport-view-switcher"
+                        role="group"
+                        aria-label="机场足迹展示方式"
+                    >
+                        <button
+                            type="button"
+                            className={visualizationMode === "map" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                            aria-pressed={visualizationMode === "map"}
+                            onClick={(): void => setVisualizationMode("map")}
+                        >
+                            地图
+                        </button>
+                        <button
+                            type="button"
+                            className={visualizationMode === "flow" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                            aria-pressed={visualizationMode === "flow"}
+                            onClick={(): void => setVisualizationMode("flow")}
+                        >
+                            航线图
+                        </button>
+                    </div>
                 </div>
                 <Suspense fallback={<PersonalAirportMapFallback />}>
-                    <AnnotatedWorldMap
-                        ariaLabel="机场打卡足迹示意图"
-                        markers={airportMapMarkers}
-                        routes={MAP_ROUTES}
-                    />
+                    {visualizationMode === "map" ? (
+                        <AnnotatedWorldMap
+                            ariaLabel="机场打卡足迹示意图"
+                            markers={airportMapMarkers}
+                            routes={MAP_ROUTES}
+                        />
+                    ) : (
+                        <PersonalAirportFlow />
+                    )}
                 </Suspense>
             </section>
 

@@ -287,6 +287,260 @@
   font-size: 1.18rem;
 }
 
+.airport-view-switcher {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(4.25rem, 1fr));
+  flex: 0 0 auto;
+  padding: 0.2rem;
+  background-color: var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 0.65rem;
+}
+
+.airport-view-switcher__button {
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  color: var(--pl-text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
+}
+
+.airport-view-switcher__button--active {
+  color: var(--pl-text-heading);
+  background-color: var(--pl-surface-chip);
+  border-color: var(--pl-border-entry-hover);
+}
+
+.airport-view-switcher__button:focus-visible {
+  outline: 2px solid var(--pl-border-focus);
+  outline-offset: 2px;
+}
+
+.airport-view-switcher__button:active {
+  transform: scale(0.97);
+}
+
+.airport-flow {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 650;
+  margin-top: 1rem;
+  overflow: hidden;
+  background: var(--pl-map-bg);
+  border: 1px solid var(--pl-map-border);
+  border-radius: 1rem;
+  box-shadow: var(--pl-map-inset);
+}
+
+.airport-flow .react-flow__renderer {
+  border-radius: inherit;
+}
+
+.airport-flow .react-flow__background {
+  color: var(--pl-map-frame);
+}
+
+.airport-flow .airport-flow-node {
+  width: 11.25rem;
+  padding: 0;
+  color: var(--pl-text-heading);
+  text-align: left;
+  background-color: var(--pl-surface-entry);
+  border: 1px solid var(--pl-border-divider-mid);
+  border-radius: 0.6rem;
+  box-shadow: var(--pl-shadow-card);
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-flow-node__content {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 0.65rem;
+  padding: 0.62rem 0.72rem;
+}
+
+.airport-flow-node__country {
+  grid-column: 1 / -1;
+  color: var(--pl-text-meta);
+  font-family: var(--pl-font-mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.airport-flow-node__content strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--pl-text-heading);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.airport-flow-node__content small {
+  align-self: center;
+  color: var(--pl-text-meta);
+  font-family: var(--pl-font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.airport-flow .airport-flow-node--domestic {
+  border-color: var(--pl-map-marker-domestic-fill);
+}
+
+.airport-flow .airport-flow-node--international {
+  border-color: var(--pl-map-marker-international-fill);
+}
+
+.airport-flow .airport-flow-node--hub {
+  background-color: var(--pl-surface-chip);
+  border-color: var(--pl-border-focus);
+  box-shadow: 0 0 0 2px var(--pl-map-frame);
+}
+
+.airport-flow .airport-flow-node--hub strong {
+  color: var(--pl-accent);
+}
+
+.airport-flow .airport-flow-node--muted {
+  opacity: 0.22;
+}
+
+.airport-flow .airport-flow-node--focused {
+  border-color: var(--pl-accent);
+  box-shadow: 0 0 0 3px var(--pl-map-frame);
+  transform: scale(1.04);
+}
+
+.airport-flow .airport-flow-node.selected {
+  border-color: var(--pl-border-focus);
+  box-shadow: 0 0 0 2px var(--pl-map-frame);
+}
+
+.airport-flow .react-flow__handle {
+  width: 0.42rem;
+  height: 0.42rem;
+  background-color: var(--pl-text-meta);
+  border-color: var(--pl-surface-entry);
+}
+
+.airport-flow .airport-flow-edge path {
+  fill: none;
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-out-quart),
+    stroke-width var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.airport-flow .airport-flow-edge--muted {
+  opacity: 0.08;
+}
+
+.airport-flow .react-flow__controls {
+  overflow: hidden;
+  border: 1px solid var(--pl-map-legend-border);
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.airport-flow .react-flow__controls-button {
+  color: var(--pl-text-heading);
+  background-color: var(--pl-map-legend-bg);
+  border-bottom-color: var(--pl-map-legend-border);
+}
+
+.airport-flow .react-flow__controls-button:hover {
+  background-color: var(--pl-surface-chip);
+}
+
+.airport-flow .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+.airport-flow__legend {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.airport-flow__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.65rem;
+  padding: 0 0.56rem;
+  color: var(--pl-map-legend-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: var(--pl-map-legend-bg);
+  border: 1px solid var(--pl-map-legend-border);
+  border-radius: 999px;
+}
+
+.airport-flow__legend-item::before {
+  width: 1rem;
+  height: 0;
+  border-top: 2px solid;
+  content: "";
+}
+
+.airport-flow__legend-item--domestic::before {
+  border-color: var(--pl-map-route-domestic);
+}
+
+.airport-flow__legend-item--international::before {
+  border-color: var(--pl-map-route-international);
+}
+
+@media (max-width: 640px) {
+  .personal-section__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .airport-view-switcher {
+    width: 100%;
+  }
+
+  .airport-flow {
+    min-height: 28rem;
+    aspect-ratio: auto;
+  }
+
+  .airport-flow__legend {
+    right: 0.65rem;
+    bottom: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .airport-view-switcher__button {
+    transition: none;
+  }
+}
+
 .personal-airport-map-loading {
   position: relative;
   display: grid;
