@@ -832,7 +832,7 @@
         "airline": "新加坡航空",
         "airlineEnglishName": "Singapore Airlines",
         "airlineWebsite": "https://www.singaporeair.com",
-        "passengerAircraftCount": 148,
+        "passengerAircraftCount": 152,
         "models": {
             "Airbus": {
                 "A350-900": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Airbus_A350_9V-SMK_Singapore_2025_(01).jpg",
@@ -840,7 +840,9 @@
             },
             "Boeing": {
                 "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Singapore_Airlines_Boeing_737_MAX_8_9V-MBR_@_WSSS_2025-11-19.jpg",
+                "B747-400": "",
                 "B777-300ER": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_777-300ER_(9V-SNB)_at_Frankfurt_Airport_(6).jpg",
+                "B777-F": "",
                 "B787-10": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_787_9V-SCD_Singapore_2025_(02).jpg"
             }
         }
