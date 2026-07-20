@@ -461,6 +461,54 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   line-height: 1.35;
 }
 
+.aircraft-log-timeline__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  gap: 0.38rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  margin-top: 0.7rem;
+  color: var(--pl-accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 0.45rem;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-log-timeline__more span {
+  color: currentColor;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-log-timeline__more:hover {
+  color: var(--pl-text-heading);
+  background-color: var(--pl-surface-pill);
+}
+
+.aircraft-log-timeline__more:hover span {
+  transform: translate3d(2px, 0, 0);
+}
+
+.aircraft-log-timeline__more:focus-visible {
+  color: var(--pl-text-heading);
+  background-color: var(--pl-surface-pill);
+  outline: 2px solid var(--pl-border-focus);
+  outline-offset: 2px;
+  box-shadow: var(--pl-focus-glow);
+}
+
+.aircraft-log-timeline__more:active {
+  transform: scale(0.97);
+}
+
 .home-flight-map {
   display: grid;
   gap: 0.9rem;
@@ -1157,6 +1205,12 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
   .aircraft-stat-dashboard__grid {
     grid-template-columns: 1fr;
+  }
+
+  .aircraft-log-timeline__more {
+    min-height: 2.75rem;
+    padding-inline: 0.7rem;
+    touch-action: manipulation;
   }
 
   .home-flight-map__header ul {

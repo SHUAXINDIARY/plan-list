@@ -9,6 +9,7 @@ import {
     type CSSProperties,
     type ReactElement,
 } from "react";
+import { Link } from "react-router";
 import type {
     AircraftModelEntry,
     AirlineFleet,
@@ -889,6 +890,13 @@ const HomePage = (): ReactElement => {
                                     ),
                                 )}
                             </ol>
+                            <Link
+                                className="aircraft-log-timeline__more"
+                                to="/personal"
+                            >
+                                查看更多
+                                <span aria-hidden="true">→</span>
+                            </Link>
                         </article>
                     </div>
                 </section>
