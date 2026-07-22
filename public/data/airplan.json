@@ -767,6 +767,30 @@
         }
     },
     {
+        "airline": "英国航空",
+        "airlineEnglishName": "British Airways",
+        "airlineWebsite": "https://www.britishairways.com",
+        "passengerAircraftCount": 297,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/British-Airways/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/British-Airways/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/British-Airways/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/British-Airways/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/British-Airways/airbus-a321neo",
+                "A350-1000": "https://www.planespotters.net/photos/fleet/British-Airways/Airbus/A350-1000",
+                "A380-800": "https://www.planespotters.net/photos/fleet/British-Airways/Airbus/A380-800"
+            },
+            "Boeing": {
+                "B777-200": "https://www.planespotters.net/photos/fleet/British-Airways/Boeing/777-200",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/British-Airways/Boeing/777-300ER",
+                "B787-8": "https://www.planespotters.net/photos/fleet/British-Airways/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/British-Airways/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/British-Airways/Boeing/787-10"
+            }
+        }
+    },
+    {
         "airline": "全日空",
         "airlineEnglishName": "All Nippon Airways (ANA)",
         "airlineWebsite": "https://www.ana.co.jp",
