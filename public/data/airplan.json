@@ -870,18 +870,18 @@
         "airline": "新加坡航空",
         "airlineEnglishName": "Singapore Airlines",
         "airlineWebsite": "https://www.singaporeair.com",
-        "passengerAircraftCount": 152,
+        "passengerAircraftCount": 163,
         "models": {
             "Airbus": {
-                "A350-900": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Airbus_A350_9V-SMK_Singapore_2025_(01).jpg",
-                "A380-800": "https://commons.wikimedia.org/wiki/File:9V-SKU-_Singapore_Airlines_Airbus_A380-800.jpg"
+                "A350-900": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Airbus/A350-900",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Airbus/A380-800"
             },
             "Boeing": {
-                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(SGP-Singapore)_Singapore_Airlines_Boeing_737_MAX_8_9V-MBR_@_WSSS_2025-11-19.jpg",
-                "B747-400": "",
-                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_777-300ER_(9V-SNB)_at_Frankfurt_Airport_(6).jpg",
-                "B777-F": "",
-                "B787-10": "https://commons.wikimedia.org/wiki/File:Singapore_Airlines_Boeing_787_9V-SCD_Singapore_2025_(02).jpg"
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Boeing/737-MAX-8",
+                "B747-400": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Boeing/747-400",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Boeing/777-300ER",
+                "B777F": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Boeing/777F",
+                "B787-10": "https://www.planespotters.net/photos/fleet/Singapore-Airlines/Boeing/787-10"
             }
         }
     },
