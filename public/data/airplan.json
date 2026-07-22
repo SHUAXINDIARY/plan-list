@@ -753,6 +753,20 @@
         }
     },
     {
+        "airline": "维兹航空",
+        "airlineEnglishName": "Wizz Air",
+        "airlineWebsite": "https://www.wizzair.com",
+        "passengerAircraftCount": 127,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Wizz-Air-Malta/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Wizz-Air-Malta/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Wizz-Air-Malta/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Wizz-Air-Malta/airbus-a321neo"
+            }
+        }
+    },
+    {
         "airline": "全日空",
         "airlineEnglishName": "All Nippon Airways (ANA)",
         "airlineWebsite": "https://www.ana.co.jp",

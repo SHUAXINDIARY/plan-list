@@ -4885,3 +4885,22 @@
 - `src/pages/personal/sections/PersonalAirportFlow.tsx`：新增自定义机场节点、枢纽布局与关联航线聚焦逻辑。
 - `src/pages/personal/index.css`：完善节点信息层级、枢纽状态、聚焦弱化状态及过渡效果。
 - `taskRecord.md`：追加本次航线图直观性优化记录。
+
+## 日期
+
+2026-07-22
+
+## 任务目的
+
+在航司数据中补充维兹航空及其现役客机机型与图片参考链接。
+
+## 完成过程
+
+1. 根据 Planespotters 的 Wizz Air Malta 机队页面核对当前机队规模与机型分类。
+2. 新增维兹航空中英文名称、官网、127 架客机总数，以及 A320-200、A320neo、A321-200、A321neo 四类机型。
+3. 为每类机型配置对应的 Planespotters 图片列表链接，并验证 JSON 格式与生产构建。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增维兹航空基础信息、客机数量、现役机型和图片参考链接。
+- `taskRecord.md`：追加本次维兹航空数据补充记录。
