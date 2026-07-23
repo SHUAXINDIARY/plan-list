@@ -749,7 +749,7 @@ const HomePage = (): ReactElement => {
                         </a>
                         <a
                             className="aircraft-wiki__hero-action"
-                            href="#flight-map"
+                            href="/personal"
                         >
                             Flight Map
                         </a>
@@ -899,46 +899,6 @@ const HomePage = (): ReactElement => {
                             </Link>
                         </article>
                     </div>
-                </section>
-            ) : null}
-
-            {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
-                <section
-                    className="home-flight-map"
-                    id="flight-map"
-                    aria-labelledby="flight-map-title"
-                >
-                    <header className="home-flight-map__header">
-                        <div>
-                            <p className="page-eyebrow">Flight Map</p>
-                            <h2 id="flight-map-title">Routes & Airports</h2>
-                        </div>
-                        <ul aria-label="航迹地图概览">
-                            <li>
-                                <strong>{airportMapMarkers.length}</strong>
-                                机场
-                            </li>
-                            <li>
-                                <strong>{MAP_ROUTES.length}</strong>
-                                航迹
-                            </li>
-                            <li>
-                                <strong>{checkedCountryCount}</strong>
-                                国家或地区
-                            </li>
-                        </ul>
-                    </header>
-                    <Suspense fallback={<HomeMapFallback />}>
-                        <AnnotatedWorldMap
-                            ariaLabel="Aircraft Log 航迹与机场地图"
-                            markers={airportMapMarkers}
-                            routes={MAP_ROUTES}
-                            domesticMarkerLegendLabel="国内机场"
-                            internationalMarkerLegendLabel="境外机场"
-                            domesticRouteLegendLabel="国内航迹"
-                            internationalRouteLegendLabel="国际航迹"
-                        />
-                    </Suspense>
                 </section>
             ) : null}
 
