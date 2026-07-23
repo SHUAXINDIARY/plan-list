@@ -822,15 +822,16 @@
         "airline": "阿联酋航空",
         "airlineEnglishName": "Emirates",
         "airlineWebsite": "https://www.emirates.com",
-        "passengerAircraftCount": 264,
+        "passengerAircraftCount": 286,
         "models": {
             "Airbus": {
-                "A350-900": "https://commons.wikimedia.org/wiki/File:Emirates_A350-900_Bologna_Airport_-_2025.jpg",
-                "A380-800": "https://commons.wikimedia.org/wiki/File:Airbus_A380-800_-_Emirates_(A6-EDF).JPG"
+                "A350-900": "https://www.planespotters.net/photos/fleet/Emirates/Airbus/A350-900",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Emirates/Airbus/A380-800"
             },
             "Boeing": {
-                "B777-200LR": "https://commons.wikimedia.org/wiki/File:A6-EWJ_Emirates_2009_Boeing_777-21H-LR_(cn_35590-775)_(6940419226).jpg",
-                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Emirates_Boeing_777-300ER_A6-EBN_(28319395444).jpg"
+                "B777-200LR": "https://www.planespotters.net/photo/1251655/a6-ewi-emirates-boeing-777-21hlr",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Emirates/Boeing/777-300ER",
+                "B777F": "https://www.planespotters.net/photos/fleet/Emirates/Boeing/777F"
             }
         }
     },
