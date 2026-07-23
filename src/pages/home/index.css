@@ -364,6 +364,18 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   white-space: nowrap;
 }
 
+.aircraft-stat-bars__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.aircraft-stat-bars__label .airline-entry__english-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .aircraft-stat-bars em {
   flex: 0 0 auto;
   color: var(--pl-text-meta);

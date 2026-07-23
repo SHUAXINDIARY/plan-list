@@ -65,6 +65,8 @@ interface AircraftLogHeroStat {
 interface RankedFleetDatum {
     /** 排名条目的展示名称。 */
     label: string;
+    /** 排名条目的英文辅助名称，仅航司排行使用。 */
+    secondaryLabel?: string;
     /** 排名条目的数值。 */
     value: number;
     /** 相对最大值的百分比，用于 CSS 条形图宽度。 */
@@ -173,7 +175,8 @@ const createTopAirlineStats = (
                 : 0;
 
         return {
-            label: airlineFleet.airlineEnglishName,
+            label: airlineFleet.airlineName,
+            secondaryLabel: airlineFleet.airlineEnglishName,
             value: airlineFleet.passengerAircraftCount,
             ratio,
         };
@@ -807,8 +810,17 @@ const HomePage = (): ReactElement => {
                                     ): ReactElement => (
                                         <li key={statDatum.label}>
                                             <span>
-                                                <strong>
+                                                <strong
+                                                    className="aircraft-stat-bars__label"
+                                                >
                                                     {statDatum.label}
+                                                    {statDatum.secondaryLabel ? (
+                                                        <span className="airline-entry__english-name">
+                                                            {
+                                                                statDatum.secondaryLabel
+                                                            }
+                                                        </span>
+                                                    ) : null}
                                                 </strong>
                                                 <em>
                                                     {formatDashboardNumber(
