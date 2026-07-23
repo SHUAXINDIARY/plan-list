@@ -839,18 +839,20 @@
         "airline": "阿提哈德航空",
         "airlineEnglishName": "Etihad Airways",
         "airlineWebsite": "https://www.etihad.com",
-        "passengerAircraftCount": 115,
+        "passengerAircraftCount": 126,
         "models": {
             "Airbus": {
-                "A320-200": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a320",
-                "A321-200": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a321",
-                "A350-1000": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a350-1000",
-                "A380-800": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=airbus-a380"
+                "A320-200": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Etihad-Airways/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Etihad-Airways/airbus-a321neo",
+                "A350-1000": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Airbus/A350-1000",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Airbus/A380-800"
             },
             "Boeing": {
-                "B777-300ER": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-777-300er",
-                "B787-9": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-787-9",
-                "B787-10": "https://www.planespotters.net/fleet/list/Etihad-Airways/current?type=boeing-787-10"
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/Etihad-Airways/Boeing/787-10"
             }
         }
     },

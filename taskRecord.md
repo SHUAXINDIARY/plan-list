@@ -5058,3 +5058,24 @@
 - `src/pages/home/index.tsx`：为排行数据增加英文辅助名称，并拆分渲染中英文航司名。
 - `src/pages/home/index.css`：增加排行名称横向层级和英文名溢出样式。
 - `taskRecord.md`：追加本次排行名称样式优化记录。
+
+## 日期
+
+2026-07-23
+
+## 任务目的
+
+根据 Planespotters 更新阿提哈德航空机队数据，并统一机型参考链接规则。
+
+## 完成过程
+
+1. 核对 Planespotters 于 2026-07-14 更新的 Etihad Airways 机队规模与现役机型。
+2. 将阿提哈德航空机队数量由 115 架更新为 126 架。
+3. 补充 `A320neo` 与 `A321neo` 两类现役机型。
+4. 参照英国航空条目，将 9 类机型链接统一改为 Planespotters 对应机型图片列表链接。
+5. 验证 JSON 格式及阿提哈德航空机型数据内容。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新阿提哈德航空机队数量、现役机型及 Planespotters 图片列表链接。
+- `taskRecord.md`：追加本次阿提哈德航空数据更新记录。
