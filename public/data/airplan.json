@@ -794,27 +794,27 @@
         "airline": "全日空",
         "airlineEnglishName": "All Nippon Airways (ANA)",
         "airlineWebsite": "https://www.ana.co.jp",
-        "passengerAircraftCount": 267,
+        "passengerAircraftCount": 244,
         "models": {
             "Airbus": {
-                "A320-200": "https://commons.wikimedia.org/wiki/File:ANA_A320-200(JA8386)_(5308427646).jpg",
-                "A320neo": "https://commons.wikimedia.org/wiki/File:JA214A@PEK_(20181227132258).jpg",
-                "A321-200": "https://commons.wikimedia.org/wiki/File:JA101A_3_A321-131_ANA_All_Nippon_NGO_20MAY03_(8405240312).jpg",
-                "A321neo": "https://commons.wikimedia.org/wiki/File:JA136A_RJTT_1.jpg",
-                "A321neoLR": "https://www.jetphotos.com/showphotos.php?airline=All%20Nippon%20Airways&aircraft=Airbus%20A321-272NX&width=1920&height=1080",
-                "A380-800": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways_A380_(JA381A)_@_NRT,_April_2019.jpg"
+                "A320neo": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/airbus-a321neo",
+                "A380-800": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Airbus/A380-800"
             },
             "Boeing": {
-                "B737-800": "https://commons.wikimedia.org/wiki/File:ANA_B737-800(JA51AN)_(5746057044).jpg",
-                "B767-300": "https://commons.wikimedia.org/wiki/File:ANA_B767-300(JA8669)_(5285607820).jpg",
-                "B777-200": "https://commons.wikimedia.org/wiki/File:ANA_B777-200(JA712A)_(6902902117).jpg",
-                "B777-300": "https://commons.wikimedia.org/wiki/File:ANA_B777-300(JA751A)_(5718881057).jpg",
-                "B787-8": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways_Boeing_787-8_Dreamliner_JA801A_OKJ.jpg",
-                "B787-9": "https://commons.wikimedia.org/wiki/File:ANA_Boeing_787_being_towed_in_Frankfurt.jpg",
-                "B787-10": "https://commons.wikimedia.org/wiki/File:All_Nippon_Airways,_Boeing_787-10,_JA900A,_NRT.jpg"
+                "B737-800": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/737-800",
+                "B767-300": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/767-300",
+                "B777-200": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/777-200",
+                "B777-300": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/777-300",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/777-300ER",
+                "B777F": "https://www.planespotters.net/airframe/boeing-777f-ja771f-ana-cargo/r1p00o",
+                "B787-8": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/Boeing/787-10"
             },
             "De Havilland Canada": {
-                "DHC-8-400": "https://commons.wikimedia.org/wiki/File:JA850A_(31683759012).jpg"
+                "DHC-8-400": "https://www.planespotters.net/photos/fleet/All-Nippon-Airways/De-Havilland-Canada/DHC-8-400"
             }
         }
     },

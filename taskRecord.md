@@ -5079,3 +5079,43 @@
 
 - `public/data/airplan.json`：更新阿提哈德航空机队数量、现役机型及 Planespotters 图片列表链接。
 - `taskRecord.md`：追加本次阿提哈德航空数据更新记录。
+
+## 日期
+
+2026-07-24
+
+## 任务目的
+
+根据 Planespotters 更新全日空机队数据，并统一机型参考链接格式。
+
+## 完成过程
+
+1. 核对 Planespotters 于 2026-07-14 更新的 All Nippon Airways 机队规模与现役机型。
+2. 将全日空机队数量由 267 架更新为 244 架。
+3. 移除已非现役机型的 `A320-200` 和未作为当前独立机型列出的 `A321neoLR`，补充 `B777-300ER` 与 `B777F`。
+4. 参照英国航空条目，将全部现役机型链接统一改为 Planespotters 对应机型图片列表链接。
+5. 验证 JSON 格式、全日空机型数据及链接格式。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新全日空机队数量、现役机型及 Planespotters 图片列表链接。
+- `taskRecord.md`：追加本次全日空数据更新记录。
+
+## 日期
+
+2026-07-24
+
+## 任务目的
+
+将全日空 `B777F` 的参考链接替换为指定的 ANA Cargo 单机页面。
+
+## 完成过程
+
+1. 定位全日空机型数据中的 `B777F` 条目。
+2. 将链接替换为 Planespotters 的 `JA771F` ANA Cargo 单机页面。
+3. 验证 JSON 格式及本次文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：替换全日空 `B777F` 的参考链接。
+- `taskRecord.md`：追加本次链接替换记录。
