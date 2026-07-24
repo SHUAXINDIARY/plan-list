@@ -1,4 +1,6 @@
 import type {
+    AirlineAlliance,
+    AirlineAllianceFilter,
     AirlineReferenceSource,
     PassengerAircraftSortOrder,
 } from "./type";
@@ -11,6 +13,19 @@ export const ALL_MANUFACTURERS_VALUE = "all";
 
 // 具体型号筛选的默认值，表示不过滤机型。
 export const ALL_AIRCRAFT_MODELS_VALUE = "all";
+
+// 联盟筛选默认值，表示同时展示已加入和未加入联盟的航司。
+export const ALL_AIRLINE_ALLIANCES_VALUE: AirlineAllianceFilter = "all";
+
+// 未加入航空联盟的筛选值，与静态数据中的 null 对应。
+export const NO_AIRLINE_ALLIANCE_VALUE: AirlineAllianceFilter = "none";
+
+// 联盟筛选采用固定顺序，避免受数据条目顺序影响。
+export const AIRLINE_ALLIANCE_OPTIONS: AirlineAlliance[] = [
+    "Star Alliance",
+    "SkyTeam",
+    "oneworld",
+];
 
 // 默认按照公开数据中的客机数量从多到少排序，优先展示规模更大的航司。
 export const DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER: PassengerAircraftSortOrder =

@@ -12,6 +12,7 @@ import {
 import { Link } from "react-router";
 import type {
     AircraftModelEntry,
+    AirlineAllianceFilter,
     AirlineFleet,
     AirplaneData,
     AirplaneDataItem,
@@ -23,10 +24,13 @@ import { FleetResultsSkeleton } from "./FleetResultsSkeleton";
 import {
     AIRPLANE_DATA_URL,
     AIRLINE_BRAND_COLORS,
+    AIRLINE_ALLIANCE_OPTIONS,
     ALL_AIRCRAFT_MODELS_VALUE,
+    ALL_AIRLINE_ALLIANCES_VALUE,
     ALL_MANUFACTURERS_VALUE,
     DEFAULT_AIRLINE_BRAND_COLOR,
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
+    NO_AIRLINE_ALLIANCE_VALUE,
 } from "./constant";
 import { MAP_ROUTES, airportMapMarkers } from "../personal/constants/airportsMap";
 import {
@@ -91,6 +95,19 @@ const isPassengerAircraftSortOrder = (
     value: string,
 ): value is PassengerAircraftSortOrder => {
     return value === "passenger-desc" || value === "passenger-asc";
+};
+
+// 校验下拉框返回值，避免将任意 DOM 字符串写入联盟筛选状态。
+const isAirlineAllianceFilter = (
+    value: string,
+): value is AirlineAllianceFilter => {
+    return (
+        value === ALL_AIRLINE_ALLIANCES_VALUE ||
+        value === NO_AIRLINE_ALLIANCE_VALUE ||
+        AIRLINE_ALLIANCE_OPTIONS.some(
+            (allianceName): boolean => allianceName === value,
+        )
+    );
 };
 
 // 判断机型映射值是否为可安全用于 href 的 http(s) 链接，避免 javascript: 等非 HTTP 协议。
@@ -339,6 +356,7 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
                 airlineName: airplaneDataItem.airline,
                 airlineEnglishName: airplaneDataItem.airlineEnglishName,
                 airlineWebsite: airplaneDataItem.airlineWebsite,
+                airlineAlliance: airplaneDataItem.airlineAlliance,
                 brandColor: getAirlineBrandColor(
                     airplaneDataItem.airlineEnglishName,
                 ),
@@ -436,6 +454,7 @@ const getAircraftModelOptions = (
 const filterAirlineFleets = (
     airlineFleets: AirlineFleet[],
     airlineSearchTerm: string,
+    selectedAirlineAlliance: AirlineAllianceFilter,
     selectedManufacturer: string,
     selectedAircraftModel: string,
     sortOrder: PassengerAircraftSortOrder,
@@ -444,14 +463,20 @@ const filterAirlineFleets = (
 
     const filteredAirlineFleets = airlineFleets
         .filter((airlineFleet: AirlineFleet): boolean => {
+            const matchesAirlineAlliance =
+                selectedAirlineAlliance === ALL_AIRLINE_ALLIANCES_VALUE ||
+                (selectedAirlineAlliance === NO_AIRLINE_ALLIANCE_VALUE
+                    ? airlineFleet.airlineAlliance === null
+                    : airlineFleet.airlineAlliance === selectedAirlineAlliance);
             const normalizedAirlineName =
                 airlineFleet.airlineName.toLocaleLowerCase();
             const normalizedAirlineEnglishName =
                 airlineFleet.airlineEnglishName.toLocaleLowerCase();
 
             return (
-                normalizedAirlineName.includes(normalizedSearchTerm) ||
-                normalizedAirlineEnglishName.includes(normalizedSearchTerm)
+                matchesAirlineAlliance &&
+                (normalizedAirlineName.includes(normalizedSearchTerm) ||
+                    normalizedAirlineEnglishName.includes(normalizedSearchTerm))
             );
         })
         .map((airlineFleet: AirlineFleet): AirlineFleet => {
@@ -517,6 +542,8 @@ const HomePage = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>("");
+    const [selectedAirlineAlliance, setSelectedAirlineAlliance] =
+        useState<AirlineAllianceFilter>(ALL_AIRLINE_ALLIANCES_VALUE);
     const [selectedManufacturer, setSelectedManufacturer] = useState<string>(
         ALL_MANUFACTURERS_VALUE,
     );
@@ -591,6 +618,7 @@ const HomePage = (): ReactElement => {
         return filterAirlineFleets(
             airlineFleets,
             airlineSearchTerm,
+            selectedAirlineAlliance,
             selectedManufacturer,
             selectedAircraftModel,
             selectedSortOrder,
@@ -598,6 +626,7 @@ const HomePage = (): ReactElement => {
     }, [
         airlineFleets,
         airlineSearchTerm,
+        selectedAirlineAlliance,
         selectedManufacturer,
         selectedAircraftModel,
         selectedSortOrder,
@@ -691,7 +720,7 @@ const HomePage = (): ReactElement => {
     }, [filteredAirlineFleets]);
 
     // 将筛选条件组合成视图 key，仅用于在结果变化后重置内嵌滚动位置。
-    const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedManufacturer}-${selectedAircraftModel}-${selectedSortOrder}`;
+    const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedAirlineAlliance}-${selectedManufacturer}-${selectedAircraftModel}-${selectedSortOrder}`;
 
     useEffect((): void => {
         // 筛选条件变化后重置结果区滚动位置，避免新结果停留在旧列表的中段。
@@ -705,6 +734,15 @@ const HomePage = (): ReactElement => {
         event: ChangeEvent<HTMLInputElement>,
     ): void => {
         setAirlineSearchTerm(event.target.value);
+    };
+
+    // 联盟下拉切换后，仅保留对应联盟或未加入联盟的航司。
+    const handleAirlineAllianceChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        if (isAirlineAllianceFilter(event.target.value)) {
+            setSelectedAirlineAlliance(event.target.value);
+        }
     };
 
     // 制造商下拉切换后立即更新过滤条件。
@@ -951,6 +989,30 @@ const HomePage = (): ReactElement => {
                         </label>
 
                         <Select
+                            label="航空联盟"
+                            className="fleet-filter"
+                            value={selectedAirlineAlliance}
+                            onChange={handleAirlineAllianceChange}
+                        >
+                            <option value={ALL_AIRLINE_ALLIANCES_VALUE}>
+                                全部联盟
+                            </option>
+                            {AIRLINE_ALLIANCE_OPTIONS.map(
+                                (allianceName): ReactElement => (
+                                    <option
+                                        key={allianceName}
+                                        value={allianceName}
+                                    >
+                                        {allianceName}
+                                    </option>
+                                ),
+                            )}
+                            <option value={NO_AIRLINE_ALLIANCE_VALUE}>
+                                无联盟
+                            </option>
+                        </Select>
+
+                        <Select
                             label="机型制造商"
                             className="fleet-filter"
                             value={selectedManufacturer}
@@ -1083,6 +1145,9 @@ const HomePage = (): ReactElement => {
                                                             airlineFleet.aircraftCount
                                                         }{" "}
                                                         个机型
+                                                        {" / 联盟："}
+                                                        {airlineFleet.airlineAlliance ??
+                                                            "-"}
                                                     </span>
                                                 </div>
                                             </div>
