@@ -1847,5 +1847,596 @@
                 "A321neo": "https://www.planespotters.net/fleet/list/Spirit-Airlines/current?type=airbus-a321neo"
             }
         }
+    },
+    {
+        "airline": "爱琴海航空",
+        "airlineEnglishName": "Aegean Airlines",
+        "airlineWebsite": "https://www.aegeanair.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 70,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Aegean-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Aegean-Airlines/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Aegean-Airlines/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Aegean-Airlines/airbus-a321neo"
+            }
+        }
+    },
+    {
+        "airline": "克罗地亚航空",
+        "airlineEnglishName": "Croatia Airlines",
+        "airlineWebsite": "https://www.croatiaairlines.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 17,
+        "models": {
+            "ATR": {
+                "ATR72": "https://www.planespotters.net/photos/fleet/Croatia-Airlines/ATR/ATR-72"
+            },
+            "Airbus": {
+                "A220-100": "https://www.planespotters.net/photos/fleet/Croatia-Airlines/Airbus/A220-100",
+                "A220-300": "https://www.planespotters.net/photos/fleet/Croatia-Airlines/Airbus/A220-300",
+                "A319-100": "https://www.planespotters.net/photos/fleet/Croatia-Airlines/Airbus/A319-100"
+            },
+            "De Havilland Canada": {
+                "DHC-8-400": "https://www.planespotters.net/photos/fleet/Croatia-Airlines/De-Havilland-Canada/DHC-8-400"
+            }
+        }
+    },
+    {
+        "airline": "瑞士国际航空",
+        "airlineEnglishName": "SWISS",
+        "airlineWebsite": "https://www.swiss.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 90,
+        "models": {
+            "Airbus": {
+                "A220-100": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A220-100",
+                "A220-300": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A220-300",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Swiss/airbus-a320neo",
+                "A321-100": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A321-100",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Swiss/airbus-a321neo",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A330-300",
+                "A340-300": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A340-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Swiss/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Swiss/Boeing/777-300ER"
+            }
+        }
+    },
+    {
+        "airline": "奥地利航空",
+        "airlineEnglishName": "Austrian Airlines",
+        "airlineWebsite": "https://www.austrian.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 65,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/Airbus/A321-200"
+            },
+            "Boeing": {
+                "B777-200": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/Boeing/777-200",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/Boeing/787-9"
+            },
+            "Embraer": {
+                "E195": "https://www.planespotters.net/photos/fleet/Austrian-Airlines/Embraer/ERJ-195"
+            }
+        }
+    },
+    {
+        "airline": "布鲁塞尔航空",
+        "airlineEnglishName": "Brussels Airlines",
+        "airlineWebsite": "https://www.brusselsairlines.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 47,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/Brussels-Airlines/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Brussels-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Brussels-Airlines/airbus-a320neo",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Brussels-Airlines/Airbus/A330-300"
+            }
+        }
+    },
+    {
+        "airline": "波兰航空",
+        "airlineEnglishName": "LOT Polish Airlines",
+        "airlineWebsite": "https://www.lot.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 92,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Boeing/737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/boeing-737-max-8",
+                "B787-8": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Boeing/787-9"
+            },
+            "Embraer": {
+                "E170": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Embraer/ERJ-170",
+                "E175": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Embraer/ERJ-175",
+                "E190": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Embraer/ERJ-190",
+                "E195": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Embraer/ERJ-195",
+                "E195-E2": "https://www.planespotters.net/photos/fleet/LOT-Polish-Airlines/Embraer/E195-E2"
+            }
+        }
+    },
+    {
+        "airline": "葡萄牙航空",
+        "airlineEnglishName": "TAP Air Portugal",
+        "airlineWebsite": "https://www.flytap.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 104,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/airbus-a321neo",
+                "A321neoLR": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/airbus-a321neo-lr",
+                "A330-200": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/Airbus/A330-200",
+                "A330-900": "https://www.planespotters.net/photos/fleet/TAP-Air-Portugal/Airbus/A330-900"
+            }
+        }
+    },
+    {
+        "airline": "印度航空",
+        "airlineEnglishName": "Air India",
+        "airlineWebsite": "https://www.airindia.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 185,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/Air-India/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Air-India/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Air-India/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Air-India/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Air-India/airbus-a321neo",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Air-India/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B777-200LR": "https://www.planespotters.net/photos/fleet/Air-India/Boeing/777-200LR",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Air-India/Boeing/777-300ER",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Air-India/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Air-India/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "土耳其航空",
+        "airlineEnglishName": "Turkish Airlines",
+        "airlineWebsite": "https://www.turkishairlines.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 412,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Boeing/737-800",
+                "B737-900ER": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Boeing/737-900ER",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/boeing-737-max-9",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Turkish-Airlines/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "埃及航空",
+        "airlineEnglishName": "EgyptAir",
+        "airlineWebsite": "https://www.egyptair.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 72,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Egyptair/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Egyptair/airbus-a320neo",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Egyptair/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Egyptair/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Egyptair/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Egyptair/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Egyptair/Boeing/737-800",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Egyptair/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Egyptair/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "埃塞俄比亚航空",
+        "airlineEnglishName": "Ethiopian Airlines",
+        "airlineWebsite": "https://www.ethiopianairlines.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 162,
+        "models": {
+            "ATR": {
+                "ATR72": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/ATR/ATR-72"
+            },
+            "Airbus": {
+                "A350-900": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Airbus/A350-900",
+                "A350-1000": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Airbus/A350-1000"
+            },
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/737-700",
+                "B737-800": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/boeing-737-max-8",
+                "B767-300": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/767-300",
+                "B777-200": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/777-200",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/777-300ER",
+                "B777F": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/777F",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/Boeing/787-9"
+            },
+            "De Havilland Canada": {
+                "DHC-8-400": "https://www.planespotters.net/photos/fleet/Ethiopian-Airlines/De-Havilland-Canada/DHC-8-400"
+            }
+        }
+    },
+    {
+        "airline": "南非航空",
+        "airlineEnglishName": "South African Airways",
+        "airlineWebsite": "https://www.flysaa.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 19,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/South-African-Airways/Airbus/A320-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/South-African-Airways/Airbus/A330-300",
+                "A340-300": "https://www.planespotters.net/photos/fleet/South-African-Airways/Airbus/A340-300"
+            }
+        }
+    },
+    {
+        "airline": "意大利航空",
+        "airlineEnglishName": "ITA Airways",
+        "airlineWebsite": "https://www.ita-airways.com",
+        "airlineAlliance": "Star Alliance",
+        "passengerAircraftCount": 108,
+        "models": {
+            "Airbus": {
+                "A220-100": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A220-100",
+                "A220-300": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A220-300",
+                "A319-100": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/airbus-a320neo",
+                "A321neo": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A330-200",
+                "A330-900": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A330-900",
+                "A350-900": "https://www.planespotters.net/photos/fleet/ITA-Italia-Trasporto-Aereo/Airbus/A350-900"
+            }
+        }
+    },
+    {
+        "airline": "法国航空",
+        "airlineEnglishName": "Air France",
+        "airlineWebsite": "https://www.airfrance.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 227,
+        "models": {
+            "Airbus": {
+                "A220-300": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A220-300",
+                "A319-100": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A320-200",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A321-200",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A330-200",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Air-France/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B777-200": "https://www.planespotters.net/photos/fleet/Air-France/Boeing/777-200",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Air-France/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Air-France/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "荷兰皇家航空",
+        "airlineEnglishName": "KLM Royal Dutch Airlines",
+        "airlineWebsite": "https://www.klm.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 124,
+        "models": {
+            "Airbus": {
+                "A321neo": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Airbus/A330-300"
+            },
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/737-700",
+                "B737-800": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/737-800",
+                "B737-900": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/737-900",
+                "B777-200": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/777-200",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/KLM-Royal-Dutch-Airlines/Boeing/787-10"
+            }
+        }
+    },
+    {
+        "airline": "捷克航空",
+        "airlineEnglishName": "Czech Airlines (CSA)",
+        "airlineWebsite": "https://www.czechairlines.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 6,
+        "models": {
+            "Airbus": {
+                "A220-300": "https://www.planespotters.net/photos/fleet/Czech-Airlines-CSA/Airbus/A220-300",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Czech-Airlines-CSA/Airbus/A320-200"
+            }
+        }
+    },
+    {
+        "airline": "罗马尼亚航空",
+        "airlineEnglishName": "TAROM",
+        "airlineWebsite": "https://www.tarom.ro",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 13,
+        "models": {
+            "ATR": {
+                "ATR72": "https://www.planespotters.net/photos/fleet/TAROM/ATR/ATR-72"
+            },
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/photos/fleet/TAROM/Boeing/737-700",
+                "B737-800": "https://www.planespotters.net/photos/fleet/TAROM/Boeing/737-800"
+            }
+        }
+    },
+    {
+        "airline": "北欧航空",
+        "airlineEnglishName": "SAS Scandinavian Airlines",
+        "airlineWebsite": "https://www.flysas.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 142,
+        "models": {
+            "ATR": {
+                "ATR72": "https://www.planespotters.net/photos/fleet/SAS/ATR/ATR-72"
+            },
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/SAS/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/SAS/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/SAS/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/SAS/Airbus/A321-200",
+                "A321neoLR": "https://www.planespotters.net/photos/fleet/SAS/airbus-a321neo-lr",
+                "A330-300": "https://www.planespotters.net/photos/fleet/SAS/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/SAS/Airbus/A350-900"
+            },
+            "Bombardier": {
+                "CRJ-900": "https://www.planespotters.net/photos/fleet/SAS/Bombardier/CRJ-900"
+            }
+        }
+    },
+    {
+        "airline": "越南航空",
+        "airlineEnglishName": "Vietnam Airlines",
+        "airlineWebsite": "https://www.vietnamairlines.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 97,
+        "models": {
+            "Airbus": {
+                "A321-200": "https://www.planespotters.net/photos/fleet/Vietnam-Airlines/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Vietnam-Airlines/airbus-a321neo",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Vietnam-Airlines/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B787-9": "https://www.planespotters.net/photos/fleet/Vietnam-Airlines/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/Vietnam-Airlines/Boeing/787-10"
+            }
+        }
+    },
+    {
+        "airline": "印尼鹰航",
+        "airlineEnglishName": "Garuda Indonesia",
+        "airlineWebsite": "https://www.garuda-indonesia.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 72,
+        "models": {
+            "Airbus": {
+                "A330-200": "https://www.planespotters.net/photos/fleet/Garuda-Indonesia/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Garuda-Indonesia/Airbus/A330-300",
+                "A330-900": "https://www.planespotters.net/photos/fleet/Garuda-Indonesia/Airbus/A330-900"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Garuda-Indonesia/Boeing/737-800",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Garuda-Indonesia/Boeing/777-300ER"
+            }
+        }
+    },
+    {
+        "airline": "沙特航空",
+        "airlineEnglishName": "Saudia",
+        "airlineWebsite": "https://www.saudia.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 171,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/airbus-a321neo",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Airbus/A330-300"
+            },
+            "Boeing": {
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Boeing/787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/Saudi-Arabian-Airlines/Boeing/787-10"
+            }
+        }
+    },
+    {
+        "airline": "中东航空",
+        "airlineEnglishName": "Middle East Airlines (MEA)",
+        "airlineWebsite": "https://www.mea.com.lb",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 24,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/MEA-Middle-East-Airlines/Airbus/A320-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/MEA-Middle-East-Airlines/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/MEA-Middle-East-Airlines/Airbus/A330-200"
+            }
+        }
+    },
+    {
+        "airline": "肯尼亚航空",
+        "airlineEnglishName": "Kenya Airways",
+        "airlineWebsite": "https://www.kenya-airways.com",
+        "airlineAlliance": "SkyTeam",
+        "passengerAircraftCount": 34,
+        "models": {
+            "Boeing": {
+                "B737-700": "https://www.planespotters.net/photos/fleet/Kenya-Airways/Boeing/737-700",
+                "B737-800": "https://www.planespotters.net/photos/fleet/Kenya-Airways/Boeing/737-800",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Kenya-Airways/Boeing/787-8"
+            },
+            "Embraer": {
+                "E190": "https://www.planespotters.net/photos/fleet/Kenya-Airways/Embraer/ERJ-190"
+            }
+        }
+    },
+    {
+        "airline": "伊比利亚航空",
+        "airlineEnglishName": "Iberia",
+        "airlineWebsite": "https://www.iberia.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 98,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Iberia/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Iberia/airbus-a321neo",
+                "A321XLR": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A321XLR",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Iberia/Airbus/A350-900"
+            }
+        }
+    },
+    {
+        "airline": "马来西亚航空",
+        "airlineEnglishName": "Malaysia Airlines",
+        "airlineWebsite": "https://www.malaysiaairlines.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 93,
+        "models": {
+            "Airbus": {
+                "A330-200": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/Airbus/A330-300",
+                "A330-900": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/Airbus/A330-900",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/Boeing/737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Malaysia-Airlines/boeing-737-max-8"
+            }
+        }
+    },
+    {
+        "airline": "斯里兰卡航空",
+        "airlineEnglishName": "SriLankan Airlines",
+        "airlineWebsite": "https://www.srilankan.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 23,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/SriLankan-Airlines/Airbus/A330-300"
+            }
+        }
+    },
+    {
+        "airline": "澳洲航空",
+        "airlineEnglishName": "Qantas",
+        "airlineWebsite": "https://www.qantas.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 138,
+        "models": {
+            "Airbus": {
+                "A321XLR": "https://www.planespotters.net/photos/fleet/Qantas/Airbus/A321XLR",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Qantas/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Qantas/Airbus/A330-300",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Qantas/Airbus/A380-800"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Qantas/Boeing/737-800",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Qantas/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "斐济航空",
+        "airlineEnglishName": "Fiji Airways",
+        "airlineWebsite": "https://www.fijiairways.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 14,
+        "models": {
+            "Airbus": {
+                "A330-200": "https://www.planespotters.net/photos/fleet/Fiji-Airways/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Fiji-Airways/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Fiji-Airways/Airbus/A350-900"
+            },
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Fiji-Airways/Boeing/737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Fiji-Airways/boeing-737-max-8"
+            }
+        }
+    },
+    {
+        "airline": "卡塔尔航空",
+        "airlineEnglishName": "Qatar Airways",
+        "airlineWebsite": "https://www.qatarairways.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 271,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A320-200",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A350-900",
+                "A350-1000": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A350-1000",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Airbus/A380-800"
+            },
+            "Boeing": {
+                "B777-200": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Boeing/777-200",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Boeing/777-300ER",
+                "B777F": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Boeing/777F",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Qatar-Airways/Boeing/787-9"
+            }
+        }
+    },
+    {
+        "airline": "阿曼航空",
+        "airlineEnglishName": "Oman Air",
+        "airlineWebsite": "https://www.omanair.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 36,
+        "models": {
+            "Boeing": {
+                "B737-800": "https://www.planespotters.net/photos/fleet/Oman-Air/Boeing/737-800",
+                "B737-900ER": "https://www.planespotters.net/photos/fleet/Oman-Air/Boeing/737-900ER",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Oman-Air/boeing-737-max-8",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Oman-Air/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Oman-Air/Boeing/787-9"
+            }
+        }
     }
 ]
