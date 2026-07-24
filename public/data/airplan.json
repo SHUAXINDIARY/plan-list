@@ -1069,30 +1069,18 @@
         "airline": "日本航空",
         "airlineEnglishName": "Japan Airlines (JAL)",
         "airlineWebsite": "https://www.jal.co.jp",
-        "passengerAircraftCount": 234,
+        "passengerAircraftCount": 150,
         "models": {
             "Airbus": {
-                "A321-200": "https://commons.wikimedia.org/wiki/File:Yamato_Transport_A321F.jpg",
-                "A350-900": "https://commons.wikimedia.org/wiki/File:Japan_Airlines_Airbus_A350-900_JA01XJ_-_1.jpg",
-                "A350-1000": "https://commons.wikimedia.org/wiki/File:Japan_Airlines_A350-1000_JA01WJ.jpg"
-            },
-            "ATR": {
-                "ATR42-600": "https://commons.wikimedia.org/wiki/File:Japan_Air_Commuter_ATR42-600_JA03JC.jpg",
-                "ATR72-600": "https://www.jetphotos.com/photo/9562119"
+                "A350-900": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Airbus/A350-900",
+                "A350-1000": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Airbus/A350-1000"
             },
             "Boeing": {
-                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-800_%E2%80%98JA10RK%E2%80%99_Japan_Transocean_Air_(46935003525).jpg",
-                "B767-300ER": "https://commons.wikimedia.org/wiki/File:JAL_B767-300ER(JA614J)_(6405615375).jpg",
-                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Japan_Airline,_Boeing_777-300ER_JA734J_%27Sky_Eco%27_NRT_(17655179521).jpg",
-                "B787-8": "https://commons.wikimedia.org/wiki/File:Boeing_787-8_%E2%80%98JA822J%E2%80%99_Japan_Airlines.jpg",
-                "B787-9": "https://commons.wikimedia.org/wiki/File:Japan_Airlines_Boeing_787-9_(JA861J)_at_Frankfurt_Airport.jpg"
-            },
-            "De Havilland Canada": {
-                "DHC-8-400CC": "https://commons.wikimedia.org/wiki/Category:De_Havilland_Canada_DHC-8-400_of_Japan_Air_Commuter"
-            },
-            "Embraer": {
-                "E170": "https://commons.wikimedia.org/wiki/Category:Embraer_170_of_J-Air",
-                "E190": "https://www.planespotters.net/photo/730374/ja244j-j-air-embraer-erj-190std-erj-190-100"
+                "B737-800": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Boeing/737-800",
+                "B767-300": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Boeing/767-300",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Boeing/777-300ER",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Japan-Airlines/Boeing/787-9"
             }
         }
     },
