@@ -1091,19 +1091,19 @@
         "passengerAircraftCount": 115,
         "models": {
             "Airbus": {
-                "A320ceo": "https://www.planespotters.net/photo/1551471/zk-oab-air-new-zealand-airbus-a320-232",
-                "A320neo": "https://www.planespotters.net/photo/1923337/zk-nha-air-new-zealand-airbus-a320-271n",
-                "A321neo": "https://www.planespotters.net/photo/1611483/zk-nnf-air-new-zealand-airbus-a321-271nx"
+                "A320-200": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/airbus-a320neo",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/airbus-a321neo"
             },
             "ATR": {
-                "ATR72-600": "https://www.planespotters.net/photo/1745059/zk-mva-air-new-zealand-link-atr-72-600-72-212a"
+                "ATR72-600": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/atr-72"
             },
             "Boeing": {
-                "B777-300ER": "https://www.planespotters.net/photo/1913306/zk-okw-air-new-zealand-boeing-777-367er",
-                "B787-9": "https://www.planespotters.net/photo/475483/n1012n-air-new-zealand-boeing-787-9-dreamliner"
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/Boeing/777-300ER",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/Boeing/787-9"
             },
             "De Havilland Canada": {
-                "Q300": "https://www.planespotters.net/photo/082013/zk-new-air-new-zealand-link-bombardier-dhc-8-311-dash-8-q300"
+                "DHC-8-300": "https://www.planespotters.net/photos/fleet/Air-New-Zealand/de-havilland-canada-dhc-8-300"
             }
         }
     },
