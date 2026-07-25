@@ -5461,3 +5461,25 @@
 
 - `public/data/airplan.json`：更新西南航空三个现役机型的 PlaneSpotters 分类链接。
 - `taskRecord.md`：追加本次西南航空机型链接调整记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+依据 PlaneSpotters 大韩航空页面更新当前机队数据，并统一机型链接格式。
+
+## 完成过程
+
+1. 读取 Korean Air Fleet Details and History 页面，确认页面于 2026-07-25 更新，当前机队总数为 169 架。
+2. 从页面 Fleet Photos 当前机队部分提取 20 个机型及其分类链接。
+3. 将全部现役机型链接统一替换为 `/photos/fleet/Korean-Air-Lines/...` 格式。
+4. 移除已转入历史机队的 A330-200、B777-200ER，并将 B747-8I 统一为页面分类名称 B747-8。
+5. 补充当前机队中的 B747-400、B777F、B787-8，以及 Bombardier 和 Gulfstream 公务机分类。
+6. 校验 JSON 格式、大韩航空机型数量及文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新大韩航空机队总数、当前机型及 PlaneSpotters 分类链接。
+- `taskRecord.md`：追加本次大韩航空数据更新记录。

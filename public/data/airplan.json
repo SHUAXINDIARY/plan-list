@@ -1166,27 +1166,35 @@
         "airlineEnglishName": "Korean Air",
         "airlineWebsite": "https://www.koreanair.com",
         "airlineAlliance": "SkyTeam",
-        "passengerAircraftCount": 143,
+        "passengerAircraftCount": 169,
         "models": {
             "Airbus": {
-                "A220-300": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A220-300_HL8314_(48946393983).jpg",
-                "A321neo": "https://commons.wikimedia.org/wiki/File:Korean_Air,_D-AZAF_HL8529,_Airbus_A321-272NX_(52926266040).jpg",
-                "A330-200": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A330-200_MEL_Nazarinia.jpg",
-                "A330-300": "https://commons.wikimedia.org/wiki/File:Airbus_A330-300_(Korean_Air)_(5777697634).jpg",
-                "A350-900": "https://commons.wikimedia.org/wiki/File:Airbus_A350-900_Korean_Air.jpg",
-                "A380-800": "https://commons.wikimedia.org/wiki/File:Korean_Air_Airbus_A380-800_HL7619.jpg"
+                "A220-300": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/airbus-a220-300",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/airbus-a321neo",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/airbus-a330-300",
+                "A350-900": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/airbus-a350-900",
+                "A380-800": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/airbus-a380-800"
             },
             "Boeing": {
-                "B737-800": "https://commons.wikimedia.org/wiki/File:Boeing_737-800_(Korean_Air)_(6441129027).jpg",
-                "B737-900": "https://commons.wikimedia.org/wiki/File:Boeing_737-900_of_Korean_Air_at_Vladivostok_Airport_(8985457617).jpg",
-                "B737-900ER": "https://commons.wikimedia.org/wiki/File:Korean_air_Boeing_737-9B5ER_HL8249_20181127_165944.jpg",
-                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:(CHN-Shanghai)_Korean_Air_Boeing_737_MAX_8_HL8349_@_ZSPD_2025-12-23.jpg",
-                "B747-8I": "https://commons.wikimedia.org/wiki/File:Boeing_747-8I_Korean_Air.jpg",
-                "B777-200ER": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_777-200ER_Monty.jpg",
-                "B777-300": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_777-300_Prasertwit-1.jpg",
-                "B777-300ER": "https://commons.wikimedia.org/wiki/File:Boeing_777-300ER_(Korean_Air)_HL7783_LHR_(12097180663).jpg",
-                "B787-9": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_787-9_Dreamliner_Taxiing_in_TPE_HL8082.jpg",
-                "B787-10": "https://commons.wikimedia.org/wiki/File:Korean_Air_Boeing_787-10_HL8537_departing_San_Francisco_February_2026.jpg"
+                "B737-800": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-737-800",
+                "B737-900": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-737-900",
+                "B737-900ER": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-737-900er",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-737-max-8",
+                "B747-400": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-747-400",
+                "B747-8": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-747-8",
+                "B777-300": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-777-300",
+                "B777-300ER": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-777-300er",
+                "B777F": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-777f",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-787-9",
+                "B787-10": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/boeing-787-10"
+            },
+            "Bombardier": {
+                "BD-700-1A10": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/bombardier-bd-700-1a10"
+            },
+            "Gulfstream": {
+                "G650ER": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/gulfstream-aerospace-g650er-g-vi",
+                "G800": "https://www.planespotters.net/photos/fleet/Korean-Air-Lines/gulfstream-aerospace-g800-g-viii"
             }
         }
     },
