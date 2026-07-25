@@ -5355,3 +5355,25 @@
 
 - `src/components/Select/index.css`：重构 Select 触发器、箭头、弹层和选项的完整视觉与交互状态。
 - `taskRecord.md`：追加本次 Select 组件 UI 重设计记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+依据 PlaneSpotters 国航页面更新中国国际航空现役机队数据，并统一机型链接格式。
+
+## 完成过程
+
+1. 核对英国航空数据使用的 PlaneSpotters Fleet Photos 分类链接格式。
+2. 读取 Air China Fleet Details and History 页面，确认页面于 2026-07-24 更新，当前机队总数为 534 架。
+3. 从页面 Fleet Photos 区域提取 18 个现役机型及其分类链接。
+4. 将国航所有机型链接统一替换为 `/photos/fleet/Air-China/...` 格式。
+5. 移除 `A321NX`、`B747-8I` 等重复别名，并按页面名称合并 COMAC 机型数据。
+6. 校验 JSON 格式、国航机型数量及文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新中国国际航空机队总数、现役机型及 PlaneSpotters 分类链接。
+- `taskRecord.md`：追加本次中国国际航空数据更新记录。
