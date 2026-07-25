@@ -255,31 +255,63 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   line-height: 1.15;
 }
 
-.aircraft-stat-dashboard__header > p {
-  max-width: 28rem;
+.aircraft-stat-dashboard__summary {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  padding: 0;
   margin: 0;
+}
+
+.aircraft-stat-dashboard__summary > div {
+  display: grid;
+  min-width: 5.2rem;
+  padding: 0 0.9rem;
+  border-left: 1px solid var(--pl-border-divider);
+}
+
+.aircraft-stat-dashboard__summary > div:first-child {
+  border-left: 0;
+}
+
+.aircraft-stat-dashboard__summary dt {
   color: var(--pl-text-meta);
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.aircraft-stat-dashboard__summary dd {
+  margin: 0.22rem 0 0;
+  color: var(--pl-text-heading);
   font-family: var(--pl-font-mono);
-  font-size: 0.78rem;
-  line-height: 1.6;
-  text-align: right;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
 .aircraft-stat-dashboard__grid {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr) minmax(18rem, 0.82fr);
-  gap: 0.85rem;
+  gap: 0;
+  overflow: hidden;
+  background-color: var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 1rem;
+  box-shadow:
+    inset 0 1px 0 rgba(164, 188, 201, 0.08),
+    var(--pl-shadow-card);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 .aircraft-stat-card {
   min-width: 0;
-  padding: 1rem;
-  background:
-    linear-gradient(180deg, rgba(244, 248, 251, 0.035), transparent 64%),
-    var(--pl-surface-toolbar);
-  border: 1px solid var(--pl-border-muted);
-  border-radius: 1rem;
-  box-shadow: var(--pl-shadow-card);
+  padding: 1.15rem;
+}
+
+.aircraft-stat-card + .aircraft-stat-card {
+  border-left: 1px solid var(--pl-border-divider);
 }
 
 .aircraft-stat-card header {
@@ -287,13 +319,16 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   align-items: baseline;
   justify-content: space-between;
   gap: 0.75rem;
+  min-height: 1.8rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pl-border-divider);
 }
 
 .aircraft-stat-card header span {
   color: var(--pl-accent);
   font-family: var(--pl-font-mono);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 750;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -308,16 +343,30 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .aircraft-stat-bars {
   display: grid;
-  gap: 0.72rem;
+  gap: 0.66rem;
   padding: 0;
-  margin: 1rem 0 0;
+  margin: 0.85rem 0 0;
   list-style: none;
+  counter-reset: stat-rank;
 }
 
 .aircraft-stat-bars li {
   display: grid;
-  gap: 0.42rem;
+  grid-template-columns: 1.45rem minmax(0, 1fr);
+  gap: 0.34rem 0.55rem;
   min-width: 0;
+  counter-increment: stat-rank;
+}
+
+.aircraft-stat-bars li::before {
+  grid-row: 1 / 3;
+  align-self: start;
+  color: var(--pl-text-placeholder);
+  font-family: var(--pl-font-mono);
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.35;
+  content: counter(stat-rank, decimal-leading-zero);
 }
 
 .aircraft-stat-bars li > span {
@@ -326,6 +375,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   justify-content: space-between;
   gap: 0.75rem;
   min-width: 0;
+  grid-column: 2;
 }
 
 .aircraft-stat-bars strong {
@@ -363,10 +413,11 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 .aircraft-stat-bars i {
   position: relative;
   display: block;
-  height: 0.48rem;
+  height: 0.34rem;
+  grid-column: 2;
   overflow: hidden;
   background-color: var(--pl-surface-pill);
-  border: 1px solid var(--pl-border-divider);
+  border: 0;
   border-radius: 999px;
 }
 
@@ -374,58 +425,37 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--stat-ratio);
-  background: linear-gradient(90deg, oklch(0.62 0.1 222 / 0.78), oklch(0.78 0.12 222 / 0.88));
+  background-color: oklch(0.68 0.105 222 / 0.86);
   border-radius: inherit;
   content: "";
 }
 
 .aircraft-stat-card--aircraft .aircraft-stat-bars i::before {
-  background: linear-gradient(90deg, oklch(0.62 0.1 152 / 0.72), oklch(0.78 0.12 152 / 0.86));
+  background-color: oklch(0.7 0.1 152 / 0.82);
 }
 
 .aircraft-log-timeline {
   display: grid;
-  gap: 0.72rem;
+  gap: 0;
   padding: 0;
-  margin: 1rem 0 0;
+  margin: 0.45rem 0 0;
   list-style: none;
 }
 
 .aircraft-log-timeline li {
-  position: relative;
   display: grid;
-  gap: 0.18rem;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 0.18rem 0.65rem;
   min-width: 0;
-  padding-left: 1.1rem;
+  padding: 0.68rem 0;
 }
 
-.aircraft-log-timeline li::before {
-  position: absolute;
-  top: 0.3rem;
-  left: 0;
-  width: 0.46rem;
-  height: 0.46rem;
-  background-color: var(--pl-accent);
-  border: 2px solid var(--pl-surface-toolbar);
-  border-radius: 999px;
-  content: "";
-}
-
-.aircraft-log-timeline li::after {
-  position: absolute;
-  top: 1rem;
-  bottom: -0.7rem;
-  left: 0.28rem;
-  width: 1px;
-  background-color: var(--pl-border-divider-mid);
-  content: "";
-}
-
-.aircraft-log-timeline li:last-child::after {
-  display: none;
+.aircraft-log-timeline li + li {
+  border-top: 1px solid var(--pl-border-divider);
 }
 
 .aircraft-log-timeline time {
+  grid-row: 1 / 3;
   color: var(--pl-text-meta);
   font-family: var(--pl-font-mono);
   font-size: 0.72rem;
@@ -433,6 +463,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 }
 
 .aircraft-log-timeline strong {
+  grid-column: 2;
   min-width: 0;
   overflow: hidden;
   color: var(--pl-text-heading);
@@ -442,6 +473,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 }
 
 .aircraft-log-timeline span {
+  grid-column: 2;
   color: var(--pl-text-secondary);
   font-size: 0.78rem;
   line-height: 1.35;
@@ -451,11 +483,11 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  justify-self: end;
+  justify-self: start;
   gap: 0.38rem;
   min-height: 2.25rem;
   padding: 0.35rem 0.55rem;
-  margin-top: 0.7rem;
+  margin-top: 0.35rem;
   color: var(--pl-accent);
   font-size: 0.76rem;
   font-weight: 800;
@@ -493,6 +525,27 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .aircraft-log-timeline__more:active {
   transform: scale(0.97);
+}
+
+@media (max-width: 1050px) {
+  .aircraft-stat-dashboard__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .aircraft-stat-card--timeline {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--pl-border-divider);
+    border-left: 0;
+  }
+
+  .aircraft-log-timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.25rem;
+  }
+
+  .aircraft-log-timeline li:nth-child(2) {
+    border-top: 0;
+  }
 }
 
 .home-flight-map {
@@ -1305,12 +1358,39 @@ html[data-theme="dark"] .aircraft-wiki__hero {
     flex-direction: column;
   }
 
-  .aircraft-stat-dashboard__header > p {
-    text-align: left;
+  .aircraft-stat-dashboard__summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .aircraft-stat-dashboard__summary > div {
+    min-width: 0;
+    padding: 0 0.65rem;
+  }
+
+  .aircraft-stat-dashboard__summary > div:first-child {
+    padding-left: 0;
   }
 
   .aircraft-stat-dashboard__grid {
     grid-template-columns: 1fr;
+  }
+
+  .aircraft-stat-card + .aircraft-stat-card {
+    border-top: 1px solid var(--pl-border-divider);
+    border-left: 0;
+  }
+
+  .aircraft-stat-card--timeline {
+    grid-column: auto;
+  }
+
+  .aircraft-log-timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .aircraft-log-timeline li:nth-child(2) {
+    border-top: 1px solid var(--pl-border-divider);
   }
 
   .aircraft-log-timeline__more {
@@ -1455,6 +1535,16 @@ html[data-theme="dark"] .aircraft-wiki__hero {
     transform: none;
   }
 
+  .aircraft-log-timeline__more,
+  .aircraft-log-timeline__more span {
+    transition-property: color, background-color;
+  }
+
+  .aircraft-log-timeline__more:active,
+  .aircraft-log-timeline__more:hover span {
+    transform: none;
+  }
+
   .aircraft-model-list__chip {
     transition-property: border-color, background-color;
   }
@@ -1480,6 +1570,12 @@ html[data-theme="dark"] .aircraft-wiki__hero {
     background-color: var(--pl-surface-entry-hover);
   }
 
+  .aircraft-stat-dashboard__grid {
+    background-color: var(--pl-surface-entry-hover);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .airline-entry {
     background: var(--pl-surface-entry-hover);
   }
@@ -1489,6 +1585,13 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   .aircraft-wiki__hero-stats,
   .aircraft-wiki__hero-stats div:nth-child(even),
   .aircraft-wiki__hero-stats div:nth-child(n + 3) {
+    border-color: var(--pl-border-strong);
+  }
+
+  .aircraft-stat-dashboard__grid,
+  .aircraft-stat-card + .aircraft-stat-card,
+  .aircraft-stat-card header,
+  .aircraft-log-timeline li + li {
     border-color: var(--pl-border-strong);
   }
 

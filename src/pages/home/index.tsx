@@ -827,13 +827,27 @@ const HomePage = (): ReactElement => {
                                 机队概览
                             </h2>
                         </div>
-                        <p>
-                            {formatDashboardNumber(
-                                totalFleetPassengerAircraftCount,
-                            )}{" "}
-                            架客机 / {totalManufacturerCount} 个制造商 /{" "}
-                            {AIRCRAFT_PHOTO_COUNT} 张照片
-                        </p>
+                        <dl
+                            className="aircraft-stat-dashboard__summary"
+                            aria-label="机队资料统计"
+                        >
+                            <div>
+                                <dt>客机</dt>
+                                <dd>
+                                    {formatDashboardNumber(
+                                        totalFleetPassengerAircraftCount,
+                                    )}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>制造商</dt>
+                                <dd>{totalManufacturerCount}</dd>
+                            </div>
+                            <div>
+                                <dt>照片</dt>
+                                <dd>{AIRCRAFT_PHOTO_COUNT}</dd>
+                            </div>
+                        </dl>
                     </header>
                     <div className="aircraft-stat-dashboard__grid">
                         <article className="aircraft-stat-card aircraft-stat-card--airline">
