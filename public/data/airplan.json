@@ -96,20 +96,20 @@
         "airlineEnglishName": "Hainan Airlines",
         "airlineWebsite": "https://www.hainanairlines.com",
         "airlineAlliance": null,
-        "passengerAircraftCount": 220,
+        "passengerAircraftCount": 230,
         "models": {
             "Airbus": {
-                "A320neo": "https://commons.wikimedia.org/wiki/File:20250502_Airbus_A320-251N_of_Hainan_Airlines_(B-32K5)_taxiing_at_CGO_02.jpg",
-                "A321neo": "https://commons.wikimedia.org/wiki/File:Airbus_A321-251NX_(c-n_12898,_D-AZAK)_2026-04-02_Andre_Gerwing_Collection_ID_028180.jpg",
-                "A330-200": "https://commons.wikimedia.org/wiki/File:B-5963@PEK_(20160809120206).jpg",
-                "A330-300": "https://commons.wikimedia.org/wiki/File:B-5935@PEK_(20180329153149).jpg",
-                "A330-900": "https://commons.wikimedia.org/wiki/File:B-32MU@PEK_(20251117163226).jpg"
+                "A320neo": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/airbus-a320neo",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/airbus-a321neo",
+                "A330-200": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/airbus-a330-200",
+                "A330-300": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/airbus-a330-300",
+                "A330-900": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/airbus-a330-900"
             },
             "Boeing": {
-                "B737-800": "https://commons.wikimedia.org/wiki/File:B-5713_-_Hainan_Airlines_-_Boeing_737-84P(WL)_-_PEK_(14896123557).jpg",
-                "B737 MAX 8": "https://commons.wikimedia.org/wiki/File:B-1389@PEK_(20241202163230).jpg",
-                "B787-8": "https://commons.wikimedia.org/wiki/File:Hainan_Airlines_B787-8(B-2729)_(12709266195).jpg",
-                "B787-9": "https://commons.wikimedia.org/wiki/File:B-6998@PEK_(20190629155647).jpg"
+                "B737-800": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/boeing-737-max-8",
+                "B787-8": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/boeing-787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Hainan-Airlines/boeing-787-9"
             }
         }
     },

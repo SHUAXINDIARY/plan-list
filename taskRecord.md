@@ -5420,3 +5420,23 @@
 
 - `public/data/airplan.json`：更新中国南方航空机队总数、现役机型及 PlaneSpotters 分类链接。
 - `taskRecord.md`：追加本次中国南方航空数据更新记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+依据 PlaneSpotters 海南航空页面更新现役机队数据，并统一机型链接格式。
+
+## 完成过程
+
+1. 读取 Hainan Airlines Fleet Details and History 页面，确认页面于 2026-07-23 更新，当前机队总数为 230 架。
+2. 从页面 Fleet Photos 现役部分提取 9 个机型及其分类链接。
+3. 核对现役机型与当前文件一致，将全部链接统一替换为 `/photos/fleet/Hainan-Airlines/...` 格式。
+4. 校验 JSON 格式、海南航空机型数量及文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新海南航空机队总数及 PlaneSpotters 现役机型分类链接。
+- `taskRecord.md`：追加本次海南航空数据更新记录。
