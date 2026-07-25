@@ -44,7 +44,7 @@ const PersonalAirportSection = (): ReactElement => {
             >
                 <div className="personal-section__header">
                     <div>
-                        <p className="personal-section__eyebrow">Airport Check-ins</p>
+                        <p className="personal-section__eyebrow">机场足迹</p>
                         <h2 id="airport-map-title">打卡过的机场</h2>
                     </div>
                     <div

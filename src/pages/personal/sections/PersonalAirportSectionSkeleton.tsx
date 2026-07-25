@@ -15,7 +15,7 @@ export const PersonalAirportSectionSkeleton = (): ReactElement => {
                 aria-busy="true"
             >
                 <div className="personal-section__header">
-                    <p className="personal-section__eyebrow">Airport Check-ins</p>
+                    <p className="personal-section__eyebrow">机场足迹</p>
                     <h2 id="airport-map-title">打卡过的机场</h2>
                 </div>
                 <PersonalAirportMapFallback />

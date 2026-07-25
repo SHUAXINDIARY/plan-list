@@ -63,7 +63,7 @@ const PersonalPage = (): ReactElement => {
             className="page-panel personal-archive"
             aria-labelledby="personal-page-title"
         >
-            <p className="page-eyebrow">Flight Log</p>
+            <p className="page-eyebrow">飞行日志</p>
             <h1 id="personal-page-title">站长飞行日志</h1>
             <p>
                 汇总打卡过的机场与乘坐过的航班，把旅途记录整理成可回看的航空足迹。
@@ -89,7 +89,7 @@ const PersonalPage = (): ReactElement => {
                 aria-labelledby="personal-timeline-title"
             >
                 <header className="personal-timeline__header">
-                    <p className="personal-section__eyebrow">Recent Spotting</p>
+                    <p className="personal-section__eyebrow">最近航程</p>
                     <h2 id="personal-timeline-title">航程时间线</h2>
                 </header>
                 <ol className="personal-timeline__list">

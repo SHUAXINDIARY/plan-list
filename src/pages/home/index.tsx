@@ -775,8 +775,8 @@ const HomePage = (): ReactElement => {
         >
             <div className="aircraft-wiki__hero">
                 <div className="aircraft-wiki__intro">
-                    <p className="page-eyebrow">Aircraft Log</p>
-                    <h1 id="home-page-title">Aircraft Log</h1>
+                    <p className="page-eyebrow">飞机日志</p>
+                    <h1 id="home-page-title">飞机日志</h1>
                     <p>Track Every Aircraft You Captured</p>
                     <div
                         className="aircraft-wiki__hero-actions"
@@ -796,7 +796,7 @@ const HomePage = (): ReactElement => {
                         </a>
                     </div>
                 </div>
-                <dl className="aircraft-wiki__hero-stats" aria-label="Aircraft Log 概览">
+                <dl className="aircraft-wiki__hero-stats" aria-label="飞机日志概览">
                     {heroStats.map(
                         (heroStat: AircraftLogHeroStat): ReactElement => (
                             <div key={heroStat.label}>
@@ -822,9 +822,9 @@ const HomePage = (): ReactElement => {
                 >
                     <header className="aircraft-stat-dashboard__header">
                         <div>
-                            <p className="page-eyebrow">Statistics</p>
+                            <p className="page-eyebrow">数据统计</p>
                             <h2 id="aircraft-stat-dashboard-title">
-                                Fleet Intelligence
+                                机队概览
                             </h2>
                         </div>
                         <p>
@@ -838,8 +838,8 @@ const HomePage = (): ReactElement => {
                     <div className="aircraft-stat-dashboard__grid">
                         <article className="aircraft-stat-card aircraft-stat-card--airline">
                             <header>
-                                <span>Top Airline</span>
-                                <strong>Fleet Size</strong>
+                                <span>航司排行</span>
+                                <strong>机队规模</strong>
                             </header>
                             <ol className="aircraft-stat-bars">
                                 {topAirlineStats.map(
@@ -880,8 +880,8 @@ const HomePage = (): ReactElement => {
                         </article>
                         <article className="aircraft-stat-card aircraft-stat-card--aircraft">
                             <header>
-                                <span>Top Aircraft</span>
-                                <strong>Model Coverage</strong>
+                                <span>机型排行</span>
+                                <strong>航司覆盖</strong>
                             </header>
                             <ol className="aircraft-stat-bars">
                                 {topAircraftModelStats.map(
@@ -908,8 +908,8 @@ const HomePage = (): ReactElement => {
                         </article>
                         <article className="aircraft-stat-card aircraft-stat-card--timeline">
                             <header>
-                                <span>Recent Spotting</span>
-                                <strong>{FLIGHT_RECORD_COUNT} Logs</strong>
+                                <span>最近航程</span>
+                                <strong>{FLIGHT_RECORD_COUNT} 条记录</strong>
                             </header>
                             <ol className="aircraft-log-timeline">
                                 {RECENT_FLIGHT_RECORDS.map(

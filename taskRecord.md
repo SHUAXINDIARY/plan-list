@@ -5230,3 +5230,28 @@
 - `src/pages/home/index.tsx`：实现联盟展示和筛选交互。
 - `src/pages/home/index.css`：调整筛选工具栏五列布局。
 - `taskRecord.md`：追加本次界面更新记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+将首页与站长飞行日志页面截图中的 section title 统一替换为中文。
+
+## 完成过程
+
+1. 将首页主标题 `Aircraft Log` 替换为“飞机日志”。
+2. 将首页统计区的 `Statistics / Fleet Intelligence` 替换为“数据统计 / 机队概览”。
+3. 将站长飞行日志页的 `Flight Log` 和 `Recent Spotting` 替换为“飞行日志”和“最近航程”。
+4. 将机场区域及其加载骨架的 `Airport Check-ins` 同步替换为“机场足迹”。
+5. 将首页统计区三个子面板的标题及标题说明替换为中文，并同步中文化首页概览的无障碍标签。
+6. 按用户要求仅完成文案修改，未运行构建测试。
+
+## 修改具体文件
+
+- `src/pages/home/index.tsx`：中文化首页和统计区标题。
+- `src/pages/personal/index.tsx`：中文化飞行日志页及最近航程标题。
+- `src/pages/personal/sections/PersonalAirportSection.tsx`：中文化机场区域标题。
+- `src/pages/personal/sections/PersonalAirportSectionSkeleton.tsx`：同步中文化机场区域加载标题。
+- `taskRecord.md`：追加本次文案调整记录。
