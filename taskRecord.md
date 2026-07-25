@@ -5398,3 +5398,25 @@
 
 - `public/data/airplan.json`：更新中国东方航空机队总数、现役机型及 PlaneSpotters 分类链接。
 - `taskRecord.md`：追加本次中国东方航空数据更新记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+依据 PlaneSpotters 南航页面更新中国南方航空现役机队数据，并统一机型链接格式。
+
+## 完成过程
+
+1. 读取 China Southern Airlines Fleet Details and History 页面，确认页面于 2026-07-23 更新，当前机队总数为 688 架。
+2. 从页面 Fleet Photos 现役部分提取 14 个机型及其分类链接，并通过 Fleet Matrix 核对机型状态。
+3. 将南航所有现役机型链接统一替换为 `/photos/fleet/China-Southern-Airlines/...` 格式。
+4. 移除 `A321NX` 等重复别名，以及 A319-100、A330-200、B737-700、B787-8、E190 等历史机型。
+5. 将货机名称统一为 `B777F`，并按页面名称统一 COMAC 机型数据。
+6. 校验 JSON 格式、南航机型数量及文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新中国南方航空机队总数、现役机型及 PlaneSpotters 分类链接。
+- `taskRecord.md`：追加本次中国南方航空数据更新记录。
