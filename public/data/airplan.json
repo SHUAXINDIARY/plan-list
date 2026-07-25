@@ -1585,9 +1585,9 @@
         "passengerAircraftCount": 803,
         "models": {
             "Boeing": {
-                "B737-700": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-700",
-                "B737-800": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-800",
-                "B737 MAX 8": "https://www.planespotters.net/fleet/list/Southwest-Airlines/current?type=boeing-737-max-8"
+                "B737-700": "https://www.planespotters.net/photos/fleet/Southwest-Airlines/boeing-737-700",
+                "B737-800": "https://www.planespotters.net/photos/fleet/Southwest-Airlines/boeing-737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Southwest-Airlines/boeing-737-max-8"
             }
         }
     },

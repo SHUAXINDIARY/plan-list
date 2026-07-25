@@ -5440,3 +5440,24 @@
 
 - `public/data/airplan.json`：更新海南航空机队总数及 PlaneSpotters 现役机型分类链接。
 - `taskRecord.md`：追加本次海南航空数据更新记录。
+
+## 日期
+
+2026-07-25
+
+## 任务目的
+
+将西南航空现役机型链接统一为英国航空使用的 PlaneSpotters Fleet Photos 格式。
+
+## 完成过程
+
+1. 核对 Southwest Airlines 当前机队页面和 Fleet Photos 分类。
+2. 确认现役机型仍为 B737-700、B737-800 与 B737 MAX 8；未来交付的 B737 MAX 7 不计入当前机型。
+3. 将三个现役机型链接从 `/fleet/list/.../current?type=...` 替换为 `/photos/fleet/Southwest-Airlines/...` 格式。
+4. 按用户要求仅调整机型链接，不修改机队数量。
+5. 校验 JSON 格式及文件差异。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：更新西南航空三个现役机型的 PlaneSpotters 分类链接。
+- `taskRecord.md`：追加本次西南航空机型链接调整记录。
