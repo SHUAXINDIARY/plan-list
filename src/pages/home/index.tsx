@@ -1132,25 +1132,47 @@ const HomePage = (): ReactElement => {
                                                             </a>
                                                         ) : null}
                                                     </div>
-                                                    <span className="airline-entry__meta">
-                                                        {
-                                                            airlineFleet.passengerAircraftCount
-                                                        }{" "}
-                                                        架客机 /{" "}
-                                                        {
-                                                            airlineFleet.manufacturerCount
-                                                        }{" "}
-                                                        个制造商 /{" "}
-                                                        {
-                                                            airlineFleet.aircraftCount
-                                                        }{" "}
-                                                        个机型
-                                                        {" / 联盟："}
-                                                        {airlineFleet.airlineAlliance ??
-                                                            "-"}
-                                                    </span>
                                                 </div>
                                             </div>
+                                            <dl
+                                                className="airline-entry__facts"
+                                                aria-label={`${airlineFleet.airlineName}机队概览`}
+                                            >
+                                                <div>
+                                                    <dt>客机</dt>
+                                                    <dd>
+                                                        {
+                                                            airlineFleet.passengerAircraftCount
+                                                        }
+                                                        <span>架</span>
+                                                    </dd>
+                                                </div>
+                                                <div>
+                                                    <dt>制造商</dt>
+                                                    <dd>
+                                                        {
+                                                            airlineFleet.manufacturerCount
+                                                        }
+                                                        <span>个</span>
+                                                    </dd>
+                                                </div>
+                                                <div>
+                                                    <dt>机型</dt>
+                                                    <dd>
+                                                        {
+                                                            airlineFleet.aircraftCount
+                                                        }
+                                                        <span>个</span>
+                                                    </dd>
+                                                </div>
+                                                <div className="airline-entry__alliance">
+                                                    <dt>联盟</dt>
+                                                    <dd>
+                                                        {airlineFleet.airlineAlliance ??
+                                                            "-"}
+                                                    </dd>
+                                                </div>
+                                            </dl>
                                         </header>
 
                                         <div className="manufacturer-list">

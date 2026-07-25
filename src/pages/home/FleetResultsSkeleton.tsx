@@ -44,13 +44,26 @@ export const FleetResultsSkeleton = (): ReactElement => {
                             key={`fleet-skeleton-entry-${skeletonEntryIndex}`}
                         >
                             <header className="airline-entry__header">
-                                <div className="airline-entry__title">
-                                    <div className="airline-entry__heading airline-entry__heading--skeleton">
-                                        <span className="fleet-skeleton-line fleet-skeleton-line--title" />
-                                        <span className="fleet-skeleton-line fleet-skeleton-line--english" />
-                                        <span className="fleet-skeleton-line fleet-skeleton-line--website" />
+                                <div className="airline-entry__identity">
+                                    <span className="airline-entry__logo airline-entry__logo--skeleton" />
+                                    <div className="airline-entry__title">
+                                        <div className="airline-entry__heading airline-entry__heading--skeleton">
+                                            <span className="fleet-skeleton-line fleet-skeleton-line--title" />
+                                            <span className="fleet-skeleton-line fleet-skeleton-line--english" />
+                                            <span className="fleet-skeleton-line fleet-skeleton-line--website" />
+                                        </div>
                                     </div>
-                                    <span className="fleet-skeleton-line fleet-skeleton-line--meta" />
+                                </div>
+                                <div className="airline-entry__facts airline-entry__facts--skeleton">
+                                    {Array.from(
+                                        { length: 4 },
+                                        (_, factIndex: number): ReactElement => (
+                                            <span
+                                                className="fleet-skeleton-line fleet-skeleton-line--fact"
+                                                key={`fleet-skeleton-fact-${skeletonEntryIndex}-${factIndex}`}
+                                            />
+                                        ),
+                                    )}
                                 </div>
                             </header>
 
