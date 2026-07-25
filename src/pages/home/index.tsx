@@ -679,28 +679,28 @@ const HomePage = (): ReactElement => {
 
         return [
             {
-                label: "Aircraft",
+                label: "机型",
                 value: isLoading
                     ? loadingValue
                     : formatDashboardNumber(totalFleetAircraftModelCount),
-                detail: "机型记录",
+                detail: "资料库收录",
             },
             {
-                label: "Airlines",
+                label: "航司",
                 value: isLoading
                     ? loadingValue
                     : formatDashboardNumber(airlineFleets.length),
-                detail: "航司机队",
+                detail: "机队档案",
             },
             {
-                label: "Airports",
+                label: "机场",
                 value: formatDashboardNumber(CHECKED_AIRPORTS.length),
-                detail: "打卡机场",
+                detail: "已打卡",
             },
             {
-                label: "Countries",
+                label: "国家或地区",
                 value: formatDashboardNumber(checkedCountryCount),
-                detail: "国家或地区",
+                detail: "航迹覆盖",
             },
         ];
     }, [
@@ -777,7 +777,7 @@ const HomePage = (): ReactElement => {
                 <div className="aircraft-wiki__intro">
                     <p className="page-eyebrow">飞机日志</p>
                     <h1 id="home-page-title">飞机日志</h1>
-                    <p>Track Every Aircraft You Captured</p>
+                    <p>浏览全球航司机队，整理属于你的飞行足迹。</p>
                     <div
                         className="aircraft-wiki__hero-actions"
                         aria-label="首页快速入口"
@@ -786,13 +786,13 @@ const HomePage = (): ReactElement => {
                             className="aircraft-wiki__hero-action aircraft-wiki__hero-action--primary"
                             href="#fleet-catalog"
                         >
-                            Browse Aircraft
+                            浏览航司机队
                         </a>
                         <a
                             className="aircraft-wiki__hero-action"
                             href="/personal"
                         >
-                            Flight Map
+                            查看飞行地图
                         </a>
                     </div>
                 </div>
