@@ -5483,3 +5483,22 @@
 
 - `public/data/airplan.json`：更新大韩航空机队总数、当前机型及 PlaneSpotters 分类链接。
 - `taskRecord.md`：追加本次大韩航空数据更新记录。
+
+## 日期
+
+2026-07-26
+
+## 任务目的
+
+补充个人飞机照片原图 URL 列表。
+
+## 完成过程
+
+1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 4 个指定的飞机照片原图 URL。
+2. 保留数组中原有 URL 的内容与顺序，不调整无关数据。
+3. 检查新增 URL 均已写入且不存在重复项。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：追加 4 个飞机照片原图 URL。
+- `taskRecord.md`：追加本次照片 URL 补充记录。

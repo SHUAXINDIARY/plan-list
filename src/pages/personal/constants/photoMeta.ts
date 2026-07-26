@@ -103,7 +103,11 @@ export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
       "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1783845160067_PANA1624.jpg",
   "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1783845160534_PANA1619.jpg",
   "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1783845161282_PANA1589.jpg",
-  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1783845162267_PANA1575.jpg"
+  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1783845162267_PANA1575.jpg",
+  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1785028666660_PANA2063.jpg",
+  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1785028667145_PANA2074.jpg",
+  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1785028667426_PANA2085.jpg",
+  "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1785028667745_PANA2086.jpg"
 ] as const;
 
 /** 相册目录筛选「全部」选项值。 */
