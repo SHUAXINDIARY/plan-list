@@ -5502,3 +5502,22 @@
 
 - `src/pages/personal/constants/photoMeta.ts`：追加 4 个飞机照片原图 URL。
 - `taskRecord.md`：追加本次照片 URL 补充记录。
+
+## 日期
+
+2026-07-26
+
+## 任务目的
+
+继续补充个人飞机照片原图 URL 列表。
+
+## 完成过程
+
+1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 2 个指定的飞机照片原图 URL。
+2. 保留数组中已有 URL 的内容与顺序，不调整无关数据。
+3. 检查新增 URL 均已写入且不存在重复项。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：追加 2 个飞机照片原图 URL。
+- `taskRecord.md`：追加本次照片 URL 补充记录。
