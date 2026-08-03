@@ -541,6 +541,107 @@
   }
 }
 
+.earth-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 650;
+  margin-top: 1rem;
+  overflow: hidden;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(124, 200, 235, 0.18), transparent 36%),
+    var(--pl-map-bg);
+  border: 1px solid var(--pl-map-border);
+  border-radius: 1rem;
+  box-shadow: var(--pl-map-inset);
+}
+
+.earth-map::before {
+  position: absolute;
+  inset: 1.25rem;
+  z-index: 2;
+  border: 1px solid var(--pl-map-frame);
+  border-radius: 0.8rem;
+  content: "";
+  pointer-events: none;
+}
+
+.earth-map__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.earth-map__canvas:active {
+  cursor: grabbing;
+}
+
+.earth-map__instruction {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+.earth-map__legend {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.earth-map__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  min-height: 1.65rem;
+  padding: 0 0.58rem;
+  color: var(--pl-map-legend-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background-color: var(--pl-map-legend-bg);
+  border: 1px solid var(--pl-map-legend-border);
+  border-radius: 999px;
+}
+
+.earth-map__legend-item::before {
+  width: 0.95rem;
+  border-bottom: 2px solid currentcolor;
+  content: "";
+}
+
+.earth-map__legend-item--domestic {
+  color: var(--pl-map-route-domestic);
+}
+
+.earth-map__legend-item--international {
+  color: var(--pl-map-route-international);
+}
+
+@media (max-width: 640px) {
+  .earth-map::before {
+    inset: 0.65rem;
+  }
+
+  .earth-map__legend {
+    right: max(0.65rem, env(safe-area-inset-right, 0px));
+    bottom: max(0.65rem, env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .personal-airport-map-loading {
   position: relative;
   display: grid;

@@ -4,9 +4,7 @@ import { airportCountryGroups } from "../constants/summary";
 import type { AirportCountryGroup, CheckedAirport } from "../type";
 import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 
-const AnnotatedWorldMap = lazy(
-    async () => import("../../../components/map"),
-);
+const EarthMap = lazy(async () => import("./EarthMap"));
 const PersonalAirportFlow = lazy(
     async () => import("./PersonalAirportFlow"),
 );
@@ -72,7 +70,7 @@ const PersonalAirportSection = (): ReactElement => {
                 </div>
                 <Suspense fallback={<PersonalAirportMapFallback />}>
                     {visualizationMode === "map" ? (
-                        <AnnotatedWorldMap
+                        <EarthMap
                             ariaLabel="机场打卡足迹示意图"
                             markers={airportMapMarkers}
                             routes={MAP_ROUTES}

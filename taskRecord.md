@@ -5505,6 +5505,27 @@
 
 ## 日期
 
+2026-08-03
+
+## 任务目的
+
+使用 Three.js 将个人机场足迹地图升级为可交互的三维地球，并按已有飞行数据绘制航线。
+
+## 完成过程
+
+1. 复用 `airportMapMarkers` 与 `MAP_ROUTES` 的机场经纬度和航线范围数据，避免新增重复数据源。
+2. 在 Three.js 场景中构建地球、经纬网、机场标记及国内/国际航线弧线，并配置拖拽旋转、缩放与自适应尺寸。
+3. 接入个人页地图展示模式，保留原有航线流程图切换入口，并处理主题切换和 WebGL 资源释放。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/EarthMap.tsx`：新增三维地球、机场标记及航线渲染组件。
+- `src/pages/personal/sections/PersonalAirportSection.tsx`：个人足迹地图模式改用三维地球。
+- `src/pages/personal/index.css`：新增三维地球容器、图例与移动端样式。
+- `taskRecord.md`：追加本次三维地球实现记录。
+
+## 日期
+
 2026-07-26
 
 ## 任务目的
