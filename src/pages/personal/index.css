@@ -289,7 +289,7 @@
 
 .airport-view-switcher {
   display: inline-grid;
-  grid-template-columns: repeat(2, minmax(4.25rem, 1fr));
+  grid-template-columns: repeat(3, minmax(3.65rem, 1fr));
   flex: 0 0 auto;
   padding: 0.2rem;
   background-color: var(--pl-surface-toolbar);

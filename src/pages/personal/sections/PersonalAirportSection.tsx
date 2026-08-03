@@ -2,18 +2,21 @@ import { lazy, Suspense, useState, type ReactElement } from "react";
 import { MAP_ROUTES, airportMapMarkers } from "../constants/airportsMap";
 import { airportCountryGroups } from "../constants/summary";
 import type { AirportCountryGroup, CheckedAirport } from "../type";
+import EarthMap from "./EarthMap";
 import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 
-const EarthMap = lazy(async () => import("./EarthMap"));
+const AnnotatedWorldMap = lazy(
+    async () => import("../../../components/map"),
+);
 const PersonalAirportFlow = lazy(
     async () => import("./PersonalAirportFlow"),
 );
 
 /** 机场足迹主视图的展示模式。 */
-type AirportVisualizationMode = "map" | "flow";
+type AirportVisualizationMode = "map" | "earth" | "flow";
 
 /**
- * 机场打卡地图与按国家折叠的机场列表，单独 async chunk 加载地图组件。
+ * 机场打卡地图与按国家折叠的机场列表；三维地球直接随该区块加载，二维地图和流程图按需加载。
  */
 const PersonalAirportSection = (): ReactElement => {
     /** 当前展开的国家或地区名；`undefined` 表示全部折叠。 */
@@ -60,6 +63,14 @@ const PersonalAirportSection = (): ReactElement => {
                         </button>
                         <button
                             type="button"
+                            className={visualizationMode === "earth" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                            aria-pressed={visualizationMode === "earth"}
+                            onClick={(): void => setVisualizationMode("earth")}
+                        >
+                            地球
+                        </button>
+                        <button
+                            type="button"
                             className={visualizationMode === "flow" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
                             aria-pressed={visualizationMode === "flow"}
                             onClick={(): void => setVisualizationMode("flow")}
@@ -70,8 +81,14 @@ const PersonalAirportSection = (): ReactElement => {
                 </div>
                 <Suspense fallback={<PersonalAirportMapFallback />}>
                     {visualizationMode === "map" ? (
-                        <EarthMap
+                        <AnnotatedWorldMap
                             ariaLabel="机场打卡足迹示意图"
+                            markers={airportMapMarkers}
+                            routes={MAP_ROUTES}
+                        />
+                    ) : visualizationMode === "earth" ? (
+                        <EarthMap
+                            ariaLabel="机场打卡三维地球"
                             markers={airportMapMarkers}
                             routes={MAP_ROUTES}
                         />
