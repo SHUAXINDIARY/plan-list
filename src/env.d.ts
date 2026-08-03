@@ -15,3 +15,9 @@ declare module '*.svg?url' {
   const assetUrl: string;
   export default assetUrl;
 }
+
+/** 将 GeoJSON 原始内容作为字符串导入，再由地图组件解析为结构化数据。 */
+declare module '*.geojson?raw' {
+  const source: string;
+  export default source;
+}

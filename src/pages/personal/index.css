@@ -591,6 +591,41 @@
   clip: rect(0, 0, 0, 0);
 }
 
+.earth-map__tooltip {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 0.18rem;
+  max-width: min(14rem, calc(100% - 2rem));
+  padding: 0.46rem 0.62rem;
+  color: var(--pl-text-emphasis);
+  font-size: 0.74rem;
+  line-height: 1.3;
+  pointer-events: none;
+  background-color: var(--pl-map-tooltip-bg);
+  border: 1px solid var(--pl-map-tooltip-border);
+  border-radius: 0.55rem;
+  box-shadow: var(--pl-shadow-map-tooltip);
+  transform: translate3d(0.8rem, calc(-100% - 0.8rem), 0);
+}
+
+.earth-map__tooltip strong {
+  color: inherit;
+  font-size: 0.78rem;
+}
+
+.earth-map__tooltip span {
+  color: var(--pl-text-secondary);
+}
+
+.earth-map__tooltip--domestic {
+  border-color: var(--pl-map-marker-domestic-stroke-active);
+}
+
+.earth-map__tooltip--international {
+  border-color: var(--pl-map-marker-international-stroke-active);
+}
+
 .earth-map__legend {
   position: absolute;
   right: 1rem;

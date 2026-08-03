@@ -5526,6 +5526,44 @@
 
 ## 日期
 
+2026-07-26
+
+## 任务目的
+
+继续补充个人飞机照片原图 URL 列表。
+
+## 完成过程
+
+1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 2 个指定的飞机照片原图 URL。
+2. 保留数组中已有 URL 的内容与顺序，不调整无关数据。
+3. 检查新增 URL 均已写入且不存在重复项。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：追加 2 个飞机照片原图 URL。
+- `taskRecord.md`：追加本次照片 URL 补充记录。
+
+## 日期
+
+2026-07-26
+
+## 任务目的
+
+继续补充个人飞机照片原图 URL 列表。
+
+## 完成过程
+
+1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 2 个指定的飞机照片原图 URL。
+2. 保留数组中已有 URL 的内容与顺序，不调整无关数据。
+3. 检查新增 URL 均已写入且不存在重复项。
+
+## 修改具体文件
+
+- `src/pages/personal/constants/photoMeta.ts`：追加 2 个飞机照片原图 URL。
+- `taskRecord.md`：追加本次照片 URL 补充记录。
+
+## 日期
+
 2026-08-03
 
 ## 任务目的
@@ -5546,38 +5584,76 @@
 
 ## 日期
 
-2026-07-26
+2026-08-03
 
 ## 任务目的
 
-继续补充个人飞机照片原图 URL 列表。
+在三维地球中绘制大陆边界，并补充机场点悬停信息提示。
 
 ## 完成过程
 
-1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 2 个指定的飞机照片原图 URL。
-2. 保留数组中已有 URL 的内容与顺序，不调整无关数据。
-3. 检查新增 URL 均已写入且不存在重复项。
+1. 复用现有世界地图 GeoJSON，将国家与岛屿边界投射为贴合球体表面的三维轮廓。
+2. 使用 Three.js Raycaster 命中机场点，在指针位置展示机场名称与说明。
+3. 复用当前地图 tooltip 的主题变量和国内/国际标记边界色。
 
 ## 修改具体文件
 
-- `src/pages/personal/constants/photoMeta.ts`：追加 2 个飞机照片原图 URL。
-- `taskRecord.md`：追加本次照片 URL 补充记录。
+- `src/pages/personal/sections/EarthMap.tsx`：新增大陆轮廓与机场点悬停提示逻辑。
+- `src/pages/personal/index.css`：新增三维地球 tooltip 样式。
+- `taskRecord.md`：追加本次三维地球细节增强记录。
 
 ## 日期
 
-2026-07-26
+2026-08-03
 
 ## 任务目的
 
-继续补充个人飞机照片原图 URL 列表。
+修复 GeoJSON 地图数据导入的 TypeScript 模块声明错误。
 
 ## 完成过程
 
-1. 在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 数组末尾追加 2 个指定的飞机照片原图 URL。
-2. 保留数组中已有 URL 的内容与顺序，不调整无关数据。
-3. 检查新增 URL 均已写入且不存在重复项。
+1. 检查现有资源模块声明，确认仅覆盖 SVG 导入。
+2. 在环境类型声明中补充 GeoJSON 默认导出与最小结构类型。
 
 ## 修改具体文件
 
-- `src/pages/personal/constants/photoMeta.ts`：追加 2 个飞机照片原图 URL。
-- `taskRecord.md`：追加本次照片 URL 补充记录。
+- `src/env.d.ts`：新增 `*.geojson` 模块声明。
+- `taskRecord.md`：追加本次 GeoJSON 类型声明修复记录。
+
+## 日期
+
+2026-08-03
+
+## 任务目的
+
+修复 Rsbuild 将 GeoJSON 按 JavaScript 解析导致的启动构建失败。
+
+## 完成过程
+
+1. 依据 Rsbuild 静态资源导入方式，将 GeoJSON 改为使用 `?raw` 查询导入。
+2. 在三维地球组件中解析内联 GeoJSON 文本，继续为大陆边界提供数据。
+3. 调整 GeoJSON 模块声明以匹配原始字符串导入。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/EarthMap.tsx`：使用 `?raw` 导入并解析 GeoJSON。
+- `src/env.d.ts`：声明 `*.geojson?raw` 模块类型。
+- `taskRecord.md`：追加本次 Rsbuild GeoJSON 导入修复记录。
+
+## 日期
+
+2026-08-03
+
+## 任务目的
+
+补充 Rsbuild 的 GeoJSON 静态资源识别规则，完成三维地球地图数据构建修复。
+
+## 完成过程
+
+1. 将 `.geojson` 扩展名加入 `source.assetsInclude`。
+2. 重新执行生产构建，确认 `map.geojson?raw` 已作为资源内容被正确处理。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`：声明 GeoJSON 静态资源扩展名。
+- `taskRecord.md`：追加本次 Rsbuild 资源配置修复记录。
