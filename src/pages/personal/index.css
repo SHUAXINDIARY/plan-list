@@ -270,6 +270,13 @@
   border-bottom: 1px solid var(--pl-border-divider-mid);
 }
 
+.personal-section__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .personal-archive p.personal-section__eyebrow {
   margin: 0;
   color: var(--pl-accent);
@@ -328,6 +335,121 @@
 
 .airport-view-switcher__button:active {
   transform: scale(0.97);
+}
+
+.airport-visualization-fullscreen-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  color: var(--pl-text-secondary);
+  cursor: pointer;
+  background-color: var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 0.65rem;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
+}
+
+.airport-visualization-fullscreen-toggle__icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.airport-visualization-fullscreen-toggle__label {
+  display: none;
+}
+
+.airport-visualization-fullscreen-toggle:focus-visible {
+  outline: 2px solid var(--pl-border-focus);
+  outline-offset: 2px;
+}
+
+.airport-visualization-fullscreen-toggle:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .airport-visualization-fullscreen-toggle:hover {
+    color: var(--pl-text-heading);
+    background-color: var(--pl-surface-chip);
+    border-color: var(--pl-border-entry-hover);
+    transform: translate3d(0, -1px, 0);
+  }
+}
+
+.personal-section--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 51;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+  margin: 0;
+  background: var(--pl-map-bg);
+}
+
+.personal-section--fullscreen .personal-section__header {
+  position: absolute;
+  top: max(0.75rem, env(safe-area-inset-top, 0px));
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
+  left: max(0.75rem, env(safe-area-inset-left, 0px));
+  z-index: 10;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  background-color: var(--pl-map-legend-bg);
+  border: 1px solid var(--pl-map-legend-border);
+  border-radius: 0.75rem;
+}
+
+.personal-section--fullscreen .personal-section__actions {
+  width: auto;
+}
+
+.personal-section--fullscreen .airport-view-switcher {
+  flex: 0 1 auto;
+}
+
+.personal-section--fullscreen .airport-visualization-fullscreen-toggle {
+  min-width: 6.75rem;
+  min-height: 2.5rem;
+  padding: 0 0.82rem;
+  color: var(--pl-text-heading);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background-color: var(--pl-surface-toolbar);
+  border-color: var(--pl-border-entry-hover);
+}
+
+.personal-section--fullscreen .airport-visualization-fullscreen-toggle__label {
+  display: inline;
+}
+
+.personal-section--fullscreen .annotated-world-map,
+.personal-section--fullscreen .earth-map,
+.personal-section--fullscreen .airport-flow,
+.personal-section--fullscreen .personal-airport-map-loading {
+  position: absolute;
+  inset: 0;
+  flex: initial;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .airport-flow {
@@ -521,7 +643,21 @@
   }
 
   .airport-view-switcher {
+    flex: 1 1 auto;
+    width: auto;
+  }
+
+  .personal-section__actions {
     width: 100%;
+  }
+
+  .personal-section--fullscreen .personal-section__header {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .personal-section--fullscreen .personal-section__actions {
+    justify-content: space-between;
   }
 
   .airport-flow {
@@ -536,7 +672,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .airport-view-switcher__button {
+  .airport-view-switcher__button,
+  .airport-visualization-fullscreen-toggle {
     transition: none;
   }
 }
