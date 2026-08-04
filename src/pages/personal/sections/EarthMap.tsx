@@ -50,6 +50,11 @@ type EarthGeoJsonGeometry =
 interface EarthGeoJsonFeature {
     /** 国家边界的几何数据。 */
     geometry: EarthGeoJsonGeometry;
+    /** 用于复用二维地图各大洲色彩的最小属性集。 */
+    properties: {
+        /** Natural Earth 中标记的大洲名称。 */
+        CONTINENT?: string;
+    };
 }
 
 /** 世界地图 GeoJSON 的最小数据结构。 */
@@ -76,6 +81,57 @@ const ROUTE_SEGMENTS = 48;
 const INITIAL_GLOBE_YAW = -0.9;
 /** 大陆轮廓略高于球体表面，避免被地球材质遮挡。 */
 const LANDMASS_RADIUS = GLOBE_RADIUS + 0.008;
+/** 大陆填充位于球面和边界线之间，使边界与航迹保持清晰。 */
+const LANDMASS_FILL_RADIUS = GLOBE_RADIUS + 0.005;
+/** 填充三角面在球面上的最大边长，防止平面弦面落入底球内部。 */
+const LANDMASS_FILL_MAX_ARC = THREE.MathUtils.degToRad(6);
+
+/** 二维地图与三维地球共同使用的大洲色彩分组。 */
+type EarthLandmassGroup =
+    | "northAmerica"
+    | "southAmerica"
+    | "europe"
+    | "africa"
+    | "asia"
+    | "oceania"
+    | "antarctica"
+    | "other";
+
+/** 依次生成大陆网格，确保每个分组都有稳定的绘制顺序。 */
+const EARTH_LANDMASS_GROUPS: EarthLandmassGroup[] = [
+    "northAmerica",
+    "southAmerica",
+    "europe",
+    "africa",
+    "asia",
+    "oceania",
+    "antarctica",
+    "other",
+];
+
+/** 从二维深色地图 SVG 的各洲填充色转换而来的 sRGB 色值。 */
+const EARTH_LANDMASS_DARK_COLORS: Record<EarthLandmassGroup, number> = {
+    northAmerica: 0x27444f,
+    southAmerica: 0x1f4046,
+    europe: 0x2e4958,
+    africa: 0x26414c,
+    asia: 0x2c474f,
+    oceania: 0x2f485a,
+    antarctica: 0x43535b,
+    other: 0x2a414a,
+};
+
+/** 从二维浅色地图 SVG 的各洲填充色转换而来的 sRGB 色值。 */
+const EARTH_LANDMASS_LIGHT_COLORS: Record<EarthLandmassGroup, number> = {
+    northAmerica: 0xb3c8d1,
+    southAmerica: 0xa2c1c5,
+    europe: 0xbcced8,
+    africa: 0xa3bcc5,
+    asia: 0xafc6cb,
+    oceania: 0xafcfce,
+    antarctica: 0xd6e0e4,
+    other: 0xadc2cb,
+};
 
 /** 三维地球可使用的 WebGPU 或 WebGL 渲染器实例。 */
 type EarthRenderer = THREE.WebGLRenderer | WebGPURenderer;
@@ -165,6 +221,278 @@ const getLandmassRings = (
     }
 
     return geometry.coordinates.flat();
+};
+
+/** 按多边形保留外环与内洞，供大陆填充三角化使用。 */
+const getLandmassPolygons = (
+    geometry: EarthGeoJsonGeometry,
+): GeoJsonPosition[][][] => {
+    if (geometry.type === "Polygon") {
+        return [geometry.coordinates];
+    }
+
+    return geometry.coordinates;
+};
+
+/** 将 Natural Earth 的大洲字段映射为二维地图所使用的色彩分组。 */
+const getLandmassGroup = (continent: string | undefined): EarthLandmassGroup => {
+    switch (continent) {
+        case "North America":
+            return "northAmerica";
+        case "South America":
+            return "southAmerica";
+        case "Europe":
+            return "europe";
+        case "Africa":
+            return "africa";
+        case "Asia":
+            return "asia";
+        case "Oceania":
+            return "oceania";
+        case "Antarctica":
+            return "antarctica";
+        default:
+            return "other";
+    }
+};
+
+/** 去除 GeoJSON 闭合环的重复末点，避免三角化生成退化面。 */
+const removeRingClosingPosition = (
+    ring: GeoJsonPosition[],
+): GeoJsonPosition[] => {
+    const firstPosition = ring[0];
+    const lastPosition = ring[ring.length - 1];
+
+    if (
+        firstPosition !== undefined &&
+        lastPosition !== undefined &&
+        firstPosition[0] === lastPosition[0] &&
+        firstPosition[1] === lastPosition[1]
+    ) {
+        return ring.slice(0, -1);
+    }
+
+    return ring;
+};
+
+/** 连续化跨日期变更线的经度，保证平面三角化不会穿过地球另一侧。 */
+const createTriangulationRing = (
+    ring: GeoJsonPosition[],
+): THREE.Vector2[] => {
+    const openRing = removeRingClosingPosition(ring);
+    let previousLongitude: number | undefined;
+
+    return openRing.map((position: GeoJsonPosition): THREE.Vector2 => {
+        let longitude = position[0];
+
+        if (previousLongitude !== undefined) {
+            while (longitude - previousLongitude > 180) {
+                longitude -= 360;
+            }
+
+            while (longitude - previousLongitude < -180) {
+                longitude += 360;
+            }
+        }
+
+        previousLongitude = longitude;
+        return new THREE.Vector2(longitude, position[1]);
+    });
+};
+
+/** 将平面三角化结果细分并重新投射到球面，避免大面片被底球遮挡。 */
+const appendSphericalTriangle = (
+    positions: number[],
+    firstPoint: THREE.Vector2,
+    secondPoint: THREE.Vector2,
+    thirdPoint: THREE.Vector2,
+): void => {
+    const firstSurfacePoint = coordinateToVector3(
+        { lat: firstPoint.y, lng: firstPoint.x },
+        1,
+    );
+    const secondSurfacePoint = coordinateToVector3(
+        { lat: secondPoint.y, lng: secondPoint.x },
+        1,
+    );
+    const thirdSurfacePoint = coordinateToVector3(
+        { lat: thirdPoint.y, lng: thirdPoint.x },
+        1,
+    );
+    const segmentCount = Math.max(
+        1,
+        Math.ceil(
+            Math.max(
+                firstSurfacePoint.angleTo(secondSurfacePoint),
+                secondSurfacePoint.angleTo(thirdSurfacePoint),
+                thirdSurfacePoint.angleTo(firstSurfacePoint),
+            ) / LANDMASS_FILL_MAX_ARC,
+        ),
+    );
+
+    /** 用重心坐标插值后归一化到球面，保持细分面始终贴合地球曲率。 */
+    const createSurfacePoint = (
+        secondWeight: number,
+        thirdWeight: number,
+    ): THREE.Vector3 => {
+        const firstWeight = 1 - secondWeight - thirdWeight;
+        const surfacePoint = new THREE.Vector3()
+            .addScaledVector(firstSurfacePoint, firstWeight)
+            .addScaledVector(secondSurfacePoint, secondWeight)
+            .addScaledVector(thirdSurfacePoint, thirdWeight);
+
+        return surfacePoint.normalize().multiplyScalar(LANDMASS_FILL_RADIUS);
+    };
+
+    /** 写入非索引三角形顶点，避免额外索引管理并兼容两个渲染后端。 */
+    const appendTriangle = (
+        firstVertex: THREE.Vector3,
+        secondVertex: THREE.Vector3,
+        thirdVertex: THREE.Vector3,
+    ): void => {
+        positions.push(
+            firstVertex.x,
+            firstVertex.y,
+            firstVertex.z,
+            secondVertex.x,
+            secondVertex.y,
+            secondVertex.z,
+            thirdVertex.x,
+            thirdVertex.y,
+            thirdVertex.z,
+        );
+    };
+
+    for (
+        let firstSegmentIndex = 0;
+        firstSegmentIndex < segmentCount;
+        firstSegmentIndex += 1
+    ) {
+        for (
+            let secondSegmentIndex = 0;
+            secondSegmentIndex < segmentCount - firstSegmentIndex;
+            secondSegmentIndex += 1
+        ) {
+            const firstWeight = firstSegmentIndex / segmentCount;
+            const secondWeight = secondSegmentIndex / segmentCount;
+            const firstVertex = createSurfacePoint(firstWeight, secondWeight);
+            const secondVertex = createSurfacePoint(
+                (firstSegmentIndex + 1) / segmentCount,
+                secondWeight,
+            );
+            const thirdVertex = createSurfacePoint(
+                firstWeight,
+                (secondSegmentIndex + 1) / segmentCount,
+            );
+
+            appendTriangle(firstVertex, secondVertex, thirdVertex);
+
+            if (firstSegmentIndex + secondSegmentIndex < segmentCount - 1) {
+                const fourthVertex = createSurfacePoint(
+                    (firstSegmentIndex + 1) / segmentCount,
+                    (secondSegmentIndex + 1) / segmentCount,
+                );
+                appendTriangle(secondVertex, fourthVertex, thirdVertex);
+            }
+        }
+    }
+};
+
+/** 将 GeoJSON 多边形三角化后贴合到球面，按大洲合并为少量填充网格。 */
+const addLandmassFills = (
+    globeGroup: THREE.Group,
+    isDarkTheme: boolean,
+): void => {
+    const positionsByGroup: Record<EarthLandmassGroup, number[]> = {
+        northAmerica: [],
+        southAmerica: [],
+        europe: [],
+        africa: [],
+        asia: [],
+        oceania: [],
+        antarctica: [],
+        other: [],
+    };
+
+    WORLD_MAP_GEOJSON.features.forEach((feature: EarthGeoJsonFeature): void => {
+        const positions = positionsByGroup[
+            getLandmassGroup(feature.properties.CONTINENT)
+        ];
+
+        getLandmassPolygons(feature.geometry).forEach(
+            (polygon: GeoJsonPosition[][]): void => {
+                const outerRing = polygon[0];
+
+                if (outerRing === undefined) {
+                    return;
+                }
+
+                const contour = createTriangulationRing(outerRing);
+                const holes = polygon
+                    .slice(1)
+                    .map(createTriangulationRing)
+                    .filter(
+                        (hole: THREE.Vector2[]): boolean => hole.length >= 3,
+                    );
+
+                if (contour.length < 3) {
+                    return;
+                }
+
+                const polygonPoints = [contour, ...holes].flat();
+                const triangles = THREE.ShapeUtils.triangulateShape(
+                    contour,
+                    holes,
+                );
+
+                triangles.forEach((triangle: number[]): void => {
+                    const firstPoint = polygonPoints[triangle[0]];
+                    const secondPoint = polygonPoints[triangle[1]];
+                    const thirdPoint = polygonPoints[triangle[2]];
+
+                    if (
+                        firstPoint === undefined ||
+                        secondPoint === undefined ||
+                        thirdPoint === undefined
+                    ) {
+                        return;
+                    }
+
+                    appendSphericalTriangle(
+                        positions,
+                        firstPoint,
+                        secondPoint,
+                        thirdPoint,
+                    );
+                });
+            },
+        );
+    });
+
+    const landmassColors = isDarkTheme
+        ? EARTH_LANDMASS_DARK_COLORS
+        : EARTH_LANDMASS_LIGHT_COLORS;
+
+    EARTH_LANDMASS_GROUPS.forEach((group: EarthLandmassGroup): void => {
+        const positions = positionsByGroup[group];
+
+        if (positions.length === 0) {
+            return;
+        }
+
+        const landmassGeometry = new THREE.BufferGeometry();
+        landmassGeometry.setAttribute(
+            "position",
+            new THREE.Float32BufferAttribute(positions, 3),
+        );
+        landmassGeometry.computeBoundingSphere();
+
+        const landmassMaterial = new THREE.MeshBasicMaterial({
+            color: landmassColors[group],
+            side: THREE.DoubleSide,
+        });
+        globeGroup.add(new THREE.Mesh(landmassGeometry, landmassMaterial));
+    });
 };
 
 /** 将 GeoJSON 大陆与国家边界绘制为贴合球面的三维轮廓线。 */
@@ -333,6 +661,7 @@ const EarthMap = ({
                 }),
             );
             globeGroup.add(graticule);
+            addLandmassFills(globeGroup, isDarkTheme);
             addLandmassContours(globeGroup, isDarkTheme);
 
             const atmosphere = new THREE.Mesh(
