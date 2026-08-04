@@ -8,6 +8,7 @@ import {
 import * as THREE from "three";
 import { WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { MARKER_RADIUS } from "../../../components/map/canvasMap";
 import type { WorldMapMarker, WorldMapRoute } from "../../../components/map";
 import worldMapGeoJsonSource from "../../../components/map/map.geojson?raw";
 
@@ -85,6 +86,8 @@ const LANDMASS_RADIUS = GLOBE_RADIUS + 0.008;
 const LANDMASS_FILL_RADIUS = GLOBE_RADIUS + 0.005;
 /** 填充三角面在球面上的最大边长，防止平面弦面落入底球内部。 */
 const LANDMASS_FILL_MAX_ARC = THREE.MathUtils.degToRad(6);
+/** 二维地图中激活机场标记使用的放大倍率。 */
+const ACTIVE_MARKER_SIZE_MULTIPLIER = 1.12;
 
 /** 二维地图与三维地球共同使用的大洲色彩分组。 */
 type EarthLandmassGroup =
@@ -169,6 +172,30 @@ const createEarthRenderer = async (
         renderer: new THREE.WebGLRenderer({ alpha: true, antialias: true }),
         renderEngine: "webgl",
     };
+};
+
+/**
+ * 将二维地图的 CSS 像素标记半径转换为当前透视相机下的世界坐标半径。
+ *
+ * 相机距离变化时，按相机视空间深度同步调整 mesh 缩放，保证地球模式的标记
+ * 与二维地图一致，始终保持 `MARKER_RADIUS` 个 CSS 像素的视觉尺寸。
+ */
+const resolveMarkerWorldRadius = (
+    cameraSpaceDepth: number,
+    cameraVerticalFov: number,
+    viewportHeight: number,
+    isActive: boolean,
+): number => {
+    const visibleWorldHeight =
+        2 *
+        cameraSpaceDepth *
+        Math.tan(THREE.MathUtils.degToRad(cameraVerticalFov / 2));
+    const worldUnitsPerCssPixel = visibleWorldHeight / Math.max(viewportHeight, 1);
+    const markerRadius = MARKER_RADIUS * worldUnitsPerCssPixel;
+
+    return isActive
+        ? markerRadius * ACTIVE_MARKER_SIZE_MULTIPLIER
+        : markerRadius;
 };
 
 /** 解析构建期内联的 GeoJSON 文本，为大陆边界绘制提供结构化数据。 */
@@ -569,6 +596,7 @@ const EarthMap = ({
     onRendererReady,
 }: EarthMapProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const hoveredMarkerIdRef = useRef<string | null>(null);
     const [hoveredMarker, setHoveredMarker] = useState<EarthMarkerTooltip | null>(
         null,
     );
@@ -595,6 +623,9 @@ const EarthMap = ({
         if (container === null) {
             return undefined;
         }
+
+        hoveredMarkerIdRef.current = null;
+        setHoveredMarker(null);
 
         let isDisposed = false;
         let cleanupRenderer: (() => void) | undefined;
@@ -696,11 +727,7 @@ const EarthMap = ({
 
             markers.forEach((marker: WorldMapMarker): void => {
                 const markerMesh = new THREE.Mesh(
-                    new THREE.SphereGeometry(
-                        marker.scope === "domestic" ? 0.018 : 0.023,
-                        12,
-                        12,
-                    ),
+                    new THREE.SphereGeometry(1, 12, 12),
                     new THREE.MeshBasicMaterial({ color: markerColor }),
                 );
                 markerMesh.position.copy(
@@ -717,6 +744,46 @@ const EarthMap = ({
 
             const raycaster = new THREE.Raycaster();
             const pointer = new THREE.Vector2();
+            const markerViewPosition = new THREE.Vector3();
+            const markerWorldPositions = new Map<THREE.Mesh, THREE.Vector3>();
+            let viewportHeight = 1;
+
+            globeGroup.updateWorldMatrix(true, true);
+            markerMeshes.forEach((markerMesh: THREE.Mesh): void => {
+                markerWorldPositions.set(
+                    markerMesh,
+                    markerMesh.getWorldPosition(new THREE.Vector3()),
+                );
+            });
+
+            /** 根据相机当前距离更新机场标记的世界坐标缩放，维持二维地图的像素尺寸。 */
+            const updateMarkerScreenScales = (): void => {
+                camera.updateMatrixWorld();
+
+                markerMeshes.forEach((markerMesh: THREE.Mesh): void => {
+                    const markerWorldPosition = markerWorldPositions.get(markerMesh);
+                    if (markerWorldPosition === undefined) {
+                        return;
+                    }
+
+                    markerViewPosition
+                        .copy(markerWorldPosition)
+                        .applyMatrix4(camera.matrixWorldInverse);
+
+                    const cameraSpaceDepth = Math.max(
+                        -markerViewPosition.z,
+                        camera.near,
+                    );
+                    const markerRadius = resolveMarkerWorldRadius(
+                        cameraSpaceDepth,
+                        camera.fov,
+                        viewportHeight,
+                        markerMesh.name === hoveredMarkerIdRef.current,
+                    );
+
+                    markerMesh.scale.setScalar(markerRadius);
+                });
+            };
 
             /** 根据指针位置命中机场球体，并将可见提示定位到容器内。 */
             const handleMarkerHover = (event: PointerEvent): void => {
@@ -736,6 +803,7 @@ const EarthMap = ({
                     ? markerById.get(intersectedMarker.object.name)
                     : undefined;
 
+                hoveredMarkerIdRef.current = marker?.id ?? null;
                 setHoveredMarker(
                     marker === undefined
                         ? null
@@ -748,7 +816,10 @@ const EarthMap = ({
             };
 
             /** 清空指针离开三维地球后的机场提示。 */
-            const clearMarkerHover = (): void => setHoveredMarker(null);
+            const clearMarkerHover = (): void => {
+                hoveredMarkerIdRef.current = null;
+                setHoveredMarker(null);
+            };
 
             renderer.domElement.addEventListener(
                 "pointermove",
@@ -767,6 +838,8 @@ const EarthMap = ({
                 camera.aspect = resolvedWidth / resolvedHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(resolvedWidth, resolvedHeight, false);
+                viewportHeight = resolvedHeight;
+                updateMarkerScreenScales();
             };
 
             const resizeObserver = new ResizeObserver(resizeRenderer);
@@ -775,6 +848,7 @@ const EarthMap = ({
 
             const renderFrame = (): void => {
                 controls.update();
+                updateMarkerScreenScales();
                 renderer.render(scene, camera);
             };
 

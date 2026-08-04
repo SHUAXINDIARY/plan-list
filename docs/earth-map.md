@@ -32,7 +32,7 @@ interface EarthMapProps {
 }
 ```
 
-`markers` 和 `routes` 与 `AnnotatedWorldMap` 共享同一套类型和数据契约。`scope` 仍只有 `domestic` 与 `international`，分别决定航线颜色、透明度和机场点半径。
+`markers` 和 `routes` 与 `AnnotatedWorldMap` 共享同一套类型和数据契约。`scope` 仍只有 `domestic` 与 `international`，用于航线和机场的视觉区分。
 
 业务侧使用方式：
 
@@ -103,7 +103,7 @@ flowchart LR
 | 国家轮廓 | `THREE.Line` | `1.008` | 国界与海岸线，位于填充层上方 |
 | 大气层 | 背面 `SphereGeometry` | `1.055` | 轻量外沿氛围 |
 | 航线 | `THREE.Line` | 高于球面 | 国内/国际航段弧线 |
-| 机场 | 小型 `SphereGeometry` | `1.028` | 机场点，供 Raycaster 命中 |
+| 机场 | 单位 `SphereGeometry`，逐帧缩放 | 表面半径 `1.028` | 机场点，供 Raycaster 命中 |
 
 大洲填充与轮廓使用不同半径，避免 z-fighting。轮廓使用 `THREE.Line` 而不是 `THREE.LineLoop`，因为 WebGPU 渲染器不支持 `LineLoop`；闭合效果由手动补齐首尾点实现。
 
@@ -132,6 +132,12 @@ routeLift = 0.045 + sin(progress * PI) * 0.2
 ```
 
 每段采样 48 个分段。国内航线使用较低饱和度、较低透明度的颜色，国际航线使用更亮的颜色。
+
+### 机场标记尺寸
+
+二维地图将机场绘制半径定义为 `MARKER_RADIUS = 5.6` 个 CSS 像素，缩放地图时尺寸不变，hover 时放大至 `1.12` 倍。地球模式直接复用该常量：每一帧根据机场在相机视空间中的深度、相机垂直 FOV 和容器高度，换算出对应的世界坐标半径并设置到单位球体的 `scale`。
+
+因此滚轮缩放地球时，标记在屏幕中的视觉尺寸与二维地图一致；机场随球面远近变化时也能保持可读，当前悬停点仍具有与二维地图相同的放大反馈。
 
 ### 大洲填充与轮廓
 
