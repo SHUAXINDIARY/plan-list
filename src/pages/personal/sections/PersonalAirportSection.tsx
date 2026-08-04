@@ -11,7 +11,7 @@ import { createPortal } from "react-dom";
 import { MAP_ROUTES, airportMapMarkers } from "../constants/airportsMap";
 import { airportCountryGroups } from "../constants/summary";
 import type { AirportCountryGroup, CheckedAirport } from "../type";
-import EarthMap from "./EarthMap";
+import EarthMap, { type EarthRenderEngine } from "./EarthMap";
 import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 
 const AnnotatedWorldMap = lazy(
@@ -24,6 +24,12 @@ const PersonalAirportFlow = lazy(
 /** 机场足迹主视图的展示模式。 */
 type AirportVisualizationMode = "map" | "earth" | "flow";
 
+/** 三维地球渲染后端在界面中的可读名称。 */
+const EARTH_RENDER_ENGINE_LABELS: Record<EarthRenderEngine, string> = {
+    webgpu: "WebGPU",
+    webgl: "WebGL",
+};
+
 /**
  * 机场打卡地图与按国家折叠的机场列表；三维地球直接随该区块加载，二维地图和流程图按需加载。
  */
@@ -35,6 +41,13 @@ const PersonalAirportSection = (): ReactElement => {
     /** 当前机场足迹可视化模式，默认保留原有地图体验。 */
     const [visualizationMode, setVisualizationMode] =
         useState<AirportVisualizationMode>("map");
+    /** 用户为三维地球选择的渲染引擎，切换后会重建地球场景。 */
+    const [earthRenderEngine, setEarthRenderEngine] =
+        useState<EarthRenderEngine>("webgpu");
+    /** 当前地球实例实际启用的渲染引擎，初始化期间暂不显示具体后端。 */
+    const [activeEarthRenderEngine, setActiveEarthRenderEngine] = useState<
+        EarthRenderEngine | undefined
+    >(undefined);
     /** 是否将当前机场可视化放大为覆盖视口的阅读模式。 */
     const [isAirportVisualizationFullscreen, setIsAirportVisualizationFullscreen] =
         useState<boolean>(false);
@@ -80,8 +93,42 @@ const PersonalAirportSection = (): ReactElement => {
 
     /** 打开覆盖浏览器视口的机场足迹展示层。 */
     const openAirportVisualizationFullscreen = (): void => {
+        if (visualizationMode === "earth") {
+            setActiveEarthRenderEngine(undefined);
+        }
         setIsAirportVisualizationFullscreen(true);
     };
+
+    /** 切换机场足迹视图，并在进入三维地球时清空旧实例的引擎状态。 */
+    const changeVisualizationMode = (
+        nextVisualizationMode: AirportVisualizationMode,
+    ): void => {
+        if (nextVisualizationMode === "earth") {
+            setActiveEarthRenderEngine(undefined);
+        }
+
+        setVisualizationMode(nextVisualizationMode);
+    };
+
+    /** 切换三维地球的渲染偏好，随后由 EarthMap 重新初始化对应后端。 */
+    const changeEarthRenderEngine = (
+        nextEarthRenderEngine: EarthRenderEngine,
+    ): void => {
+        if (nextEarthRenderEngine === earthRenderEngine) {
+            return;
+        }
+
+        setActiveEarthRenderEngine(undefined);
+        setEarthRenderEngine(nextEarthRenderEngine);
+    };
+
+    /** 接收 EarthMap 初始化完成后的实际渲染后端，用于展示 WebGPU 回退状态。 */
+    const handleEarthRendererReady = useCallback(
+        (resolvedEarthRenderEngine: EarthRenderEngine): void => {
+            setActiveEarthRenderEngine(resolvedEarthRenderEngine);
+        },
+        [],
+    );
 
     // 手风琴切换：同一时刻仅保留一个展开国家，再次点击已展开项则折叠。
     const toggleAirportCountry = (countryName: string): void => {
@@ -104,7 +151,7 @@ const PersonalAirportSection = (): ReactElement => {
                 type="button"
                 className={visualizationMode === "map" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
                 aria-pressed={visualizationMode === "map"}
-                onClick={(): void => setVisualizationMode("map")}
+                onClick={(): void => changeVisualizationMode("map")}
             >
                 地图
             </button>
@@ -112,7 +159,7 @@ const PersonalAirportSection = (): ReactElement => {
                 type="button"
                 className={visualizationMode === "earth" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
                 aria-pressed={visualizationMode === "earth"}
-                onClick={(): void => setVisualizationMode("earth")}
+                onClick={(): void => changeVisualizationMode("earth")}
             >
                 地球
             </button>
@@ -120,12 +167,62 @@ const PersonalAirportSection = (): ReactElement => {
                 type="button"
                 className={visualizationMode === "flow" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
                 aria-pressed={visualizationMode === "flow"}
-                onClick={(): void => setVisualizationMode("flow")}
+                onClick={(): void => changeVisualizationMode("flow")}
             >
                 航线图
             </button>
         </div>
     );
+
+    /** 在全屏三维地球工具栏中显示实际后端，并允许用户切换渲染偏好。 */
+    const renderEarthRendererSwitcher = (): ReactElement | null => {
+        if (visualizationMode !== "earth") {
+            return null;
+        }
+
+        const isRendererInitializing = activeEarthRenderEngine === undefined;
+        const isRendererFallback =
+            !isRendererInitializing &&
+            activeEarthRenderEngine !== earthRenderEngine;
+        const rendererStatusLabel = isRendererInitializing
+            ? "正在初始化"
+            : `${EARTH_RENDER_ENGINE_LABELS[activeEarthRenderEngine]}${isRendererFallback ? "（已降级）" : ""}`;
+
+        return (
+            <div className="airport-renderer-switcher">
+                <span
+                    className="airport-renderer-switcher__status"
+                    aria-live="polite"
+                >
+                    当前引擎：<strong>{rendererStatusLabel}</strong>
+                </span>
+                <div
+                    className="airport-renderer-switcher__options"
+                    role="group"
+                    aria-label="三维地球渲染引擎"
+                >
+                    {(
+                        Object.entries(EARTH_RENDER_ENGINE_LABELS) as [
+                            EarthRenderEngine,
+                            string,
+                        ][]
+                    ).map(
+                        ([engine, label]: [EarthRenderEngine, string]): ReactElement => (
+                            <button
+                                key={engine}
+                                className={`airport-renderer-switcher__button${earthRenderEngine === engine ? " airport-renderer-switcher__button--active" : ""}`}
+                                type="button"
+                                aria-pressed={earthRenderEngine === engine}
+                                onClick={(): void => changeEarthRenderEngine(engine)}
+                            >
+                                {label}
+                            </button>
+                        ),
+                    )}
+                </div>
+            </div>
+        );
+    };
 
     /** 根据展示位置渲染进入全屏或退出全屏的控制按钮。 */
     const renderFullscreenToggle = (
@@ -200,6 +297,8 @@ const PersonalAirportSection = (): ReactElement => {
                 <EarthMap
                     ariaLabel="机场打卡三维地球"
                     markers={airportMapMarkers}
+                    onRendererReady={handleEarthRendererReady}
+                    renderEngine={earthRenderEngine}
                     routes={MAP_ROUTES}
                 />
             ) : (
@@ -217,7 +316,10 @@ const PersonalAirportSection = (): ReactElement => {
                   aria-modal="true"
                   aria-label="机场足迹全屏展示"
               >
-                  <div className="personal-section__header">
+                  <div
+                      className={`personal-section__header${visualizationMode === "earth" ? " personal-section__header--with-renderer" : ""}`}
+                  >
+                      {renderEarthRendererSwitcher()}
                       <div className="personal-section__actions">
                           {renderVisualizationModeSwitcher()}
                           {renderFullscreenToggle(true)}

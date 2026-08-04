@@ -337,6 +337,75 @@
   transform: scale(0.97);
 }
 
+.airport-renderer-switcher {
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.5rem;
+  padding: 0.2rem 0.2rem 0.2rem 0.65rem;
+  color: var(--pl-text-secondary);
+  background-color: var(--pl-surface-toolbar);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 0.65rem;
+}
+
+.airport-renderer-switcher__status {
+  min-width: 0;
+  font-family: var(--pl-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.airport-renderer-switcher__status strong {
+  color: var(--pl-text-heading);
+}
+
+.airport-renderer-switcher__options {
+  display: inline-grid;
+  grid-template-columns: repeat(2, auto);
+  flex: 0 0 auto;
+  padding: 0.16rem;
+  background-color: var(--pl-surface-chip);
+  border: 1px solid var(--pl-border-muted);
+  border-radius: 0.5rem;
+}
+
+.airport-renderer-switcher__button {
+  min-height: 1.92rem;
+  padding: 0 0.56rem;
+  color: var(--pl-text-secondary);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.36rem;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    transform var(--personal-motion-feedback) var(--motion-ease-out-quart);
+}
+
+.airport-renderer-switcher__button--active {
+  color: var(--pl-text-heading);
+  background-color: var(--pl-map-legend-bg);
+  border-color: var(--pl-border-entry-hover);
+}
+
+.airport-renderer-switcher__button:focus-visible {
+  outline: 2px solid var(--pl-border-focus);
+  outline-offset: 2px;
+}
+
+.airport-renderer-switcher__button:active {
+  transform: scale(0.97);
+}
+
 .airport-visualization-fullscreen-toggle {
   display: inline-flex;
   flex: 0 0 auto;
@@ -409,6 +478,11 @@
   background-color: var(--pl-map-legend-bg);
   border: 1px solid var(--pl-map-legend-border);
   border-radius: 0.75rem;
+}
+
+.personal-section--fullscreen .personal-section__header--with-renderer {
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .personal-section--fullscreen .personal-section__actions {
@@ -656,6 +730,15 @@
     flex-direction: row;
   }
 
+  .personal-section--fullscreen .personal-section__header--with-renderer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .personal-section--fullscreen .airport-renderer-switcher {
+    justify-content: space-between;
+  }
+
   .personal-section--fullscreen .personal-section__actions {
     justify-content: space-between;
   }
@@ -673,6 +756,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .airport-view-switcher__button,
+  .airport-renderer-switcher__button,
   .airport-visualization-fullscreen-toggle {
     transition: none;
   }

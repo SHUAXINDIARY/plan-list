@@ -5754,3 +5754,24 @@
 
 - `src/pages/personal/sections/EarthMap.tsx`：以闭合点序列的 THREE.Line 替代 THREE.LineLoop。
 - `taskRecord.md`：追加本次 WebGPU 轮廓兼容性修复记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+在机场足迹全屏三维地球工具栏中展示当前渲染后端，并允许用户切换 WebGPU 与 WebGL 后重新初始化场景。
+
+## 完成过程
+
+1. 将三维地球的渲染偏好和实际初始化结果提升至机场足迹区块，保留 WebGPU 初始化失败时的 WebGL 降级状态。
+2. 在全屏地球工具栏左侧新增当前引擎状态与 WebGPU/WebGL 分段切换控件，切换后清理并重建地球渲染器。
+3. 补充工具栏的焦点状态、状态播报与窄屏纵向布局，避免控制项挤压地图画布。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAirportSection.tsx`：接收 EarthMap 的实际后端状态，并提供全屏渲染引擎切换控件。
+- `src/pages/personal/sections/EarthMap.tsx`：接收渲染偏好并在初始化完成后报告实际启用的后端。
+- `src/pages/personal/index.css`：新增渲染引擎控件及全屏窄屏工具栏布局。
+- `taskRecord.md`：追加本次渲染引擎切换记录。

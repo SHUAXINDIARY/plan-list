@@ -11,6 +11,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { WorldMapMarker, WorldMapRoute } from "../../../components/map";
 import worldMapGeoJsonSource from "../../../components/map/map.geojson?raw";
 
+/** 三维地球允许用户选择并实际报告的渲染引擎。 */
+export type EarthRenderEngine = "webgpu" | "webgl";
+
 /** 三维地球组件的输入数据，复用现有机场标记与航迹数据契约。 */
 interface EarthMapProps {
     /** 用于三维标记的已打卡机场。 */
@@ -19,6 +22,10 @@ interface EarthMapProps {
     routes: WorldMapRoute[];
     /** 地图区域的无障碍名称。 */
     ariaLabel: string;
+    /** 用户要求优先尝试的三维渲染引擎。 */
+    renderEngine: EarthRenderEngine;
+    /** 渲染器完成初始化后，向父级报告实际启用的引擎。 */
+    onRendererReady: (renderEngine: EarthRenderEngine) => void;
 }
 
 /** GeoJSON 位置，按经度、纬度的顺序存储。 */
@@ -73,9 +80,19 @@ const LANDMASS_RADIUS = GLOBE_RADIUS + 0.008;
 /** 三维地球可使用的 WebGPU 或 WebGL 渲染器实例。 */
 type EarthRenderer = THREE.WebGLRenderer | WebGPURenderer;
 
-/** 优先初始化 WebGPU 渲染器，设备不可用或初始化失败时保留 WebGL 回退。 */
-const createEarthRenderer = async (): Promise<EarthRenderer> => {
-    if (navigator.gpu !== undefined) {
+/** 渲染器创建结果，携带实例及实际使用的渲染引擎。 */
+interface EarthRendererResult {
+    /** 已完成创建的 Three.js 渲染器实例。 */
+    renderer: EarthRenderer;
+    /** 该实例实际采用的渲染引擎。 */
+    renderEngine: EarthRenderEngine;
+}
+
+/** 按用户选择优先初始化 WebGPU，设备不可用或初始化失败时保留 WebGL 回退。 */
+const createEarthRenderer = async (
+    requestedRenderEngine: EarthRenderEngine,
+): Promise<EarthRendererResult> => {
+    if (requestedRenderEngine === "webgpu" && navigator.gpu !== undefined) {
         const webGpuRenderer = new WebGPURenderer({
             alpha: true,
             antialias: true,
@@ -83,13 +100,19 @@ const createEarthRenderer = async (): Promise<EarthRenderer> => {
 
         try {
             await webGpuRenderer.init();
-            return webGpuRenderer;
+            return {
+                renderer: webGpuRenderer,
+                renderEngine: "webgpu",
+            };
         } catch {
             webGpuRenderer.dispose();
         }
     }
 
-    return new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    return {
+        renderer: new THREE.WebGLRenderer({ alpha: true, antialias: true }),
+        renderEngine: "webgl",
+    };
 };
 
 /** 解析构建期内联的 GeoJSON 文本，为大陆边界绘制提供结构化数据。 */
@@ -210,7 +233,13 @@ const disposeSceneResources = (scene: THREE.Scene): void => {
 /**
  * Three.js 地球：机场点与航线均由当前个人飞行数据驱动，支持拖拽旋转与滚轮缩放。
  */
-const EarthMap = ({ markers, routes, ariaLabel }: EarthMapProps): ReactElement => {
+const EarthMap = ({
+    markers,
+    routes,
+    ariaLabel,
+    renderEngine,
+    onRendererReady,
+}: EarthMapProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [hoveredMarker, setHoveredMarker] = useState<EarthMarkerTooltip | null>(
         null,
@@ -244,12 +273,15 @@ const EarthMap = ({ markers, routes, ariaLabel }: EarthMapProps): ReactElement =
 
         /** 异步获取渲染器后创建场景；卸载期间完成的初始化会立即释放。 */
         const initializeEarthMap = async (): Promise<void> => {
-            const renderer = await createEarthRenderer();
+            const rendererResult = await createEarthRenderer(renderEngine);
+            const renderer = rendererResult.renderer;
 
             if (isDisposed) {
                 renderer.dispose();
                 return;
             }
+
+            onRendererReady(rendererResult.renderEngine);
 
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
@@ -447,7 +479,7 @@ const EarthMap = ({ markers, routes, ariaLabel }: EarthMapProps): ReactElement =
             isDisposed = true;
             cleanupRenderer?.();
         };
-    }, [isDarkTheme, markers, routes]);
+    }, [isDarkTheme, markers, onRendererReady, renderEngine, routes]);
 
     const markerTooltipStyle: CSSProperties | undefined =
         hoveredMarker === null
