@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rsbuild build",
     "dev": "rsbuild --open",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.2",
