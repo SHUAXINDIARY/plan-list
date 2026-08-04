@@ -1,4 +1,4 @@
-<!-- 已与当前源码视觉对齐：`src/App.css`（应用壳层、tokens）、`src/pages/**/index.css`（页面块）。大范围改版时请同步本节。 -->
+<!-- 本文定义 Plane List 的设计约束。新增或改造实现时以本文为准，并在完成后同步记录。 -->
 ---
 name: Plane List
 description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界面（Night Flight Archive）
@@ -26,7 +26,7 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 - 深色沉浸背景承载整体氛围，内容面板用半透明 navy 层级压在上面，不靠重阴影分层。
 - 全站 sans：数据、筛选、导航、芯片统一无衬线，避免 ornament 混入控件。
 - 信息组织优先使用列表、分区标题、筛选行和状态胶囊；Fleet 区域内联滚动与整页滚动共用一套滚动条色相（见 §7）。
-- 动效以 160–480ms 的过渡与单次 reveal 动画为主，`prefers-reduced-motion: reduce` 下收窄为瞬时（见 `src/App.css`）。
+- 动效只服务状态、空间关系和直接操作。常规反馈保持短促，避免为页面加载或装饰设置循环运动；减少动态偏好下提供静态或短 opacity 反馈。
 - **双主题**：默认深色「Night Flight Archive」；亮色为日间阅读向的冷灰蓝底，由 `--pl-*` token 在 `html[data-theme="light"]` 下整体覆写，顶栏可切换并写入 `localStorage`（见 §2.4）。
 
 ## 2. Colors
@@ -95,41 +95,42 @@ description: 航司机型 wiki 与个人乘坐记录的深色档案型产品界�
 
 ### 2.5 系统辅助偏好
 
-- `prefers-reduced-motion: reduce`：移除位移、缩放和长时过渡，保留帮助理解状态的短 opacity 反馈。
+- `prefers-reduced-motion: reduce`：停止自动旋转、循环 shimmer、loading orbit 和大范围位移；以静态状态或短 opacity 反馈保留信息层级，不使用“加速到 0.01ms”的位移动画替代。
 - `prefers-reduced-transparency: reduce`：将顶栏、导航、面板、工具条、输入框和资料表面提升为近实色，避免内容透叠降低辨识度。
 - `prefers-contrast: more`：提升正文次级信息、分割线、输入边界与焦点环对比度；深浅主题分别使用对应的高对比 token 覆写。
 
 ## 3. Typography
 
-**当前字体栈（实现）**：`Inter, Avenir, Helvetica, Arial, sans-serif` —— 全部为系统友好 sans，不使用装饰性 display 字体；「档案编辑感」由字重、字距与大标题比例承担，不靠换字体族。
+**字体策略**：优先沿用项目现有 sans 字体栈，不使用装饰性 display 字体；「档案编辑感」由数据层级、字重和行高建立，不靠视口缩放字号或人为拉开字距。
 
-### Hierarchy（与实现对齐的指导）
+### Hierarchy
 
-| 层级        | 实现参考 | 用法 |
+| 层级        | 规范 | 用法 |
 |-------------|----------|------|
-| **Display** | `clamp(2.4rem, 6vw, 4.25rem)`，收紧行高 | `page-panel` 内 H1；小屏再上 `clamp(1.85rem, 9vw, 2.75rem)`。 |
+| **Display** | 固定 `2.5rem`，`line-height: 1.1`，`letter-spacing: 0` | 页面级 H1。窄屏应通过换行和容器留白适配，不按视口连续缩放字号。 |
 | **App Title** | `1.15rem` bold | 顶栏产品名 Plane List。 |
-| **Eyebrow** | `0.72rem–0.78rem`，大写，`letter-spacing: 0.14em–0.18em` | 区块标签（References、kicker、Fleet 过滤器 label）。 |
+| **Eyebrow** | `0.72rem–0.78rem`，中高字重，`letter-spacing: 0` | 区块标签（References、kicker、Fleet 过滤器 label）。 |
 | **Body**    | `1.05rem`（小屏 `1rem`）、`line-height: 1.7`，段落 `max-width: 42rem` | 长说明与介绍性段落。 |
 | **Data / Caption** | `0.82rem–0.86rem` | 条目元数据、脚注、次要链接说明。 |
 
 ### Named Rules
 
-**The Data Stays Sans Rule.** 列表、表单、筛选、芯片与数据统计禁止换 serif / display；大标题可以保持戏剧性的 **尺寸与字距**，而不是换字体。
+**The Data Stays Sans Rule.** 列表、表单、筛选、芯片与数据统计禁止换 serif / display；大标题通过尺寸、字重和行高建立层级，正文、数据和标签不使用额外字距。
 
 ## 4. Motion
 
-时间变量集中在 `body`/`App.css` 根样式旁（亦为各页 `var(--motion-*)` 引用来源）：
+动效的目标是让状态与空间关系可预测，不是强化装饰。时间变量仍集中在 `body`/`App.css` 根样式旁，但应遵守以下约束：
 
-| Token | 值 | 用途 |
-|-------|-----|------|
-| `--motion-duration-fast` | `160ms` | hover、边框与微位移动画。 |
-| `--motion-duration-standard` | `240ms` | 筛选切换、条目轻反馈。 |
-| `--motion-duration-enter` | `480ms` | 首屏/面板 archive-reveal 类入场。 |
+| 类型 | 时长与形式 | 用途 |
+|-------|------------|------|
+| **直接反馈** | 约 `160ms`，颜色、opacity 或不超过 `2px` 的 transform | hover、focus、按下与边界反馈。 |
+| **状态切换** | `200–240ms`，`ease-out` | 筛选结果、展开项、非阻塞面板。 |
+| **内容进入** | 最长 `240ms`，单次且不级联 | 仅用于帮助理解新内容出现；页面加载不编排入场序列。 |
+| **空间数据** | 连续但缓慢，可被直接操作中断 | 地球等空间视图可提供方向提示，不能作为背景装饰循环。 |
 
-缓动：**`--motion-ease-out-quart`**、**`--motion-ease-out-quint`** 用于绝大部分过渡。
+缓动默认使用 **`--motion-ease-out-quart`** 或 **`--motion-ease-out-quint`**。手势可直接操控的对象必须按指针连续跟随，不能以固定时长 CSS 动画代替手势；结束后如需回弹，使用可中断的弹簧并保留释放速度。
 
-`@media (prefers-reduced-motion: reduce)` 下 animations/transitions 压到 `0.01ms`，避免剥夺动效用户信息。
+大范围自动运动必须有明确的空间含义、在直接拖拽时让位，并在 `prefers-reduced-motion: reduce` 下停止。减少动态并非删除所有反馈，保留短 opacity、颜色和焦点状态即可。
 
 ## 5. Shape, Elevation & Layout
 
@@ -168,6 +169,12 @@ Fleet 过滤器：`select`/`input` 深色表面、可读 placeholder、`**focus-
 
 顶部横向主导航已实现；不要求侧栏。**当前路由高亮**：`NavLink` + `aria-label="主导航"`。
 
+### 空间数据视图
+
+- 地图、地球和航线图的首要任务是读取位置与航段，自动运动只能提供方向感，不能遮挡、漂移或延迟数据读取。
+- 三维地球可在默认空闲态缓慢自动绕目标旋转；拖拽、滚轮和 pointer hover 必须即时接管，用户松手后才恢复自动运动。
+- 自动旋转、loading orbit 和无穷 shimmer 必须在减少动态偏好下关闭。为实现该规则时，优先监听媒体查询，不以仅降低速度替代停止。
+
 ## 7. Scroll Areas（滚动条）
 
 全站纵向滚动条与 **Fleet 内嵌滚动区** 共用 **Night Archive Scroll** token，避免出现 Windows/macOS 默认灰条与 Fleet 自定义条两套语言。
@@ -195,7 +202,8 @@ Firefox：依赖 `scrollbar-width: thin` + `scrollbar-color`；Safari/Chromium�
 - **Do** 继续使用层级化 navy surface + hairline border 区分区块，少用阴影讲故事。
 - **Do** 让机型代号、航司名、载客统计与数据来源成为Fleet列表的第一可读信息。
 - **Do** 把溢出滚动区域接到 **`scroll-area-night` + `:root`（或 `html[data-theme]`）滚动变量**，保持轨道色相一致。
-- **Do** 用 `motion-duration-fast` / `standard` / `enter` 三档时间管理反馈，不与随机自定义时长混用。
+- **Do** 用 `motion-duration-fast` / `standard` 管理反馈；内容进入不超过标准状态切换时长，不与随机自定义时长混用。
+- **Do** 让可交互运动从当前呈现位置继续，并在减少动态偏好下提供静态等价状态。
 
 ### Don't
 
@@ -203,3 +211,5 @@ Firefox：依赖 `scrollbar-width: thin` + `scrollbar-color`；Safari/Chromium�
 - **Don't** 用同质卡片网格塞满维基；Fleet 已通过「航司条目 + manufacturer 小节」打散节奏，新增模块应类比此结构而非盲目加卡片。
 - **Don't** 为强调使用粗竖色条分割列表项主导航。
 - **Don't** 在正文或数据控件上使用低对比「装饰灰」替代 **Secondary Cabin / Meta** 已经校验过的可读灰阶。
+- **Don't** 用 `vw` / `clamp()` 连续缩放产品排版，或依赖大写与额外字距制造层级。
+- **Don't** 在页面壳层和数据视图中放置没有空间含义、不能被用户中断的默认循环动效。
