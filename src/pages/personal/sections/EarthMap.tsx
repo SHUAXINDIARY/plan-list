@@ -629,8 +629,8 @@ const EarthMap = ({
             controls.enableDamping = true;
             controls.dampingFactor = 0.06;
             controls.enablePan = false;
-            controls.minDistance = 2.2;
-            controls.maxDistance = 4.1;
+            controls.minDistance = 1;
+            controls.maxDistance = 10;
             controls.target.set(0, 0, 0);
             controls.update();
 
