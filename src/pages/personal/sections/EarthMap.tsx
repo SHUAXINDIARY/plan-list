@@ -327,13 +327,12 @@ const createTriangulationRing = (
     });
 };
 
-/** 将平面三角化结果细分并重新投射到球面，避免大面片被底球遮挡。 */
-const appendSphericalTriangle = (
-    positions: number[],
+/** 计算三角形贴合球面时所需的最小统一细分段数。 */
+const getSphericalTriangleSegmentCount = (
     firstPoint: THREE.Vector2,
     secondPoint: THREE.Vector2,
     thirdPoint: THREE.Vector2,
-): void => {
+): number => {
     const firstSurfacePoint = coordinateToVector3(
         { lat: firstPoint.y, lng: firstPoint.x },
         1,
@@ -346,7 +345,8 @@ const appendSphericalTriangle = (
         { lat: thirdPoint.y, lng: thirdPoint.x },
         1,
     );
-    const segmentCount = Math.max(
+
+    return Math.max(
         1,
         Math.ceil(
             Math.max(
@@ -355,6 +355,33 @@ const appendSphericalTriangle = (
                 thirdSurfacePoint.angleTo(firstSurfacePoint),
             ) / LANDMASS_FILL_MAX_ARC,
         ),
+    );
+};
+
+/**
+ * 将平面三角化结果按多边形统一段数细分并重新投射到球面。
+ *
+ * 同一多边形内的三角形必须使用相同段数，才能让共享边生成相同的球面顶点，
+ * 避免相邻三角形因不同曲线近似形成 T 形接缝。
+ */
+const appendSphericalTriangle = (
+    positions: number[],
+    firstPoint: THREE.Vector2,
+    secondPoint: THREE.Vector2,
+    thirdPoint: THREE.Vector2,
+    segmentCount: number,
+): void => {
+    const firstSurfacePoint = coordinateToVector3(
+        { lat: firstPoint.y, lng: firstPoint.x },
+        1,
+    );
+    const secondSurfacePoint = coordinateToVector3(
+        { lat: secondPoint.y, lng: secondPoint.x },
+        1,
+    );
+    const thirdSurfacePoint = coordinateToVector3(
+        { lat: thirdPoint.y, lng: thirdPoint.x },
+        1,
     );
 
     /** 用重心坐标插值后归一化到球面，保持细分面始终贴合地球曲率。 */
@@ -471,6 +498,34 @@ const addLandmassFills = (
                     contour,
                     holes,
                 );
+                const segmentCount = triangles.reduce(
+                    (
+                        currentSegmentCount: number,
+                        triangle: number[],
+                    ): number => {
+                        const firstPoint = polygonPoints[triangle[0]];
+                        const secondPoint = polygonPoints[triangle[1]];
+                        const thirdPoint = polygonPoints[triangle[2]];
+
+                        if (
+                            firstPoint === undefined ||
+                            secondPoint === undefined ||
+                            thirdPoint === undefined
+                        ) {
+                            return currentSegmentCount;
+                        }
+
+                        return Math.max(
+                            currentSegmentCount,
+                            getSphericalTriangleSegmentCount(
+                                firstPoint,
+                                secondPoint,
+                                thirdPoint,
+                            ),
+                        );
+                    },
+                    1,
+                );
 
                 triangles.forEach((triangle: number[]): void => {
                     const firstPoint = polygonPoints[triangle[0]];
@@ -490,6 +545,7 @@ const addLandmassFills = (
                         firstPoint,
                         secondPoint,
                         thirdPoint,
+                        segmentCount,
                     );
                 });
             },
