@@ -5716,3 +5716,41 @@
 
 - `src/pages/personal/sections/PersonalAirportSection.tsx`：将全屏展示改为 body Portal，修复覆盖范围与焦点管理。
 - `taskRecord.md`：追加本次全屏展示裁切修复记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+让三维地球优先使用 WebGPU，设备不支持或初始化失败时降级为原有 WebGL 渲染器。
+
+## 完成过程
+
+1. 查询 Three.js 当前 WebGPURenderer 文档，确认初始化前需要 await renderer.init()。
+2. 增加 WebGPU 优先的渲染器工厂，在 navigator.gpu 缺失或 WebGPU 初始化失败时创建 WebGLRenderer。
+3. 将地球初始化调整为可取消的异步流程，确保组件卸载时同步释放渲染器、场景和事件监听。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/EarthMap.tsx`：新增 WebGPU 优先初始化和 WebGL 降级路径。
+- `taskRecord.md`：追加本次三维渲染器升级记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+修复 WebGPU 渲染器不支持大陆轮廓 LineLoop 而导致的持续控制台报错与页面卡顿。
+
+## 完成过程
+
+1. 根据控制台报错定位到 GeoJSON 大陆轮廓使用了 WebGPU 不支持的 THREE.LineLoop。
+2. 参考 Three.js Line 绘制规则，在轮廓未闭合时补齐首尾顶点。
+3. 将轮廓对象替换为 WebGPU 支持的 THREE.Line，保持原有大陆边界视觉。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/EarthMap.tsx`：以闭合点序列的 THREE.Line 替代 THREE.LineLoop。
+- `taskRecord.md`：追加本次 WebGPU 轮廓兼容性修复记录。
