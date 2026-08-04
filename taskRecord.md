@@ -5775,3 +5775,24 @@
 - `src/pages/personal/sections/EarthMap.tsx`：接收渲染偏好并在初始化完成后报告实际启用的后端。
 - `src/pages/personal/index.css`：新增渲染引擎控件及全屏窄屏工具栏布局。
 - `taskRecord.md`：追加本次渲染引擎切换记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+修复 `pnpm exec tsc --noEmit` 发现的未使用声明与相册预览映射索引类型错误。
+
+## 完成过程
+
+1. 移除首页未再渲染的航迹地图懒加载代码及关联导入，并删除未使用的航司参考类型导入。
+2. 为构建期照片预览映射建立字符串键值读取类型，兼容开发期空映射和生产构建生成的预览记录。
+3. 重新执行 TypeScript 类型检查，确认项目无类型错误。
+
+## 修改具体文件
+
+- `src/pages/home/constant.ts`：删除未使用的类型导入。
+- `src/pages/home/index.tsx`：删除未使用的地图懒加载声明及关联导入。
+- `src/pages/personal/data/aircraftPhotosData.ts`：为预览映射补充安全的字符串索引类型。
+- `taskRecord.md`：追加本次 TypeScript 错误修复记录。

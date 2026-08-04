@@ -1,7 +1,6 @@
 import type {
     AirlineAlliance,
     AirlineAllianceFilter,
-    AirlineReferenceSource,
     PassengerAircraftSortOrder,
 } from "./type";
 

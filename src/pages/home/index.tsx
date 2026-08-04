@@ -1,6 +1,4 @@
 import {
-    Suspense,
-    lazy,
     useEffect,
     useMemo,
     useRef,
@@ -32,7 +30,6 @@ import {
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
     NO_AIRLINE_ALLIANCE_VALUE,
 } from "./constant";
-import { MAP_ROUTES, airportMapMarkers } from "../personal/constants/airportsMap";
 import {
     CHECKED_AIRPORTS,
     checkedCountryCount,
@@ -76,8 +73,6 @@ interface RankedFleetDatum {
     /** 相对最大值的百分比，用于 CSS 条形图宽度。 */
     ratio: number;
 }
-
-const AnnotatedWorldMap = lazy(async () => import("../../components/map"));
 
 /** 首页统计条形图最多展示的条目数，保持仪表盘可扫描。 */
 const STAT_BAR_LIMIT = 5;
@@ -312,16 +307,6 @@ const formatFlightRecordDateTime = (departureDate: string): string => {
     const [year, month, day] = departureDate.split("-");
 
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-};
-
-// 地图懒加载时展示与地图同尺寸的轻量占位，避免页面跳动。
-const HomeMapFallback = (): ReactElement => {
-    return (
-        <div className="home-flight-map__fallback" role="status">
-            <span aria-hidden="true" />
-            <p>正在装载航迹地图...</p>
-        </div>
-    );
 };
 
 // 将原始 JSON 转换为页面渲染所需的航司、制造商和机型统计结构。

@@ -9,6 +9,10 @@ import type {
 /** `key` 仅含文件名时使用的根目录筛选键。 */
 const AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY = "root";
 
+/** 生成映射为空对象时仍以任意原图 URL 作为键读取，未命中则回退原图。 */
+const aircraftPhotoPreviewUrlByOriginalUrl: Record<string, string> =
+    aircraftPhotoPreviewUrls;
+
 // 从图片链接的 key 参数提取文件所属目录，保留完整目录层级供筛选复用。
 const getAircraftPhotoDirectoryKey = (originalUrl: string): string => {
     const parsedUrl = new URL(originalUrl);
@@ -37,7 +41,8 @@ const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
 const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.map(
     (originalUrl: string): AircraftPhoto => ({
         originalUrl,
-        previewUrl: aircraftPhotoPreviewUrls[originalUrl] ?? originalUrl,
+        previewUrl:
+            aircraftPhotoPreviewUrlByOriginalUrl[originalUrl] ?? originalUrl,
         directory: getAircraftPhotoDirectoryKey(originalUrl),
     }),
 );
