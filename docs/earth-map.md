@@ -1,6 +1,6 @@
 # 三维机场足迹地球（`EarthMap`）
 
-`src/pages/personal/sections/EarthMap.tsx` 是个人记录页的三维机场足迹视图。它复用二维地图和航线图的机场、航段数据，在 Three.js 场景中绘制可旋转的地球、大洲、航线和机场标记。
+`src/pages/personal/sections/EarthMap.tsx` 是个人记录页的三维机场足迹视图。它复用二维地图和航线图的机场、航段数据，在 Three.js 场景中绘制默认缓慢自转、可手动浏览的地球、大洲、航线和机场标记。
 
 当前接入页面为 `/personal` 的「地球」展示模式，并可在全屏状态切换 WebGPU 或 WebGL 后端。
 
@@ -167,6 +167,7 @@ routeLift = 0.045 + sin(progress * PI) * 0.2
 
 | 场景 | 行为 |
 | --- | --- |
+| 默认自转 | `OrbitControls.autoRotate` 默认开启，使用 `GLOBE_AUTO_ROTATE_SPEED` 控制速度；用户拖拽时由手势接管 |
 | 拖拽 | `OrbitControls` 绕地球旋转，启用阻尼，禁止平移 |
 | 滚轮 / 触控缩放 | 缩放距离限制在 `1` 到 `10` |
 | 机场悬停 | Raycaster 对机场 mesh 做命中检测，显示名称和可选描述 |
@@ -205,6 +206,7 @@ routeLift = 0.045 + sin(progress * PI) * 0.2
 
 - 调整容器、tooltip 和图例：修改 `src/pages/personal/index.css` 与 `src/App.css` 的 `--pl-map-*` token。
 - 调整海洋、经纬网、航线和机场 3D 材质：修改 `EarthMap.tsx` 场景初始化部分。
+- 调整默认自转速度：修改 `GLOBE_AUTO_ROTATE_SPEED`。渲染循环会把 `THREE.Clock` 的时间差传入 `controls.update(deltaTime)`，速度不会随帧率变化。
 - 调整机场标记的视觉半径：修改二维地图的 `MARKER_RADIUS`；地球模式会自动复用。仅需调整地球 hover 倍率时，修改 `ACTIVE_MARKER_SIZE_MULTIPLIER`。
 - 调整大洲颜色：同时核对 `map.svg`、`map-light.svg` 和 `EARTH_LANDMASS_*_COLORS`，保持二维/三维一致。
 - 调整填充精度：修改 `LANDMASS_FILL_MAX_ARC`。角度更小会减少曲率误差，但会增加该多边形所有三角形的顶点数和初始化成本；不要改为按单个三角形各自使用不同的段数。

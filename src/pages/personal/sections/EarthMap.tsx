@@ -80,6 +80,8 @@ const GLOBE_RADIUS = 1;
 const ROUTE_SEGMENTS = 48;
 /** 初始地球偏航角，使亚洲与已有航线在首屏可见。 */
 const INITIAL_GLOBE_YAW = -0.9;
+/** 默认自转速度，使用 OrbitControls 的速度单位，保持低干扰的持续浏览节奏。 */
+const GLOBE_AUTO_ROTATE_SPEED = 0.35;
 /** 大陆轮廓略高于球体表面，避免被地球材质遮挡。 */
 const LANDMASS_RADIUS = GLOBE_RADIUS + 0.008;
 /** 大陆填充位于球面和边界线之间，使边界与航迹保持清晰。 */
@@ -701,6 +703,7 @@ const EarthMap = ({
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
             const controls = new OrbitControls(camera, renderer.domElement);
+            const animationClock = new THREE.Clock();
             const globeGroup = new THREE.Group();
             const routeColor = isDarkTheme ? 0x9ed8f2 : 0x0f6f98;
             const domesticRouteColor = isDarkTheme ? 0x6cb4d0 : 0x3c7797;
@@ -720,6 +723,8 @@ const EarthMap = ({
             controls.maxDistance = 10;
             controls.target.set(0, 0, 0);
             controls.update();
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = GLOBE_AUTO_ROTATE_SPEED;
 
             globeGroup.rotation.y = INITIAL_GLOBE_YAW;
             scene.add(globeGroup);
@@ -903,7 +908,7 @@ const EarthMap = ({
             resizeRenderer();
 
             const renderFrame = (): void => {
-                controls.update();
+                controls.update(animationClock.getDelta());
                 updateMarkerScreenScales();
                 renderer.render(scene, camera);
             };

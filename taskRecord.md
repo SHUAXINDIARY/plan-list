@@ -5912,3 +5912,23 @@
 - `src/pages/personal/sections/EarthMap.tsx`：统一同一大陆多边形内所有填充三角形的球面细分段数，消除细微接缝。
 - `docs/earth-map.md`：补充大陆填充接缝修复原理和维护说明。
 - `taskRecord.md`：追加本次大陆填充接缝修复记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+为三维机场足迹地球增加默认自转，并将自转速度集中为可维护常量。
+
+## 完成过程
+
+1. 使用现有 `OrbitControls` 的 `autoRotate` 和 `autoRotateSpeed` 实现默认自转，保留原有拖拽、阻尼和缩放行为。
+2. 新增 `GLOBE_AUTO_ROTATE_SPEED` 常量，并通过 `THREE.Clock` 向 `controls.update` 传入时间差，保持不同帧率下的速度一致。
+3. 同步更新地球实现文档中的交互行为和维护入口。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/EarthMap.tsx`：启用默认自转并抽离自转速度常量。
+- `docs/earth-map.md`：记录默认自转行为、速度常量和帧率无关更新方式。
+- `taskRecord.md`：追加本次默认自转功能记录。
