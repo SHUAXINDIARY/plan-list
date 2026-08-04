@@ -8,121 +8,94 @@
     --pl-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
     /* 正文与标题 */
-    --pl-text-body: #283a49;
-    --pl-text-heading: #172535;
-    --pl-text-secondary: #5a6f80;
-    --pl-text-kicker: #657a8c;
-    --pl-text-meta: #6d8191;
-    --pl-text-placeholder: #9aabb8;
-    --pl-text-emphasis: #123a56;
-    --pl-text-data: #23394a;
-    --pl-text-english: #687d8f;
-    --pl-text-chip: #263948;
+    --pl-text-body: #374551;
+    --pl-text-heading: #202c36;
+    --pl-text-secondary: #5b6974;
+    --pl-text-kicker: #6b7880;
+    --pl-text-meta: #77838a;
+    --pl-text-placeholder: #9aa4aa;
+    --pl-text-emphasis: #173e4e;
+    --pl-text-data: #2b3d47;
+    --pl-text-english: #718087;
+    --pl-text-chip: #30414a;
 
-    --pl-accent: #0f6f98;
-    --pl-link: #0b6e9e;
-    --pl-link-decoration: rgba(11, 110, 158, 0.36);
-    --pl-link-hover: #084f76;
-    --pl-link-hover-decoration: rgba(8, 79, 118, 0.68);
-    --pl-underline-model: rgba(15, 111, 152, 0.34);
-    --pl-underline-model-hover: rgba(23, 37, 53, 0.68);
+    --pl-accent: #176b7d;
+    --pl-link: #075d78;
+    --pl-link-decoration: rgba(7, 93, 120, 0.34);
+    --pl-link-hover: #004960;
+    --pl-link-hover-decoration: rgba(0, 73, 96, 0.66);
+    --pl-underline-model: rgba(23, 107, 125, 0.32);
+    --pl-underline-model-hover: rgba(32, 44, 54, 0.66);
 
-    --pl-border-default: rgba(112, 142, 166, 0.38);
-    --pl-border-muted: rgba(130, 158, 179, 0.32);
-    --pl-border-divider: rgba(145, 169, 188, 0.32);
-    --pl-border-divider-mid: rgba(126, 154, 176, 0.42);
-    --pl-border-input: rgba(123, 151, 174, 0.44);
-    --pl-border-strong: rgba(92, 120, 145, 0.46);
-    --pl-border-nav-hover: rgba(15, 111, 152, 0.42);
-    --pl-border-nav-active: rgba(15, 111, 152, 0.62);
-    --pl-nav-active-bg: rgba(236, 247, 252, 0.86);
-    --pl-border-focus: rgba(15, 111, 152, 0.58);
-    --pl-focus-glow: 0 0 0 3px rgba(15, 111, 152, 0.14);
-    --pl-border-accent-soft: rgba(15, 111, 152, 0.22);
-    --pl-border-entry-hover: rgba(15, 111, 152, 0.28);
-    --pl-border-chip-hover: rgba(15, 111, 152, 0.36);
-    --pl-border-pill: rgba(112, 142, 166, 0.42);
-    --pl-border-preview-btn-hover: rgba(15, 111, 152, 0.42);
-    --pl-border-loading-ring: rgba(15, 111, 152, 0.2);
+    --pl-border-default: rgba(101, 117, 126, 0.34);
+    --pl-border-muted: rgba(111, 126, 134, 0.28);
+    --pl-border-divider: rgba(126, 140, 146, 0.24);
+    --pl-border-divider-mid: rgba(105, 121, 129, 0.34);
+    --pl-border-input: rgba(101, 117, 126, 0.4);
+    --pl-border-strong: rgba(84, 103, 112, 0.46);
+    --pl-border-nav-hover: rgba(23, 107, 125, 0.42);
+    --pl-border-nav-active: rgba(23, 107, 125, 0.62);
+    --pl-nav-active-bg: rgba(227, 239, 239, 0.88);
+    --pl-border-focus: rgba(23, 107, 125, 0.64);
+    --pl-focus-glow: 0 0 0 3px rgba(23, 107, 125, 0.16);
+    --pl-border-accent-soft: rgba(23, 107, 125, 0.2);
+    --pl-border-entry-hover: rgba(23, 107, 125, 0.28);
+    --pl-border-chip-hover: rgba(23, 107, 125, 0.36);
+    --pl-border-pill: rgba(101, 117, 126, 0.38);
+    --pl-border-preview-btn-hover: rgba(23, 107, 125, 0.42);
+    --pl-border-loading-ring: rgba(23, 107, 125, 0.2);
     --pl-border-error: rgba(242, 118, 118, 0.5);
 
-    --pl-surface-panel: rgba(248, 252, 254, 0.76);
-    --pl-surface-toolbar: rgba(248, 252, 254, 0.74);
-    --pl-surface-entry: rgba(248, 252, 254, 0.84);
-    --pl-surface-entry-hover: rgba(248, 252, 254, 0.98);
-    --pl-surface-input: rgba(248, 252, 254, 0.94);
-    --pl-surface-chip: rgba(248, 252, 254, 0.96);
-    --pl-surface-reference: rgba(248, 252, 254, 0.56);
-    --pl-surface-reference-hover: rgba(248, 252, 254, 0.84);
-    --pl-surface-data-state: rgba(248, 252, 254, 0.82);
-    --pl-surface-route-loading: rgba(248, 252, 254, 0.86);
-    --pl-surface-pill: rgba(239, 247, 251, 0.72);
-    --pl-surface-personal-pill: rgba(239, 247, 251, 0.74);
-    --pl-surface-gallery: rgba(248, 252, 254, 0.72);
-    --pl-surface-image: rgba(227, 237, 245, 0.78);
-    --pl-surface-airport: rgba(248, 252, 254, 0.78);
-    --pl-surface-preview-btn: rgba(248, 252, 254, 0.9);
-    --pl-surface-preview-btn-hover: rgba(239, 247, 251, 0.96);
-    --pl-surface-preview-loading: rgba(248, 252, 254, 0.92);
-    --pl-surface-preview-img: rgba(248, 252, 254, 0.9);
+    --pl-surface-panel: rgba(249, 250, 250, 0.84);
+    --pl-surface-toolbar: rgba(247, 249, 249, 0.86);
+    --pl-surface-entry: rgba(251, 252, 251, 0.94);
+    --pl-surface-entry-hover: rgba(253, 254, 253, 0.98);
+    --pl-surface-input: rgba(252, 253, 252, 0.96);
+    --pl-surface-chip: rgba(239, 244, 243, 0.96);
+    --pl-surface-reference: rgba(249, 250, 250, 0.68);
+    --pl-surface-reference-hover: rgba(252, 253, 252, 0.9);
+    --pl-surface-data-state: rgba(248, 250, 249, 0.88);
+    --pl-surface-route-loading: rgba(246, 249, 248, 0.9);
+    --pl-surface-pill: rgba(229, 239, 238, 0.78);
+    --pl-surface-personal-pill: rgba(231, 240, 239, 0.8);
+    --pl-surface-gallery: rgba(248, 250, 249, 0.8);
+    --pl-surface-image: rgba(222, 231, 230, 0.82);
+    --pl-surface-airport: rgba(248, 250, 249, 0.84);
+    --pl-surface-preview-btn: rgba(250, 252, 251, 0.94);
+    --pl-surface-preview-btn-hover: rgba(235, 243, 242, 0.96);
+    --pl-surface-preview-loading: rgba(249, 251, 250, 0.94);
+    --pl-surface-preview-img: rgba(249, 251, 250, 0.92);
 
-    --pl-body-gradient: linear-gradient(to bottom, #f3f8fb, #e3edf5);
-    --pl-shell-bg:
-        radial-gradient(
-            circle at 80% 20%,
-            rgba(205, 225, 238, 0.72),
-            transparent 31rem
-        ),
-        radial-gradient(
-            circle at 10% 82%,
-            rgba(226, 238, 246, 0.84),
-            transparent 28rem
-        ),
-        linear-gradient(135deg, #f5f9fc 0%, #ebf3f8 48%, #dde9f1 100%);
-    --pl-shell-overlay:
-        radial-gradient(
-            circle at 86% 16%,
-            rgba(15, 111, 152, 0.1),
-            transparent 26rem
-        ),
-        radial-gradient(
-            circle at 4% 86%,
-            rgba(80, 133, 158, 0.08),
-            transparent 25rem
-        ),
-        linear-gradient(
-            115deg,
-            transparent 58%,
-            rgba(15, 111, 152, 0.06) 70%,
-            transparent 84%
-        );
-    --pl-surface-header: rgba(248, 252, 254, 0.72);
-    --pl-surface-nav: rgba(248, 252, 254, 0.72);
-    --pl-surface-nav-item: rgba(239, 247, 251, 0.82);
-    --pl-shadow-shell: 0 0.2rem 0.9rem rgba(48, 72, 91, 0.1);
+    --pl-body-gradient: linear-gradient(to bottom, #f4f6f6, #e8ecec);
+    --pl-shell-bg: linear-gradient(180deg, #f6f8f8 0%, #eaeeee 100%);
+    --pl-shell-overlay: transparent;
+    --pl-surface-header: rgba(249, 251, 250, 0.84);
+    --pl-surface-nav: rgba(249, 251, 250, 0.84);
+    --pl-surface-nav-item: rgba(232, 241, 240, 0.86);
+    --pl-shadow-shell: 0 0.2rem 0.9rem rgba(53, 69, 77, 0.08);
     --pl-shadow-brand:
-        0 0.28rem 0.85rem rgba(48, 72, 91, 0.14),
-        0 1px 3px rgba(48, 72, 91, 0.12),
-        inset 0 1px 0 rgba(248, 252, 254, 0.78);
-    --pl-shadow-panel: 0 1.25rem 2.25rem rgba(48, 72, 91, 0.13);
+        0 0.28rem 0.85rem rgba(53, 69, 77, 0.12),
+        0 1px 3px rgba(53, 69, 77, 0.1),
+        inset 0 1px 0 rgba(253, 254, 253, 0.78);
+    --pl-shadow-panel: 0 1.25rem 2.25rem rgba(53, 69, 77, 0.11);
     --pl-shadow-control:
-        0 0.6rem 1.15rem rgba(48, 72, 91, 0.12), 0 2px 5px rgba(48, 72, 91, 0.1);
+        0 0.6rem 1.15rem rgba(53, 69, 77, 0.1), 0 2px 5px rgba(53, 69, 77, 0.08);
     --pl-shadow-card:
-        0 1px 2px rgba(48, 72, 91, 0.07),
-        inset 0 1px 0 rgba(248, 252, 254, 0.72);
+        0 1px 2px rgba(53, 69, 77, 0.06),
+        inset 0 1px 0 rgba(253, 254, 253, 0.72);
     --pl-shadow-card-hover:
-        0 0.3rem 0.8rem rgba(48, 72, 91, 0.08), 0 1px 2px rgba(48, 72, 91, 0.08);
-    --pl-shadow-chip: 0 1px 2px rgba(48, 72, 91, 0.12);
+        0 0.3rem 0.8rem rgba(53, 69, 77, 0.08), 0 1px 2px rgba(53, 69, 77, 0.08);
+    --pl-shadow-chip: 0 1px 2px rgba(53, 69, 77, 0.1);
 
-    --pl-stat-blue-bg: rgba(239, 246, 255, 0.92);
-    --pl-stat-blue-border: rgba(147, 197, 253, 0.72);
-    --pl-stat-blue-text: #2563eb;
-    --pl-stat-teal-bg: rgba(236, 253, 245, 0.92);
-    --pl-stat-teal-border: rgba(94, 234, 212, 0.58);
-    --pl-stat-teal-text: #0f766e;
-    --pl-stat-orange-bg: rgba(255, 247, 237, 0.94);
-    --pl-stat-orange-border: rgba(253, 186, 116, 0.72);
-    --pl-stat-orange-text: #b45309;
+    --pl-stat-blue-bg: rgba(235, 243, 245, 0.94);
+    --pl-stat-blue-border: rgba(147, 190, 204, 0.66);
+    --pl-stat-blue-text: #23627b;
+    --pl-stat-teal-bg: rgba(234, 244, 240, 0.94);
+    --pl-stat-teal-border: rgba(137, 188, 172, 0.64);
+    --pl-stat-teal-text: #276d5e;
+    --pl-stat-orange-bg: rgba(250, 242, 232, 0.96);
+    --pl-stat-orange-border: rgba(218, 173, 122, 0.7);
+    --pl-stat-orange-text: #92591f;
 
     --pl-airline-stripe-1: #2563eb;
     --pl-airline-stripe-2: #94a3b8;
@@ -137,55 +110,57 @@
     --pl-shadow-map-tooltip: 0 0.85rem 1.8rem rgba(2, 8, 18, 0.34);
     --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
 
-    --pl-map-bg:
-        radial-gradient(
-            circle at 72% 28%,
-            oklch(0.91 0.04 222 / 0.62),
-            transparent 12rem
-        ),
-        radial-gradient(
-            circle at 18% 18%,
-            oklch(0.94 0.026 226 / 0.64),
-            transparent 10rem
-        ),
-        linear-gradient(
-            135deg,
-            oklch(0.96 0.012 230 / 0.98),
-            oklch(0.88 0.024 224 / 0.94)
-        );
-    --pl-map-border: rgba(82, 116, 142, 0.3);
-    --pl-map-inset: inset 0 0 0 1px rgba(248, 252, 254, 0.72);
-    --pl-map-frame: rgba(82, 116, 142, 0.22);
+    --pl-map-bg: linear-gradient(135deg, #edf3f2 0%, #dce8e7 100%);
+    --pl-map-border: rgba(79, 111, 117, 0.32);
+    --pl-map-inset: inset 0 0 0 1px rgba(252, 253, 252, 0.74);
+    --pl-map-frame: rgba(79, 111, 117, 0.2);
     --pl-map-vignette:
         linear-gradient(
             to right,
-            rgba(31, 58, 78, 0.08),
+            rgba(35, 58, 62, 0.07),
             transparent 18%,
             transparent 82%,
-            rgba(31, 58, 78, 0.06)
+            rgba(35, 58, 62, 0.05)
         ),
         linear-gradient(
             to bottom,
-            rgba(31, 58, 78, 0.06),
+            rgba(35, 58, 62, 0.05),
             transparent 28%,
-            rgba(31, 58, 78, 0.08)
+            rgba(35, 58, 62, 0.07)
         );
 
-    --pl-map-tooltip-bg: oklch(0.97 0.012 235 / 0.96);
-    --pl-map-tooltip-border: rgba(31, 105, 145, 0.3);
-    --pl-map-legend-bg: rgba(247, 252, 254, 0.88);
-    --pl-map-legend-text: rgba(24, 48, 66, 0.8);
-    --pl-map-legend-border: rgba(82, 116, 142, 0.24);
-    --pl-map-route-international: oklch(0.78 0.105 222 / 0.58);
-    --pl-map-route-domestic: oklch(0.68 0.055 228 / 0.44);
-    --pl-map-marker-domestic-fill: oklch(0.56 0.045 232 / 0.9);
-    --pl-map-marker-domestic-stroke: oklch(0.8 0.06 225 / 0.88);
-    --pl-map-marker-domestic-fill-active: oklch(0.72 0.075 225 / 0.96);
-    --pl-map-marker-domestic-stroke-active: oklch(0.94 0.03 220 / 0.96);
-    --pl-map-marker-international-fill: oklch(0.76 0.1 222 / 0.94);
-    --pl-map-marker-international-stroke: oklch(0.94 0.03 220 / 0.96);
-    --pl-map-marker-international-fill-active: oklch(0.86 0.12 222 / 0.98);
-    --pl-map-marker-international-stroke-active: oklch(0.98 0.02 220 / 1);
+    --pl-map-tooltip-bg: rgba(250, 252, 251, 0.96);
+    --pl-map-tooltip-border: rgba(46, 104, 114, 0.3);
+    --pl-map-legend-bg: rgba(248, 251, 250, 0.9);
+    --pl-map-legend-text: rgba(36, 60, 64, 0.82);
+    --pl-map-legend-border: rgba(79, 111, 117, 0.24);
+    --pl-map-route-international: oklch(0.5 0.095 235 / 0.64);
+    --pl-map-route-domestic: oklch(0.5 0.065 185 / 0.58);
+    --pl-map-marker-domestic-fill: oklch(0.5 0.07 185 / 0.94);
+    --pl-map-marker-domestic-stroke: oklch(0.83 0.055 180 / 0.94);
+    --pl-map-marker-domestic-fill-active: oklch(0.61 0.095 185 / 0.98);
+    --pl-map-marker-domestic-stroke-active: oklch(0.96 0.025 180 / 0.98);
+    --pl-map-marker-international-fill: oklch(0.54 0.105 235 / 0.96);
+    --pl-map-marker-international-stroke: oklch(0.93 0.03 230 / 0.98);
+    --pl-map-marker-international-fill-active: oklch(0.65 0.12 235 / 0.98);
+    --pl-map-marker-international-stroke-active: oklch(0.98 0.012 230 / 1);
+
+    --pl-earth-land-north-america: #b9c8c5;
+    --pl-earth-land-south-america: #aebfb5;
+    --pl-earth-land-europe: #c2ccd1;
+    --pl-earth-land-africa: #c6c2ad;
+    --pl-earth-land-asia: #b8c9bf;
+    --pl-earth-land-oceania: #b8c5d1;
+    --pl-earth-land-antarctica: #d9dddc;
+    --pl-earth-land-other: #b8c4c2;
+    --pl-earth-contour: #597883;
+    --pl-earth-route-international: #176b91;
+    --pl-earth-route-domestic: #3f7a73;
+    --pl-earth-marker: #0c627c;
+    --pl-earth-globe: #a9c7cc;
+    --pl-earth-globe-emissive: #3a6871;
+    --pl-earth-graticule: #457784;
+    --pl-earth-atmosphere: #6fa8b3;
 
     --pl-preview-backdrop:
         radial-gradient(
@@ -343,6 +318,22 @@ html[data-theme="dark"] {
     --pl-map-legend-bg: rgba(7, 17, 29, 0.76);
     --pl-map-legend-text: rgba(217, 231, 238, 0.8);
     --pl-map-legend-border: rgba(164, 188, 201, 0.16);
+    --pl-earth-land-north-america: #27444f;
+    --pl-earth-land-south-america: #1f4046;
+    --pl-earth-land-europe: #2e4958;
+    --pl-earth-land-africa: #26414c;
+    --pl-earth-land-asia: #2c474f;
+    --pl-earth-land-oceania: #2f485a;
+    --pl-earth-land-antarctica: #43535b;
+    --pl-earth-land-other: #2a414a;
+    --pl-earth-contour: #5b9ab7;
+    --pl-earth-route-international: #9ed8f2;
+    --pl-earth-route-domestic: #6cb4d0;
+    --pl-earth-marker: #dff4ff;
+    --pl-earth-globe: #0c2639;
+    --pl-earth-globe-emissive: #06121e;
+    --pl-earth-graticule: #87cdea;
+    --pl-earth-atmosphere: #73c7ed;
     --pl-summary-chevron: #9ed8f2;
     --scroll-area-track-bg: rgba(15, 31, 48, 0.55);
     --scroll-area-thumb: rgba(124, 200, 235, 0.42);

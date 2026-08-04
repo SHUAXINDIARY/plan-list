@@ -5951,3 +5951,25 @@
 
 - `DESIGN.md`：更新排版、动效、空间数据视图和无障碍设计约束。
 - `taskRecord.md`：追加本次设计上下文审查与调整记录。
+
+## 日期
+
+2026-08-04
+
+## 任务目的
+
+依据 Apple 日间产品界面原则，重新设计主站浅色模式配色，并同步适配二维 SVG 地图、三维地球与机场航线图。
+
+## 完成过程
+
+1. 将浅色模式收敛为低眩光的雾白中性色背景、石墨文字和克制的海松绿强调色，保留深色 Night Flight Archive 配色不变。
+2. 更新二维地图的静态 SVG 色板，以及 Canvas 地图的国内外航线、机场标记和提示色，明确以青绿和深蓝区分航段语义。
+3. 将三维地球的大陆、轮廓、海洋、航线和机场标记改为读取全局地球主题 token，使其与 Flow 视图共享同一浅色语义色。
+
+## 修改具体文件
+
+- `src/App.css`：重设浅色模式全站、地图和三维地球主题 token，并保持深色地球 token 的原有视觉。
+- `src/components/map/index.css`：同步二维 Canvas 地图的浅色航线、标记与 Tooltip 色彩。
+- `src/components/map/map-light.svg`：重绘浅色静态世界地图的海洋、陆地、轮廓与文字色板。
+- `src/pages/personal/sections/EarthMap.tsx`：改为从主题 token 读取三维地球配色。
+- `taskRecord.md`：追加本次浅色主题与空间视图配色适配记录。

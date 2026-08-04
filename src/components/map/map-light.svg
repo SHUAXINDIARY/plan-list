@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
     <title id="title">Daylight Archive world map</title>
-    <desc id="desc">A low-detail world map from Natural Earth 1:110m country polygons, tinted for Plane List Daylight Archive (cool blue-gray ocean, quiet slate landmasses, cyan archive signals).</desc>
+    <desc id="desc">A low-detail world map from Natural Earth 1:110m country polygons, tinted for Plane List daylight reading mode with a quiet mineral ocean, muted land groups, and distinct teal and blue route signals.</desc>
     <defs>
       <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="oklch(0.96 0.012 228)"/>
-        <stop offset="1" stop-color="oklch(0.9 0.022 225)"/>
+        <stop offset="0" stop-color="oklch(0.95 0.016 190)"/>
+        <stop offset="1" stop-color="oklch(0.88 0.028 190)"/>
       </linearGradient>
       <filter id="landShadow" x="-4%" y="-4%" width="108%" height="112%">
-        <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="oklch(0.38 0.034 232)" flood-opacity="0.12"/>
+        <feDropShadow dx="0" dy="2.5" stdDeviation="2.6" flood-color="oklch(0.32 0.025 190)" flood-opacity="0.1"/>
       </filter>
       <style>
         :root {
@@ -18,13 +18,13 @@
         }
         .frame {
           fill: none;
-          stroke: oklch(0.58 0.07 224 / 0.34);
+          stroke: oklch(0.52 0.045 190 / 0.34);
           stroke-width: 1.2;
           opacity: 1;
         }
         .graticule path {
           fill: none;
-          stroke: oklch(0.72 0.032 226 / 0.34);
+          stroke: oklch(0.69 0.022 190 / 0.34);
           stroke-width: 0.75;
           opacity: 1;
         }
@@ -32,28 +32,28 @@
           filter: url(#landShadow);
         }
         .country {
-          stroke: oklch(0.67 0.032 226 / 0.5);
+          stroke: oklch(0.63 0.022 190 / 0.5);
           stroke-width: 0.62;
           stroke-linejoin: round;
           stroke-linecap: round;
           vector-effect: non-scaling-stroke;
         }
         .country:hover {
-          fill: oklch(0.74 0.065 220);
-          stroke: oklch(0.42 0.075 224 / 0.82);
+          fill: oklch(0.72 0.075 185);
+          stroke: oklch(0.38 0.075 190 / 0.82);
           stroke-width: 1.2;
         }
-        .north-america { fill: oklch(0.82 0.026 226); }
-        .south-america { fill: oklch(0.79 0.034 205); }
-        .europe { fill: oklch(0.84 0.024 232); }
-        .africa { fill: oklch(0.78 0.03 220); }
-        .asia { fill: oklch(0.81 0.026 214); }
-        .oceania { fill: oklch(0.83 0.034 196); }
-        .antarctica { fill: oklch(0.9 0.012 224); }
-        .other { fill: oklch(0.8 0.026 226); }
+        .north-america { fill: oklch(0.8 0.024 180); }
+        .south-america { fill: oklch(0.77 0.032 155); }
+        .europe { fill: oklch(0.82 0.02 225); }
+        .africa { fill: oklch(0.78 0.03 100); }
+        .asia { fill: oklch(0.8 0.025 170); }
+        .oceania { fill: oklch(0.8 0.03 205); }
+        .antarctica { fill: oklch(0.88 0.01 180); }
+        .other { fill: oklch(0.79 0.022 180); }
         .outline {
           fill: none;
-          stroke: oklch(0.48 0.075 224 / 0.78);
+          stroke: oklch(0.43 0.065 190 / 0.78);
           stroke-width: 1.12;
           stroke-linejoin: round;
           stroke-linecap: round;
@@ -65,10 +65,10 @@
           font-size: 16px;
           font-weight: 700;
           letter-spacing: 0.02em;
-          fill: oklch(0.4 0.054 224 / 0.74);
+          fill: oklch(0.38 0.04 190 / 0.74);
           opacity: 1;
           paint-order: stroke;
-          stroke: oklch(0.97 0.01 226 / 0.9);
+          stroke: oklch(0.97 0.008 180 / 0.9);
           stroke-width: 4px;
           stroke-linejoin: round;
         }
@@ -77,7 +77,7 @@
           font-size: 12px;
           font-weight: 600;
           letter-spacing: 0.01em;
-          fill: oklch(0.46 0.052 224 / 0.64);
+          fill: oklch(0.44 0.038 190 / 0.64);
           opacity: 1;
         }
       </style>

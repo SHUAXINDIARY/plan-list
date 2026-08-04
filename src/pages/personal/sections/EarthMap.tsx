@@ -114,29 +114,21 @@ const EARTH_LANDMASS_GROUPS: EarthLandmassGroup[] = [
     "other",
 ];
 
-/** 从二维深色地图 SVG 的各洲填充色转换而来的 sRGB 色值。 */
-const EARTH_LANDMASS_DARK_COLORS: Record<EarthLandmassGroup, number> = {
-    northAmerica: 0x27444f,
-    southAmerica: 0x1f4046,
-    europe: 0x2e4958,
-    africa: 0x26414c,
-    asia: 0x2c474f,
-    oceania: 0x2f485a,
-    antarctica: 0x43535b,
-    other: 0x2a414a,
+/** 三维大陆分组对应的主题色 token，与二维 SVG 的色彩角色保持一致。 */
+const EARTH_LANDMASS_COLOR_TOKENS: Record<EarthLandmassGroup, string> = {
+    northAmerica: "--pl-earth-land-north-america",
+    southAmerica: "--pl-earth-land-south-america",
+    europe: "--pl-earth-land-europe",
+    africa: "--pl-earth-land-africa",
+    asia: "--pl-earth-land-asia",
+    oceania: "--pl-earth-land-oceania",
+    antarctica: "--pl-earth-land-antarctica",
+    other: "--pl-earth-land-other",
 };
 
-/** 从二维浅色地图 SVG 的各洲填充色转换而来的 sRGB 色值。 */
-const EARTH_LANDMASS_LIGHT_COLORS: Record<EarthLandmassGroup, number> = {
-    northAmerica: 0xb3c8d1,
-    southAmerica: 0xa2c1c5,
-    europe: 0xbcced8,
-    africa: 0xa3bcc5,
-    asia: 0xafc6cb,
-    oceania: 0xafcfce,
-    antarctica: 0xd6e0e4,
-    other: 0xadc2cb,
-};
+/** 读取当前浅色或深色主题下可被 Three.js 解析的十六进制地球颜色。 */
+const readEarthThemeColor = (token: string): string =>
+    getComputedStyle(document.documentElement).getPropertyValue(token).trim();
 
 /** 三维地球可使用的 WebGPU 或 WebGL 渲染器实例。 */
 type EarthRenderer = THREE.WebGLRenderer | WebGPURenderer;
@@ -455,10 +447,7 @@ const appendSphericalTriangle = (
 };
 
 /** 将 GeoJSON 多边形三角化后贴合到球面，按大洲合并为少量填充网格。 */
-const addLandmassFills = (
-    globeGroup: THREE.Group,
-    isDarkTheme: boolean,
-): void => {
+const addLandmassFills = (globeGroup: THREE.Group): void => {
     const positionsByGroup: Record<EarthLandmassGroup, number[]> = {
         northAmerica: [],
         southAmerica: [],
@@ -554,10 +543,6 @@ const addLandmassFills = (
         );
     });
 
-    const landmassColors = isDarkTheme
-        ? EARTH_LANDMASS_DARK_COLORS
-        : EARTH_LANDMASS_LIGHT_COLORS;
-
     EARTH_LANDMASS_GROUPS.forEach((group: EarthLandmassGroup): void => {
         const positions = positionsByGroup[group];
 
@@ -573,7 +558,7 @@ const addLandmassFills = (
         landmassGeometry.computeBoundingSphere();
 
         const landmassMaterial = new THREE.MeshBasicMaterial({
-            color: landmassColors[group],
+            color: readEarthThemeColor(EARTH_LANDMASS_COLOR_TOKENS[group]),
             side: THREE.DoubleSide,
         });
         globeGroup.add(new THREE.Mesh(landmassGeometry, landmassMaterial));
@@ -611,7 +596,7 @@ const addLandmassContours = (
                     contourPoints,
                 );
                 const contourMaterial = new THREE.LineBasicMaterial({
-                    color: isDarkTheme ? 0x5b9ab7 : 0x407b99,
+                    color: readEarthThemeColor("--pl-earth-contour"),
                     transparent: true,
                     opacity: isDarkTheme ? 0.58 : 0.5,
                 });
@@ -705,9 +690,13 @@ const EarthMap = ({
             const controls = new OrbitControls(camera, renderer.domElement);
             const animationClock = new THREE.Clock();
             const globeGroup = new THREE.Group();
-            const routeColor = isDarkTheme ? 0x9ed8f2 : 0x0f6f98;
-            const domesticRouteColor = isDarkTheme ? 0x6cb4d0 : 0x3c7797;
-            const markerColor = isDarkTheme ? 0xdff4ff : 0x0a5d84;
+            const routeColor = readEarthThemeColor(
+                "--pl-earth-route-international",
+            );
+            const domesticRouteColor = readEarthThemeColor(
+                "--pl-earth-route-domestic",
+            );
+            const markerColor = readEarthThemeColor("--pl-earth-marker");
 
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -733,8 +722,8 @@ const EarthMap = ({
             const globe = new THREE.Mesh(
                 new THREE.SphereGeometry(GLOBE_RADIUS, 80, 56),
                 new THREE.MeshPhongMaterial({
-                    color: isDarkTheme ? 0x0c2639 : 0x92b8ce,
-                    emissive: isDarkTheme ? 0x06121e : 0x243f52,
+                    color: readEarthThemeColor("--pl-earth-globe"),
+                    emissive: readEarthThemeColor("--pl-earth-globe-emissive"),
                     emissiveIntensity: isDarkTheme ? 0.72 : 0.18,
                     shininess: 6,
                     transparent: true,
@@ -746,20 +735,20 @@ const EarthMap = ({
             const graticule = new THREE.Mesh(
                 new THREE.SphereGeometry(GLOBE_RADIUS + 0.002, 40, 24),
                 new THREE.MeshBasicMaterial({
-                    color: isDarkTheme ? 0x87cdea : 0x326d8c,
+                    color: readEarthThemeColor("--pl-earth-graticule"),
                     wireframe: true,
                     transparent: true,
                     opacity: isDarkTheme ? 0.16 : 0.2,
                 }),
             );
             globeGroup.add(graticule);
-            addLandmassFills(globeGroup, isDarkTheme);
+            addLandmassFills(globeGroup);
             addLandmassContours(globeGroup, isDarkTheme);
 
             const atmosphere = new THREE.Mesh(
                 new THREE.SphereGeometry(GLOBE_RADIUS + 0.055, 80, 56),
                 new THREE.MeshBasicMaterial({
-                    color: isDarkTheme ? 0x73c7ed : 0x5292b4,
+                    color: readEarthThemeColor("--pl-earth-atmosphere"),
                     transparent: true,
                     opacity: isDarkTheme ? 0.09 : 0.1,
                     side: THREE.BackSide,
