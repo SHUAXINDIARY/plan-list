@@ -307,6 +307,22 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     departureDate: '2026-9-4',
   },
   {
+    airline: '中国东方航空',
+    aircraft: '321',
+    origin: '西安',
+    destination: '北京',
+    routeKind: 'one-way',
+    departureDate: '2026-8-23',
+  },
+  {
+    airline: '中国东方航空',
+    aircraft: '320NEO',
+    origin: '北京',
+    destination: '西安',
+    routeKind: 'one-way',
+    departureDate: '2026-8-21',
+  },
+  {
     airline: '全日空',
     aircraft: '777-300ER',
     origin: '东京',
