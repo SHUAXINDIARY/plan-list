@@ -912,6 +912,29 @@
         }
     },
     {
+        "airline": "皇家约旦航空",
+        "airlineEnglishName": "Royal Jordanian",
+        "airlineWebsite": "https://www.rj.com",
+        "airlineAlliance": "oneworld",
+        "passengerAircraftCount": 36,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/airbus-a321neo"
+            },
+            "Boeing": {
+                "B787-8": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Boeing/787-8",
+                "B787-9": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Boeing/787-9"
+            },
+            "Embraer": {
+                "E190-E2": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Embraer/E190-E2",
+                "E195-E2": "https://www.planespotters.net/photos/fleet/Royal-Jordanian/Embraer/E195-E2"
+            }
+        }
+    },
+    {
         "airline": "亚洲航空",
         "airlineEnglishName": "AirAsia",
         "airlineWebsite": "https://www.airasia.com",
