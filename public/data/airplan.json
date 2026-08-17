@@ -1434,11 +1434,11 @@
         "airlineEnglishName": "StarFlyer",
         "airlineWebsite": "https://www.starflyer.jp",
         "airlineAlliance": null,
-        "passengerAircraftCount": 10,
+        "passengerAircraftCount": 11,
         "models": {
             "Airbus": {
-                "A320-200": "https://www.planespotters.net/photo/1931803/ja07mc-starflyer-airbus-a320-214",
-                "A320neo": "https://commons.wikimedia.org/wiki/File:Starflyer_JA28MC_A320-251N_HND_26-09-2024.jpg"
+                "A320-200": "https://www.planespotters.net/photos/fleet/Starflyer/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Starflyer/airbus-a320neo"
             }
         }
     },
