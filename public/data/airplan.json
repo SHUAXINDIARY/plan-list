@@ -1085,6 +1085,42 @@
         }
     },
     {
+        "airline": "白俄罗斯航空",
+        "airlineEnglishName": "Belavia",
+        "airlineWebsite": "https://belavia.by",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 18,
+        "models": {
+            "Airbus": {
+                "A330-200": "https://www.planespotters.net/photos/fleet/Belavia/Airbus/A330-200"
+            },
+            "Boeing": {
+                "B737-300": "https://www.planespotters.net/photos/fleet/Belavia/Boeing/737-300",
+                "B737-800": "https://www.planespotters.net/photos/fleet/Belavia/Boeing/737-800",
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Belavia/boeing-737-max-8"
+            },
+            "Embraer": {
+                "E175": "https://www.planespotters.net/photos/fleet/Belavia/embraer-erj-175",
+                "E195": "https://www.planespotters.net/photos/fleet/Belavia/embraer-erj-195"
+            }
+        }
+    },
+    {
+        "airline": "冲刺航空",
+        "airlineEnglishName": "SprintAir",
+        "airlineWebsite": "https://sprintair.eu",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 16,
+        "models": {
+            "ATR": {
+                "ATR 72": "https://www.planespotters.net/photos/fleet/SprintAir/atr-72"
+            },
+            "Saab": {
+                "Saab 340": "https://www.planespotters.net/photos/fleet/SprintAir/saab-340"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "airlineWebsite": "https://www.lionairthai.com",
