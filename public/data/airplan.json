@@ -1039,6 +1039,29 @@
         }
     },
     {
+        "airline": "冰岛航空",
+        "airlineEnglishName": "Icelandair",
+        "airlineWebsite": "https://www.icelandair.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 45,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Icelandair/Airbus/A320-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Icelandair/airbus-a321neo"
+            },
+            "Boeing": {
+                "B737 MAX 8": "https://www.planespotters.net/photos/fleet/Icelandair/boeing-737-max-8",
+                "B737 MAX 9": "https://www.planespotters.net/photos/fleet/Icelandair/boeing-737-max-9",
+                "B757-200": "https://www.planespotters.net/photos/fleet/Icelandair/Boeing/757-200",
+                "B767-300": "https://www.planespotters.net/photos/fleet/Icelandair/Boeing/767-300"
+            },
+            "De Havilland Canada": {
+                "DHC-8-200": "https://www.planespotters.net/photos/fleet/Icelandair/De-Havilland-Canada/DHC-8-200",
+                "DHC-8-400": "https://www.planespotters.net/photos/fleet/Icelandair/De-Havilland-Canada/DHC-8-400"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "airlineWebsite": "https://www.lionairthai.com",
