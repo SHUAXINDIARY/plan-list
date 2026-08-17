@@ -1705,6 +1705,21 @@
         }
     },
     {
+        "airline": "Viva航空",
+        "airlineEnglishName": "Viva",
+        "airlineWebsite": "https://www.vivaaerobus.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 108,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Viva/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Viva/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Viva/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Viva/airbus-a321neo"
+            }
+        }
+    },
+    {
         "airline": "夏威夷航空",
         "airlineEnglishName": "Hawaiian Airlines",
         "airlineWebsite": "https://www.hawaiianairlines.com",
