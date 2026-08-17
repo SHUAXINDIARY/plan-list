@@ -897,6 +897,21 @@
         }
     },
     {
+        "airline": "阿拉伯航空",
+        "airlineEnglishName": "Air Arabia",
+        "airlineWebsite": "https://www.airarabia.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 64,
+        "models": {
+            "Airbus": {
+                "A320-200": "https://www.planespotters.net/photos/fleet/Air-Arabia/Airbus/A320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Air-Arabia/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Air-Arabia/Airbus/A321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Air-Arabia/airbus-a321neo"
+            }
+        }
+    },
+    {
         "airline": "亚洲航空",
         "airlineEnglishName": "AirAsia",
         "airlineWebsite": "https://www.airasia.com",
