@@ -340,7 +340,7 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
             return {
                 airlineName: airplaneDataItem.airline,
                 airlineEnglishName: airplaneDataItem.airlineEnglishName,
-                country: airplaneDataItem.country,
+                country: airplaneDataItem.country?.trim() || "未知",
                 airlineWebsite: airplaneDataItem.airlineWebsite,
                 airlineAlliance: airplaneDataItem.airlineAlliance,
                 brandColor: getAirlineBrandColor(
@@ -1178,6 +1178,12 @@ const HomePage = (): ReactElement => {
                                                 className="airline-entry__facts"
                                                 aria-label={`${airlineFleet.airlineName}机队概览`}
                                             >
+                                                <div className="airline-entry__country">
+                                                    <dt>国家/地区</dt>
+                                                    <dd>
+                                                        {airlineFleet.country}
+                                                    </dd>
+                                                </div>
                                                 <div>
                                                     <dt>客机</dt>
                                                     <dd>

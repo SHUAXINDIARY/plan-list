@@ -56,7 +56,7 @@ export const FleetResultsSkeleton = (): ReactElement => {
                                 </div>
                                 <div className="airline-entry__facts airline-entry__facts--skeleton">
                                     {Array.from(
-                                        { length: 4 },
+                                        { length: 5 },
                                         (_, factIndex: number): ReactElement => (
                                             <span
                                                 className="fleet-skeleton-line fleet-skeleton-line--fact"

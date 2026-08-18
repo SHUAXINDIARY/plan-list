@@ -1064,7 +1064,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .airline-entry__facts {
   display: grid;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(5, max-content);
   gap: 0;
   padding: 0;
   margin: 0;
@@ -1106,6 +1106,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .airline-entry__facts .airline-entry__alliance {
   min-width: 7.25rem;
+}
+
+.airline-entry__facts .airline-entry__country {
+  min-width: 5.75rem;
 }
 
 .airline-entry__facts--skeleton {
@@ -1306,8 +1310,8 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .airline-entry__facts {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: min(100%, 28rem);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 100%;
   }
 
   .airline-entry__facts > div {
@@ -1315,6 +1319,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .airline-entry__facts .airline-entry__alliance {
+    min-width: 0;
+  }
+
+  .airline-entry__facts .airline-entry__country {
     min-width: 0;
   }
 }
@@ -1495,6 +1503,11 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .airline-entry__facts .airline-entry__alliance {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .airline-entry__facts .airline-entry__country {
     min-width: 0;
   }
 
