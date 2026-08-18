@@ -1115,20 +1115,12 @@ const HomePage = (): ReactElement => {
                             ]}
                         />
                     </div>
-                </div>
-            ) : null}
-
-            {!isLoading && !errorMessage && airlineFleets.length === 0 ? (
-                <p className="data-state">暂无机型数据。</p>
-            ) : null}
-
-            {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
-                <div
-                    className="fleet-results"
-                    role="region"
-                    aria-label="航司机型筛选结果"
-                    aria-live="polite"
-                >
+                    <div
+                        className="fleet-results"
+                        role="region"
+                        aria-label="航司机型筛选结果"
+                        aria-live="polite"
+                    >
                     {filteredAirlineFleets.length === 0 ? (
                         <p className="fleet-results__empty">
                             没有匹配当前筛选条件的航司或机型。
@@ -1297,7 +1289,12 @@ const HomePage = (): ReactElement => {
                             )}
                         </div>
                     )}
+                    </div>
                 </div>
+            ) : null}
+
+            {!isLoading && !errorMessage && airlineFleets.length === 0 ? (
+                <p className="data-state">暂无机型数据。</p>
             ) : null}
 
         </section>

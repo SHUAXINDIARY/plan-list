@@ -19,8 +19,11 @@
   }
 }
 
-.aircraft-wiki {
+.page-panel.aircraft-wiki {
   width: min(100%, 96rem);
+  /* 允许筛选栏以页面视口为滚动上下文，同时保留面板的横向裁切。 */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .aircraft-wiki__hero {
@@ -707,7 +710,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .fleet-toolbar {
   display: grid;
-  gap: 1.85rem;
+  gap: 1.5rem;
   padding: 0;
   margin-top: 1.1rem;
   background-color: transparent;
@@ -722,6 +725,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0.65rem 1rem;
+  margin-bottom: 0.35rem;
   padding: 0;
   border-bottom: 0;
 }
@@ -735,6 +739,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 }
 
 .fleet-filters {
+  position: sticky;
+  top: max(0.75rem, env(safe-area-inset-top, 0px));
+  z-index: 5;
+  align-self: start;
   display: grid;
   grid-template-columns: minmax(13rem, 1.4fr) repeat(5, minmax(8rem, 1fr));
   align-items: end;
@@ -1428,7 +1436,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .fleet-filters {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
 
@@ -1439,6 +1447,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .fleet-filter:first-child {
+    grid-column: 1 / -1;
     flex: 1 1 100%;
     min-width: 0;
     max-width: none;
