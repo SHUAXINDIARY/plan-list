@@ -38,6 +38,8 @@ export interface SelectProps {
     name?: string;
     /** 为 true 时禁用整个下拉框。 */
     disabled?: boolean;
+    /** 为 true 时在展开的选项面板中显示搜索框；默认不启用。 */
+    searchable?: boolean;
     /** 无可见 `label` 时供屏幕阅读器使用的控件名称。 */
     ariaLabel?: string;
     /** 附加在根字段容器或裸 select 上的 class，便于页面布局（如筛选行 flex）。 */

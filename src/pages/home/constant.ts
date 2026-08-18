@@ -13,6 +13,9 @@ export const ALL_MANUFACTURERS_VALUE = "all";
 // 具体型号筛选的默认值，表示不过滤机型。
 export const ALL_AIRCRAFT_MODELS_VALUE = "all";
 
+// 国家或地区筛选的默认值，表示同时展示所有航司。
+export const ALL_COUNTRIES_VALUE = "all";
+
 // 联盟筛选默认值，表示同时展示已加入和未加入联盟的航司。
 export const ALL_AIRLINE_ALLIANCES_VALUE: AirlineAllianceFilter = "all";
 

@@ -2,6 +2,7 @@
     {
         "airline": "中国东方航空",
         "airlineEnglishName": "China Eastern Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.ceair.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 679,
@@ -32,6 +33,7 @@
     {
         "airline": "中国南方航空",
         "airlineEnglishName": "China Southern Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.csair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 688,
@@ -61,6 +63,7 @@
     {
         "airline": "中国国际航空",
         "airlineEnglishName": "Air China",
+        "country": "中国内地",
         "airlineWebsite": "https://www.airchina.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 534,
@@ -94,6 +97,7 @@
     {
         "airline": "海南航空",
         "airlineEnglishName": "Hainan Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.hainanairlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 230,
@@ -116,6 +120,7 @@
     {
         "airline": "深圳航空",
         "airlineEnglishName": "Shenzhen Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.shenzhenair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 202,
@@ -136,6 +141,7 @@
     {
         "airline": "四川航空",
         "airlineEnglishName": "Sichuan Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.sichuanair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 202,
@@ -155,6 +161,7 @@
     {
         "airline": "厦门航空",
         "airlineEnglishName": "XiamenAir",
+        "country": "中国内地",
         "airlineWebsite": "https://www.xiamenair.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 171,
@@ -175,6 +182,7 @@
     {
         "airline": "国泰航空",
         "airlineEnglishName": "Cathay Pacific",
+        "country": "中国香港",
         "airlineWebsite": "https://www.cathaypacific.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 159,
@@ -197,6 +205,7 @@
     {
         "airline": "山东航空",
         "airlineEnglishName": "Shandong Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.sda.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 135,
@@ -211,6 +220,7 @@
     {
         "airline": "春秋航空",
         "airlineEnglishName": "Spring Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.ch.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 134,
@@ -225,6 +235,7 @@
     {
         "airline": "春秋航空日本",
         "airlineEnglishName": "Spring Japan",
+        "country": "日本",
         "airlineWebsite": "https://www.akijapan.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 9,
@@ -240,6 +251,7 @@
     {
         "airline": "天津航空",
         "airlineEnglishName": "Tianjin Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.tianjin-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 103,
@@ -260,6 +272,7 @@
     {
         "airline": "吉祥航空",
         "airlineEnglishName": "Juneyao Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.juneyaoair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 102,
@@ -278,6 +291,7 @@
     {
         "airline": "上海航空",
         "airlineEnglishName": "Shanghai Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.shanghai-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 86,
@@ -293,6 +307,7 @@
     {
         "airline": "成都航空",
         "airlineEnglishName": "Chengdu Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.chengduair.cc",
         "airlineAlliance": null,
         "passengerAircraftCount": 82,
@@ -309,6 +324,7 @@
     {
         "airline": "首都航空",
         "airlineEnglishName": "Capital Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.jdair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 81,
@@ -327,6 +343,7 @@
     {
         "airline": "华夏航空",
         "airlineEnglishName": "China Express Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.chinaexpressair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 77,
@@ -345,6 +362,7 @@
     {
         "airline": "长龙航空",
         "airlineEnglishName": "Loong Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.loongair.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 73,
@@ -359,6 +377,7 @@
     {
         "airline": "中国联合航空",
         "airlineEnglishName": "China United Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.flycua.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 60,
@@ -372,6 +391,7 @@
     {
         "airline": "祥鹏航空",
         "airlineEnglishName": "Lucky Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.luckyair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 50,
@@ -392,6 +412,7 @@
     {
         "airline": "西藏航空",
         "airlineEnglishName": "Tibet Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.tibetairlines.com.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 47,
@@ -408,6 +429,7 @@
     {
         "airline": "西部航空",
         "airlineEnglishName": "West Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.westair.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 46,
@@ -423,6 +445,7 @@
     {
         "airline": "香港快运航空",
         "airlineEnglishName": "HK Express",
+        "country": "中国香港",
         "airlineWebsite": "https://www.hkexpress.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 44,
@@ -438,6 +461,7 @@
     {
         "airline": "青岛航空",
         "airlineEnglishName": "Qingdao Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.qdair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 38,
@@ -452,6 +476,7 @@
     {
         "airline": "昆明航空",
         "airlineEnglishName": "Kunming Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.airkunming.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 32,
@@ -466,6 +491,7 @@
     {
         "airline": "香港航空",
         "airlineEnglishName": "Hong Kong Airlines",
+        "country": "中国香港",
         "airlineWebsite": "https://www.hongkongairlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 31,
@@ -480,6 +506,7 @@
     {
         "airline": "重庆航空",
         "airlineEnglishName": "Chongqing Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.chongqingairlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 30,
@@ -494,6 +521,7 @@
     {
         "airline": "河北航空",
         "airlineEnglishName": "Hebei Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.hbhk.com.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 27,
@@ -509,6 +537,7 @@
     {
         "airline": "九元航空",
         "airlineEnglishName": "9 Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.9air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 27,
@@ -522,6 +551,7 @@
     {
         "airline": "瑞丽航空",
         "airlineEnglishName": "Ruili Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.rlair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 25,
@@ -536,6 +566,7 @@
     {
         "airline": "北部湾航空",
         "airlineEnglishName": "GX Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.gxbair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 24,
@@ -552,6 +583,7 @@
     {
         "airline": "澳门航空",
         "airlineEnglishName": "Air Macau",
+        "country": "中国澳门",
         "airlineWebsite": "https://www.airmacau.com.mo",
         "airlineAlliance": null,
         "passengerAircraftCount": 22,
@@ -567,6 +599,7 @@
     {
         "airline": "东海航空",
         "airlineEnglishName": "Donghai Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.donghaiair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 21,
@@ -580,6 +613,7 @@
     {
         "airline": "奥凯航空",
         "airlineEnglishName": "Okay Airways",
+        "country": "中国内地",
         "airlineWebsite": "https://www.okair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 21,
@@ -594,6 +628,7 @@
     {
         "airline": "多彩贵州航空",
         "airlineEnglishName": "Colorful Guizhou Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.cgzair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 20,
@@ -609,6 +644,7 @@
     {
         "airline": "江西航空",
         "airlineEnglishName": "Jiangxi Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.airjiangxi.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 18,
@@ -621,6 +657,7 @@
     {
         "airline": "乌鲁木齐航空",
         "airlineEnglishName": "Urumqi Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.urumqi-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 17,
@@ -634,6 +671,7 @@
     {
         "airline": "福州航空",
         "airlineEnglishName": "Fuzhou Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.fuzhou-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 16,
@@ -647,6 +685,7 @@
     {
         "airline": "湖南航空",
         "airlineEnglishName": "Air Travel",
+        "country": "中国内地",
         "airlineWebsite": "https://www.a6air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 16,
@@ -662,6 +701,7 @@
     {
         "airline": "长安航空",
         "airlineEnglishName": "Air Chang'an",
+        "country": "中国内地",
         "airlineWebsite": "https://www.airchangan.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 13,
@@ -674,6 +714,7 @@
     {
         "airline": "大连航空",
         "airlineEnglishName": "Dalian Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.dalianair-china.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 13,
@@ -686,6 +727,7 @@
     {
         "airline": "金鹏航空",
         "airlineEnglishName": "Suparna Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.yzr.com.cn",
         "airlineAlliance": null,
         "passengerAircraftCount": 10,
@@ -699,6 +741,7 @@
     {
         "airline": "桂林航空",
         "airlineEnglishName": "Air Guilin",
+        "country": "中国内地",
         "airlineWebsite": "https://www.airguilin.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 10,
@@ -712,6 +755,7 @@
     {
         "airline": "龙江航空",
         "airlineEnglishName": "Longjiang Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.longjiangair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 9,
@@ -724,6 +768,7 @@
     {
         "airline": "大湾区航空",
         "airlineEnglishName": "Greater Bay Airlines",
+        "country": "中国香港",
         "airlineWebsite": "https://www.greaterbay-airlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 8,
@@ -737,6 +782,7 @@
     {
         "airline": "天骄航空",
         "airlineEnglishName": "Genghis Khan Airlines",
+        "country": "中国内地",
         "airlineWebsite": "https://www.tianjiaoair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 7,
@@ -749,6 +795,7 @@
     {
         "airline": "大新华航空",
         "airlineEnglishName": "Grand China Air",
+        "country": "中国内地",
         "airlineWebsite": "https://www.grandchinaair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 3,
@@ -761,6 +808,7 @@
     {
         "airline": "香港华民航空",
         "airlineEnglishName": "Air Hong Kong",
+        "country": "中国香港",
         "airlineWebsite": "https://www.hkcargo.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 14,
@@ -774,6 +822,7 @@
     {
         "airline": "瑞安航空",
         "airlineEnglishName": "Ryanair",
+        "country": "爱尔兰",
         "airlineWebsite": "https://www.ryanair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 647,
@@ -790,6 +839,7 @@
     {
         "airline": "维兹航空",
         "airlineEnglishName": "Wizz Air",
+        "country": "匈牙利",
         "airlineWebsite": "https://www.wizzair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 127,
@@ -805,6 +855,7 @@
     {
         "airline": "英国航空",
         "airlineEnglishName": "British Airways",
+        "country": "英国",
         "airlineWebsite": "https://www.britishairways.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 297,
@@ -830,6 +881,7 @@
     {
         "airline": "全日空",
         "airlineEnglishName": "All Nippon Airways (ANA)",
+        "country": "日本",
         "airlineWebsite": "https://www.ana.co.jp",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 244,
@@ -859,6 +911,7 @@
     {
         "airline": "阿联酋航空",
         "airlineEnglishName": "Emirates",
+        "country": "阿联酋",
         "airlineWebsite": "https://www.emirates.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 286,
@@ -877,6 +930,7 @@
     {
         "airline": "阿提哈德航空",
         "airlineEnglishName": "Etihad Airways",
+        "country": "阿联酋",
         "airlineWebsite": "https://www.etihad.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 126,
@@ -899,6 +953,7 @@
     {
         "airline": "阿拉伯航空",
         "airlineEnglishName": "Air Arabia",
+        "country": "阿联酋",
         "airlineWebsite": "https://www.airarabia.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 64,
@@ -914,6 +969,7 @@
     {
         "airline": "皇家约旦航空",
         "airlineEnglishName": "Royal Jordanian",
+        "country": "约旦",
         "airlineWebsite": "https://www.rj.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 36,
@@ -937,6 +993,7 @@
     {
         "airline": "亚洲航空",
         "airlineEnglishName": "AirAsia",
+        "country": "马来西亚",
         "airlineWebsite": "https://www.airasia.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 224,
@@ -951,6 +1008,7 @@
     {
         "airline": "新加坡航空",
         "airlineEnglishName": "Singapore Airlines",
+        "country": "新加坡",
         "airlineWebsite": "https://www.singaporeair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 163,
@@ -971,6 +1029,7 @@
     {
         "airline": "酷航",
         "airlineEnglishName": "Scoot",
+        "country": "新加坡",
         "airlineWebsite": "https://www.flyscoot.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 63,
@@ -992,6 +1051,7 @@
     {
         "airline": "纳斯航空",
         "airlineEnglishName": "flynas",
+        "country": "沙特阿拉伯",
         "airlineWebsite": "https://www.flynas.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 67,
@@ -1006,6 +1066,7 @@
     {
         "airline": "泰国航空",
         "airlineEnglishName": "Thai Airways",
+        "country": "泰国",
         "airlineWebsite": "https://www.thaiairways.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 85,
@@ -1027,6 +1088,7 @@
     {
         "airline": "泛航航空",
         "airlineEnglishName": "Transavia",
+        "country": "荷兰",
         "airlineWebsite": "https://www.transavia.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 50,
@@ -1042,6 +1104,7 @@
     {
         "airline": "芬兰航空",
         "airlineEnglishName": "Finnair",
+        "country": "芬兰",
         "airlineWebsite": "https://www.finnair.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 77,
@@ -1064,6 +1127,7 @@
     {
         "airline": "冰岛航空",
         "airlineEnglishName": "Icelandair",
+        "country": "冰岛",
         "airlineWebsite": "https://www.icelandair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 45,
@@ -1087,6 +1151,7 @@
     {
         "airline": "白俄罗斯航空",
         "airlineEnglishName": "Belavia",
+        "country": "白俄罗斯",
         "airlineWebsite": "https://belavia.by",
         "airlineAlliance": null,
         "passengerAircraftCount": 18,
@@ -1108,6 +1173,7 @@
     {
         "airline": "冲刺航空",
         "airlineEnglishName": "SprintAir",
+        "country": "波兰",
         "airlineWebsite": "https://sprintair.eu",
         "airlineAlliance": null,
         "passengerAircraftCount": 16,
@@ -1123,6 +1189,7 @@
     {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
+        "country": "泰国",
         "airlineWebsite": "https://www.lionairthai.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 28,
@@ -1136,6 +1203,7 @@
     {
         "airline": "长荣航空",
         "airlineEnglishName": "EVA Air",
+        "country": "中国台湾",
         "airlineWebsite": "https://www.evaair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 87,
@@ -1155,6 +1223,7 @@
     {
         "airline": "中华航空",
         "airlineEnglishName": "China Airlines",
+        "country": "中国台湾",
         "airlineWebsite": "https://www.china-airlines.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 83,
@@ -1175,6 +1244,7 @@
     {
         "airline": "星宇航空",
         "airlineEnglishName": "STARLUX Airlines",
+        "country": "中国台湾",
         "airlineWebsite": "https://www.starlux-airlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 32,
@@ -1190,6 +1260,7 @@
     {
         "airline": "汉莎航空",
         "airlineEnglishName": "Lufthansa",
+        "country": "德国",
         "airlineWebsite": "https://www.lufthansa.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 285,
@@ -1217,6 +1288,7 @@
     {
         "airline": "日本航空",
         "airlineEnglishName": "Japan Airlines (JAL)",
+        "country": "日本",
         "airlineWebsite": "https://www.jal.co.jp",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 150,
@@ -1237,6 +1309,7 @@
     {
         "airline": "新西兰航空",
         "airlineEnglishName": "Air New Zealand",
+        "country": "新西兰",
         "airlineWebsite": "https://www.airnewzealand.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 115,
@@ -1261,6 +1334,7 @@
     {
         "airline": "大韩航空",
         "airlineEnglishName": "Korean Air",
+        "country": "韩国",
         "airlineWebsite": "https://www.koreanair.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 169,
@@ -1298,6 +1372,7 @@
     {
         "airline": "韩亚航空",
         "airlineEnglishName": "Asiana Airlines",
+        "country": "韩国",
         "airlineWebsite": "https://flyasiana.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 68,
@@ -1317,6 +1392,7 @@
     {
         "airline": "济州航空",
         "airlineEnglishName": "Jeju Air",
+        "country": "韩国",
         "airlineWebsite": "https://www.jejuair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 46,
@@ -1330,6 +1406,7 @@
     {
         "airline": "真航空",
         "airlineEnglishName": "Jin Air",
+        "country": "韩国",
         "airlineWebsite": "https://www.jinair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 32,
@@ -1345,6 +1422,7 @@
     {
         "airline": "德威航空",
         "airlineEnglishName": "T'way Air",
+        "country": "韩国",
         "airlineWebsite": "https://www.twayair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 49,
@@ -1363,6 +1441,7 @@
     {
         "airline": "釜山航空",
         "airlineEnglishName": "Air Busan",
+        "country": "韩国",
         "airlineWebsite": "https://www.airbusan.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 21,
@@ -1377,6 +1456,7 @@
     {
         "airline": "首尔航空",
         "airlineEnglishName": "Air Seoul",
+        "country": "韩国",
         "airlineWebsite": "https://flyairseoul.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 6,
@@ -1389,6 +1469,7 @@
     {
         "airline": "易斯达航空",
         "airlineEnglishName": "Eastar Jet",
+        "country": "韩国",
         "airlineWebsite": "https://www.eastarjet.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 20,
@@ -1402,6 +1483,7 @@
     {
         "airline": "普莱米娅航空",
         "airlineEnglishName": "Air Premia",
+        "country": "韩国",
         "airlineWebsite": "https://www.airpremia.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 9,
@@ -1414,6 +1496,7 @@
     {
         "airline": "Aero K航空",
         "airlineEnglishName": "Aero K",
+        "country": "韩国",
         "airlineWebsite": "https://www.aerok.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 9,
@@ -1426,6 +1509,7 @@
     {
         "airline": "乐桃航空",
         "airlineEnglishName": "Peach Aviation",
+        "country": "日本",
         "airlineWebsite": "https://www.flypeach.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 39,
@@ -1440,6 +1524,7 @@
     {
         "airline": "捷星日本航空",
         "airlineEnglishName": "Jetstar Japan",
+        "country": "日本",
         "airlineWebsite": "https://www.jetstar.com/jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 22,
@@ -1453,6 +1538,7 @@
     {
         "airline": "天马航空",
         "airlineEnglishName": "Skymark Airlines",
+        "country": "日本",
         "airlineWebsite": "https://www.skymark.co.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 30,
@@ -1466,6 +1552,7 @@
     {
         "airline": "北海道国际航空",
         "airlineEnglishName": "Air Do",
+        "country": "日本",
         "airlineWebsite": "https://www.airdo.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 12,
@@ -1479,6 +1566,7 @@
     {
         "airline": "索拉西德航空",
         "airlineEnglishName": "Solaseed Air",
+        "country": "日本",
         "airlineWebsite": "https://www.solaseedair.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 14,
@@ -1491,6 +1579,7 @@
     {
         "airline": "星悦航空",
         "airlineEnglishName": "StarFlyer",
+        "country": "日本",
         "airlineWebsite": "https://www.starflyer.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 11,
@@ -1504,6 +1593,7 @@
     {
         "airline": "ZIPAIR东京",
         "airlineEnglishName": "ZIPAIR Tokyo",
+        "country": "日本",
         "airlineWebsite": "https://www.zipair.net",
         "airlineAlliance": null,
         "passengerAircraftCount": 8,
@@ -1516,6 +1606,7 @@
     {
         "airline": "富士梦幻航空",
         "airlineEnglishName": "Fuji Dream Airlines",
+        "country": "日本",
         "airlineWebsite": "https://www.fujidream.co.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 15,
@@ -1529,6 +1620,7 @@
     {
         "airline": "IBEX航空",
         "airlineEnglishName": "IBEX Airlines",
+        "country": "日本",
         "airlineWebsite": "https://www.ibexair.co.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 9,
@@ -1541,6 +1633,7 @@
     {
         "airline": "东方空桥",
         "airlineEnglishName": "Oriental Air Bridge",
+        "country": "日本",
         "airlineWebsite": "https://www.orc-air.co.jp",
         "airlineAlliance": null,
         "passengerAircraftCount": 2,
@@ -1553,6 +1646,7 @@
     {
         "airline": "朱鹮航空",
         "airlineEnglishName": "Toki Air",
+        "country": "日本",
         "airlineWebsite": "https://toki-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 3,
@@ -1566,6 +1660,7 @@
     {
         "airline": "天草航空",
         "airlineEnglishName": "Amakusa Airlines",
+        "country": "日本",
         "airlineWebsite": "https://amakusa-air.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 1,
@@ -1578,6 +1673,7 @@
     {
         "airline": "摩洛哥皇家航空",
         "airlineEnglishName": "Royal Air Maroc",
+        "country": "摩洛哥",
         "airlineWebsite": "https://www.royalairmaroc.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 63,
@@ -1599,6 +1695,7 @@
     {
         "airline": "美国航空",
         "airlineEnglishName": "American Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.aa.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 1022,
@@ -1623,6 +1720,7 @@
     {
         "airline": "达美航空",
         "airlineEnglishName": "Delta Air Lines",
+        "country": "美国",
         "airlineWebsite": "https://www.delta.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 989,
@@ -1653,6 +1751,7 @@
     {
         "airline": "美国联合航空",
         "airlineEnglishName": "United Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.united.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 1090,
@@ -1685,6 +1784,7 @@
     {
         "airline": "西南航空",
         "airlineEnglishName": "Southwest Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.southwest.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 803,
@@ -1699,6 +1799,7 @@
     {
         "airline": "阿拉斯加航空",
         "airlineEnglishName": "Alaska Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.alaskaair.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 337,
@@ -1719,6 +1820,7 @@
     {
         "airline": "捷蓝航空",
         "airlineEnglishName": "JetBlue Airways",
+        "country": "美国",
         "airlineWebsite": "https://www.jetblue.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 288,
@@ -1735,6 +1837,7 @@
     {
         "airline": "边疆航空",
         "airlineEnglishName": "Frontier Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.flyfrontier.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 176,
@@ -1750,6 +1853,7 @@
     {
         "airline": "墨西哥航空",
         "airlineEnglishName": "Aeromexico",
+        "country": "墨西哥",
         "airlineWebsite": "https://aeromexico.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 132,
@@ -1766,6 +1870,7 @@
     {
         "airline": "Viva航空",
         "airlineEnglishName": "Viva",
+        "country": "墨西哥",
         "airlineWebsite": "https://www.vivaaerobus.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 108,
@@ -1781,6 +1886,7 @@
     {
         "airline": "夏威夷航空",
         "airlineEnglishName": "Hawaiian Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.hawaiianairlines.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 66,
@@ -1798,6 +1904,7 @@
     {
         "airline": "忠实航空",
         "airlineEnglishName": "Allegiant Air",
+        "country": "美国",
         "airlineWebsite": "https://www.allegiantair.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 119,
@@ -1814,6 +1921,7 @@
     {
         "airline": "加拿大航空",
         "airlineEnglishName": "Air Canada",
+        "country": "加拿大",
         "airlineWebsite": "https://www.aircanada.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 216,
@@ -1837,6 +1945,7 @@
     {
         "airline": "西捷航空",
         "airlineEnglishName": "WestJet",
+        "country": "加拿大",
         "airlineWebsite": "https://www.westjet.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 157,
@@ -1852,6 +1961,7 @@
     {
         "airline": "拉塔姆航空",
         "airlineEnglishName": "LATAM Airlines",
+        "country": "智利",
         "airlineWebsite": "https://www.latamairlines.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 348,
@@ -1874,6 +1984,7 @@
     {
         "airline": "阿维安卡航空",
         "airlineEnglishName": "Avianca",
+        "country": "哥伦比亚",
         "airlineWebsite": "https://www.avianca.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 128,
@@ -1891,6 +2002,7 @@
     {
         "airline": "巴拿马航空",
         "airlineEnglishName": "Copa Airlines",
+        "country": "巴拿马",
         "airlineWebsite": "https://www.copaair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 105,
@@ -1906,6 +2018,7 @@
     {
         "airline": "巴西高尔航空",
         "airlineEnglishName": "GOL",
+        "country": "巴西",
         "airlineWebsite": "https://www.voegol.com.br",
         "airlineAlliance": null,
         "passengerAircraftCount": 136,
@@ -1920,6 +2033,7 @@
     {
         "airline": "巴西蔚蓝航空",
         "airlineEnglishName": "Azul Brazilian Airlines",
+        "country": "巴西",
         "airlineWebsite": "https://www.voeazul.com.br",
         "airlineAlliance": null,
         "passengerAircraftCount": 189,
@@ -1942,6 +2056,7 @@
     {
         "airline": "精神航空",
         "airlineEnglishName": "Spirit Airlines",
+        "country": "美国",
         "airlineWebsite": "https://www.spirit.com",
         "airlineAlliance": null,
         "passengerAircraftCount": 131,
@@ -1957,6 +2072,7 @@
     {
         "airline": "爱琴海航空",
         "airlineEnglishName": "Aegean Airlines",
+        "country": "希腊",
         "airlineWebsite": "https://www.aegeanair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 70,
@@ -1972,6 +2088,7 @@
     {
         "airline": "克罗地亚航空",
         "airlineEnglishName": "Croatia Airlines",
+        "country": "克罗地亚",
         "airlineWebsite": "https://www.croatiaairlines.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 17,
@@ -1992,6 +2109,7 @@
     {
         "airline": "瑞士国际航空",
         "airlineEnglishName": "SWISS",
+        "country": "瑞士",
         "airlineWebsite": "https://www.swiss.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 90,
@@ -2016,6 +2134,7 @@
     {
         "airline": "奥地利航空",
         "airlineEnglishName": "Austrian Airlines",
+        "country": "奥地利",
         "airlineWebsite": "https://www.austrian.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 65,
@@ -2037,6 +2156,7 @@
     {
         "airline": "布鲁塞尔航空",
         "airlineEnglishName": "Brussels Airlines",
+        "country": "比利时",
         "airlineWebsite": "https://www.brusselsairlines.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 47,
@@ -2052,6 +2172,7 @@
     {
         "airline": "波兰航空",
         "airlineEnglishName": "LOT Polish Airlines",
+        "country": "波兰",
         "airlineWebsite": "https://www.lot.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 92,
@@ -2074,6 +2195,7 @@
     {
         "airline": "葡萄牙航空",
         "airlineEnglishName": "TAP Air Portugal",
+        "country": "葡萄牙",
         "airlineWebsite": "https://www.flytap.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 104,
@@ -2093,6 +2215,7 @@
     {
         "airline": "印度航空",
         "airlineEnglishName": "Air India",
+        "country": "印度",
         "airlineWebsite": "https://www.airindia.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 185,
@@ -2116,6 +2239,7 @@
     {
         "airline": "土耳其航空",
         "airlineEnglishName": "Turkish Airlines",
+        "country": "土耳其",
         "airlineWebsite": "https://www.turkishairlines.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 412,
@@ -2143,6 +2267,7 @@
     {
         "airline": "埃及航空",
         "airlineEnglishName": "EgyptAir",
+        "country": "埃及",
         "airlineWebsite": "https://www.egyptair.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 72,
@@ -2165,6 +2290,7 @@
     {
         "airline": "埃塞俄比亚航空",
         "airlineEnglishName": "Ethiopian Airlines",
+        "country": "埃塞俄比亚",
         "airlineWebsite": "https://www.ethiopianairlines.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 162,
@@ -2195,6 +2321,7 @@
     {
         "airline": "南非航空",
         "airlineEnglishName": "South African Airways",
+        "country": "南非",
         "airlineWebsite": "https://www.flysaa.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 19,
@@ -2209,6 +2336,7 @@
     {
         "airline": "意大利航空",
         "airlineEnglishName": "ITA Airways",
+        "country": "意大利",
         "airlineWebsite": "https://www.ita-airways.com",
         "airlineAlliance": "Star Alliance",
         "passengerAircraftCount": 108,
@@ -2229,6 +2357,7 @@
     {
         "airline": "法国航空",
         "airlineEnglishName": "Air France",
+        "country": "法国",
         "airlineWebsite": "https://www.airfrance.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 227,
@@ -2251,6 +2380,7 @@
     {
         "airline": "荷兰皇家航空",
         "airlineEnglishName": "KLM Royal Dutch Airlines",
+        "country": "荷兰",
         "airlineWebsite": "https://www.klm.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 124,
@@ -2274,6 +2404,7 @@
     {
         "airline": "捷克航空",
         "airlineEnglishName": "Czech Airlines (CSA)",
+        "country": "捷克",
         "airlineWebsite": "https://www.czechairlines.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 6,
@@ -2287,6 +2418,7 @@
     {
         "airline": "罗马尼亚航空",
         "airlineEnglishName": "TAROM",
+        "country": "罗马尼亚",
         "airlineWebsite": "https://www.tarom.ro",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 13,
@@ -2303,6 +2435,7 @@
     {
         "airline": "北欧航空",
         "airlineEnglishName": "SAS Scandinavian Airlines",
+        "country": "瑞典",
         "airlineWebsite": "https://www.flysas.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 142,
@@ -2327,6 +2460,7 @@
     {
         "airline": "越南航空",
         "airlineEnglishName": "Vietnam Airlines",
+        "country": "越南",
         "airlineWebsite": "https://www.vietnamairlines.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 97,
@@ -2345,6 +2479,7 @@
     {
         "airline": "印尼鹰航",
         "airlineEnglishName": "Garuda Indonesia",
+        "country": "印度尼西亚",
         "airlineWebsite": "https://www.garuda-indonesia.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 72,
@@ -2363,6 +2498,7 @@
     {
         "airline": "沙特航空",
         "airlineEnglishName": "Saudia",
+        "country": "沙特阿拉伯",
         "airlineWebsite": "https://www.saudia.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 171,
@@ -2384,6 +2520,7 @@
     {
         "airline": "中东航空",
         "airlineEnglishName": "Middle East Airlines (MEA)",
+        "country": "黎巴嫩",
         "airlineWebsite": "https://www.mea.com.lb",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 24,
@@ -2398,6 +2535,7 @@
     {
         "airline": "肯尼亚航空",
         "airlineEnglishName": "Kenya Airways",
+        "country": "肯尼亚",
         "airlineWebsite": "https://www.kenya-airways.com",
         "airlineAlliance": "SkyTeam",
         "passengerAircraftCount": 34,
@@ -2415,6 +2553,7 @@
     {
         "airline": "伊比利亚航空",
         "airlineEnglishName": "Iberia",
+        "country": "西班牙",
         "airlineWebsite": "https://www.iberia.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 98,
@@ -2435,6 +2574,7 @@
     {
         "airline": "马来西亚航空",
         "airlineEnglishName": "Malaysia Airlines",
+        "country": "马来西亚",
         "airlineWebsite": "https://www.malaysiaairlines.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 93,
@@ -2454,6 +2594,7 @@
     {
         "airline": "斯里兰卡航空",
         "airlineEnglishName": "SriLankan Airlines",
+        "country": "斯里兰卡",
         "airlineWebsite": "https://www.srilankan.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 23,
@@ -2471,6 +2612,7 @@
     {
         "airline": "澳洲航空",
         "airlineEnglishName": "Qantas",
+        "country": "澳大利亚",
         "airlineWebsite": "https://www.qantas.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 138,
@@ -2490,6 +2632,7 @@
     {
         "airline": "斐济航空",
         "airlineEnglishName": "Fiji Airways",
+        "country": "斐济",
         "airlineWebsite": "https://www.fijiairways.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 14,
@@ -2508,6 +2651,7 @@
     {
         "airline": "卡塔尔航空",
         "airlineEnglishName": "Qatar Airways",
+        "country": "卡塔尔",
         "airlineWebsite": "https://www.qatarairways.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 271,
@@ -2532,6 +2676,7 @@
     {
         "airline": "阿曼航空",
         "airlineEnglishName": "Oman Air",
+        "country": "阿曼",
         "airlineWebsite": "https://www.omanair.com",
         "airlineAlliance": "oneworld",
         "passengerAircraftCount": 36,

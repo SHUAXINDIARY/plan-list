@@ -62,7 +62,7 @@ interface SelectMenuOptionProps {
 interface SelectOptionsMenuProps {
     /** listbox 根节点 id，供 combobox `aria-controls` 引用。 */
     listboxId: string;
-    /** 已归一化的可选项列表。 */
+    /** 已根据搜索词过滤的可见选项列表。 */
     items: SelectOption[];
     /** 当前受控选中值。 */
     value: string;
@@ -72,8 +72,20 @@ interface SelectOptionsMenuProps {
     onHighlight: (index: number) => void;
     /** 选中某值并关闭面板。 */
     onSelect: (nextValue: string) => void;
+    /** 是否展示选项搜索框。 */
+    searchable: boolean;
+    /** 当前选项搜索词。 */
+    searchTerm: string;
+    /** 更新搜索词并同步键盘高亮项。 */
+    onSearchTermChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 搜索框内的键盘导航与提交处理。 */
+    onSearchKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void;
+    /** 搜索框 DOM 引用，供打开面板时自动聚焦。 */
+    searchInputRef: RefObject<HTMLInputElement | null>;
+    /** 搜索框的无障碍名称。 */
+    searchAriaLabel: string;
     /** Portal 面板的 DOM 引用，供外点关闭判断。 */
-    menuRef: RefObject<HTMLUListElement | null>;
+    menuRef: RefObject<HTMLDivElement | null>;
     /** Portal 面板的 fixed 定位与宽度。 */
     placement: SelectMenuPlacement;
     /** 是否正在执行退出过渡；退出阶段面板保留挂载但不可交互。 */
@@ -222,6 +234,38 @@ const findAdjacentEnabledIndex = (
 };
 
 /**
+ * 在当前可见选项中优先定位已选项；已选项被过滤时定位到第一个可用选项。
+ */
+const findSelectedOrFirstEnabledIndex = (
+    items: SelectOption[],
+    value: string,
+): number => {
+    const selectedIndex = items.findIndex(
+        (item: SelectOption): boolean => item.value === value,
+    );
+
+    return selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items);
+};
+
+/**
+ * 按展示文案过滤选项，保留禁用项以便用户了解其存在但不能提交。
+ */
+const filterSelectItems = (
+    items: SelectOption[],
+    searchTerm: string,
+): SelectOption[] => {
+    const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase();
+
+    if (!normalizedSearchTerm) {
+        return items;
+    }
+
+    return items.filter((item: SelectOption): boolean =>
+        item.label.toLocaleLowerCase().includes(normalizedSearchTerm),
+    );
+};
+
+/**
  * 构造与原生 select 兼容的 `ChangeEvent`，供页面现有 handler 无改动复用。
  */
 const createSelectChangeEvent = (nextValue: string): ChangeEvent<HTMLSelectElement> => {
@@ -309,6 +353,12 @@ const SelectOptionsMenu = ({
     highlightedIndex,
     onHighlight,
     onSelect,
+    searchable,
+    searchTerm,
+    onSearchTermChange,
+    onSearchKeyDown,
+    searchInputRef,
+    searchAriaLabel,
     menuRef,
     placement,
     isClosing,
@@ -321,33 +371,68 @@ const SelectOptionsMenu = ({
     };
 
     return (
-        <ul
+        <div
             ref={menuRef}
-            id={listboxId}
             className={
                 isClosing
-                    ? "pl-select-menu pl-select-menu--portal pl-select-menu--closing scroll-area-night"
-                    : "pl-select-menu pl-select-menu--portal scroll-area-night"
+                    ? "pl-select-menu pl-select-menu--portal pl-select-menu--closing"
+                    : "pl-select-menu pl-select-menu--portal"
             }
-            role="listbox"
             style={menuStyle}
             aria-hidden={isClosing}
             inert={isClosing}
-            aria-activedescendant={`${listboxId}-option-${highlightedIndex}`}
         >
-            {items.map((option: SelectOption, index: number): ReactElement => (
-                <SelectMenuOption
-                    key={option.value}
-                    option={option}
-                    index={index}
-                    optionId={`${listboxId}-option-${index}`}
-                    isSelected={option.value === value}
-                    isHighlighted={index === highlightedIndex}
-                    onSelect={onSelect}
-                    onHighlight={onHighlight}
-                />
-            ))}
-        </ul>
+            {searchable ? (
+                <div className="pl-select-menu__search">
+                    <input
+                        ref={searchInputRef}
+                        className="pl-select-menu__search-input"
+                        type="search"
+                        role="combobox"
+                        value={searchTerm}
+                        onChange={onSearchTermChange}
+                        onKeyDown={onSearchKeyDown}
+                        placeholder="搜索选项"
+                        aria-label={searchAriaLabel}
+                        aria-expanded={!isClosing}
+                        aria-controls={listboxId}
+                        aria-activedescendant={
+                            items[highlightedIndex]
+                                ? `${listboxId}-option-${highlightedIndex}`
+                                : undefined
+                        }
+                        autoComplete="off"
+                        spellCheck={false}
+                    />
+                </div>
+            ) : null}
+            <ul
+                id={listboxId}
+                className="pl-select-menu__list scroll-area-night"
+                role="listbox"
+            >
+                {items.length > 0 ? (
+                    items.map(
+                        (option: SelectOption, index: number): ReactElement => (
+                            <SelectMenuOption
+                                key={option.value}
+                                option={option}
+                                index={index}
+                                optionId={`${listboxId}-option-${index}`}
+                                isSelected={option.value === value}
+                                isHighlighted={index === highlightedIndex}
+                                onSelect={onSelect}
+                                onHighlight={onHighlight}
+                            />
+                        ),
+                    )
+                ) : (
+                    <li className="pl-select-menu__empty" role="presentation">
+                        没有匹配的选项
+                    </li>
+                )}
+            </ul>
+        </div>
     );
 };
 
@@ -359,19 +444,24 @@ const SelectControl = ({
     name,
     value,
     disabled,
+    label,
     ariaLabel,
     className,
     options,
     children,
+    searchable = false,
     onChange,
 }: SelectProps): ReactElement => {
     const listboxId = useId();
     const wrapRef = useRef<HTMLDivElement>(null);
-    const menuRef = useRef<HTMLUListElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isClosing, setIsClosing] = useState<boolean>(false);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [menuPlacement, setMenuPlacement] =
         useState<SelectMenuPlacement | null>(null);
 
@@ -385,6 +475,15 @@ const SelectControl = ({
     );
     const selectedItem = selectedIndex >= 0 ? items[selectedIndex] : undefined;
     const displayLabel = selectedItem?.label ?? value;
+    const visibleItems = useMemo(
+        (): SelectOption[] => filterSelectItems(items, searchTerm),
+        [items, searchTerm],
+    );
+    const searchAriaLabel = label
+        ? `搜索${label}选项`
+        : ariaLabel
+          ? `搜索${ariaLabel}选项`
+          : "搜索选项";
 
     const controlClassName = className
         ? `pl-select ${className}`
@@ -425,6 +524,7 @@ const SelectControl = ({
         closeTimerRef.current = setTimeout((): void => {
             setIsClosing(false);
             setMenuPlacement(null);
+            setSearchTerm("");
             closeTimerRef.current = null;
         }, SELECT_MENU_EXIT_DURATION_MS);
     }, [clearCloseTimer, items, selectedIndex]);
@@ -448,6 +548,7 @@ const SelectControl = ({
     const openMenu = useCallback((): void => {
         clearCloseTimer();
         setIsClosing(false);
+        setSearchTerm("");
         setHighlightedIndex(
             selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
         );
@@ -537,6 +638,60 @@ const SelectControl = ({
         }
     };
 
+    /**
+     * 更新搜索词，并在过滤后的列表中将高亮复位到已选项或首个可用项。
+     */
+    const handleSearchTermChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const nextSearchTerm = event.target.value;
+        const nextVisibleItems = filterSelectItems(items, nextSearchTerm);
+
+        setSearchTerm(nextSearchTerm);
+        setHighlightedIndex(
+            findSelectedOrFirstEnabledIndex(nextVisibleItems, value),
+        );
+    };
+
+    /**
+     * 搜索框键盘操作：在匹配结果中移动、确认选择或返回触发器。
+     */
+    const handleSearchKeyDown = (
+        event: KeyboardEvent<HTMLInputElement>,
+    ): void => {
+        switch (event.key) {
+            case "ArrowDown":
+                event.preventDefault();
+                setHighlightedIndex((previousIndex: number): number =>
+                    findAdjacentEnabledIndex(visibleItems, previousIndex, 1),
+                );
+                return;
+            case "ArrowUp":
+                event.preventDefault();
+                setHighlightedIndex((previousIndex: number): number =>
+                    findAdjacentEnabledIndex(visibleItems, previousIndex, -1),
+                );
+                return;
+            case "Enter": {
+                const highlightedItem = visibleItems[highlightedIndex];
+
+                if (highlightedItem && !highlightedItem.disabled) {
+                    event.preventDefault();
+                    commitSelection(highlightedItem.value);
+                    triggerRef.current?.focus();
+                }
+                return;
+            }
+            case "Escape":
+                event.preventDefault();
+                closeMenu();
+                triggerRef.current?.focus();
+                return;
+            default:
+                return;
+        }
+    };
+
     /** 外部 value 变化时，保持高亮索引与选中项一致（面板关闭态）。 */
     useEffect((): void => {
         if (!isOpen) {
@@ -551,6 +706,21 @@ const SelectControl = ({
             clearCloseTimer();
         };
     }, [clearCloseTimer]);
+
+    /** 面板打开后将输入焦点放到搜索框，直接进入筛选状态。 */
+    useEffect((): (() => void) | void => {
+        if (!isOpen || !searchable) {
+            return;
+        }
+
+        const animationFrameId = window.requestAnimationFrame((): void => {
+            searchInputRef.current?.focus();
+        });
+
+        return (): void => {
+            window.cancelAnimationFrame(animationFrameId);
+        };
+    }, [isOpen, searchable]);
 
     /** 面板打开后在 scroll/resize 时重新定位 Portal。 */
     useEffect((): (() => void) | void => {
@@ -601,6 +771,7 @@ const SelectControl = ({
         <div className={wrapClassName} ref={wrapRef}>
             <button
                 type="button"
+                ref={triggerRef}
                 id={id}
                 className={controlClassName}
                 disabled={disabled || items.length === 0}
@@ -621,11 +792,17 @@ const SelectControl = ({
                 ? createPortal(
                       <SelectOptionsMenu
                           listboxId={listboxId}
-                          items={items}
+                          items={visibleItems}
                           value={value}
                           highlightedIndex={highlightedIndex}
                           onHighlight={setHighlightedIndex}
                           onSelect={commitSelection}
+                          searchable={searchable}
+                          searchTerm={searchTerm}
+                          onSearchTermChange={handleSearchTermChange}
+                          onSearchKeyDown={handleSearchKeyDown}
+                          searchInputRef={searchInputRef}
+                          searchAriaLabel={searchAriaLabel}
                           menuRef={menuRef}
                           placement={menuPlacement}
                           isClosing={isClosing}
@@ -662,6 +839,7 @@ export const Select = ({
                 <SelectControl
                     {...controlProps}
                     id={resolvedId}
+                    label={label}
                     className={undefined}
                 />
             </div>

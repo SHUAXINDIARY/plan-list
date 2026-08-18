@@ -25,7 +25,7 @@ const FLEET_SKELETON_CHIP_SIZE_CLASSES: string[] = [
 export const FleetResultsSkeleton = (): ReactElement => {
     return (
         <div
-            className="fleet-results fleet-results--loading scroll-area-night"
+            className="fleet-results fleet-results--loading"
             aria-live="polite"
             aria-label="正在载入机型数据"
             role="status"

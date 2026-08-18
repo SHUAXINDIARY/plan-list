@@ -528,6 +528,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 }
 
 @media (max-width: 1050px) {
+  .fleet-filters {
+    grid-template-columns: minmax(13rem, 1.4fr) repeat(2, minmax(8rem, 1fr));
+  }
+
   .aircraft-stat-dashboard__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -667,16 +671,10 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   border-color: var(--pl-border-error);
 }
 
-/* 结果窗使用固定视口高度承载筛选变化，避免页面随匹配数量反复跳动。 */
+/* 结果区置于普通文档流中，与页面共享同一个纵向滚动上下文。 */
 .fleet-results {
   box-sizing: border-box;
-  height: clamp(32rem, 68vh, 52rem);
-  min-height: 30rem;
-  padding: 0.15rem 0.35rem 0.15rem 0;
   margin-top: 1.5rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 
 .fleet-results--loading {
@@ -738,7 +736,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 
 .fleet-filters {
   display: grid;
-  grid-template-columns: minmax(13rem, 1.4fr) repeat(4, minmax(8rem, 1fr));
+  grid-template-columns: minmax(13rem, 1.4fr) repeat(5, minmax(8rem, 1fr));
   align-items: end;
   gap: 0.75rem;
   width: 100%;
@@ -1457,14 +1455,7 @@ html[data-theme="dark"] .aircraft-wiki__hero {
   }
 
   .fleet-results {
-    height: min(30rem, 70vh);
-    min-height: 24rem;
-    padding-right: 0;
-  }
-
-  .fleet-results--loading {
-    height: min(30rem, 70vh);
-    min-height: 24rem;
+    margin-top: 1.25rem;
   }
 
   .airline-entry__header {

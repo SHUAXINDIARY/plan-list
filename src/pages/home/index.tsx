@@ -1,7 +1,6 @@
 import {
     useEffect,
     useMemo,
-    useRef,
     useState,
     type ChangeEvent,
     type CSSProperties,
@@ -25,6 +24,7 @@ import {
     AIRLINE_ALLIANCE_OPTIONS,
     ALL_AIRCRAFT_MODELS_VALUE,
     ALL_AIRLINE_ALLIANCES_VALUE,
+    ALL_COUNTRIES_VALUE,
     ALL_MANUFACTURERS_VALUE,
     DEFAULT_AIRLINE_BRAND_COLOR,
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
@@ -340,6 +340,7 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
             return {
                 airlineName: airplaneDataItem.airline,
                 airlineEnglishName: airplaneDataItem.airlineEnglishName,
+                country: airplaneDataItem.country,
                 airlineWebsite: airplaneDataItem.airlineWebsite,
                 airlineAlliance: airplaneDataItem.airlineAlliance,
                 brandColor: getAirlineBrandColor(
@@ -404,6 +405,20 @@ const getManufacturerOptions = (airlineFleets: AirlineFleet[]): string[] => {
     );
 };
 
+// 从全部航司机队中提取唯一国家或地区选项，供首页国家筛选使用。
+const getCountryOptions = (airlineFleets: AirlineFleet[]): string[] => {
+    const countries = new Set<string>();
+
+    airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
+        countries.add(airlineFleet.country);
+    });
+
+    return Array.from(countries).sort(
+        (firstCountry: string, secondCountry: string): number =>
+            firstCountry.localeCompare(secondCountry, "zh-Hans-CN"),
+    );
+};
+
 // 从航司机队中收集具体型号选项；已选制造商时仅保留该制造商下出现过的型号，便于缩小下拉范围。
 const getAircraftModelOptions = (
     airlineFleets: AirlineFleet[],
@@ -435,11 +450,12 @@ const getAircraftModelOptions = (
     );
 };
 
-// 同时根据航司搜索词、制造商与具体型号筛选项过滤数据，并重新计算过滤后的统计数量。
+// 同时根据航司搜索词、国家或地区、联盟、制造商与具体型号筛选项过滤数据，并重新计算过滤后的统计数量。
 const filterAirlineFleets = (
     airlineFleets: AirlineFleet[],
     airlineSearchTerm: string,
     selectedAirlineAlliance: AirlineAllianceFilter,
+    selectedCountry: string,
     selectedManufacturer: string,
     selectedAircraftModel: string,
     sortOrder: PassengerAircraftSortOrder,
@@ -453,6 +469,9 @@ const filterAirlineFleets = (
                 (selectedAirlineAlliance === NO_AIRLINE_ALLIANCE_VALUE
                     ? airlineFleet.airlineAlliance === null
                     : airlineFleet.airlineAlliance === selectedAirlineAlliance);
+            const matchesCountry =
+                selectedCountry === ALL_COUNTRIES_VALUE ||
+                airlineFleet.country === selectedCountry;
             const normalizedAirlineName =
                 airlineFleet.airlineName.toLocaleLowerCase();
             const normalizedAirlineEnglishName =
@@ -460,6 +479,7 @@ const filterAirlineFleets = (
 
             return (
                 matchesAirlineAlliance &&
+                matchesCountry &&
                 (normalizedAirlineName.includes(normalizedSearchTerm) ||
                     normalizedAirlineEnglishName.includes(normalizedSearchTerm))
             );
@@ -529,6 +549,9 @@ const HomePage = (): ReactElement => {
     const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>("");
     const [selectedAirlineAlliance, setSelectedAirlineAlliance] =
         useState<AirlineAllianceFilter>(ALL_AIRLINE_ALLIANCES_VALUE);
+    const [selectedCountry, setSelectedCountry] = useState<string>(
+        ALL_COUNTRIES_VALUE,
+    );
     const [selectedManufacturer, setSelectedManufacturer] = useState<string>(
         ALL_MANUFACTURERS_VALUE,
     );
@@ -539,8 +562,6 @@ const HomePage = (): ReactElement => {
         useState<PassengerAircraftSortOrder>(
             DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
         );
-    const fleetResultsRef = useRef<HTMLDivElement | null>(null);
-
     useEffect((): (() => void) => {
         let isMounted = true;
 
@@ -584,6 +605,11 @@ const HomePage = (): ReactElement => {
         return getManufacturerOptions(airlineFleets);
     }, [airlineFleets]);
 
+    // 国家或地区选项由完整航司数据生成，避免维护一份容易偏离数据的静态列表。
+    const countryOptions = useMemo((): string[] => {
+        return getCountryOptions(airlineFleets);
+    }, [airlineFleets]);
+
     // 具体型号选项随制造商筛选变化，避免列出与当前制造商无关的型号。
     const aircraftModelOptions = useMemo((): string[] => {
         return getAircraftModelOptions(airlineFleets, selectedManufacturer);
@@ -604,6 +630,7 @@ const HomePage = (): ReactElement => {
             airlineFleets,
             airlineSearchTerm,
             selectedAirlineAlliance,
+            selectedCountry,
             selectedManufacturer,
             selectedAircraftModel,
             selectedSortOrder,
@@ -612,6 +639,7 @@ const HomePage = (): ReactElement => {
         airlineFleets,
         airlineSearchTerm,
         selectedAirlineAlliance,
+        selectedCountry,
         selectedManufacturer,
         selectedAircraftModel,
         selectedSortOrder,
@@ -704,16 +732,6 @@ const HomePage = (): ReactElement => {
         return createTopAircraftModelStats(filteredAirlineFleets);
     }, [filteredAirlineFleets]);
 
-    // 将筛选条件组合成视图 key，仅用于在结果变化后重置内嵌滚动位置。
-    const filteredViewKey = `${airlineSearchTerm.trim()}-${selectedAirlineAlliance}-${selectedManufacturer}-${selectedAircraftModel}-${selectedSortOrder}`;
-
-    useEffect((): void => {
-        // 筛选条件变化后重置结果区滚动位置，避免新结果停留在旧列表的中段。
-        if (fleetResultsRef.current) {
-            fleetResultsRef.current.scrollTop = 0;
-        }
-    }, [filteredViewKey]);
-
     // 航司搜索输入实时写入状态，驱动列表过滤。
     const handleAirlineSearchChange = (
         event: ChangeEvent<HTMLInputElement>,
@@ -727,6 +745,20 @@ const HomePage = (): ReactElement => {
     ): void => {
         if (isAirlineAllianceFilter(event.target.value)) {
             setSelectedAirlineAlliance(event.target.value);
+        }
+    };
+
+    // 国家或地区下拉仅接受当前数据集生成的选项，避免无效筛选值导致列表意外为空。
+    const handleCountryChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const country = event.target.value;
+
+        if (
+            country === ALL_COUNTRIES_VALUE ||
+            countryOptions.includes(country)
+        ) {
+            setSelectedCountry(country);
         }
     };
 
@@ -1012,6 +1044,25 @@ const HomePage = (): ReactElement => {
                         </Select>
 
                         <Select
+                            label="国家或地区"
+                            className="fleet-filter"
+                            value={selectedCountry}
+                            onChange={handleCountryChange}
+                            searchable
+                        >
+                            <option value={ALL_COUNTRIES_VALUE}>
+                                全部国家或地区
+                            </option>
+                            {countryOptions.map(
+                                (country: string): ReactElement => (
+                                    <option key={country} value={country}>
+                                        {country}
+                                    </option>
+                                ),
+                            )}
+                        </Select>
+
+                        <Select
                             label="机型制造商"
                             className="fleet-filter"
                             value={selectedManufacturer}
@@ -1073,12 +1124,10 @@ const HomePage = (): ReactElement => {
 
             {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
                 <div
-                    className="fleet-results scroll-area-night"
-                    ref={fleetResultsRef}
+                    className="fleet-results"
                     role="region"
                     aria-label="航司机型筛选结果"
                     aria-live="polite"
-                    tabIndex={0}
                 >
                     {filteredAirlineFleets.length === 0 ? (
                         <p className="fleet-results__empty">

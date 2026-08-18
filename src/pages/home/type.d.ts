@@ -16,6 +16,8 @@ export interface AirlineFleet {
   airlineName: string;
   /** 航司英文名称，用于在中文名称旁展示辅助识别信息。 */
   airlineEnglishName: string;
+  /** 航司所属国家或地区，用于首页国家筛选。 */
+  country: string;
   /** 航司官方网站链接，用于跳转至航司官网。 */
   airlineWebsite: string;
   /** 航司所属联盟；未加入联盟时为空。 */
@@ -32,6 +34,8 @@ export interface AirplaneDataItem {
   airline: string;
   /** 航司英文名称，用于跨语言展示、搜索或后续外部数据匹配。 */
   airlineEnglishName: string;
+  /** 航司所属国家或地区；中国内地、香港、澳门和台湾按统一前缀标记。 */
+  country: string;
   /** 航司官方网站链接，供界面跳转或参考资料引用。 */
   airlineWebsite: string;
   /** 航司所属联盟；未加入联盟时为空。 */
