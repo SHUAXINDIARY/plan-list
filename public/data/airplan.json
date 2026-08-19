@@ -1201,6 +1201,25 @@
         }
     },
     {
+        "airline": "南非连接航空",
+        "airlineEnglishName": "Airlink",
+        "country": "南非",
+        "airlineWebsite": "https://www.flyairlink.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 71,
+        "models": {
+            "Embraer": {
+                "E195-E2": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-e195-e2",
+                "ERJ-135": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-135",
+                "ERJ-140": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-140",
+                "ERJ-170": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-170",
+                "ERJ-175": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-175",
+                "ERJ-190": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-190",
+                "ERJ-195": "https://www.planespotters.net/photos/fleet/Airlink-South-Africa/embraer-erj-195"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "country": "泰国",
