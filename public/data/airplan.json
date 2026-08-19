@@ -1220,6 +1220,23 @@
         }
     },
     {
+        "airline": "伏林航空",
+        "airlineEnglishName": "Vueling",
+        "country": "西班牙",
+        "airlineWebsite": "https://www.vueling.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 138,
+        "models": {
+            "Airbus": {
+                "A319-100": "https://www.planespotters.net/photos/fleet/Vueling/airbus-a319-100",
+                "A320-200": "https://www.planespotters.net/photos/fleet/Vueling/airbus-a320-200",
+                "A320neo": "https://www.planespotters.net/photos/fleet/Vueling/airbus-a320neo",
+                "A321-200": "https://www.planespotters.net/photos/fleet/Vueling/airbus-a321-200",
+                "A321neo": "https://www.planespotters.net/photos/fleet/Vueling/airbus-a321neo"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "country": "泰国",
