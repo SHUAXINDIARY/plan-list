@@ -6243,3 +6243,23 @@
 - `src/pages/home/index.css`：适配五项概览数据的桌面端与移动端布局。
 - `src/pages/home/FleetResultsSkeleton.tsx`：将卡片概览骨架项同步为五项。
 - `taskRecord.md`：追加本次航司国家或地区展示任务记录。
+
+## 日期
+
+2026-08-19
+
+## 任务目的
+
+按现有航司数据规则，在航司数据中新增尼日利亚 ValueJet航空。
+
+## 完成过程
+
+1. 根据 Planespotters 的 ValueJet 页面核对当前机队规模、在役状态与历史机型。
+2. 新增 ValueJet航空中英文名称、所属国家、官网、联盟信息及 9 架当前机队总数。
+3. 补充 CRJ-900 和 CRJ-1000 两类当前机型，并配置对应的 Planespotters `photos/fleet` 图片列表链接。
+4. 验证 JSON 格式、数据字段、机型链接规则与生产构建。
+
+## 修改具体文件
+
+- `public/data/airplan.json`：新增 ValueJet航空基础信息、国家、机队数量、当前机型和图片列表链接。
+- `taskRecord.md`：追加本次 ValueJet航空数据补充记录。

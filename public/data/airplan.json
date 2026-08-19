@@ -1187,6 +1187,20 @@
         }
     },
     {
+        "airline": "ValueJet航空",
+        "airlineEnglishName": "ValueJet",
+        "country": "尼日利亚",
+        "airlineWebsite": "https://flyvaluejet.com",
+        "airlineAlliance": null,
+        "passengerAircraftCount": 9,
+        "models": {
+            "Bombardier": {
+                "CRJ-900": "https://www.planespotters.net/photos/fleet/ValueJet/bombardier-crj-900",
+                "CRJ-1000": "https://www.planespotters.net/photos/fleet/ValueJet/bombardier-crj-1000"
+            }
+        }
+    },
+    {
         "airline": "泰国狮子航空",
         "airlineEnglishName": "Thai Lion Air",
         "country": "泰国",
