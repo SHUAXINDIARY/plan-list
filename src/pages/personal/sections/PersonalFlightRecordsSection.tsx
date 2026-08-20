@@ -17,18 +17,54 @@ const FLIGHT_ROUTE_SEPARATOR_LABEL: Record<FlightRouteSeparator, string> = {
     arrow: "->",
 };
 
+/** 乘机记录出发日期的固定数据格式。 */
+const FLIGHT_DEPARTURE_DATE_PATTERN = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+
 /**
- * 将乘机记录的路线格式化为 `(出发 - 到达)` 或往返 `<->` 文案。
+ * 判断出发日是否严格晚于用户本地当天；格式不合法的历史数据不展示状态标签。
  */
-const formatFlightRoute = (flightRecord: FlightRecord): string => {
-    if (flightRecord.routeKind === "round-trip") {
-        return `${flightRecord.origin} <-> ${flightRecord.destination}`;
+const isPendingFlight = (departureDate: string): boolean => {
+    const dateParts = departureDate.match(FLIGHT_DEPARTURE_DATE_PATTERN);
+
+    if (dateParts === null) {
+        return false;
     }
 
-    const routeSeparator =
-        FLIGHT_ROUTE_SEPARATOR_LABEL[flightRecord.routeSeparator ?? "dash"];
+    const year = Number(dateParts[1]);
+    const month = Number(dateParts[2]);
+    const day = Number(dateParts[3]);
+    const departureDayTimestamp = Date.UTC(year, month - 1, day);
+    const parsedDepartureDate = new Date(departureDayTimestamp);
 
-    return `${flightRecord.origin} ${routeSeparator} ${flightRecord.destination}`;
+    if (
+        parsedDepartureDate.getUTCFullYear() !== year ||
+        parsedDepartureDate.getUTCMonth() !== month - 1 ||
+        parsedDepartureDate.getUTCDate() !== day
+    ) {
+        return false;
+    }
+
+    const currentDate = new Date();
+    const currentDayTimestamp = Date.UTC(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
+    );
+
+    return departureDayTimestamp > currentDayTimestamp;
+};
+
+/**
+ * 获取单条乘机记录的航线连接符，供起降地点之间的视觉连接使用。
+ */
+const getFlightRouteSeparator = (flightRecord: FlightRecord): string => {
+    if (flightRecord.routeKind === "round-trip") {
+        return "<->";
+    }
+
+    return FLIGHT_ROUTE_SEPARATOR_LABEL[
+        flightRecord.routeSeparator ?? "dash"
+    ];
 };
 
 /**
@@ -43,13 +79,6 @@ const formatFlightDate = (flightRecord: FlightRecord): string => {
     }
 
     return flightRecord.departureDate;
-};
-
-/**
- * 生成单条乘机记录的无障碍朗读文案。
- */
-const formatFlightRecordAriaLabel = (flightRecord: FlightRecord): string => {
-    return `${flightRecord.airline} ${flightRecord.aircraft}，${formatFlightRoute(flightRecord)}，${formatFlightDate(flightRecord)}`;
 };
 
 /**
@@ -157,43 +186,74 @@ const PersonalFlightRecordsSection = (): ReactElement => {
                                                 (
                                                     flightRecord: FlightRecord,
                                                     flightRecordIndex: number,
-                                                ): ReactElement => (
-                                                    <li
-                                                        className="flight-ledger-row"
-                                                        key={`${flightRecord.airline}-${flightRecord.aircraft}-${flightRecord.departureDate}-${flightRecordIndex}`}
-                                                    >
-                                                        <span
-                                                            className="flight-ledger-row__airline"
-                                                            aria-label={formatFlightRecordAriaLabel(
-                                                                flightRecord,
-                                                            )}
+                                                ): ReactElement => {
+                                                    const isPending =
+                                                        isPendingFlight(
+                                                            flightRecord.departureDate,
+                                                        );
+
+                                                    return (
+                                                        <li
+                                                            className="flight-ledger-row"
+                                                            key={`${flightRecord.airline}-${flightRecord.aircraft}-${flightRecord.departureDate}-${flightRecordIndex}`}
                                                         >
-                                                            {
-                                                                flightRecord.airline
-                                                            }
-                                                        </span>
-                                                        <span className="flight-ledger-row__aircraft">
-                                                            {
-                                                                flightRecord.aircraft
-                                                            }
-                                                        </span>
-                                                        <span className="flight-ledger-row__route">
-                                                            {formatFlightRoute(
-                                                                flightRecord,
-                                                            )}
-                                                        </span>
-                                                        <time
-                                                            className="flight-ledger-row__date"
-                                                            dateTime={
-                                                                flightRecord.departureDate
-                                                            }
-                                                        >
-                                                            {formatFlightDate(
-                                                                flightRecord,
-                                                            )}
-                                                        </time>
-                                                    </li>
-                                                ),
+                                                            <div className="flight-ledger-row__identity">
+                                                                <div className="flight-ledger-row__airline-group">
+                                                                    <span className="flight-ledger-row__airline">
+                                                                        {
+                                                                            flightRecord.airline
+                                                                        }
+                                                                    </span>
+                                                                    {isPending ? (
+                                                                        <span className="flight-ledger-row__status">
+                                                                            待出行
+                                                                        </span>
+                                                                    ) : null}
+                                                                </div>
+                                                                <span className="flight-ledger-row__aircraft">
+                                                                    {
+                                                                        flightRecord.aircraft
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                            <div className="flight-ledger-row__route">
+                                                                <span className="flight-ledger-row__route-point">
+                                                                    {
+                                                                        flightRecord.origin
+                                                                    }
+                                                                </span>
+                                                                <span
+                                                                    className="flight-ledger-row__route-connector"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    {getFlightRouteSeparator(
+                                                                        flightRecord,
+                                                                    )}
+                                                                </span>
+                                                                <span className="flight-ledger-row__route-point">
+                                                                    {
+                                                                        flightRecord.destination
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                            <time
+                                                                className="flight-ledger-row__date"
+                                                                dateTime={
+                                                                    flightRecord.departureDate
+                                                                }
+                                                            >
+                                                                <span className="flight-ledger-row__date-label">
+                                                                    日期
+                                                                </span>
+                                                                <span className="flight-ledger-row__date-value">
+                                                                    {formatFlightDate(
+                                                                        flightRecord,
+                                                                    )}
+                                                                </span>
+                                                            </time>
+                                                        </li>
+                                                    );
+                                                },
                                             )}
                                         </ul>
                                     </div>
