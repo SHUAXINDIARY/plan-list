@@ -308,7 +308,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     },
     {
         airline: "中国东方航空",
-        aircraft: "320",
+        aircraft: "321",
         origin: "西安",
         destination: "北京",
         routeKind: "one-way",
@@ -316,7 +316,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     },
     {
         airline: "中国东方航空",
-        aircraft: "319",
+        aircraft: "320",
         origin: "北京",
         destination: "西安",
         routeKind: "one-way",
