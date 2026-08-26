@@ -6409,3 +6409,199 @@
 - `src/components/Select/index.css`：实现清除按钮布局、交互和焦点样式。
 - `src/pages/home/index.tsx`：为四个首页多选筛选器配置清除后的默认值。
 - `taskRecord.md`：追加本次多选筛选清除入口记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+新增飞机模型渲染占位页面，并接入应用路由和顶部导航。
+
+## 完成过程
+
+1. 新增模型渲染页面的占位视窗与模型、场景、渲染状态信息，沿用现有双主题设计 token 和响应式布局。
+2. 在应用主导航和懒加载路由中注册 `/plane-render`，导航名称为“模型渲染”。
+3. 将新路径加入路由过渡顺序，保持页面切换方向与顶部导航顺序一致。
+4. 按用户要求仅完成代码修改，未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/index.tsx`：新增飞机模型渲染占位页面结构。
+- `src/pages/planeRender/index.css`：新增模型视窗和状态信息的双主题响应式样式。
+- `src/App.tsx`：注册懒加载页面、`/plane-render` 路由和顶部导航入口。
+- `src/components/route-transition/index.tsx`：补充照片和模型渲染页面的导航过渡顺序。
+- `taskRecord.md`：追加本次页面接入记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+将 `amvlab/aircraft-models` 仓库作为 Git 子模块加入当前项目。
+
+## 完成过程
+
+1. 使用 `git submodule add` 将 `https://github.com/amvlab/aircraft-models` 克隆到项目根目录下的 `aircraft-models`。
+2. 确认 `.gitmodules` 已记录子模块路径与远端 URL。
+3. 确认父仓库暂存的子模块 gitlink 指向提交 `91d835e8e851b2317fe79af291c9fed6153fd525`。
+4. 本次仅进行 Git 配置核对，未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `.gitmodules`：新增 `aircraft-models` 子模块路径和远端地址。
+- `aircraft-models`：新增指向 `91d835e8e851b2317fe79af291c9fed6153fd525` 的 Git 子模块引用。
+- `taskRecord.md`：追加本次子模块接入记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+新增可一键更新当前仓库全部 Git 子模块的命令脚本。
+
+## 完成过程
+
+1. 新增 `updateModule.sh`，通过脚本路径定位父仓库根目录，支持从任意当前工作目录调用。
+2. 当仓库未配置 `.gitmodules` 时输出提示并安全退出。
+3. 依次执行 `git submodule sync --recursive` 与 `git submodule update --init --recursive --remote`，同步远端地址并递归更新全部子模块。
+4. 更新完成后输出递归子模块状态；按用户要求未实际执行更新脚本、构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `updateModule.sh`：新增可执行的递归 Git 子模块更新脚本。
+- `taskRecord.md`：追加本次脚本新增记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+使用 Three.js WebGPU 渲染 `aircraft-models/models` 目录下的全部 GLB 飞机模型。
+
+## 完成过程
+
+1. 通过 Rspack 构建期目录上下文递归收集 `aircraft-models/models` 内所有 `.glb` 文件，避免维护手写模型清单。
+2. 扩展 Rsbuild 静态资源白名单，使 GLB 文件输出为可由 GLTFLoader 请求的构建资源。
+3. 新增 WebGPU Three.js 场景，使用 GLTFLoader 并发载入全量模型、统一模型尺度、排列为机队全览，并提供 OrbitControls 交互。
+4. 新增模型目录，可在完整机队与单架模型焦点之间切换；补充加载进度、失败提示、响应式布局与 GPU 资源释放。
+5. 根据模型仓库的 CC BY 4.0 许可证，在页面中补充来源和许可证链接。
+6. 按用户要求未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`：将 `.glb` 加入静态资源处理范围。
+- `src/env.d.ts`：补充 Rspack 构建期目录上下文的 TypeScript 声明。
+- `src/pages/planeRender/modelAssets.ts`：自动收集 GLB 文件并导出懒加载模型目录。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增 Three.js WebGPU 全量模型加载与渲染视窗。
+- `src/pages/planeRender/index.tsx`：接入加载状态、机队全览和单模型聚焦目录。
+- `src/pages/planeRender/index.css`：实现渲染视窗、模型目录、响应式布局和署名链接样式。
+- `taskRecord.md`：追加本次 WebGPU 模型渲染记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复飞机模型资源目录和 WebGPU 视窗中的 TypeScript 类型错误。
+
+## 完成过程
+
+1. 运行 TypeScript 检查，定位到 Rspack `webpackContext` 返回 `unknown` 导致 GLB 资源 URL 无法读取的问题。
+2. 将模型目录扫描改为 Rspack 泛型 `import.meta.glob<string>`，使每个懒加载器的返回值明确为 `Promise<string>`。
+3. 显式忽略 WebGPU `setAnimationLoop` 的异步返回值，标明动画循环 Promise 不参与后续控制流。
+4. 移除不再使用且无法覆盖 Rspack 内置声明的自定义目录上下文类型。
+5. 重新运行 `pnpm run type-check`，确认 TypeScript 检查通过；未运行构建或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：使用类型安全的泛型 GLB 资源目录扫描。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：显式处理异步动画循环调用的返回值。
+- `src/env.d.ts`：移除失效的 Rspack 目录上下文类型扩展。
+- `taskRecord.md`：追加本次 TypeScript 类型修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复 WebGPU 能力检测中 `Navigator.gpu` 未声明导致的 TypeScript 报错。
+
+## 完成过程
+
+1. 将直接读取 `navigator.gpu` 改为使用 `"gpu" in navigator` 判断属性是否存在。
+2. 保持浏览器不支持 WebGPU 时的原有错误提示和初始化中断行为。
+3. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：使用无需 `Navigator.gpu` 类型声明的 WebGPU 能力检测。
+- `taskRecord.md`：追加本次 WebGPU 类型兼容性修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复 Rspack 无法静态分析动态 `import.meta.glob` 模式导致的构建警告。
+
+## 完成过程
+
+1. 确认 Rspack 要求 `import.meta.glob` 的模式与选项均为构建期字面量。
+2. 将 GLB 目录 glob 模式直接内联到调用中，保留原有的泛型资源 URL 类型和懒加载扫描范围。
+3. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：将动态 glob 模式改为构建期字面量。
+- `taskRecord.md`：追加本次 Rspack 静态分析修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+将飞机模型视窗调整为单次仅渲染当前选择的一架模型。
+
+## 完成过程
+
+1. 页面默认选择模型目录中的第一项，移除完整机队全览入口。
+2. 将 WebGPU 视窗输入收敛为单个 GLB 资源，取消场景内全量并发加载和机队网格排布。
+3. 切换目录项时通过 effect 清理旧场景及 GPU 资源，再加载并聚焦新选择的模型。
+4. 同步更新载入状态的分母，使其反映当前单模型渲染状态。
+5. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/index.tsx`：默认选择单架模型并移除完整机队入口。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：改为仅加载、渲染和聚焦当前单个 GLB 模型。
+- `taskRecord.md`：追加本次单模型渲染调整记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+为 WebGPU 飞机模型画布增加全屏查看和更大范围的缩放能力。
+
+## 完成过程
+
+1. 在画布容器中接入 Fullscreen API，提供全屏查看和退出全屏按钮，并监听浏览器原生退出状态。
+2. 全屏容器复用现有 ResizeObserver，使 WebGPU 画布在进入、退出全屏时自动更新尺寸。
+3. 将 OrbitControls 的距离范围调整为 `0.45` 至 `80`，启用以指针为中心的缩放并提升缩放速度。
+4. 为全屏按钮补充键盘焦点、悬停、移动端定位和全屏请求失败提示。
+5. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增全屏状态、切换命令与扩展的缩放控制范围。
+- `src/pages/planeRender/index.css`：新增全屏画布、按钮和错误提示样式。
+- `taskRecord.md`：追加本次全屏与缩放能力记录。
