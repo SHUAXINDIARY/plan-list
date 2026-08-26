@@ -132,6 +132,26 @@ const SelectChevron = (): ReactElement => (
     </svg>
 );
 
+/** 选中内容的清除图标：仅在多选值偏离默认值时展示。 */
+const SelectClearIcon = (): ReactElement => (
+    <svg
+        className="pl-select__clear-icon"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
+    >
+        <path
+            d="M7 7l10 10M17 7L7 17"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+        />
+    </svg>
+);
+
 /**
  * 选中态勾号：仅装饰，选中语义由 `aria-selected` 承担。
  */
@@ -269,6 +289,20 @@ const filterSelectItems = (
 
     return items.filter((item: SelectOption): boolean =>
         item.label.toLocaleLowerCase().includes(normalizedSearchTerm),
+    );
+};
+
+/** 比较两组受控多选值是否完全一致，用于判断是否应展示清除按钮。 */
+const areSelectValuesEqual = (
+    firstValues: string[],
+    secondValues: string[],
+): boolean => {
+    return (
+        firstValues.length === secondValues.length &&
+        firstValues.every(
+            (value: string, index: number): boolean =>
+                value === secondValues[index],
+        )
     );
 };
 
@@ -480,6 +514,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
     );
 
     const selectedValues = props.multiple ? props.value : [props.value];
+    const clearValue = props.multiple ? props.clearValue : undefined;
     const selectedItems = items.filter(
         (item: SelectOption): boolean => selectedValues.includes(item.value),
     );
@@ -494,6 +529,10 @@ const SelectControl = (props: SelectProps): ReactElement => {
     const controlAriaLabel = multiple
         ? `${ariaLabel ?? label ?? "选择选项"}，${displayLabel}`
         : ariaLabel;
+    const shouldShowClearButton =
+        clearValue !== undefined &&
+        !areSelectValuesEqual(selectedValues, clearValue);
+    const clearButtonLabel = `清空${label ?? ariaLabel ?? "已选项"}`;
     const visibleItems = useMemo(
         (): SelectOption[] => filterSelectItems(items, searchTerm),
         [items, searchTerm],
@@ -602,6 +641,25 @@ const SelectControl = (props: SelectProps): ReactElement => {
             return;
         }
         openMenu();
+    };
+
+    /** 恢复调用方指定的多选默认值，并将焦点安全地还给下拉触发器。 */
+    const handleClearClick = (event: MouseEvent<HTMLButtonElement>): void => {
+        event.stopPropagation();
+
+        if (props.multiple !== true || props.clearValue === undefined) {
+            return;
+        }
+
+        props.onChange(props.clearValue);
+
+        if (isOpen) {
+            closeMenu();
+        }
+
+        window.requestAnimationFrame((): void => {
+            triggerRef.current?.focus();
+        });
     };
 
     /**
@@ -817,6 +875,18 @@ const SelectControl = (props: SelectProps): ReactElement => {
             >
                 <span className="pl-select__value">{displayLabel}</span>
             </button>
+            {shouldShowClearButton ? (
+                <button
+                    type="button"
+                    className="pl-select__clear"
+                    disabled={disabled}
+                    aria-label={clearButtonLabel}
+                    title={clearButtonLabel}
+                    onClick={handleClearClick}
+                >
+                    <SelectClearIcon />
+                </button>
+            ) : null}
             {name
                 ? props.multiple
                     ? selectedItems.map(

@@ -152,6 +152,60 @@
   white-space: nowrap;
 }
 
+.pl-select:has(+ .pl-select__clear) {
+  padding-right: 4.7rem;
+}
+
+.pl-select__clear {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 2.08rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  padding: 0;
+  color: var(--pl-text-meta);
+  background-color: transparent;
+  border: 0;
+  border-radius: 0.46rem;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+    color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.pl-select__clear:not(:disabled):hover {
+  color: var(--pl-link);
+  background-color: var(--pl-surface-pill);
+}
+
+.pl-select__clear:focus-visible {
+  color: var(--pl-text-body);
+  background-color: var(--pl-surface-pill);
+  outline: 1px solid var(--pl-border-focus);
+  outline-offset: 1px;
+}
+
+.pl-select__clear:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.pl-select-wrap:has(.pl-select__clear:not(:disabled):hover) .pl-select,
+.pl-select-wrap:has(.pl-select__clear:focus-visible) .pl-select {
+  color: var(--pl-text-body);
+  border-color: var(--pl-border-focus);
+}
+
+.pl-select__clear-icon {
+  width: 0.74rem;
+  height: 0.74rem;
+}
+
 button.pl-select {
   text-align: left;
 }
@@ -335,6 +389,10 @@ button.pl-select {
   .pl-select__chevron,
   .pl-select-menu__search-input,
   .pl-select-menu__option {
+    transition: none;
+  }
+
+  .pl-select__clear {
     transition: none;
   }
 

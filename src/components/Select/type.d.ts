@@ -62,6 +62,8 @@ export interface MultipleSelectProps extends SelectBaseProps {
     multiple: true;
     /** 当前选中项的值数组，顺序由父组件控制。 */
     value: string[];
+    /** 清除已选项后写回的默认值；传入后仅在当前值偏离默认值时显示清除按钮。 */
+    clearValue?: string[];
     /** 用户切换某项时触发，参数为切换后的完整选中值数组。 */
     onChange: (values: string[]) => void;
 }

@@ -1117,6 +1117,7 @@ const HomePage = (): ReactElement => {
                             value={selectedAirlineAlliance}
                             onChange={handleAirlineAllianceChange}
                             multiple
+                            clearValue={[ALL_AIRLINE_ALLIANCES_VALUE]}
                         >
                             <option value={ALL_AIRLINE_ALLIANCES_VALUE}>
                                 全部联盟
@@ -1143,6 +1144,7 @@ const HomePage = (): ReactElement => {
                             onChange={handleCountryChange}
                             searchable
                             multiple
+                            clearValue={[ALL_COUNTRIES_VALUE]}
                         >
                             <option value={ALL_COUNTRIES_VALUE}>
                                 全部国家或地区
@@ -1162,6 +1164,7 @@ const HomePage = (): ReactElement => {
                             value={selectedManufacturer}
                             onChange={handleManufacturerChange}
                             multiple
+                            clearValue={[ALL_MANUFACTURERS_VALUE]}
                         >
                             <option value={ALL_MANUFACTURERS_VALUE}>
                                 全部制造商
@@ -1184,6 +1187,7 @@ const HomePage = (): ReactElement => {
                             value={selectedAircraftModel}
                             onChange={handleAircraftModelChange}
                             multiple
+                            clearValue={[ALL_AIRCRAFT_MODELS_VALUE]}
                         >
                             <option value={ALL_AIRCRAFT_MODELS_VALUE}>
                                 全部型号
