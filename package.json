@@ -7,7 +7,8 @@
     "build": "rsbuild build",
     "dev": "rsbuild",
     "preview": "rsbuild preview",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "update": "bash updateModule.sh"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.2",

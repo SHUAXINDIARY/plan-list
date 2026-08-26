@@ -6453,3 +6453,23 @@
 - `.gitmodules`：新增 `aircraft-models` 子模块路径和远端地址。
 - `aircraft-models`：新增指向 `91d835e8e851b2317fe79af291c9fed6153fd525` 的 Git 子模块引用。
 - `taskRecord.md`：追加本次子模块接入记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+新增可一键更新当前仓库全部 Git 子模块的命令脚本。
+
+## 完成过程
+
+1. 新增 `updateModule.sh`，通过脚本路径定位父仓库根目录，支持从任意当前工作目录调用。
+2. 当仓库未配置 `.gitmodules` 时输出提示并安全退出。
+3. 依次执行 `git submodule sync --recursive` 与 `git submodule update --init --recursive --remote`，同步远端地址并递归更新全部子模块。
+4. 更新完成后输出递归子模块状态；按用户要求未实际执行更新脚本、构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `updateModule.sh`：新增可执行的递归 Git 子模块更新脚本。
+- `taskRecord.md`：追加本次脚本新增记录。
