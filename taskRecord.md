@@ -6583,3 +6583,25 @@
 - `src/pages/planeRender/index.tsx`：默认选择单架模型并移除完整机队入口。
 - `src/pages/planeRender/AircraftModelViewport.tsx`：改为仅加载、渲染和聚焦当前单个 GLB 模型。
 - `taskRecord.md`：追加本次单模型渲染调整记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+为 WebGPU 飞机模型画布增加全屏查看和更大范围的缩放能力。
+
+## 完成过程
+
+1. 在画布容器中接入 Fullscreen API，提供全屏查看和退出全屏按钮，并监听浏览器原生退出状态。
+2. 全屏容器复用现有 ResizeObserver，使 WebGPU 画布在进入、退出全屏时自动更新尺寸。
+3. 将 OrbitControls 的距离范围调整为 `0.45` 至 `80`，启用以指针为中心的缩放并提升缩放速度。
+4. 为全屏按钮补充键盘焦点、悬停、移动端定位和全屏请求失败提示。
+5. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增全屏状态、切换命令与扩展的缩放控制范围。
+- `src/pages/planeRender/index.css`：新增全屏画布、按钮和错误提示样式。
+- `taskRecord.md`：追加本次全屏与缩放能力记录。

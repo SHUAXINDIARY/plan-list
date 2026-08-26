@@ -1,4 +1,9 @@
-import { useEffect, useRef, type ReactElement } from "react";
+import {
+    useEffect,
+    useRef,
+    useState,
+    type ReactElement,
+} from "react";
 import * as THREE from "three";
 import { WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -36,6 +41,12 @@ interface AircraftModelViewportProps {
 
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
 const NORMALIZED_MODEL_MAX_SIZE = 1.35;
+/** 允许近距离检查机身细节时的相机最小距离。 */
+const MINIMUM_CAMERA_DISTANCE = 0.45;
+/** 允许完整检查模型外形时的相机最大距离。 */
+const MAXIMUM_CAMERA_DISTANCE = 80;
+/** 提升滚轮和双指缩放的响应速度，便于在全屏时检查细节。 */
+const MODEL_VIEWER_ZOOM_SPEED = 1.15;
 /** WebGPU 不可用时的用户可见提示。 */
 const WEBGPU_UNAVAILABLE_MESSAGE = "当前浏览器或设备未提供 WebGPU 支持。";
 /** WebGPU 初始化失败时的用户可见提示。 */
@@ -44,6 +55,8 @@ const WEBGPU_INITIALIZATION_ERROR_MESSAGE = "WebGPU 渲染器初始化失败。"
 const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文件。";
 /** 所有模型加载失败时的用户可见提示。 */
 const ALL_MODELS_FAILED_MESSAGE = "所有模型均未能加载。";
+/** 浏览器拒绝全屏请求时的用户可见提示。 */
+const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
 
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
 const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
@@ -131,6 +144,52 @@ export const AircraftModelViewport = ({
     onLoadingProgressChange,
 }: AircraftModelViewportProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+    const [fullscreenError, setFullscreenError] = useState<string | null>(
+        null,
+    );
+
+    useEffect((): (() => void) => {
+        /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
+        const handleFullscreenChange = (): void => {
+            setIsFullscreen(document.fullscreenElement === containerRef.current);
+        };
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+        return (): void => {
+            document.removeEventListener(
+                "fullscreenchange",
+                handleFullscreenChange,
+            );
+        };
+    }, []);
+
+    /** 切换当前画布容器的浏览器全屏状态，并在被拒绝时保留可读反馈。 */
+    const toggleFullscreen = async (): Promise<void> => {
+        const container = containerRef.current;
+
+        if (container === null) {
+            return;
+        }
+
+        try {
+            if (document.fullscreenElement === container) {
+                await document.exitFullscreen();
+            } else {
+                await container.requestFullscreen();
+            }
+
+            setFullscreenError(null);
+        } catch {
+            setFullscreenError(FULLSCREEN_REQUEST_ERROR_MESSAGE);
+        }
+    };
+
+    /** 由明确的按钮命令触发异步全屏切换。 */
+    const handleFullscreenToggle = (): void => {
+        void toggleFullscreen();
+    };
 
     useEffect((): (() => void) | undefined => {
         const container = containerRef.current;
@@ -212,9 +271,11 @@ export const AircraftModelViewport = ({
 
             controls.enableDamping = true;
             controls.dampingFactor = 0.065;
-            controls.minDistance = 2.5;
-            controls.maxDistance = 35;
+            controls.minDistance = MINIMUM_CAMERA_DISTANCE;
+            controls.maxDistance = MAXIMUM_CAMERA_DISTANCE;
             controls.maxPolarAngle = Math.PI * 0.49;
+            controls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
+            controls.zoomToCursor = true;
 
             scene.add(new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1));
 
@@ -325,5 +386,21 @@ export const AircraftModelViewport = ({
         };
     }, [asset, onLoadingProgressChange]);
 
-    return <div ref={containerRef} className="plane-render__viewport-canvas" />;
+    return (
+        <div ref={containerRef} className="plane-render__viewport-canvas">
+            <button
+                className="plane-render__fullscreen-button"
+                type="button"
+                aria-pressed={isFullscreen}
+                onClick={handleFullscreenToggle}
+            >
+                {isFullscreen ? "退出全屏" : "全屏查看"}
+            </button>
+            {fullscreenError !== null ? (
+                <p className="plane-render__fullscreen-error" role="alert">
+                    {fullscreenError}
+                </p>
+            ) : null}
+        </div>
+    );
 };

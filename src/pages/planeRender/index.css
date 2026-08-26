@@ -43,12 +43,71 @@
     height: 100%;
 }
 
+.plane-render__viewport-canvas:fullscreen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--pl-map-bg);
+}
+
+.plane-render__viewport-canvas::backdrop {
+    background: var(--pl-body-gradient);
+}
+
 .plane-render__canvas {
     cursor: grab;
 }
 
 .plane-render__canvas:active {
     cursor: grabbing;
+}
+
+.plane-render__fullscreen-button {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 4;
+    min-height: 2.25rem;
+    padding: 0.45rem 0.68rem;
+    color: var(--pl-text-data);
+    font-size: 0.78rem;
+    font-weight: 750;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.55rem;
+    cursor: pointer;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__fullscreen-button:focus-visible {
+    color: var(--pl-text-heading);
+    border-color: var(--pl-border-focus);
+    outline: none;
+    box-shadow: var(--pl-focus-glow);
+}
+
+.plane-render__fullscreen-button:active {
+    transform: scale(0.97);
+}
+
+.plane-render__fullscreen-error {
+    position: absolute;
+    top: 3.65rem;
+    right: 0.85rem;
+    z-index: 4;
+    max-width: min(18rem, calc(100% - 1.7rem));
+    margin: 0;
+    padding: 0.52rem 0.64rem;
+    color: var(--pl-error-text);
+    font-size: 0.76rem;
+    line-height: 1.45;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-error);
+    border-radius: 0.55rem;
 }
 
 .plane-render__viewport-status,
@@ -256,7 +315,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .plane-render__model-button:hover {
+    .plane-render__model-button:hover,
+    .plane-render__fullscreen-button:hover {
         color: var(--pl-text-heading);
         background-color: var(--pl-surface-entry-hover);
         border-color: var(--pl-border-entry-hover);
@@ -294,6 +354,17 @@
         right: 1rem;
         bottom: 1rem;
         max-width: calc(100% - 2rem);
+    }
+
+    .plane-render__fullscreen-button {
+        top: 0.65rem;
+        right: 0.65rem;
+    }
+
+    .plane-render__fullscreen-error {
+        top: 3.25rem;
+        right: 0.65rem;
+        max-width: calc(100% - 1.3rem);
     }
 
     .plane-render__catalog-list {
