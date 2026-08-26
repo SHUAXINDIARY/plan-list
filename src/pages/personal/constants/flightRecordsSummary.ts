@@ -1,7 +1,7 @@
 import {
     FLIGHT_RECORDS,
-    type FlightRecord,
 } from "../../../constants/external-links";
+import type { FlightRecord } from "../../../constants/type";
 
 /** 按年份聚合后的乘机记录分组，供台账列表渲染。 */
 export interface FlightYearGroup {

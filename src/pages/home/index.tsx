@@ -39,7 +39,7 @@ import {
     flightRecordsByYear,
 } from "../personal/constants/flightRecordsSummary";
 import { AIRCRAFT_PHOTO_COUNT } from "../personal/constants/photoMeta";
-import type { FlightRecord } from "../../constants/external-links";
+import type { FlightRecord } from "../../constants/type";
 import "./index.css";
 
 /** 航司条目内联 CSS 变量，用于把品牌色传给纯 CSS logo 与顶部识别线。 */

@@ -7,8 +7,8 @@ import { CHECKED_AIRPORTS, checkedCountryCount } from "./constants/summary";
 import { PersonalAirportSectionSkeleton } from "./sections/PersonalAirportSectionSkeleton";
 import { PersonalFlightRecordsSectionSkeleton } from "./sections/PersonalFlightRecordsSectionSkeleton";
 import { PersonalViewportSection } from "./sections/PersonalViewportSection";
-import type { FlightRecord } from "../../constants/external-links";
 import "./index.css";
+import type { FlightRecord } from "../../constants/type";
 
 const PersonalAirportSection = lazy(
     async () =>

@@ -1,15 +1,12 @@
 import { useState, type ReactElement } from "react";
 import {
-    type FlightRecord,
-    type FlightRouteSeparator,
-} from "../../../constants/external-links";
-import {
     FLIGHT_AIRCRAFT_TYPE_COUNT,
     FLIGHT_AIRLINE_COUNT,
     FLIGHT_RECORD_COUNT,
     flightRecordsByYear,
     type FlightYearGroup,
 } from "../constants/flightRecordsSummary";
+import type { FlightRecord, FlightRouteSeparator } from "../../../constants/type";
 
 /** 单程路线连接符映射，供台账行内展示。 */
 const FLIGHT_ROUTE_SEPARATOR_LABEL: Record<FlightRouteSeparator, string> = {
