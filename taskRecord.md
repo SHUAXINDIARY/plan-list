@@ -6605,3 +6605,24 @@
 - `src/pages/planeRender/AircraftModelViewport.tsx`：新增全屏状态、切换命令与扩展的缩放控制范围。
 - `src/pages/planeRender/index.css`：新增全屏画布、按钮和错误提示样式。
 - `taskRecord.md`：追加本次全屏与缩放能力记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+将 `Flightradar24/fr24-3d-models` 仓库作为 Git 子模块加入当前项目。
+
+## 完成过程
+
+1. 使用 `git submodule add` 将 `https://github.com/Flightradar24/fr24-3d-models.git` 克隆到项目根目录下的 `fr24-3d-models`。
+2. 确认 `.gitmodules` 已记录子模块路径与远端 URL。
+3. 确认父仓库暂存的子模块 gitlink 指向 `master` 分支的提交 `dd53267690c6a4ecbb290a3acf0284333a5d68a9`。
+4. 本次仅进行 Git 配置核对，未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `.gitmodules`：新增 `fr24-3d-models` 子模块路径和远端地址。
+- `fr24-3d-models`：新增指向 `dd53267690c6a4ecbb290a3acf0284333a5d68a9` 的 Git 子模块引用。
+- `taskRecord.md`：追加本次子模块接入记录。

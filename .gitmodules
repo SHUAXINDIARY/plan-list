@@ -1,3 +1,6 @@
 [submodule "aircraft-models"]
 	path = aircraft-models
 	url = https://github.com/amvlab/aircraft-models
+[submodule "fr24-3d-models"]
+	path = fr24-3d-models
+	url = https://github.com/Flightradar24/fr24-3d-models.git
