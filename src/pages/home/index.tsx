@@ -1024,6 +1024,7 @@ const HomePage = (): ReactElement => {
                             className="fleet-filter"
                             value={selectedAirlineAlliance}
                             onChange={handleAirlineAllianceChange}
+                            
                         >
                             <option value={ALL_AIRLINE_ALLIANCES_VALUE}>
                                 全部联盟

@@ -6345,3 +6345,24 @@
 - `src/pages/personal/sections/PersonalFlightRecordsSection.tsx`：重组单条乘机记录的语义结构与航线展示。
 - `src/pages/personal/index.css`：实现三段式航程卡片、移动端重排及匹配的骨架屏布局。
 - `taskRecord.md`：追加本次乘机记录卡片重设计记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+扩展通用 Select 组件，使其可通过 props 开启受控多选。
+
+## 完成过程
+
+1. 使用 `multiple` 作为模式开关，保持未传该属性时的单选值与原生风格变更事件契约。
+2. 为多选模式补充 `string[]` 受控值与数组回调，支持连续勾选、取消勾选、搜索内键盘切换及表单重复字段提交。
+3. 为多选 listbox 补充 `aria-multiselectable` 语义，并让触发器朗读当前选择状态。
+4. 运行 TypeScript 检查与生产构建；在桌面和 390px 移动视口检查既有选择器，确认无横向溢出。
+
+## 修改具体文件
+
+- `src/components/Select/type.d.ts`：定义单选与多选的判别联合 props，并导出多选相关类型。
+- `src/components/Select/index.tsx`：实现多选切换、选中展示、键盘行为、无障碍语义与表单提交。
+- `taskRecord.md`：追加本次 Select 多选支持记录。

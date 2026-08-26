@@ -19,7 +19,12 @@ import { createPortal } from "react-dom";
 import type { SelectOption, SelectProps } from "./type";
 import "./index.css";
 
-export type { SelectOption, SelectProps } from "./type";
+export type {
+    MultipleSelectProps,
+    SelectOption,
+    SelectProps,
+    SingleSelectProps,
+} from "./type";
 
 /** 下拉面板与触发器之间的间距（px），对应 CSS 0.35rem。 */
 const SELECT_MENU_GAP_PX = 6;
@@ -65,12 +70,14 @@ interface SelectOptionsMenuProps {
     /** 已根据搜索词过滤的可见选项列表。 */
     items: SelectOption[];
     /** 当前受控选中值。 */
-    value: string;
+    selectedValues: string[];
+    /** 是否允许同时选中多个选项。 */
+    multiple: boolean;
     /** 键盘/指针高亮项索引。 */
     highlightedIndex: number;
     /** 更新高亮索引。 */
     onHighlight: (index: number) => void;
-    /** 选中某值并关闭面板。 */
+    /** 切换某个选项的选中状态。 */
     onSelect: (nextValue: string) => void;
     /** 是否展示选项搜索框。 */
     searchable: boolean;
@@ -234,14 +241,14 @@ const findAdjacentEnabledIndex = (
 };
 
 /**
- * 在当前可见选项中优先定位已选项；已选项被过滤时定位到第一个可用选项。
+ * 在当前可见选项中优先定位任一已选项；已选项被过滤时定位到第一个可用选项。
  */
 const findSelectedOrFirstEnabledIndex = (
     items: SelectOption[],
-    value: string,
+    selectedValues: string[],
 ): number => {
     const selectedIndex = items.findIndex(
-        (item: SelectOption): boolean => item.value === value,
+        (item: SelectOption): boolean => selectedValues.includes(item.value),
     );
 
     return selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items);
@@ -306,7 +313,7 @@ const SelectMenuOption = ({
     };
 
     /**
-     * 确认选择：跳过禁用项，交由父级关闭面板并触发 onChange。
+     * 确认选择：跳过禁用项，交由父级同步受控值与面板状态。
      */
     const handleClick = (): void => {
         if (!option.disabled) {
@@ -349,7 +356,8 @@ const computeMenuPlacement = (wrapElement: HTMLDivElement): SelectMenuPlacement 
 const SelectOptionsMenu = ({
     listboxId,
     items,
-    value,
+    selectedValues,
+    multiple,
     highlightedIndex,
     onHighlight,
     onSelect,
@@ -410,6 +418,7 @@ const SelectOptionsMenu = ({
                 id={listboxId}
                 className="pl-select-menu__list scroll-area-night"
                 role="listbox"
+                aria-multiselectable={multiple || undefined}
             >
                 {items.length > 0 ? (
                     items.map(
@@ -419,7 +428,7 @@ const SelectOptionsMenu = ({
                                 option={option}
                                 index={index}
                                 optionId={`${listboxId}-option-${index}`}
-                                isSelected={option.value === value}
+                                isSelected={selectedValues.includes(option.value)}
                                 isHighlighted={index === highlightedIndex}
                                 onSelect={onSelect}
                                 onHighlight={onHighlight}
@@ -437,21 +446,21 @@ const SelectOptionsMenu = ({
 };
 
 /**
- * Combobox 内核：自定义 listbox 选项面板 + 与原生 select 兼容的 onChange 契约。
+ * Combobox 内核：自定义 listbox 面板，支持单选原生事件契约与受控多选值数组。
  */
-const SelectControl = ({
-    id,
-    name,
-    value,
-    disabled,
-    label,
-    ariaLabel,
-    className,
-    options,
-    children,
-    searchable = false,
-    onChange,
-}: SelectProps): ReactElement => {
+const SelectControl = (props: SelectProps): ReactElement => {
+    const {
+        id,
+        name,
+        disabled,
+        label,
+        ariaLabel,
+        className,
+        options,
+        children,
+        searchable = false,
+    } = props;
+    const multiple = props.multiple === true;
     const listboxId = useId();
     const wrapRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -470,11 +479,21 @@ const SelectControl = ({
         [options, children],
     );
 
-    const selectedIndex = items.findIndex(
-        (item: SelectOption): boolean => item.value === value,
+    const selectedValues = props.multiple ? props.value : [props.value];
+    const selectedItems = items.filter(
+        (item: SelectOption): boolean => selectedValues.includes(item.value),
     );
-    const selectedItem = selectedIndex >= 0 ? items[selectedIndex] : undefined;
-    const displayLabel = selectedItem?.label ?? value;
+    const selectedIndex = items.findIndex(
+        (item: SelectOption): boolean => selectedValues.includes(item.value),
+    );
+    const displayLabel = props.multiple
+        ? selectedItems.length > 0
+            ? selectedItems.map((item: SelectOption): string => item.label).join("、")
+            : "未选择"
+        : selectedItems[0]?.label ?? props.value;
+    const controlAriaLabel = multiple
+        ? `${ariaLabel ?? label ?? "选择选项"}，${displayLabel}`
+        : ariaLabel;
     const visibleItems = useMemo(
         (): SelectOption[] => filterSelectItems(items, searchTerm),
         [items, searchTerm],
@@ -530,16 +549,28 @@ const SelectControl = ({
     }, [clearCloseTimer, items, selectedIndex]);
 
     /**
-     * 提交新值：构造 synthetic change event，关闭面板。
+     * 提交新值：多选时切换数组并保持面板展开，单选时沿用 synthetic change event 后关闭。
      */
     const commitSelection = useCallback(
         (nextValue: string): void => {
-            if (nextValue !== value) {
-                onChange(createSelectChangeEvent(nextValue));
+            if (props.multiple) {
+                const nextValues = selectedValues.includes(nextValue)
+                    ? selectedValues.filter(
+                          (selectedValue: string): boolean =>
+                              selectedValue !== nextValue,
+                      )
+                    : [...selectedValues, nextValue];
+
+                props.onChange(nextValues);
+                return;
+            }
+
+            if (nextValue !== props.value) {
+                props.onChange(createSelectChangeEvent(nextValue));
             }
             closeMenu();
         },
-        [closeMenu, onChange, value],
+        [closeMenu, props, selectedValues],
     );
 
     /**
@@ -649,7 +680,7 @@ const SelectControl = ({
 
         setSearchTerm(nextSearchTerm);
         setHighlightedIndex(
-            findSelectedOrFirstEnabledIndex(nextVisibleItems, value),
+            findSelectedOrFirstEnabledIndex(nextVisibleItems, selectedValues),
         );
     };
 
@@ -678,7 +709,9 @@ const SelectControl = ({
                 if (highlightedItem && !highlightedItem.disabled) {
                     event.preventDefault();
                     commitSelection(highlightedItem.value);
-                    triggerRef.current?.focus();
+                    if (!multiple) {
+                        triggerRef.current?.focus();
+                    }
                 }
                 return;
             }
@@ -775,7 +808,7 @@ const SelectControl = ({
                 id={id}
                 className={controlClassName}
                 disabled={disabled || items.length === 0}
-                aria-label={ariaLabel}
+                aria-label={controlAriaLabel}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 aria-controls={listboxId}
@@ -784,7 +817,20 @@ const SelectControl = ({
             >
                 <span className="pl-select__value">{displayLabel}</span>
             </button>
-            {name ? <input type="hidden" name={name} value={value} /> : null}
+            {name
+                ? props.multiple
+                    ? selectedItems.map(
+                          (item: SelectOption): ReactElement => (
+                              <input
+                                  key={item.value}
+                                  type="hidden"
+                                  name={name}
+                                  value={item.value}
+                              />
+                          ),
+                      )
+                    : <input type="hidden" name={name} value={props.value} />
+                : null}
             <span className="pl-select__affordance" aria-hidden>
                 <SelectChevron />
             </span>
@@ -793,7 +839,8 @@ const SelectControl = ({
                       <SelectOptionsMenu
                           listboxId={listboxId}
                           items={visibleItems}
-                          value={value}
+                          selectedValues={selectedValues}
+                          multiple={multiple}
                           highlightedIndex={highlightedIndex}
                           onHighlight={setHighlightedIndex}
                           onSelect={commitSelection}

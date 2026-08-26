@@ -13,15 +13,9 @@ export interface SelectOption {
 }
 
 /**
- * 全站通用下拉选择器封装：自定义 listbox 选项面板，onChange 契约与原生 select 保持一致。
+ * 单选和多选共享的下拉选择器配置。
  */
-export interface SelectProps {
-    /** 当前选中项的 `value`，与原生 select 受控模式一致。 */
-    value: string;
-    /**
-     * 用户切换选项时触发；事件目标为内部原生 select，便于读取 `event.target.value`。
-     */
-    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+interface SelectBaseProps {
     /**
      * 结构化选项列表；与 `children` 二选一，同时传入时以 `options` 为准。
      */
@@ -45,3 +39,34 @@ export interface SelectProps {
     /** 附加在根字段容器或裸 select 上的 class，便于页面布局（如筛选行 flex）。 */
     className?: string;
 }
+
+/**
+ * 单选模式的选择器属性。未传 `multiple` 时默认使用此模式，保留与原生 select 一致的变更事件。
+ */
+export interface SingleSelectProps extends SelectBaseProps {
+    /** 单选模式标识；省略或传入 false 均表示单选。 */
+    multiple?: false;
+    /** 当前选中项的 `value`，与原生 select 受控模式一致。 */
+    value: string;
+    /**
+     * 用户切换选项时触发；事件目标为内部原生 select，便于读取 `event.target.value`。
+     */
+    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+}
+
+/**
+ * 多选模式的选择器属性。传入 `multiple` 后，值与回调参数均使用选项值数组。
+ */
+export interface MultipleSelectProps extends SelectBaseProps {
+    /** 多选模式标识；传入 true 后面板保持展开以连续切换选项。 */
+    multiple: true;
+    /** 当前选中项的值数组，顺序由父组件控制。 */
+    value: string[];
+    /** 用户切换某项时触发，参数为切换后的完整选中值数组。 */
+    onChange: (values: string[]) => void;
+}
+
+/**
+ * 全站通用下拉选择器属性；通过 `multiple` 区分单选与多选的受控值和回调契约。
+ */
+export type SelectProps = SingleSelectProps | MultipleSelectProps;
