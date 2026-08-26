@@ -6,7 +6,9 @@ import "./index.css";
 const ROUTE_PATH_ORDER: readonly string[] = [
     "/",
     "/personal",
+    "/photos",
     "/references",
+    "/plane-render",
 ];
 
 /**

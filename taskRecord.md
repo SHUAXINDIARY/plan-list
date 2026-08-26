@@ -6409,3 +6409,26 @@
 - `src/components/Select/index.css`：实现清除按钮布局、交互和焦点样式。
 - `src/pages/home/index.tsx`：为四个首页多选筛选器配置清除后的默认值。
 - `taskRecord.md`：追加本次多选筛选清除入口记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+新增飞机模型渲染占位页面，并接入应用路由和顶部导航。
+
+## 完成过程
+
+1. 新增模型渲染页面的占位视窗与模型、场景、渲染状态信息，沿用现有双主题设计 token 和响应式布局。
+2. 在应用主导航和懒加载路由中注册 `/plane-render`，导航名称为“模型渲染”。
+3. 将新路径加入路由过渡顺序，保持页面切换方向与顶部导航顺序一致。
+4. 按用户要求仅完成代码修改，未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/index.tsx`：新增飞机模型渲染占位页面结构。
+- `src/pages/planeRender/index.css`：新增模型视窗和状态信息的双主题响应式样式。
+- `src/App.tsx`：注册懒加载页面、`/plane-render` 路由和顶部导航入口。
+- `src/components/route-transition/index.tsx`：补充照片和模型渲染页面的导航过渡顺序。
+- `taskRecord.md`：追加本次页面接入记录。

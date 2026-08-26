@@ -1,0 +1,108 @@
+.plane-render {
+    width: min(100%, 64rem);
+}
+
+.plane-render__header {
+    max-width: 42rem;
+}
+
+.plane-render__viewport {
+    display: grid;
+    place-items: center;
+    min-height: 20rem;
+    margin-top: 2rem;
+    overflow: hidden;
+    background-color: var(--pl-surface-toolbar);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 1rem;
+}
+
+.plane-render__viewport-label {
+    display: grid;
+    justify-items: center;
+    gap: 0.65rem;
+    text-align: center;
+}
+
+.plane-render__viewport-label span {
+    display: inline-grid;
+    place-items: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    color: var(--pl-accent);
+    font-family: var(--pl-font-mono);
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: 1px solid var(--pl-border-nav-active);
+    border-radius: 50%;
+}
+
+.plane-render__viewport-label p,
+.plane-render__viewport-note {
+    margin: 0;
+}
+
+.plane-render__viewport-label p {
+    color: var(--pl-text-heading);
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+.plane-render__viewport-note {
+    align-self: end;
+    justify-self: start;
+    margin: 0 1.25rem 1.1rem;
+    color: var(--pl-text-meta);
+    font-family: var(--pl-font-mono);
+    font-size: 0.76rem;
+    font-weight: 650;
+}
+
+.plane-render__status-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 1rem 0 0;
+    border: 1px solid var(--pl-border-divider);
+    border-radius: 1rem;
+}
+
+.plane-render__status-list div {
+    min-width: 0;
+    padding: 1rem 1.15rem;
+}
+
+.plane-render__status-list div + div {
+    border-left: 1px solid var(--pl-border-divider);
+}
+
+.plane-render__status-list dt {
+    color: var(--pl-text-meta);
+    font-family: var(--pl-font-mono);
+    font-size: 0.7rem;
+    font-weight: 750;
+}
+
+.plane-render__status-list dd {
+    margin: 0.4rem 0 0;
+    overflow-wrap: anywhere;
+    color: var(--pl-text-body);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .plane-render__viewport {
+        min-height: 16rem;
+        margin-top: 1.5rem;
+    }
+
+    .plane-render__status-list {
+        grid-template-columns: 1fr;
+    }
+
+    .plane-render__status-list div + div {
+        border-top: 1px solid var(--pl-border-divider);
+        border-left: 0;
+    }
+}

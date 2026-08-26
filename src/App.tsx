@@ -40,6 +40,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/personal", label: "飞行日志", end: false },
     { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
+    { path: "/plane-render", label: "模型渲染", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 
@@ -48,6 +49,7 @@ const HomePage = lazy(async () => import("./pages/home"));
 const PersonalPage = lazy(async () => import("./pages/personal"));
 const PhotosPage = lazy(async () => import("./pages/photos"));
 const ReferencesPage = lazy(async () => import("./pages/references"));
+const PlaneRenderPage = lazy(async () => import("./pages/planeRender"));
 
 // 根据路由激活状态生成导航类名，保持当前页面入口高亮。
 const getNavigationClassName = ({
@@ -162,6 +164,10 @@ const App = (): ReactElement => {
                                 <Route
                                     path="/references"
                                     element={<ReferencesPage />}
+                                />
+                                <Route
+                                    path="/plane-render"
+                                    element={<PlaneRenderPage />}
                                 />
                             </Route>
                         </Routes>
