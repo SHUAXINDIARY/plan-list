@@ -3,7 +3,10 @@ import {
     AircraftModelViewport,
     type AircraftModelLoadingProgress,
 } from "./AircraftModelViewport";
-import { AIRCRAFT_MODEL_ASSETS } from "./modelAssets";
+import {
+    AIRCRAFT_MODEL_ASSETS,
+    type AircraftModelAsset,
+} from "./modelAssets";
 import "./index.css";
 
 /** 页面加载模型时使用的初始进度状态。 */
@@ -12,6 +15,9 @@ const INITIAL_LOADING_PROGRESS: AircraftModelLoadingProgress = {
     loadedModelCount: 0,
     failedModelCount: 0,
 };
+
+/** 页面首次打开时默认渲染模型目录中的第一架飞机。 */
+const INITIAL_SELECTED_MODEL_ID = AIRCRAFT_MODEL_ASSETS[0]?.id ?? "";
 
 /** 根据加载阶段生成页面内的状态标题。 */
 const getLoadingStatusTitle = (
@@ -32,24 +38,21 @@ const getLoadingStatusTitle = (
     return "模型目录已载入";
 };
 
-/** 根据当前选择状态返回目录工具栏的可读说明。 */
-const getSelectedModelSummary = (selectedModelId: string | null): string => {
-    if (selectedModelId === null) {
-        return "完整机队";
-    }
-
-    return (
-        AIRCRAFT_MODEL_ASSETS.find(
-            (asset): boolean => asset.id === selectedModelId,
-        )?.label ?? "完整机队"
+/** 从模型目录中查找当前选择的单架模型。 */
+const getSelectedModel = (
+    selectedModelId: string,
+): AircraftModelAsset | undefined =>
+    AIRCRAFT_MODEL_ASSETS.find(
+        (asset): boolean => asset.id === selectedModelId,
     );
-};
 
 /**
- * 使用 WebGPU 渲染整个子模块模型目录，并提供全览与单机聚焦浏览。
+ * 使用 WebGPU 每次渲染当前选择的一架飞机模型。
  */
 const PlaneRenderPage = (): ReactElement => {
-    const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+    const [selectedModelId, setSelectedModelId] = useState<string>(
+        INITIAL_SELECTED_MODEL_ID,
+    );
     const [loadingProgress, setLoadingProgress] =
         useState<AircraftModelLoadingProgress>(INITIAL_LOADING_PROGRESS);
 
@@ -61,12 +64,13 @@ const PlaneRenderPage = (): ReactElement => {
         [],
     );
 
-    /** 切换全览或单架模型焦点，不重新请求已加载的模型资源。 */
-    const handleModelSelection = (modelId: string | null): void => {
+    /** 切换当前模型，视窗会清理旧场景并载入新选择。 */
+    const handleModelSelection = (modelId: string): void => {
         setSelectedModelId(modelId);
     };
 
-    const selectedModelSummary = getSelectedModelSummary(selectedModelId);
+    const selectedModel = getSelectedModel(selectedModelId);
+    const selectedModelSummary = selectedModel?.label ?? "暂无模型";
     const hasFailedModels = loadingProgress.failedModelCount > 0;
 
     return (
@@ -78,7 +82,7 @@ const PlaneRenderPage = (): ReactElement => {
                 <p className="page-eyebrow">Model Studio</p>
                 <h1 id="plane-render-heading">飞机模型渲染</h1>
                 <p>
-                    来自 aircraft-models 子模块的完整 GLB 模型目录。
+                    从 aircraft-models 子模块目录中选择并检查单架 GLB 模型。
                 </p>
             </header>
 
@@ -89,8 +93,7 @@ const PlaneRenderPage = (): ReactElement => {
                     aria-busy={loadingProgress.phase === "loading"}
                 >
                     <AircraftModelViewport
-                        assets={AIRCRAFT_MODEL_ASSETS}
-                        selectedModelId={selectedModelId}
+                        asset={selectedModel}
                         onLoadingProgressChange={handleLoadingProgressChange}
                     />
                     {loadingProgress.phase !== "ready" ? (
@@ -105,7 +108,7 @@ const PlaneRenderPage = (): ReactElement => {
                             <strong>{getLoadingStatusTitle(loadingProgress)}</strong>
                             <span>
                                 {loadingProgress.message ??
-                                    `${loadingProgress.loadedModelCount} / ${AIRCRAFT_MODEL_ASSETS.length} 个模型`}
+                                    `${loadingProgress.loadedModelCount} / 1 个模型`}
                             </span>
                         </div>
                     ) : null}
@@ -122,15 +125,6 @@ const PlaneRenderPage = (): ReactElement => {
                         </div>
                     </div>
                     <div className="plane-render__catalog-list scroll-area-night">
-                        <button
-                            className={`plane-render__model-button${selectedModelId === null ? " plane-render__model-button--active" : ""}`}
-                            type="button"
-                            aria-pressed={selectedModelId === null}
-                            onClick={(): void => handleModelSelection(null)}
-                        >
-                            <span>完整机队</span>
-                            <small>全览</small>
-                        </button>
                         {AIRCRAFT_MODEL_ASSETS.map(
                             (asset): ReactElement => (
                                 <button
@@ -159,7 +153,7 @@ const PlaneRenderPage = (): ReactElement => {
                 <div>
                     <dt>已载入</dt>
                     <dd>
-                        {loadingProgress.loadedModelCount} / {AIRCRAFT_MODEL_ASSETS.length}
+                        {loadingProgress.loadedModelCount} / 1
                     </dd>
                 </div>
                 <div>

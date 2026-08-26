@@ -6561,3 +6561,25 @@
 
 - `src/pages/planeRender/modelAssets.ts`：将动态 glob 模式改为构建期字面量。
 - `taskRecord.md`：追加本次 Rspack 静态分析修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+将飞机模型视窗调整为单次仅渲染当前选择的一架模型。
+
+## 完成过程
+
+1. 页面默认选择模型目录中的第一项，移除完整机队全览入口。
+2. 将 WebGPU 视窗输入收敛为单个 GLB 资源，取消场景内全量并发加载和机队网格排布。
+3. 切换目录项时通过 effect 清理旧场景及 GPU 资源，再加载并聚焦新选择的模型。
+4. 同步更新载入状态的分母，使其反映当前单模型渲染状态。
+5. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/index.tsx`：默认选择单架模型并移除完整机队入口。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：改为仅加载、渲染和聚焦当前单个 GLB 模型。
+- `taskRecord.md`：追加本次单模型渲染调整记录。
