@@ -1,61 +1,195 @@
 .plane-render {
-    width: min(100%, 64rem);
+    width: min(100%, 86rem);
 }
 
 .plane-render__header {
     max-width: 42rem;
 }
 
-.plane-render__viewport {
+.plane-render__workspace {
     display: grid;
-    place-items: center;
-    min-height: 20rem;
-    margin-top: 2rem;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 17rem);
+    gap: 1rem;
+    margin-top: 1.8rem;
+}
+
+.plane-render__viewport {
+    position: relative;
+    min-height: 31rem;
     overflow: hidden;
+    touch-action: none;
+    background: var(--pl-map-bg);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 1rem;
+    box-shadow: var(--pl-map-inset);
+}
+
+.plane-render__viewport::before {
+    position: absolute;
+    inset: 1rem;
+    z-index: 2;
+    border: 1px solid var(--pl-map-frame);
+    border-radius: 0.72rem;
+    content: "";
+    pointer-events: none;
+}
+
+.plane-render__viewport-canvas,
+.plane-render__canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.plane-render__canvas {
+    cursor: grab;
+}
+
+.plane-render__canvas:active {
+    cursor: grabbing;
+}
+
+.plane-render__viewport-status,
+.plane-render__viewport-caption {
+    position: absolute;
+    z-index: 3;
+    margin: 0;
+    pointer-events: none;
+}
+
+.plane-render__viewport-status {
+    top: 1.55rem;
+    left: 1.55rem;
+    display: grid;
+    gap: 0.2rem;
+    max-width: calc(100% - 3.1rem);
+    padding: 0.6rem 0.72rem;
+    color: var(--pl-text-data);
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.62rem;
+}
+
+.plane-render__viewport-status strong {
+    color: var(--pl-text-heading);
+    font-size: 0.82rem;
+}
+
+.plane-render__viewport-status span,
+.plane-render__viewport-caption,
+.plane-render__catalog-label,
+.plane-render__model-button small {
+    font-family: var(--pl-font-mono);
+    font-size: 0.76rem;
+    font-weight: 650;
+}
+
+.plane-render__viewport-status span {
+    overflow-wrap: anywhere;
+}
+
+.plane-render__viewport-status--error {
+    color: var(--pl-error-text);
+    border-color: var(--pl-border-error);
+}
+
+.plane-render__viewport-caption {
+    right: 1.55rem;
+    bottom: 1.4rem;
+    max-width: calc(100% - 3.1rem);
+    padding: 0.4rem 0.56rem;
+    color: var(--pl-text-data);
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.48rem;
+}
+
+.plane-render__catalog {
+    min-width: 0;
+    padding: 0.95rem;
     background-color: var(--pl-surface-toolbar);
     border: 1px solid var(--pl-border-default);
     border-radius: 1rem;
 }
 
-.plane-render__viewport-label {
-    display: grid;
-    justify-items: center;
-    gap: 0.65rem;
-    text-align: center;
+.plane-render__catalog-heading {
+    padding: 0.15rem 0.2rem 0.8rem;
+    border-bottom: 1px solid var(--pl-border-divider);
 }
 
-.plane-render__viewport-label span {
-    display: inline-grid;
-    place-items: center;
-    width: 3.6rem;
-    height: 3.6rem;
-    color: var(--pl-accent);
-    font-family: var(--pl-font-mono);
-    font-size: 0.95rem;
-    font-weight: 800;
-    border: 1px solid var(--pl-border-nav-active);
-    border-radius: 50%;
-}
-
-.plane-render__viewport-label p,
-.plane-render__viewport-note {
+.plane-render__catalog-label {
     margin: 0;
+    color: var(--pl-accent);
 }
 
-.plane-render__viewport-label p {
+.plane-render__catalog-heading h2 {
+    margin: 0.3rem 0 0;
     color: var(--pl-text-heading);
-    font-size: 1rem;
-    font-weight: 750;
+    font-family: var(--pl-font-display);
+    font-size: 1.05rem;
+    line-height: 1.2;
 }
 
-.plane-render__viewport-note {
-    align-self: end;
-    justify-self: start;
-    margin: 0 1.25rem 1.1rem;
+.plane-render__catalog-list {
+    display: grid;
+    gap: 0.38rem;
+    max-height: 27.5rem;
+    padding: 0.75rem 0.18rem 0.1rem 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.plane-render__model-button {
+    display: grid;
+    gap: 0.17rem;
+    width: 100%;
+    min-width: 0;
+    padding: 0.58rem 0.66rem;
+    color: var(--pl-text-secondary);
+    text-align: left;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.58rem;
+    cursor: pointer;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__model-button span {
+    overflow: hidden;
+    font-size: 0.84rem;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.plane-render__model-button small {
+    overflow: hidden;
     color: var(--pl-text-meta);
-    font-family: var(--pl-font-mono);
-    font-size: 0.76rem;
-    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.plane-render__model-button--active {
+    color: var(--pl-text-emphasis);
+    background-color: var(--pl-nav-active-bg);
+    border-color: var(--pl-border-nav-active);
+}
+
+.plane-render__model-button:focus-visible {
+    color: var(--pl-text-heading);
+    border-color: var(--pl-border-focus);
+    outline: none;
+    box-shadow: var(--pl-focus-glow);
+}
+
+.plane-render__model-button:active {
+    transform: scale(0.98);
 }
 
 .plane-render__status-list {
@@ -91,10 +225,80 @@
     font-weight: 700;
 }
 
+.plane-render__load-note {
+    margin: 0.8rem 0 0;
+    color: var(--pl-error-text);
+    font-size: 0.84rem;
+    font-weight: 650;
+}
+
+.plane-render__attribution {
+    margin: 0.8rem 0 0;
+    color: var(--pl-text-meta);
+    font-size: 0.78rem;
+}
+
+.plane-render__attribution a {
+    color: var(--pl-link);
+    text-decoration-color: var(--pl-link-decoration);
+    text-underline-offset: 0.16em;
+}
+
+.plane-render__attribution a:hover {
+    color: var(--pl-link-hover);
+    text-decoration-color: var(--pl-link-hover-decoration);
+}
+
+.plane-render__attribution a:focus-visible {
+    border-radius: 0.15rem;
+    outline: 2px solid var(--pl-border-focus);
+    outline-offset: 0.15rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .plane-render__model-button:hover {
+        color: var(--pl-text-heading);
+        background-color: var(--pl-surface-entry-hover);
+        border-color: var(--pl-border-entry-hover);
+        transform: translate3d(0, -1px, 0);
+    }
+}
+
+@media (max-width: 820px) {
+    .plane-render__workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .plane-render__catalog-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: 16rem;
+    }
+}
+
 @media (max-width: 640px) {
     .plane-render__viewport {
-        min-height: 16rem;
-        margin-top: 1.5rem;
+        min-height: 21rem;
+    }
+
+    .plane-render__viewport::before {
+        inset: 0.65rem;
+    }
+
+    .plane-render__viewport-status {
+        top: 1rem;
+        left: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    .plane-render__viewport-caption {
+        right: 1rem;
+        bottom: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    .plane-render__catalog-list {
+        grid-template-columns: 1fr;
+        max-height: 17rem;
     }
 
     .plane-render__status-list {

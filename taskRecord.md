@@ -6473,3 +6473,91 @@
 
 - `updateModule.sh`：新增可执行的递归 Git 子模块更新脚本。
 - `taskRecord.md`：追加本次脚本新增记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+使用 Three.js WebGPU 渲染 `aircraft-models/models` 目录下的全部 GLB 飞机模型。
+
+## 完成过程
+
+1. 通过 Rspack 构建期目录上下文递归收集 `aircraft-models/models` 内所有 `.glb` 文件，避免维护手写模型清单。
+2. 扩展 Rsbuild 静态资源白名单，使 GLB 文件输出为可由 GLTFLoader 请求的构建资源。
+3. 新增 WebGPU Three.js 场景，使用 GLTFLoader 并发载入全量模型、统一模型尺度、排列为机队全览，并提供 OrbitControls 交互。
+4. 新增模型目录，可在完整机队与单架模型焦点之间切换；补充加载进度、失败提示、响应式布局与 GPU 资源释放。
+5. 根据模型仓库的 CC BY 4.0 许可证，在页面中补充来源和许可证链接。
+6. 按用户要求未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `rsbuild.config.ts`：将 `.glb` 加入静态资源处理范围。
+- `src/env.d.ts`：补充 Rspack 构建期目录上下文的 TypeScript 声明。
+- `src/pages/planeRender/modelAssets.ts`：自动收集 GLB 文件并导出懒加载模型目录。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增 Three.js WebGPU 全量模型加载与渲染视窗。
+- `src/pages/planeRender/index.tsx`：接入加载状态、机队全览和单模型聚焦目录。
+- `src/pages/planeRender/index.css`：实现渲染视窗、模型目录、响应式布局和署名链接样式。
+- `taskRecord.md`：追加本次 WebGPU 模型渲染记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复飞机模型资源目录和 WebGPU 视窗中的 TypeScript 类型错误。
+
+## 完成过程
+
+1. 运行 TypeScript 检查，定位到 Rspack `webpackContext` 返回 `unknown` 导致 GLB 资源 URL 无法读取的问题。
+2. 将模型目录扫描改为 Rspack 泛型 `import.meta.glob<string>`，使每个懒加载器的返回值明确为 `Promise<string>`。
+3. 显式忽略 WebGPU `setAnimationLoop` 的异步返回值，标明动画循环 Promise 不参与后续控制流。
+4. 移除不再使用且无法覆盖 Rspack 内置声明的自定义目录上下文类型。
+5. 重新运行 `pnpm run type-check`，确认 TypeScript 检查通过；未运行构建或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：使用类型安全的泛型 GLB 资源目录扫描。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：显式处理异步动画循环调用的返回值。
+- `src/env.d.ts`：移除失效的 Rspack 目录上下文类型扩展。
+- `taskRecord.md`：追加本次 TypeScript 类型修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复 WebGPU 能力检测中 `Navigator.gpu` 未声明导致的 TypeScript 报错。
+
+## 完成过程
+
+1. 将直接读取 `navigator.gpu` 改为使用 `"gpu" in navigator` 判断属性是否存在。
+2. 保持浏览器不支持 WebGPU 时的原有错误提示和初始化中断行为。
+3. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：使用无需 `Navigator.gpu` 类型声明的 WebGPU 能力检测。
+- `taskRecord.md`：追加本次 WebGPU 类型兼容性修复记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+修复 Rspack 无法静态分析动态 `import.meta.glob` 模式导致的构建警告。
+
+## 完成过程
+
+1. 确认 Rspack 要求 `import.meta.glob` 的模式与选项均为构建期字面量。
+2. 将 GLB 目录 glob 模式直接内联到调用中，保留原有的泛型资源 URL 类型和懒加载扫描范围。
+3. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：将动态 glob 模式改为构建期字面量。
+- `taskRecord.md`：追加本次 Rspack 静态分析修复记录。
