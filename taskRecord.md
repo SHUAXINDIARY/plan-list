@@ -6432,3 +6432,24 @@
 - `src/App.tsx`：注册懒加载页面、`/plane-render` 路由和顶部导航入口。
 - `src/components/route-transition/index.tsx`：补充照片和模型渲染页面的导航过渡顺序。
 - `taskRecord.md`：追加本次页面接入记录。
+
+## 日期
+
+2026-08-26
+
+## 任务目的
+
+将 `amvlab/aircraft-models` 仓库作为 Git 子模块加入当前项目。
+
+## 完成过程
+
+1. 使用 `git submodule add` 将 `https://github.com/amvlab/aircraft-models` 克隆到项目根目录下的 `aircraft-models`。
+2. 确认 `.gitmodules` 已记录子模块路径与远端 URL。
+3. 确认父仓库暂存的子模块 gitlink 指向提交 `91d835e8e851b2317fe79af291c9fed6153fd525`。
+4. 本次仅进行 Git 配置核对，未运行构建、类型检查或本地服务验收。
+
+## 修改具体文件
+
+- `.gitmodules`：新增 `aircraft-models` 子模块路径和远端地址。
+- `aircraft-models`：新增指向 `91d835e8e851b2317fe79af291c9fed6153fd525` 的 Git 子模块引用。
+- `taskRecord.md`：追加本次子模块接入记录。

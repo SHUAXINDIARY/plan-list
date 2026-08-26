@@ -1,0 +1,3 @@
+[submodule "aircraft-models"]
+	path = aircraft-models
+	url = https://github.com/amvlab/aircraft-models
