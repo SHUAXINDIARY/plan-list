@@ -33,9 +33,9 @@ const customModelModules: Record<string, () => Promise<string>> =
 
 /** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
+    ...customModelModules,
     ...amvModelModules,
     ...fr24ModelModules,
-    ...customModelModules,
 };
 
 /** 从 Rspack 上下文路径派生稳定的模型选择标识。 */

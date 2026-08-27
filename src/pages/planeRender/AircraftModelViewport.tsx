@@ -128,8 +128,6 @@ const MAXIMUM_ROLL_ANGLE = 180;
 const MINIMUM_YAW_ANGLE = -180;
 /** 3D 姿态操控器允许的最高偏航角。 */
 const MAXIMUM_YAW_ANGLE = 180;
-/** 姿态角度控件的离散精度。 */
-const ATTITUDE_ANGLE_STEP = 1;
 /** 3D 操控器每移动一个屏幕像素对应的俯仰/偏航角度。 */
 const ATTITUDE_ORBIT_DRAG_SENSITIVITY = 0.5;
 /** 3D 操控器外圈每移动一个屏幕像素对应的滚转角度。 */
