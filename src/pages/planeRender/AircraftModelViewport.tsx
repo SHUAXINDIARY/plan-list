@@ -2,6 +2,7 @@ import {
     useEffect,
     useRef,
     useState,
+    type ChangeEvent,
     type ReactElement,
 } from "react";
 import * as THREE from "three";
@@ -39,6 +40,26 @@ interface AircraftModelViewportProps {
     ) => void;
 }
 
+/** 可供模型视窗即时切换的色调映射预设。 */
+type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
+
+/** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
+type AircraftShadowMode = "pcf" | "vsm";
+
+/** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
+interface AircraftRenderSettings {
+    /** 输出画面使用的色调映射预设。 */
+    toneMapping: AircraftToneMapping;
+    /** 色调映射在输出前使用的曝光系数。 */
+    exposure: number;
+    /** 写入渲染器的物理像素倍率，影响清晰度与 GPU 负载。 */
+    pixelRatio: number;
+    /** 是否全局开启模型和展示平面的实时阴影。 */
+    shadowsEnabled: boolean;
+    /** 阴影贴图采用的 WebGPU 算法。 */
+    shadowMode: AircraftShadowMode;
+}
+
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
 const NORMALIZED_MODEL_MAX_SIZE = 1.35;
 /** 允许近距离检查机身细节时的相机最小距离。 */
@@ -57,6 +78,91 @@ const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文
 const ALL_MODELS_FAILED_MESSAGE = "所有模型均未能加载。";
 /** 浏览器拒绝全屏请求时的用户可见提示。 */
 const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
+/** 渲染倍率滑块允许的最低物理像素比，适用于需要降低 GPU 负载的设备。 */
+const MINIMUM_RENDER_PIXEL_RATIO = 0.5;
+/** 渲染倍率滑块允许的最高物理像素比，限制高密度屏幕的 GPU 开销。 */
+const MAXIMUM_RENDER_PIXEL_RATIO = 2;
+/** 渲染倍率滑块的离散精度。 */
+const RENDER_PIXEL_RATIO_STEP = 0.25;
+/** 曝光滑块允许的最低值，避免模型细节完全压暗。 */
+const MINIMUM_TONE_MAPPING_EXPOSURE = 0.5;
+/** 曝光滑块允许的最高值，避免模型高光过度溢出。 */
+const MAXIMUM_TONE_MAPPING_EXPOSURE = 2;
+/** 曝光滑块的离散精度。 */
+const TONE_MAPPING_EXPOSURE_STEP = 0.05;
+/** 曝光控件的 DOM 标识，用于关联数值输出。 */
+const EXPOSURE_CONTROL_ID = "plane-render-exposure";
+/** 渲染倍率控件的 DOM 标识，用于关联数值输出。 */
+const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
+/** 阴影开关的 DOM 标识，用于关联可读标签。 */
+const SHADOWS_CONTROL_ID = "plane-render-shadows";
+/** 画布内可收起渲染控制区的 DOM 标识。 */
+const RENDER_CONTROLS_ID = "plane-render-controls";
+
+/** 模型视窗保留原有画面效果时采用的渲染参数基线。 */
+const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
+    toneMapping: "aces",
+    exposure: 1.1,
+    shadowsEnabled: true,
+    shadowMode: "pcf",
+};
+
+/** 将用户可读的预设名称映射至模型视窗可用的色调映射值。 */
+const getToneMappingValue = (
+    toneMapping: AircraftToneMapping,
+): THREE.ToneMapping => {
+    if (toneMapping === "agx") {
+        return THREE.AgXToneMapping;
+    }
+
+    if (toneMapping === "neutral") {
+        return THREE.NeutralToneMapping;
+    }
+
+    if (toneMapping === "none") {
+        return THREE.NoToneMapping;
+    }
+
+    return THREE.ACESFilmicToneMapping;
+};
+
+/** 将界面中的阴影模式映射至 WebGPU 渲染器的阴影贴图类型。 */
+const getShadowMapType = (
+    shadowMode: AircraftShadowMode,
+): THREE.ShadowMapType =>
+    shadowMode === "vsm" ? THREE.VSMShadowMap : THREE.PCFShadowMap;
+
+/** 基于当前设备像素密度建立与原始视窗一致的初始渲染设置。 */
+const createDefaultRenderSettings = (): AircraftRenderSettings => ({
+    ...DEFAULT_RENDER_SETTINGS,
+    pixelRatio: Math.min(window.devicePixelRatio, MAXIMUM_RENDER_PIXEL_RATIO),
+});
+
+/** 校验 select 元素的字符串值是否为已支持的色调映射预设。 */
+const isAircraftToneMapping = (
+    value: string,
+): value is AircraftToneMapping =>
+    value === "aces" ||
+    value === "agx" ||
+    value === "neutral" ||
+    value === "none";
+
+/** 校验 select 元素的字符串值是否为已支持的 WebGPU 阴影算法。 */
+const isAircraftShadowMode = (
+    value: string,
+): value is AircraftShadowMode => value === "pcf" || value === "vsm";
+
+/** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
+const applyRenderSettings = (
+    renderer: WebGPURenderer,
+    settings: AircraftRenderSettings,
+): void => {
+    renderer.toneMapping = getToneMappingValue(settings.toneMapping);
+    renderer.toneMappingExposure = settings.exposure;
+    renderer.setPixelRatio(settings.pixelRatio);
+    renderer.shadowMap.enabled = settings.shadowsEnabled;
+    renderer.shadowMap.type = getShadowMapType(settings.shadowMode);
+};
 
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
 const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
@@ -144,10 +250,19 @@ export const AircraftModelViewport = ({
     onLoadingProgressChange,
 }: AircraftModelViewportProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const rendererRef = useRef<WebGPURenderer | null>(null);
+    const resizeRendererRef = useRef<(() => void) | null>(null);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+    const [isRenderControlsOpen, setIsRenderControlsOpen] =
+        useState<boolean>(false);
     const [fullscreenError, setFullscreenError] = useState<string | null>(
         null,
     );
+    const [renderSettings, setRenderSettings] =
+        useState<AircraftRenderSettings>(createDefaultRenderSettings);
+    const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
+
+    renderSettingsRef.current = renderSettings;
 
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
@@ -190,6 +305,106 @@ export const AircraftModelViewport = ({
     const handleFullscreenToggle = (): void => {
         void toggleFullscreen();
     };
+
+    /** 切换画布内渲染控制面板，并保持三维模型的直接操作区域可用。 */
+    const handleRenderControlsToggle = (): void => {
+        setIsRenderControlsOpen((isOpen: boolean): boolean => !isOpen);
+    };
+
+    /** 仅接受已声明的色调映射值，避免 select 意外值破坏渲染器状态。 */
+    const handleToneMappingChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const toneMapping = event.currentTarget.value;
+
+        if (!isAircraftToneMapping(toneMapping)) {
+            return;
+        }
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                toneMapping,
+            }),
+        );
+    };
+
+    /** 更新色调映射曝光，并由滑块范围约束有效数值。 */
+    const handleExposureChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const exposure = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                exposure,
+            }),
+        );
+    };
+
+    /** 更新 WebGPU 画布的物理像素倍率，平衡模型边缘清晰度与 GPU 负载。 */
+    const handlePixelRatioChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const pixelRatio = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                pixelRatio,
+            }),
+        );
+    };
+
+    /** 切换场景级阴影，便于直接对比模型底部与地面接触效果。 */
+    const handleShadowsEnabledChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const shadowsEnabled = event.currentTarget.checked;
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                shadowsEnabled,
+            }),
+        );
+    };
+
+    /** 仅接受已声明的阴影算法，避免向 WebGPU 渲染器写入无效配置。 */
+    const handleShadowModeChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const shadowMode = event.currentTarget.value;
+
+        if (!isAircraftShadowMode(shadowMode)) {
+            return;
+        }
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                shadowMode,
+            }),
+        );
+    };
+
+    /** 将当前视窗恢复为项目既有的 ACES、PCF 阴影和设备像素比基线。 */
+    const handleRenderSettingsReset = (): void => {
+        setRenderSettings(createDefaultRenderSettings());
+    };
+
+    useEffect((): void => {
+        const renderer = rendererRef.current;
+
+        if (renderer === null) {
+            return;
+        }
+
+        // 更新渲染器后重新使用当前容器尺寸分配物理绘制缓冲区。
+        applyRenderSettings(renderer, renderSettings);
+        resizeRendererRef.current?.();
+    }, [renderSettings]);
 
     useEffect((): (() => void) | undefined => {
         const container = containerRef.current;
@@ -260,11 +475,7 @@ export const AircraftModelViewport = ({
             const controls = new OrbitControls(camera, renderer.domElement);
             const gltfLoader = new GLTFLoader();
 
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.outputColorSpace = THREE.SRGBColorSpace;
-            renderer.shadowMap.enabled = true;
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.1;
             renderer.domElement.className = "plane-render__canvas";
             renderer.domElement.setAttribute("aria-hidden", "true");
             container.appendChild(renderer.domElement);
@@ -309,8 +520,13 @@ export const AircraftModelViewport = ({
 
                 camera.aspect = resolvedWidth / resolvedHeight;
                 camera.updateProjectionMatrix();
+                renderer.setPixelRatio(renderSettingsRef.current.pixelRatio);
                 renderer.setSize(resolvedWidth, resolvedHeight, false);
             };
+
+            rendererRef.current = renderer;
+            resizeRendererRef.current = resizeRenderer;
+            applyRenderSettings(renderer, renderSettingsRef.current);
 
             const resizeObserver = new ResizeObserver(resizeRenderer);
             resizeObserver.observe(container);
@@ -330,6 +546,11 @@ export const AircraftModelViewport = ({
                 disposeSceneResources(scene);
                 renderer.dispose();
                 renderer.domElement.remove();
+
+                if (rendererRef.current === renderer) {
+                    rendererRef.current = null;
+                    resizeRendererRef.current = null;
+                }
             };
 
             if (isDisposed) {
@@ -388,6 +609,105 @@ export const AircraftModelViewport = ({
 
     return (
         <div ref={containerRef} className="plane-render__viewport-canvas">
+            <div className="plane-render__render-controls">
+                <button
+                    className="plane-render__render-controls-toggle"
+                    type="button"
+                    aria-controls={RENDER_CONTROLS_ID}
+                    aria-expanded={isRenderControlsOpen}
+                    onClick={handleRenderControlsToggle}
+                >
+                    {isRenderControlsOpen ? "收起控制" : "渲染控制"}
+                </button>
+                {isRenderControlsOpen ? (
+                    <aside
+                        id={RENDER_CONTROLS_ID}
+                        className="plane-render__render-controls-panel"
+                        aria-label="WebGPU 渲染控制"
+                    >
+                        <div className="plane-render__render-controls-heading">
+                            <p>WebGPU Output</p>
+                            <h2>渲染控制</h2>
+                        </div>
+                        <div className="plane-render__render-fields">
+                            <label className="plane-render__render-field">
+                                <span>色调映射</span>
+                                <select
+                                    value={renderSettings.toneMapping}
+                                    onChange={handleToneMappingChange}
+                                >
+                                    <option value="aces">ACES Filmic</option>
+                                    <option value="agx">AgX</option>
+                                    <option value="neutral">Neutral</option>
+                                    <option value="none">关闭</option>
+                                </select>
+                            </label>
+                            <label className="plane-render__render-field plane-render__render-field--range">
+                                <span>
+                                    曝光
+                                    <output htmlFor={EXPOSURE_CONTROL_ID}>
+                                        {renderSettings.exposure.toFixed(2)}
+                                    </output>
+                                </span>
+                                <input
+                                    id={EXPOSURE_CONTROL_ID}
+                                    type="range"
+                                    min={MINIMUM_TONE_MAPPING_EXPOSURE}
+                                    max={MAXIMUM_TONE_MAPPING_EXPOSURE}
+                                    step={TONE_MAPPING_EXPOSURE_STEP}
+                                    value={renderSettings.exposure}
+                                    onChange={handleExposureChange}
+                                />
+                            </label>
+                            <label className="plane-render__render-field plane-render__render-field--range">
+                                <span>
+                                    渲染倍率
+                                    <output htmlFor={PIXEL_RATIO_CONTROL_ID}>
+                                        {renderSettings.pixelRatio.toFixed(2)}x
+                                    </output>
+                                </span>
+                                <input
+                                    id={PIXEL_RATIO_CONTROL_ID}
+                                    type="range"
+                                    min={MINIMUM_RENDER_PIXEL_RATIO}
+                                    max={MAXIMUM_RENDER_PIXEL_RATIO}
+                                    step={RENDER_PIXEL_RATIO_STEP}
+                                    value={renderSettings.pixelRatio}
+                                    onChange={handlePixelRatioChange}
+                                />
+                            </label>
+                            <label className="plane-render__render-switch">
+                                <span>实时阴影</span>
+                                <input
+                                    id={SHADOWS_CONTROL_ID}
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={renderSettings.shadowsEnabled}
+                                    onChange={handleShadowsEnabledChange}
+                                />
+                            </label>
+                            <label className="plane-render__render-field">
+                                <span>阴影算法</span>
+                                <select
+                                    value={renderSettings.shadowMode}
+                                    disabled={!renderSettings.shadowsEnabled}
+                                    onChange={handleShadowModeChange}
+                                >
+                                    <option value="pcf">标准 PCF</option>
+                                    <option value="vsm">柔化 VSM</option>
+                                </select>
+                            </label>
+                            <button
+                                className="plane-render__render-reset"
+                                type="button"
+                                onClick={handleRenderSettingsReset}
+                            >
+                                恢复默认
+                            </button>
+                        </div>
+                    </aside>
+                ) : null}
+            </div>
             <button
                 className="plane-render__fullscreen-button"
                 type="button"

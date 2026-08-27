@@ -77,6 +77,203 @@
     cursor: grabbing;
 }
 
+.plane-render__render-controls {
+    position: absolute;
+    top: 0.85rem;
+    right: 5.15rem;
+    z-index: 5;
+}
+
+.plane-render__render-controls-toggle,
+.plane-render__render-reset {
+    min-height: 2.25rem;
+    color: var(--pl-text-data);
+    font-size: 0.78rem;
+    font-weight: 750;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.55rem;
+    cursor: pointer;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__render-controls-toggle {
+    padding: 0.45rem 0.68rem;
+}
+
+.plane-render__render-controls-toggle:focus-visible,
+.plane-render__render-reset:focus-visible,
+.plane-render__render-field select:focus-visible,
+.plane-render__render-field input[type="range"]:focus-visible,
+.plane-render__render-switch input:focus-visible {
+    border-color: var(--pl-border-focus);
+    outline: none;
+    box-shadow: var(--pl-focus-glow);
+}
+
+.plane-render__render-controls-toggle:active,
+.plane-render__render-reset:active {
+    transform: scale(0.97);
+}
+
+.plane-render__render-controls-panel {
+    position: absolute;
+    top: calc(100% + 0.48rem);
+    right: 0;
+    width: min(15.5rem, calc(100vw - 2rem));
+    padding: 0.82rem;
+    color: var(--pl-text-secondary);
+    background-color: var(--pl-surface-toolbar);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.72rem;
+}
+
+.plane-render__render-controls-heading {
+    padding: 0.04rem 0.04rem 0.72rem;
+    border-bottom: 1px solid var(--pl-border-divider);
+}
+
+.plane-render__render-controls-heading p {
+    margin: 0;
+    color: var(--pl-accent);
+    font-family: var(--pl-font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.plane-render__render-controls-heading h2 {
+    margin: 0.24rem 0 0;
+    color: var(--pl-text-heading);
+    font-family: var(--pl-font-display);
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.plane-render__render-fields {
+    display: grid;
+    gap: 0.72rem;
+    padding-top: 0.74rem;
+}
+
+.plane-render__render-field {
+    display: grid;
+    gap: 0.38rem;
+    min-width: 0;
+}
+
+.plane-render__render-field > span,
+.plane-render__render-switch > span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--pl-text-secondary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.plane-render__render-field output {
+    color: var(--pl-accent);
+    font-family: var(--pl-font-mono);
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+
+.plane-render__render-field select {
+    width: 100%;
+    min-height: 2.2rem;
+    padding: 0.42rem 0.52rem;
+    color: var(--pl-text-data);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 650;
+    background-color: var(--pl-surface-entry);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.48rem;
+    cursor: pointer;
+}
+
+.plane-render__render-field select:disabled {
+    color: var(--pl-text-meta);
+    cursor: not-allowed;
+    opacity: 0.68;
+}
+
+.plane-render__render-field input[type="range"] {
+    width: 100%;
+    height: 1.3rem;
+    margin: 0;
+    accent-color: var(--pl-accent);
+    cursor: pointer;
+}
+
+.plane-render__render-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2.2rem;
+    padding: 0.42rem 0.52rem;
+    background-color: var(--pl-surface-entry);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.48rem;
+    cursor: pointer;
+}
+
+.plane-render__render-switch input {
+    position: relative;
+    flex: 0 0 auto;
+    width: 2.3rem;
+    height: 1.3rem;
+    margin: 0;
+    appearance: none;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__render-switch input::before {
+    position: absolute;
+    top: 0.16rem;
+    left: 0.16rem;
+    width: 0.84rem;
+    height: 0.84rem;
+    background-color: var(--pl-text-meta);
+    border-radius: 999px;
+    content: "";
+    transition:
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart);
+}
+
+.plane-render__render-switch input:checked {
+    background-color: var(--pl-nav-active-bg);
+    border-color: var(--pl-border-nav-active);
+}
+
+.plane-render__render-switch input:checked::before {
+    background-color: var(--pl-accent);
+    transform: translateX(0.98rem);
+}
+
+.plane-render__render-reset {
+    width: 100%;
+    padding: 0.45rem 0.64rem;
+    background-color: transparent;
+}
+
 .plane-render__fullscreen-button {
     position: absolute;
     top: 0.85rem;
@@ -348,7 +545,9 @@
 
 @media (hover: hover) and (pointer: fine) {
     .plane-render__model-button:hover,
-    .plane-render__fullscreen-button:hover {
+    .plane-render__fullscreen-button:hover,
+    .plane-render__render-controls-toggle:hover,
+    .plane-render__render-reset:hover {
         color: var(--pl-text-heading);
         background-color: var(--pl-surface-entry-hover);
         border-color: var(--pl-border-entry-hover);
@@ -418,6 +617,17 @@
         right: 0.65rem;
     }
 
+    .plane-render__render-controls {
+        top: 0.65rem;
+        right: 4.82rem;
+    }
+
+    .plane-render__render-controls-panel {
+        max-height: min(20rem, calc(100vh - 5.5rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
     .plane-render__fullscreen-error {
         top: 3.25rem;
         right: 0.65rem;
@@ -441,7 +651,11 @@
 
 @media (prefers-reduced-motion: reduce) {
     .plane-render__viewport-canvas,
-    .plane-render__model-button {
+    .plane-render__model-button,
+    .plane-render__render-controls-toggle,
+    .plane-render__render-reset,
+    .plane-render__render-switch input,
+    .plane-render__render-switch input::before {
         transition: none;
     }
 }
