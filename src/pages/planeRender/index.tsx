@@ -13,6 +13,13 @@ const INITIAL_LOADING_PROGRESS: AircraftModelLoadingProgress = {
     failedModelCount: 0,
 };
 
+/** 用户切换模型后立即呈现的加载状态，避免旧模型状态延迟停留。 */
+const MODEL_SWITCHING_PROGRESS: AircraftModelLoadingProgress = {
+    phase: "loading",
+    loadedModelCount: 0,
+    failedModelCount: 0,
+};
+
 /** 页面首次打开时默认渲染模型目录中的第一架飞机。 */
 const INITIAL_SELECTED_MODEL_ID = AIRCRAFT_MODEL_ASSETS[0]?.id ?? "";
 
@@ -61,14 +68,22 @@ const PlaneRenderPage = (): ReactElement => {
         [],
     );
 
-    /** 切换当前模型，视窗会清理旧场景并载入新选择。 */
+    /** 切换当前模型，并在点击提交的同一帧反馈新模型正在载入。 */
     const handleModelSelection = (modelId: string): void => {
+        if (modelId === selectedModelId) {
+            return;
+        }
+
+        setLoadingProgress(MODEL_SWITCHING_PROGRESS);
         setSelectedModelId(modelId);
     };
 
     const selectedModel = getSelectedModel(selectedModelId);
     const selectedModelSummary = selectedModel?.label ?? "暂无模型";
     const hasFailedModels = loadingProgress.failedModelCount > 0;
+    const isModelLoading =
+        loadingProgress.phase === "initializing" ||
+        loadingProgress.phase === "loading";
 
     return (
         <section
@@ -85,7 +100,8 @@ const PlaneRenderPage = (): ReactElement => {
                 <section
                     className="plane-render__viewport"
                     aria-label="WebGPU 三维模型视窗，支持拖拽旋转与滚动缩放"
-                    aria-busy={loadingProgress.phase === "loading"}
+                    aria-busy={isModelLoading}
+                    data-loading={isModelLoading}
                 >
                     <AircraftModelViewport
                         asset={selectedModel}
