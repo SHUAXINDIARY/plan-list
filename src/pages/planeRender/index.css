@@ -31,6 +31,8 @@
 }
 
 .plane-render__viewport-canvas {
+    --plane-render-toolbar-gap: 20px;
+    --plane-render-fullscreen-button-width: 4.8rem;
     opacity: 1;
     transition: opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
@@ -77,14 +79,23 @@
     cursor: grabbing;
 }
 
-.plane-render__render-controls {
+.plane-render__viewport-tools {
     position: absolute;
     top: 0.85rem;
-    right: 5.15rem;
+    right: 0.85rem;
     z-index: 5;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--plane-render-toolbar-gap);
+}
+
+.plane-render__render-controls,
+.plane-render__attitude-controls {
+    position: relative;
 }
 
 .plane-render__render-controls-toggle,
+.plane-render__attitude-controls-toggle,
 .plane-render__render-reset {
     min-height: 2.25rem;
     color: var(--pl-text-data);
@@ -106,7 +117,12 @@
     padding: 0.45rem 0.68rem;
 }
 
+.plane-render__attitude-controls-toggle {
+    padding: 0.45rem 0.68rem;
+}
+
 .plane-render__render-controls-toggle:focus-visible,
+.plane-render__attitude-controls-toggle:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
 .plane-render__render-field input[type="range"]:focus-visible,
@@ -117,6 +133,7 @@
 }
 
 .plane-render__render-controls-toggle:active,
+.plane-render__attitude-controls-toggle:active,
 .plane-render__render-reset:active {
     transform: scale(0.97);
 }
@@ -131,6 +148,51 @@
     background-color: var(--pl-surface-toolbar);
     border: 1px solid var(--pl-border-default);
     border-radius: 0.72rem;
+}
+
+.plane-render__attitude-controls-panel {
+    width: min(18rem, calc(100vw - 2rem));
+}
+
+.plane-render__attitude-presets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.38rem;
+}
+
+.plane-render__attitude-preset {
+    min-height: 2.25rem;
+    padding: 0.38rem 0.44rem;
+    color: var(--pl-text-secondary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    background-color: var(--pl-surface-entry);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.48rem;
+    cursor: pointer;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__attitude-preset--active {
+    color: var(--pl-text-emphasis);
+    background-color: var(--pl-nav-active-bg);
+    border-color: var(--pl-border-nav-active);
+}
+
+.plane-render__attitude-preset:focus-visible {
+    color: var(--pl-text-heading);
+    border-color: var(--pl-border-focus);
+    outline: none;
+    box-shadow: var(--pl-focus-glow);
+}
+
+.plane-render__attitude-preset:active {
+    transform: scale(0.97);
 }
 
 .plane-render__render-controls-heading {
@@ -275,10 +337,11 @@
 }
 
 .plane-render__fullscreen-button {
-    position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
-    z-index: 4;
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: auto;
+    width: var(--plane-render-fullscreen-button-width);
     min-height: 2.25rem;
     padding: 0.45rem 0.68rem;
     color: var(--pl-text-data);
@@ -547,7 +610,9 @@
     .plane-render__model-button:hover,
     .plane-render__fullscreen-button:hover,
     .plane-render__render-controls-toggle:hover,
-    .plane-render__render-reset:hover {
+    .plane-render__attitude-controls-toggle:hover,
+    .plane-render__render-reset:hover,
+    .plane-render__attitude-preset:hover {
         color: var(--pl-text-heading);
         background-color: var(--pl-surface-entry-hover);
         border-color: var(--pl-border-entry-hover);
@@ -613,13 +678,14 @@
     }
 
     .plane-render__fullscreen-button {
-        top: 0.65rem;
-        right: 0.65rem;
+        position: relative;
+        top: auto;
+        right: auto;
     }
 
-    .plane-render__render-controls {
+    .plane-render__viewport-tools {
         top: 0.65rem;
-        right: 4.82rem;
+        right: 0.65rem;
     }
 
     .plane-render__render-controls-panel {
@@ -653,7 +719,9 @@
     .plane-render__viewport-canvas,
     .plane-render__model-button,
     .plane-render__render-controls-toggle,
+    .plane-render__attitude-controls-toggle,
     .plane-render__render-reset,
+    .plane-render__attitude-preset,
     .plane-render__render-switch input,
     .plane-render__render-switch input::before {
         transition: none;

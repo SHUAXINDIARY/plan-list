@@ -46,6 +46,29 @@ type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
 /** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
 type AircraftShadowMode = "pcf" | "vsm";
 
+/** 飞行姿态面板可切换的预设状态。 */
+type AircraftAttitudePreset =
+    | "level"
+    | "takeoff"
+    | "descent"
+    | "landing"
+    | "custom";
+
+/** 飞行姿态面板中可单独调节的旋转轴。 */
+type AircraftAttitudeAxis = "pitch" | "roll" | "yaw";
+
+/** 一组以角度表示的飞机旋转参数。 */
+interface AircraftAttitudeSettings {
+    /** 当前姿态预设，手动调节后变为 custom。 */
+    preset: AircraftAttitudePreset;
+    /** 机头上下摆动角度，正值表示抬头。 */
+    pitch: number;
+    /** 机翼左右倾斜角度，正值表示右侧下倾。 */
+    roll: number;
+    /** 机身水平转向角度，正值表示向右偏航。 */
+    yaw: number;
+}
+
 /** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
 interface AircraftRenderSettings {
     /** 输出画面使用的色调映射预设。 */
@@ -98,6 +121,44 @@ const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
 const SHADOWS_CONTROL_ID = "plane-render-shadows";
 /** 画布内可收起渲染控制区的 DOM 标识。 */
 const RENDER_CONTROLS_ID = "plane-render-controls";
+/** 画布内可收起飞行姿态区的 DOM 标识。 */
+const ATTITUDE_CONTROLS_ID = "plane-render-attitude-controls";
+/** 姿态角度换算为 Three.js 弧度时使用的比例。 */
+const DEGREES_TO_RADIANS = Math.PI / 180;
+/** 俯仰滑块允许的最低角度。 */
+const MINIMUM_PITCH_ANGLE = -20;
+/** 俯仰滑块允许的最高角度。 */
+const MAXIMUM_PITCH_ANGLE = 20;
+/** 滚转滑块允许的最低角度。 */
+const MINIMUM_ROLL_ANGLE = -35;
+/** 滚转滑块允许的最高角度。 */
+const MAXIMUM_ROLL_ANGLE = 35;
+/** 偏航滑块允许的最低角度。 */
+const MINIMUM_YAW_ANGLE = -45;
+/** 偏航滑块允许的最高角度。 */
+const MAXIMUM_YAW_ANGLE = 45;
+/** 姿态滑块的离散精度。 */
+const ATTITUDE_ANGLE_STEP = 1;
+
+/** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
+const ATTITUDE_PRESET_VALUES: Readonly<
+    Record<
+        Exclude<AircraftAttitudePreset, "custom">,
+        Omit<AircraftAttitudeSettings, "preset">
+    >
+> = {
+    level: { pitch: 0, roll: 0, yaw: 0 },
+    takeoff: { pitch: 10, roll: 0, yaw: 0 },
+    descent: { pitch: -8, roll: 0, yaw: 0 },
+    landing: { pitch: 3, roll: 0, yaw: 0 },
+};
+/** 模型视窗打开时采用的平飞姿态基线。 */
+const DEFAULT_ATTITUDE_SETTINGS: AircraftAttitudeSettings = {
+    preset: "level",
+    pitch: 0,
+    roll: 0,
+    yaw: 0,
+};
 
 /** 模型视窗保留原有画面效果时采用的渲染参数基线。 */
 const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
@@ -163,6 +224,26 @@ const applyRenderSettings = (
     renderer.shadowMap.enabled = settings.shadowsEnabled;
     renderer.shadowMap.type = getShadowMapType(settings.shadowMode);
 };
+
+/** 将控制面板中的角度单位转换为 Three.js 使用的弧度。 */
+const degreesToRadians = (degrees: number): number =>
+    degrees * DEGREES_TO_RADIANS;
+
+/** 将姿态面板的三轴角度写入模型根节点，保持模型资源本身不变。 */
+const applyAircraftAttitude = (
+    model: THREE.Object3D,
+    settings: AircraftAttitudeSettings,
+): void => {
+    model.rotation.set(
+        degreesToRadians(settings.pitch),
+        degreesToRadians(settings.yaw),
+        degreesToRadians(settings.roll),
+    );
+};
+
+/** 为姿态角度生成带方向符号的紧凑读数。 */
+const formatAttitudeAngle = (angle: number): string =>
+    `${angle > 0 ? "+" : ""}${angle}°`;
 
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
 const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
@@ -252,17 +333,25 @@ export const AircraftModelViewport = ({
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
     const resizeRendererRef = useRef<(() => void) | null>(null);
+    const aircraftModelRef = useRef<THREE.Object3D | null>(null);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
+        useState<boolean>(false);
+    const [isAttitudeControlsOpen, setIsAttitudeControlsOpen] =
         useState<boolean>(false);
     const [fullscreenError, setFullscreenError] = useState<string | null>(
         null,
     );
     const [renderSettings, setRenderSettings] =
         useState<AircraftRenderSettings>(createDefaultRenderSettings);
+    const [attitudeSettings, setAttitudeSettings] =
+        useState<AircraftAttitudeSettings>(DEFAULT_ATTITUDE_SETTINGS);
     const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
+    const attitudeSettingsRef =
+        useRef<AircraftAttitudeSettings>(attitudeSettings);
 
     renderSettingsRef.current = renderSettings;
+    attitudeSettingsRef.current = attitudeSettings;
 
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
@@ -309,6 +398,11 @@ export const AircraftModelViewport = ({
     /** 切换画布内渲染控制面板，并保持三维模型的直接操作区域可用。 */
     const handleRenderControlsToggle = (): void => {
         setIsRenderControlsOpen((isOpen: boolean): boolean => !isOpen);
+    };
+
+    /** 切换画布内飞行姿态面板，保留模型目录和轨道操作的空间。 */
+    const handleAttitudeControlsToggle = (): void => {
+        setIsAttitudeControlsOpen((isOpen: boolean): boolean => !isOpen);
     };
 
     /** 仅接受已声明的色调映射值，避免 select 意外值破坏渲染器状态。 */
@@ -394,6 +488,37 @@ export const AircraftModelViewport = ({
         setRenderSettings(createDefaultRenderSettings());
     };
 
+    /** 应用一组飞行阶段预设，并将手动角度同步至三维模型。 */
+    const handleAttitudePresetChange = (
+        preset: Exclude<AircraftAttitudePreset, "custom">,
+    ): void => {
+        const presetSettings = ATTITUDE_PRESET_VALUES[preset];
+
+        setAttitudeSettings({
+            preset,
+            ...presetSettings,
+        });
+    };
+
+    /** 更新单个姿态轴，并将预设标记为自定义，保留其他轴当前值。 */
+    const handleAttitudeAxisChange = (
+        axis: AircraftAttitudeAxis,
+        value: number,
+    ): void => {
+        setAttitudeSettings(
+            (currentSettings: AircraftAttitudeSettings): AircraftAttitudeSettings => ({
+                ...currentSettings,
+                preset: "custom",
+                [axis]: value,
+            }),
+        );
+    };
+
+    /** 将模型姿态恢复为平飞状态，不改变渲染器或相机参数。 */
+    const handleAttitudeReset = (): void => {
+        setAttitudeSettings(DEFAULT_ATTITUDE_SETTINGS);
+    };
+
     useEffect((): void => {
         const renderer = rendererRef.current;
 
@@ -405,6 +530,16 @@ export const AircraftModelViewport = ({
         applyRenderSettings(renderer, renderSettings);
         resizeRendererRef.current?.();
     }, [renderSettings]);
+
+    useEffect((): void => {
+        const model = aircraftModelRef.current;
+
+        if (model === null) {
+            return;
+        }
+
+        applyAircraftAttitude(model, attitudeSettings);
+    }, [attitudeSettings]);
 
     useEffect((): (() => void) | undefined => {
         const container = containerRef.current;
@@ -551,6 +686,10 @@ export const AircraftModelViewport = ({
                     rendererRef.current = null;
                     resizeRendererRef.current = null;
                 }
+
+                if (aircraftModelRef.current !== null) {
+                    aircraftModelRef.current = null;
+                }
             };
 
             if (isDisposed) {
@@ -577,7 +716,9 @@ export const AircraftModelViewport = ({
 
                 const model = gltf.scene;
                 normalizeAircraftModel(model);
+                applyAircraftAttitude(model, attitudeSettingsRef.current);
                 scene.add(model);
+                aircraftModelRef.current = model;
                 focusModel(camera, controls, model);
                 loadedModelCount = 1;
             } catch {
@@ -609,7 +750,8 @@ export const AircraftModelViewport = ({
 
     return (
         <div ref={containerRef} className="plane-render__viewport-canvas">
-            <div className="plane-render__render-controls">
+            <div className="plane-render__viewport-tools">
+                <div className="plane-render__render-controls">
                 <button
                     className="plane-render__render-controls-toggle"
                     type="button"
@@ -707,15 +849,183 @@ export const AircraftModelViewport = ({
                         </div>
                     </aside>
                 ) : null}
+                </div>
+                <div className="plane-render__attitude-controls">
+                    <button
+                        className="plane-render__attitude-controls-toggle"
+                        type="button"
+                        aria-controls={ATTITUDE_CONTROLS_ID}
+                        aria-expanded={isAttitudeControlsOpen}
+                        onClick={handleAttitudeControlsToggle}
+                    >
+                        {isAttitudeControlsOpen ? "收起姿态" : "飞行姿态"}
+                    </button>
+                    {isAttitudeControlsOpen ? (
+                        <aside
+                            id={ATTITUDE_CONTROLS_ID}
+                            className="plane-render__render-controls-panel plane-render__attitude-controls-panel"
+                            aria-label="飞机飞行姿态控制"
+                        >
+                            <div className="plane-render__render-controls-heading">
+                                <p>Flight Profile</p>
+                                <h2>飞行姿态</h2>
+                            </div>
+                            <div className="plane-render__render-fields">
+                                <div
+                                    className="plane-render__attitude-presets"
+                                    role="group"
+                                    aria-label="飞行阶段预设"
+                                >
+                                    <button
+                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "level" ? " plane-render__attitude-preset--active" : ""}`}
+                                        type="button"
+                                        aria-pressed={
+                                            attitudeSettings.preset === "level"
+                                        }
+                                        onClick={(): void =>
+                                            handleAttitudePresetChange("level")
+                                        }
+                                    >
+                                        平飞
+                                    </button>
+                                    <button
+                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "takeoff" ? " plane-render__attitude-preset--active" : ""}`}
+                                        type="button"
+                                        aria-pressed={
+                                            attitudeSettings.preset === "takeoff"
+                                        }
+                                        onClick={(): void =>
+                                            handleAttitudePresetChange("takeoff")
+                                        }
+                                    >
+                                        起飞
+                                    </button>
+                                    <button
+                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "descent" ? " plane-render__attitude-preset--active" : ""}`}
+                                        type="button"
+                                        aria-pressed={
+                                            attitudeSettings.preset === "descent"
+                                        }
+                                        onClick={(): void =>
+                                            handleAttitudePresetChange("descent")
+                                        }
+                                    >
+                                        下降
+                                    </button>
+                                    <button
+                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "landing" ? " plane-render__attitude-preset--active" : ""}`}
+                                        type="button"
+                                        aria-pressed={
+                                            attitudeSettings.preset === "landing"
+                                        }
+                                        onClick={(): void =>
+                                            handleAttitudePresetChange("landing")
+                                        }
+                                    >
+                                        落地
+                                    </button>
+                                </div>
+                                <label className="plane-render__render-field plane-render__render-field--range">
+                                    <span>
+                                        俯仰
+                                        <output>
+                                            {formatAttitudeAngle(
+                                                attitudeSettings.pitch,
+                                            )}
+                                        </output>
+                                    </span>
+                                    <input
+                                        type="range"
+                                        min={MINIMUM_PITCH_ANGLE}
+                                        max={MAXIMUM_PITCH_ANGLE}
+                                        step={ATTITUDE_ANGLE_STEP}
+                                        value={attitudeSettings.pitch}
+                                        onChange={(
+                                            event: ChangeEvent<HTMLInputElement>,
+                                        ): void =>
+                                            handleAttitudeAxisChange(
+                                                "pitch",
+                                                Number(
+                                                    event.currentTarget.value,
+                                                ),
+                                            )
+                                        }
+                                    />
+                                </label>
+                                <label className="plane-render__render-field plane-render__render-field--range">
+                                    <span>
+                                        滚转
+                                        <output>
+                                            {formatAttitudeAngle(
+                                                attitudeSettings.roll,
+                                            )}
+                                        </output>
+                                    </span>
+                                    <input
+                                        type="range"
+                                        min={MINIMUM_ROLL_ANGLE}
+                                        max={MAXIMUM_ROLL_ANGLE}
+                                        step={ATTITUDE_ANGLE_STEP}
+                                        value={attitudeSettings.roll}
+                                        onChange={(
+                                            event: ChangeEvent<HTMLInputElement>,
+                                        ): void =>
+                                            handleAttitudeAxisChange(
+                                                "roll",
+                                                Number(
+                                                    event.currentTarget.value,
+                                                ),
+                                            )
+                                        }
+                                    />
+                                </label>
+                                <label className="plane-render__render-field plane-render__render-field--range">
+                                    <span>
+                                        偏航
+                                        <output>
+                                            {formatAttitudeAngle(
+                                                attitudeSettings.yaw,
+                                            )}
+                                        </output>
+                                    </span>
+                                    <input
+                                        type="range"
+                                        min={MINIMUM_YAW_ANGLE}
+                                        max={MAXIMUM_YAW_ANGLE}
+                                        step={ATTITUDE_ANGLE_STEP}
+                                        value={attitudeSettings.yaw}
+                                        onChange={(
+                                            event: ChangeEvent<HTMLInputElement>,
+                                        ): void =>
+                                            handleAttitudeAxisChange(
+                                                "yaw",
+                                                Number(
+                                                    event.currentTarget.value,
+                                                ),
+                                            )
+                                        }
+                                    />
+                                </label>
+                                <button
+                                    className="plane-render__render-reset"
+                                    type="button"
+                                    onClick={handleAttitudeReset}
+                                >
+                                    恢复平飞
+                                </button>
+                            </div>
+                        </aside>
+                    ) : null}
+                </div>
+                <button
+                    className="plane-render__fullscreen-button"
+                    type="button"
+                    aria-pressed={isFullscreen}
+                    onClick={handleFullscreenToggle}
+                >
+                    {isFullscreen ? "退出全屏" : "全屏查看"}
+                </button>
             </div>
-            <button
-                className="plane-render__fullscreen-button"
-                type="button"
-                aria-pressed={isFullscreen}
-                onClick={handleFullscreenToggle}
-            >
-                {isFullscreen ? "退出全屏" : "全屏查看"}
-            </button>
             {fullscreenError !== null ? (
                 <p className="plane-render__fullscreen-error" role="alert">
                     {fullscreenError}
