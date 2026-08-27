@@ -6842,6 +6842,27 @@
 
 ## 任务目的
 
+将飞机模型视口中的 WebGPU 渲染控制面板迁移为独立组件。
+
+## 完成过程
+
+1. 新增 `components/RenderControls.tsx`，集中承载渲染面板 JSX、控件常量、渲染设置类型和 props 定义。
+2. 从 `AircraftModelViewport.tsx` 移除重复的渲染面板标记与 UI 常量，改为引入并渲染 `<RenderControls />`。
+3. 保留视口组件对 WebGPU 实例、场景对象和状态更新的所有权，通过事件 props 维持原有交互行为。
+4. 按用户约定仅完成代码修改，未运行构建、类型检查、启动服务器或浏览器验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/components/RenderControls.tsx`：新增独立渲染控制组件。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：引入组件并移除内联渲染面板。
+- `taskRecord.md`：追加本次渲染控制组件抽离记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
 在 WebGPU 渲染控制面板中增加飞机底部展示平面的可见性配置，默认不渲染。
 
 ## 完成过程

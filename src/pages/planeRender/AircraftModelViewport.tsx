@@ -11,6 +11,12 @@ import * as THREE from "three";
 import { WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import {
+    RenderControls,
+    type AircraftRenderSettings,
+    type AircraftShadowMode,
+    type AircraftToneMapping,
+} from "./components/RenderControls";
 import type { AircraftModelAsset } from "./modelAssets";
 
 /** 模型视窗当前所处的初始化或加载阶段。 */
@@ -41,12 +47,6 @@ interface AircraftModelViewportProps {
         progress: AircraftModelLoadingProgress,
     ) => void;
 }
-
-/** 可供模型视窗即时切换的色调映射预设。 */
-type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
-
-/** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
-type AircraftShadowMode = "pcf" | "vsm";
 
 /** 飞行姿态面板可切换的预设状态。 */
 type AircraftAttitudePreset =
@@ -92,26 +92,6 @@ interface AircraftAttitudeSettings {
     yaw: number;
 }
 
-/** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
-interface AircraftRenderSettings {
-    /** 输出画面使用的色调映射预设。 */
-    toneMapping: AircraftToneMapping;
-    /** 色调映射在输出前使用的曝光系数。 */
-    exposure: number;
-    /** 写入渲染器的物理像素倍率，影响清晰度与 GPU 负载。 */
-    pixelRatio: number;
-    /** 是否全局开启模型和展示平面的实时阴影。 */
-    shadowsEnabled: boolean;
-    /** 阴影贴图采用的 WebGPU 算法。 */
-    shadowMode: AircraftShadowMode;
-    /** 是否渲染飞机底部的展示平面。 */
-    displayFloor: boolean;
-    /** 主方向光绕场景垂直轴的水平角度。 */
-    lightAzimuth: number;
-    /** 主方向光相对水平面的高度角。 */
-    lightElevation: number;
-}
-
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
 const NORMALIZED_MODEL_MAX_SIZE = 1.35;
 /** 允许近距离检查机身细节时的相机最小距离。 */
@@ -130,32 +110,8 @@ const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文
 const ALL_MODELS_FAILED_MESSAGE = "所有模型均未能加载。";
 /** 浏览器拒绝全屏请求时的用户可见提示。 */
 const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
-/** 渲染倍率滑块允许的最低物理像素比，适用于需要降低 GPU 负载的设备。 */
-const MINIMUM_RENDER_PIXEL_RATIO = 0.5;
 /** 渲染倍率滑块允许的最高物理像素比，限制高密度屏幕的 GPU 开销。 */
 const MAXIMUM_RENDER_PIXEL_RATIO = 2;
-/** 渲染倍率滑块的离散精度。 */
-const RENDER_PIXEL_RATIO_STEP = 0.25;
-/** 曝光滑块允许的最低值，避免模型细节完全压暗。 */
-const MINIMUM_TONE_MAPPING_EXPOSURE = 0.5;
-/** 曝光滑块允许的最高值，避免模型高光过度溢出。 */
-const MAXIMUM_TONE_MAPPING_EXPOSURE = 2;
-/** 曝光滑块的离散精度。 */
-const TONE_MAPPING_EXPOSURE_STEP = 0.05;
-/** 曝光控件的 DOM 标识，用于关联数值输出。 */
-const EXPOSURE_CONTROL_ID = "plane-render-exposure";
-/** 渲染倍率控件的 DOM 标识，用于关联数值输出。 */
-const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
-/** 阴影开关的 DOM 标识，用于关联可读标签。 */
-const SHADOWS_CONTROL_ID = "plane-render-shadows";
-/** 展示平面开关的 DOM 标识，用于关联可读标签。 */
-const DISPLAY_FLOOR_CONTROL_ID = "plane-render-display-floor";
-/** 主光源水平角控件的 DOM 标识。 */
-const LIGHT_AZIMUTH_CONTROL_ID = "plane-render-light-azimuth";
-/** 主光源高度角控件的 DOM 标识。 */
-const LIGHT_ELEVATION_CONTROL_ID = "plane-render-light-elevation";
-/** 画布内可收起渲染控制区的 DOM 标识。 */
-const RENDER_CONTROLS_ID = "plane-render-controls";
 /** 画布内可收起飞行姿态区的 DOM 标识。 */
 const ATTITUDE_CONTROLS_ID = "plane-render-attitude-controls";
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
@@ -184,14 +140,6 @@ const KEY_LIGHT_DISTANCE = Math.hypot(7, 10, 8);
 const DEFAULT_LIGHT_AZIMUTH = 49;
 /** 主光源高度角的默认值，对应初始位置的仰角。 */
 const DEFAULT_LIGHT_ELEVATION = 43;
-/** 主光源水平角滑块的最小值。 */
-const MINIMUM_LIGHT_AZIMUTH = -180;
-/** 主光源水平角滑块的最大值。 */
-const MAXIMUM_LIGHT_AZIMUTH = 180;
-/** 主光源高度角滑块的最小值。 */
-const MINIMUM_LIGHT_ELEVATION = 5;
-/** 主光源高度角滑块的最大值。 */
-const MAXIMUM_LIGHT_ELEVATION = 85;
 
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
@@ -1073,156 +1021,20 @@ export const AircraftModelViewport = ({
     return (
         <div ref={containerRef} className="plane-render__viewport-canvas">
             <div className="plane-render__viewport-tools">
-                <div className="plane-render__render-controls">
-                <button
-                    className="plane-render__render-controls-toggle"
-                    type="button"
-                    aria-controls={RENDER_CONTROLS_ID}
-                    aria-expanded={isRenderControlsOpen}
-                    onClick={handleRenderControlsToggle}
-                >
-                    {isRenderControlsOpen ? "收起控制" : "渲染控制"}
-                </button>
-                {isRenderControlsOpen ? (
-                    <aside
-                        id={RENDER_CONTROLS_ID}
-                        className="plane-render__render-controls-panel"
-                        aria-label="WebGPU 渲染控制"
-                    >
-                        <div className="plane-render__render-controls-heading">
-                            <p>WebGPU Output</p>
-                            <h2>渲染控制</h2>
-                        </div>
-                        <div className="plane-render__render-fields">
-                            <label className="plane-render__render-field">
-                                <span>色调映射</span>
-                                <select
-                                    value={renderSettings.toneMapping}
-                                    onChange={handleToneMappingChange}
-                                >
-                                    <option value="aces">ACES Filmic</option>
-                                    <option value="agx">AgX</option>
-                                    <option value="neutral">Neutral</option>
-                                    <option value="none">关闭</option>
-                                </select>
-                            </label>
-                            <label className="plane-render__render-field plane-render__render-field--range">
-                                <span>
-                                    曝光
-                                    <output htmlFor={EXPOSURE_CONTROL_ID}>
-                                        {renderSettings.exposure.toFixed(2)}
-                                    </output>
-                                </span>
-                                <input
-                                    id={EXPOSURE_CONTROL_ID}
-                                    type="range"
-                                    min={MINIMUM_TONE_MAPPING_EXPOSURE}
-                                    max={MAXIMUM_TONE_MAPPING_EXPOSURE}
-                                    step={TONE_MAPPING_EXPOSURE_STEP}
-                                    value={renderSettings.exposure}
-                                    onChange={handleExposureChange}
-                                />
-                            </label>
-                            <label className="plane-render__render-field plane-render__render-field--range">
-                                <span>
-                                    渲染倍率
-                                    <output htmlFor={PIXEL_RATIO_CONTROL_ID}>
-                                        {renderSettings.pixelRatio.toFixed(2)}x
-                                    </output>
-                                </span>
-                                <input
-                                    id={PIXEL_RATIO_CONTROL_ID}
-                                    type="range"
-                                    min={MINIMUM_RENDER_PIXEL_RATIO}
-                                    max={MAXIMUM_RENDER_PIXEL_RATIO}
-                                    step={RENDER_PIXEL_RATIO_STEP}
-                                    value={renderSettings.pixelRatio}
-                                    onChange={handlePixelRatioChange}
-                                />
-                            </label>
-                            <p className="plane-render__render-section-label">
-                                打光方向
-                            </p>
-                            <label className="plane-render__render-field plane-render__render-field--range">
-                                <span>
-                                    水平角
-                                    <output htmlFor={LIGHT_AZIMUTH_CONTROL_ID}>
-                                        {formatAttitudeAngle(
-                                            renderSettings.lightAzimuth,
-                                        )}
-                                    </output>
-                                </span>
-                                <input
-                                    id={LIGHT_AZIMUTH_CONTROL_ID}
-                                    type="range"
-                                    min={MINIMUM_LIGHT_AZIMUTH}
-                                    max={MAXIMUM_LIGHT_AZIMUTH}
-                                    step={ATTITUDE_ANGLE_STEP}
-                                    value={renderSettings.lightAzimuth}
-                                    onChange={handleLightAzimuthChange}
-                                />
-                            </label>
-                            <label className="plane-render__render-field plane-render__render-field--range">
-                                <span>
-                                    高度角
-                                    <output htmlFor={LIGHT_ELEVATION_CONTROL_ID}>
-                                        {formatAttitudeAngle(
-                                            renderSettings.lightElevation,
-                                        )}
-                                    </output>
-                                </span>
-                                <input
-                                    id={LIGHT_ELEVATION_CONTROL_ID}
-                                    type="range"
-                                    min={MINIMUM_LIGHT_ELEVATION}
-                                    max={MAXIMUM_LIGHT_ELEVATION}
-                                    step={ATTITUDE_ANGLE_STEP}
-                                    value={renderSettings.lightElevation}
-                                    onChange={handleLightElevationChange}
-                                />
-                            </label>
-                            <label className="plane-render__render-switch">
-                                <span>实时阴影</span>
-                                <input
-                                    id={SHADOWS_CONTROL_ID}
-                                    type="checkbox"
-                                    role="switch"
-                                    checked={renderSettings.shadowsEnabled}
-                                    onChange={handleShadowsEnabledChange}
-                                />
-                            </label>
-                            <label className="plane-render__render-switch">
-                                <span>展示平面</span>
-                                <input
-                                    id={DISPLAY_FLOOR_CONTROL_ID}
-                                    type="checkbox"
-                                    role="switch"
-                                    checked={renderSettings.displayFloor}
-                                    onChange={handleDisplayFloorChange}
-                                />
-                            </label>
-                            <label className="plane-render__render-field">
-                                <span>阴影算法</span>
-                                <select
-                                    value={renderSettings.shadowMode}
-                                    disabled={!renderSettings.shadowsEnabled}
-                                    onChange={handleShadowModeChange}
-                                >
-                                    <option value="pcf">标准 PCF</option>
-                                    <option value="vsm">柔化 VSM</option>
-                                </select>
-                            </label>
-                            <button
-                                className="plane-render__render-reset"
-                                type="button"
-                                onClick={handleRenderSettingsReset}
-                            >
-                                恢复默认
-                            </button>
-                        </div>
-                    </aside>
-                ) : null}
-                </div>
+                <RenderControls
+                    isOpen={isRenderControlsOpen}
+                    settings={renderSettings}
+                    onToggle={handleRenderControlsToggle}
+                    onToneMappingChange={handleToneMappingChange}
+                    onExposureChange={handleExposureChange}
+                    onPixelRatioChange={handlePixelRatioChange}
+                    onLightAzimuthChange={handleLightAzimuthChange}
+                    onLightElevationChange={handleLightElevationChange}
+                    onShadowsEnabledChange={handleShadowsEnabledChange}
+                    onDisplayFloorChange={handleDisplayFloorChange}
+                    onShadowModeChange={handleShadowModeChange}
+                    onReset={handleRenderSettingsReset}
+                />
                 <div className="plane-render__attitude-controls">
                     <button
                         className="plane-render__attitude-controls-toggle"
