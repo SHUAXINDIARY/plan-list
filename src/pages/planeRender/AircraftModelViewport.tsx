@@ -81,6 +81,12 @@ interface AircraftRenderSettings {
     shadowsEnabled: boolean;
     /** 阴影贴图采用的 WebGPU 算法。 */
     shadowMode: AircraftShadowMode;
+    /** 是否渲染飞机底部的展示平面。 */
+    displayFloor: boolean;
+    /** 主方向光绕场景垂直轴的水平角度。 */
+    lightAzimuth: number;
+    /** 主方向光相对水平面的高度角。 */
+    lightElevation: number;
 }
 
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
@@ -119,6 +125,12 @@ const EXPOSURE_CONTROL_ID = "plane-render-exposure";
 const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
 /** 阴影开关的 DOM 标识，用于关联可读标签。 */
 const SHADOWS_CONTROL_ID = "plane-render-shadows";
+/** 展示平面开关的 DOM 标识，用于关联可读标签。 */
+const DISPLAY_FLOOR_CONTROL_ID = "plane-render-display-floor";
+/** 主光源水平角控件的 DOM 标识。 */
+const LIGHT_AZIMUTH_CONTROL_ID = "plane-render-light-azimuth";
+/** 主光源高度角控件的 DOM 标识。 */
+const LIGHT_ELEVATION_CONTROL_ID = "plane-render-light-elevation";
 /** 画布内可收起渲染控制区的 DOM 标识。 */
 const RENDER_CONTROLS_ID = "plane-render-controls";
 /** 画布内可收起飞行姿态区的 DOM 标识。 */
@@ -139,6 +151,20 @@ const MINIMUM_YAW_ANGLE = -45;
 const MAXIMUM_YAW_ANGLE = 45;
 /** 姿态滑块的离散精度。 */
 const ATTITUDE_ANGLE_STEP = 1;
+/** 主方向光保持的距离，沿用初始位置 (7, 10, 8) 的向量长度。 */
+const KEY_LIGHT_DISTANCE = Math.hypot(7, 10, 8);
+/** 主光源水平角的默认值，对应初始位置的方位。 */
+const DEFAULT_LIGHT_AZIMUTH = 49;
+/** 主光源高度角的默认值，对应初始位置的仰角。 */
+const DEFAULT_LIGHT_ELEVATION = 43;
+/** 主光源水平角滑块的最小值。 */
+const MINIMUM_LIGHT_AZIMUTH = -180;
+/** 主光源水平角滑块的最大值。 */
+const MAXIMUM_LIGHT_AZIMUTH = 180;
+/** 主光源高度角滑块的最小值。 */
+const MINIMUM_LIGHT_ELEVATION = 5;
+/** 主光源高度角滑块的最大值。 */
+const MAXIMUM_LIGHT_ELEVATION = 85;
 
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
@@ -166,6 +192,9 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     exposure: 1.1,
     shadowsEnabled: true,
     shadowMode: "pcf",
+    displayFloor: false,
+    lightAzimuth: DEFAULT_LIGHT_AZIMUTH,
+    lightElevation: DEFAULT_LIGHT_ELEVATION,
 };
 
 /** 将用户可读的预设名称映射至模型视窗可用的色调映射值。 */
@@ -244,6 +273,24 @@ const applyAircraftAttitude = (
 /** 为姿态角度生成带方向符号的紧凑读数。 */
 const formatAttitudeAngle = (angle: number): string =>
     `${angle > 0 ? "+" : ""}${angle}°`;
+
+/** 根据水平角和高度角重新计算主方向光位置，保持光源距离与强度不变。 */
+const applyKeyLightDirection = (
+    light: THREE.DirectionalLight,
+    azimuth: number,
+    elevation: number,
+): void => {
+    const azimuthRadians = degreesToRadians(azimuth);
+    const elevationRadians = degreesToRadians(elevation);
+    const horizontalDistance =
+        KEY_LIGHT_DISTANCE * Math.cos(elevationRadians);
+
+    light.position.set(
+        horizontalDistance * Math.cos(azimuthRadians),
+        KEY_LIGHT_DISTANCE * Math.sin(elevationRadians),
+        horizontalDistance * Math.sin(azimuthRadians),
+    );
+};
 
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
 const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
@@ -334,6 +381,8 @@ export const AircraftModelViewport = ({
     const rendererRef = useRef<WebGPURenderer | null>(null);
     const resizeRendererRef = useRef<(() => void) | null>(null);
     const aircraftModelRef = useRef<THREE.Object3D | null>(null);
+    const displayFloorRef = useRef<THREE.Mesh | null>(null);
+    const keyLightRef = useRef<THREE.DirectionalLight | null>(null);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
         useState<boolean>(false);
@@ -465,6 +514,48 @@ export const AircraftModelViewport = ({
         );
     };
 
+    /** 切换飞机底部展示平面的可见性，默认保持纯模型画面。 */
+    const handleDisplayFloorChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const displayFloor = event.currentTarget.checked;
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                displayFloor,
+            }),
+        );
+    };
+
+    /** 更新主方向光的水平角度，实时改变模型的侧向受光。 */
+    const handleLightAzimuthChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const lightAzimuth = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                lightAzimuth,
+            }),
+        );
+    };
+
+    /** 更新主方向光的高度角，实时改变模型顶部与底部的明暗关系。 */
+    const handleLightElevationChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const lightElevation = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                lightElevation,
+            }),
+        );
+    };
+
     /** 仅接受已声明的阴影算法，避免向 WebGPU 渲染器写入无效配置。 */
     const handleShadowModeChange = (
         event: ChangeEvent<HTMLSelectElement>,
@@ -530,6 +621,30 @@ export const AircraftModelViewport = ({
         applyRenderSettings(renderer, renderSettings);
         resizeRendererRef.current?.();
     }, [renderSettings]);
+
+    useEffect((): void => {
+        const displayFloor = displayFloorRef.current;
+
+        if (displayFloor === null) {
+            return;
+        }
+
+        displayFloor.visible = renderSettings.displayFloor;
+    }, [renderSettings.displayFloor]);
+
+    useEffect((): void => {
+        const keyLight = keyLightRef.current;
+
+        if (keyLight === null) {
+            return;
+        }
+
+        applyKeyLightDirection(
+            keyLight,
+            renderSettings.lightAzimuth,
+            renderSettings.lightElevation,
+        );
+    }, [renderSettings.lightAzimuth, renderSettings.lightElevation]);
 
     useEffect((): void => {
         const model = aircraftModelRef.current;
@@ -626,8 +741,13 @@ export const AircraftModelViewport = ({
             scene.add(new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1));
 
             const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-            keyLight.position.set(7, 10, 8);
+            applyKeyLightDirection(
+                keyLight,
+                renderSettingsRef.current.lightAzimuth,
+                renderSettingsRef.current.lightElevation,
+            );
             keyLight.castShadow = true;
+            keyLightRef.current = keyLight;
             scene.add(keyLight);
 
             const fillLight = new THREE.DirectionalLight(0x8acbe7, 1.2);
@@ -645,6 +765,8 @@ export const AircraftModelViewport = ({
             displayFloor.rotation.x = -Math.PI / 2;
             displayFloor.position.y = -0.015;
             displayFloor.receiveShadow = true;
+            displayFloor.visible = renderSettingsRef.current.displayFloor;
+            displayFloorRef.current = displayFloor;
             scene.add(displayFloor);
 
             /** 根据容器实际尺寸更新相机投影和 WebGPU 画布分辨率。 */
@@ -689,6 +811,14 @@ export const AircraftModelViewport = ({
 
                 if (aircraftModelRef.current !== null) {
                     aircraftModelRef.current = null;
+                }
+
+                if (displayFloorRef.current === displayFloor) {
+                    displayFloorRef.current = null;
+                }
+
+                if (keyLightRef.current === keyLight) {
+                    keyLightRef.current = null;
                 }
             };
 
@@ -818,6 +948,47 @@ export const AircraftModelViewport = ({
                                     onChange={handlePixelRatioChange}
                                 />
                             </label>
+                            <p className="plane-render__render-section-label">
+                                打光方向
+                            </p>
+                            <label className="plane-render__render-field plane-render__render-field--range">
+                                <span>
+                                    水平角
+                                    <output htmlFor={LIGHT_AZIMUTH_CONTROL_ID}>
+                                        {formatAttitudeAngle(
+                                            renderSettings.lightAzimuth,
+                                        )}
+                                    </output>
+                                </span>
+                                <input
+                                    id={LIGHT_AZIMUTH_CONTROL_ID}
+                                    type="range"
+                                    min={MINIMUM_LIGHT_AZIMUTH}
+                                    max={MAXIMUM_LIGHT_AZIMUTH}
+                                    step={ATTITUDE_ANGLE_STEP}
+                                    value={renderSettings.lightAzimuth}
+                                    onChange={handleLightAzimuthChange}
+                                />
+                            </label>
+                            <label className="plane-render__render-field plane-render__render-field--range">
+                                <span>
+                                    高度角
+                                    <output htmlFor={LIGHT_ELEVATION_CONTROL_ID}>
+                                        {formatAttitudeAngle(
+                                            renderSettings.lightElevation,
+                                        )}
+                                    </output>
+                                </span>
+                                <input
+                                    id={LIGHT_ELEVATION_CONTROL_ID}
+                                    type="range"
+                                    min={MINIMUM_LIGHT_ELEVATION}
+                                    max={MAXIMUM_LIGHT_ELEVATION}
+                                    step={ATTITUDE_ANGLE_STEP}
+                                    value={renderSettings.lightElevation}
+                                    onChange={handleLightElevationChange}
+                                />
+                            </label>
                             <label className="plane-render__render-switch">
                                 <span>实时阴影</span>
                                 <input
@@ -826,6 +997,16 @@ export const AircraftModelViewport = ({
                                     role="switch"
                                     checked={renderSettings.shadowsEnabled}
                                     onChange={handleShadowsEnabledChange}
+                                />
+                            </label>
+                            <label className="plane-render__render-switch">
+                                <span>展示平面</span>
+                                <input
+                                    id={DISPLAY_FLOOR_CONTROL_ID}
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={renderSettings.displayFloor}
+                                    onChange={handleDisplayFloorChange}
                                 />
                             </label>
                             <label className="plane-render__render-field">

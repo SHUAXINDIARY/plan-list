@@ -222,6 +222,16 @@
     padding-top: 0.74rem;
 }
 
+.plane-render__render-section-label {
+    margin: 0.12rem 0 -0.18rem;
+    padding-top: 0.64rem;
+    color: var(--pl-accent);
+    font-family: var(--pl-font-mono);
+    font-size: 0.7rem;
+    font-weight: 750;
+    border-top: 1px solid var(--pl-border-divider);
+}
+
 .plane-render__render-field {
     display: grid;
     gap: 0.38rem;
