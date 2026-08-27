@@ -218,7 +218,7 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     toneMapping: "aces",
     exposure: 1.1,
     shadowsEnabled: true,
-    shadowMode: "pcf",
+    shadowMode: "vsm",
     displayFloor: false,
     lightAzimuth: DEFAULT_LIGHT_AZIMUTH,
     lightElevation: DEFAULT_LIGHT_ELEVATION,
