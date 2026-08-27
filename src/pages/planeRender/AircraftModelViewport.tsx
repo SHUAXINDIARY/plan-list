@@ -132,12 +132,12 @@ const MAXIMUM_YAW_ANGLE = 180;
 const ATTITUDE_ORBIT_DRAG_SENSITIVITY = 0.5;
 /** 3D 操控器外圈每移动一个屏幕像素对应的滚转角度。 */
 const ATTITUDE_ROLL_DRAG_SENSITIVITY = 0.8;
-/** 主方向光保持的距离，沿用初始位置 (7, 10, 8) 的向量长度。 */
-const KEY_LIGHT_DISTANCE = Math.hypot(7, 10, 8);
-/** 主光源水平角的默认值，对应初始位置的方位。 */
-const DEFAULT_LIGHT_AZIMUTH = 49;
-/** 主光源高度角的默认值，对应初始位置的仰角。 */
-const DEFAULT_LIGHT_ELEVATION = 43;
+/** 主方向光 X 轴的默认位置。 */
+const DEFAULT_LIGHT_POSITION_X = 7;
+/** 主方向光 Y 轴的默认位置。 */
+const DEFAULT_LIGHT_POSITION_Y = 10;
+/** 主方向光 Z 轴的默认位置。 */
+const DEFAULT_LIGHT_POSITION_Z = 8;
 
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
@@ -166,8 +166,9 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     shadowsEnabled: true,
     shadowMode: "vsm",
     displayFloor: false,
-    lightAzimuth: DEFAULT_LIGHT_AZIMUTH,
-    lightElevation: DEFAULT_LIGHT_ELEVATION,
+    lightPositionX: DEFAULT_LIGHT_POSITION_X,
+    lightPositionY: DEFAULT_LIGHT_POSITION_Y,
+    lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
 };
 
 /** 将用户可读的预设名称映射至模型视窗可用的色调映射值。 */
@@ -251,22 +252,14 @@ const formatAttitudeAngle = (angle: number): string =>
 const clampAngle = (angle: number, minimum: number, maximum: number): number =>
     Math.min(Math.max(angle, minimum), maximum);
 
-/** 根据水平角和高度角重新计算主方向光位置，保持光源距离与强度不变。 */
-const applyKeyLightDirection = (
+/** 将主方向光移动到用户指定的场景坐标，保持光源强度不变。 */
+const applyKeyLightPosition = (
     light: THREE.DirectionalLight,
-    azimuth: number,
-    elevation: number,
+    x: number,
+    y: number,
+    z: number,
 ): void => {
-    const azimuthRadians = degreesToRadians(azimuth);
-    const elevationRadians = degreesToRadians(elevation);
-    const horizontalDistance =
-        KEY_LIGHT_DISTANCE * Math.cos(elevationRadians);
-
-    light.position.set(
-        horizontalDistance * Math.cos(azimuthRadians),
-        KEY_LIGHT_DISTANCE * Math.sin(elevationRadians),
-        horizontalDistance * Math.sin(azimuthRadians),
-    );
+    light.position.set(x, y, z);
 };
 
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
@@ -508,30 +501,44 @@ export const AircraftModelViewport = ({
         );
     };
 
-    /** 更新主方向光的水平角度，实时改变模型的侧向受光。 */
-    const handleLightAzimuthChange = (
+    /** 更新主方向光的 X 轴位置，实时改变模型的侧向受光。 */
+    const handleLightPositionXChange = (
         event: ChangeEvent<HTMLInputElement>,
     ): void => {
-        const lightAzimuth = Number(event.currentTarget.value);
+        const lightPositionX = Number(event.currentTarget.value);
 
         setRenderSettings(
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
-                lightAzimuth,
+                lightPositionX,
             }),
         );
     };
 
-    /** 更新主方向光的高度角，实时改变模型顶部与底部的明暗关系。 */
-    const handleLightElevationChange = (
+    /** 更新主方向光的 Y 轴位置，实时改变模型顶部与底部的明暗关系。 */
+    const handleLightPositionYChange = (
         event: ChangeEvent<HTMLInputElement>,
     ): void => {
-        const lightElevation = Number(event.currentTarget.value);
+        const lightPositionY = Number(event.currentTarget.value);
 
         setRenderSettings(
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
-                lightElevation,
+                lightPositionY,
+            }),
+        );
+    };
+
+    /** 更新主方向光的 Z 轴位置，实时改变模型的前后受光关系。 */
+    const handleLightPositionZChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const lightPositionZ = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                lightPositionZ,
             }),
         );
     };
@@ -777,12 +784,17 @@ export const AircraftModelViewport = ({
             return;
         }
 
-        applyKeyLightDirection(
+        applyKeyLightPosition(
             keyLight,
-            renderSettings.lightAzimuth,
-            renderSettings.lightElevation,
+            renderSettings.lightPositionX,
+            renderSettings.lightPositionY,
+            renderSettings.lightPositionZ,
         );
-    }, [renderSettings.lightAzimuth, renderSettings.lightElevation]);
+    }, [
+        renderSettings.lightPositionX,
+        renderSettings.lightPositionY,
+        renderSettings.lightPositionZ,
+    ]);
 
     useEffect((): void => {
         const model = aircraftModelRef.current;
@@ -879,10 +891,11 @@ export const AircraftModelViewport = ({
             scene.add(new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1));
 
             const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-            applyKeyLightDirection(
+            applyKeyLightPosition(
                 keyLight,
-                renderSettingsRef.current.lightAzimuth,
-                renderSettingsRef.current.lightElevation,
+                renderSettingsRef.current.lightPositionX,
+                renderSettingsRef.current.lightPositionY,
+                renderSettingsRef.current.lightPositionZ,
             );
             keyLight.castShadow = true;
             keyLightRef.current = keyLight;
@@ -1026,8 +1039,9 @@ export const AircraftModelViewport = ({
                     onToneMappingChange={handleToneMappingChange}
                     onExposureChange={handleExposureChange}
                     onPixelRatioChange={handlePixelRatioChange}
-                    onLightAzimuthChange={handleLightAzimuthChange}
-                    onLightElevationChange={handleLightElevationChange}
+                    onLightPositionXChange={handleLightPositionXChange}
+                    onLightPositionYChange={handleLightPositionYChange}
+                    onLightPositionZChange={handleLightPositionZChange}
                     onShadowsEnabledChange={handleShadowsEnabledChange}
                     onDisplayFloorChange={handleDisplayFloorChange}
                     onShadowModeChange={handleShadowModeChange}

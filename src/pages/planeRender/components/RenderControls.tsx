@@ -20,10 +20,12 @@ export interface AircraftRenderSettings {
     shadowMode: AircraftShadowMode;
     /** 是否渲染飞机底部的展示平面。 */
     displayFloor: boolean;
-    /** 主方向光绕场景垂直轴的水平角度。 */
-    lightAzimuth: number;
-    /** 主方向光相对水平面的高度角。 */
-    lightElevation: number;
+    /** 主方向光在场景 X 轴上的位置。 */
+    lightPositionX: number;
+    /** 主方向光在场景 Y 轴上的位置。 */
+    lightPositionY: number;
+    /** 主方向光在场景 Z 轴上的位置。 */
+    lightPositionZ: number;
 }
 
 /** 渲染控制面板的输入状态和交互回调。 */
@@ -40,10 +42,12 @@ interface RenderControlsProps {
     onExposureChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理渲染倍率滑块的变更。 */
     onPixelRatioChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    /** 处理主光源水平角滑块的变更。 */
-    onLightAzimuthChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    /** 处理主光源高度角滑块的变更。 */
-    onLightElevationChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 处理主光源 X 轴位置滑块的变更。 */
+    onLightPositionXChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 处理主光源 Y 轴位置滑块的变更。 */
+    onLightPositionYChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 处理主光源 Z 轴位置滑块的变更。 */
+    onLightPositionZChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理实时阴影开关的变更。 */
     onShadowsEnabledChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理展示平面开关的变更。 */
@@ -62,10 +66,12 @@ const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
 const SHADOWS_CONTROL_ID = "plane-render-shadows";
 /** 展示平面开关的 DOM 标识，用于关联可读标签。 */
 const DISPLAY_FLOOR_CONTROL_ID = "plane-render-display-floor";
-/** 主光源水平角控件的 DOM 标识。 */
-const LIGHT_AZIMUTH_CONTROL_ID = "plane-render-light-azimuth";
-/** 主光源高度角控件的 DOM 标识。 */
-const LIGHT_ELEVATION_CONTROL_ID = "plane-render-light-elevation";
+/** 主光源 X 轴位置控件的 DOM 标识。 */
+const LIGHT_POSITION_X_CONTROL_ID = "plane-render-light-position-x";
+/** 主光源 Y 轴位置控件的 DOM 标识。 */
+const LIGHT_POSITION_Y_CONTROL_ID = "plane-render-light-position-y";
+/** 主光源 Z 轴位置控件的 DOM 标识。 */
+const LIGHT_POSITION_Z_CONTROL_ID = "plane-render-light-position-z";
 /** 画布内可收起渲染控制区的 DOM 标识。 */
 const RENDER_CONTROLS_ID = "plane-render-controls";
 /** 渲染倍率滑块允许的最低物理像素比。 */
@@ -80,20 +86,12 @@ const MINIMUM_TONE_MAPPING_EXPOSURE = 0.5;
 const MAXIMUM_TONE_MAPPING_EXPOSURE = 2;
 /** 曝光滑块的离散精度。 */
 const TONE_MAPPING_EXPOSURE_STEP = 0.05;
-/** 主光源水平角滑块的最小值。 */
-const MINIMUM_LIGHT_AZIMUTH = -180;
-/** 主光源水平角滑块的最大值。 */
-const MAXIMUM_LIGHT_AZIMUTH = 180;
-/** 主光源高度角滑块的最小值。 */
-const MINIMUM_LIGHT_ELEVATION = 5;
-/** 主光源高度角滑块的最大值。 */
-const MAXIMUM_LIGHT_ELEVATION = 85;
-/** 主光源角度滑块的离散精度。 */
-const LIGHT_ANGLE_STEP = 1;
-
-/** 将角度格式化为带方向符号的紧凑读数。 */
-const formatAngle = (angle: number): string =>
-    `${angle > 0 ? "+" : ""}${angle}°`;
+/** 主光源位置滑块的最小值。 */
+const MINIMUM_LIGHT_POSITION = -20;
+/** 主光源位置滑块的最大值。 */
+const MAXIMUM_LIGHT_POSITION = 20;
+/** 主光源位置滑块的离散精度。 */
+const LIGHT_POSITION_STEP = 0.5;
 
 /** 渲染控制面板，集中承载 WebGPU 输出和主光源配置。 */
 export const RenderControls = ({
@@ -103,8 +101,9 @@ export const RenderControls = ({
     onToneMappingChange,
     onExposureChange,
     onPixelRatioChange,
-    onLightAzimuthChange,
-    onLightElevationChange,
+    onLightPositionXChange,
+    onLightPositionYChange,
+    onLightPositionZChange,
     onShadowsEnabledChange,
     onDisplayFloorChange,
     onShadowModeChange,
@@ -178,40 +177,57 @@ export const RenderControls = ({
                         />
                     </label>
                     <p className="plane-render__render-section-label">
-                        打光方向
+                        光源位置
                     </p>
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
-                            水平角
-                            <output htmlFor={LIGHT_AZIMUTH_CONTROL_ID}>
-                                {formatAngle(settings.lightAzimuth)}
+                            X 轴
+                            <output htmlFor={LIGHT_POSITION_X_CONTROL_ID}>
+                                {settings.lightPositionX.toFixed(1)}
                             </output>
                         </span>
                         <input
-                            id={LIGHT_AZIMUTH_CONTROL_ID}
+                            id={LIGHT_POSITION_X_CONTROL_ID}
                             type="range"
-                            min={MINIMUM_LIGHT_AZIMUTH}
-                            max={MAXIMUM_LIGHT_AZIMUTH}
-                            step={LIGHT_ANGLE_STEP}
-                            value={settings.lightAzimuth}
-                            onChange={onLightAzimuthChange}
+                            min={MINIMUM_LIGHT_POSITION}
+                            max={MAXIMUM_LIGHT_POSITION}
+                            step={LIGHT_POSITION_STEP}
+                            value={settings.lightPositionX}
+                            onChange={onLightPositionXChange}
                         />
                     </label>
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
-                            高度角
-                            <output htmlFor={LIGHT_ELEVATION_CONTROL_ID}>
-                                {formatAngle(settings.lightElevation)}
+                            Y 轴
+                            <output htmlFor={LIGHT_POSITION_Y_CONTROL_ID}>
+                                {settings.lightPositionY.toFixed(1)}
                             </output>
                         </span>
                         <input
-                            id={LIGHT_ELEVATION_CONTROL_ID}
+                            id={LIGHT_POSITION_Y_CONTROL_ID}
                             type="range"
-                            min={MINIMUM_LIGHT_ELEVATION}
-                            max={MAXIMUM_LIGHT_ELEVATION}
-                            step={LIGHT_ANGLE_STEP}
-                            value={settings.lightElevation}
-                            onChange={onLightElevationChange}
+                            min={MINIMUM_LIGHT_POSITION}
+                            max={MAXIMUM_LIGHT_POSITION}
+                            step={LIGHT_POSITION_STEP}
+                            value={settings.lightPositionY}
+                            onChange={onLightPositionYChange}
+                        />
+                    </label>
+                    <label className="plane-render__render-field plane-render__render-field--range">
+                        <span>
+                            Z 轴
+                            <output htmlFor={LIGHT_POSITION_Z_CONTROL_ID}>
+                                {settings.lightPositionZ.toFixed(1)}
+                            </output>
+                        </span>
+                        <input
+                            id={LIGHT_POSITION_Z_CONTROL_ID}
+                            type="range"
+                            min={MINIMUM_LIGHT_POSITION}
+                            max={MAXIMUM_LIGHT_POSITION}
+                            step={LIGHT_POSITION_STEP}
+                            value={settings.lightPositionZ}
+                            onChange={onLightPositionZChange}
                         />
                     </label>
                     <label className="plane-render__render-switch">
