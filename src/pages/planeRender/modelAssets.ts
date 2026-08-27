@@ -4,7 +4,7 @@ export interface AircraftModelAsset {
     id: string;
     /** 面向用户展示的模型名称。 */
     label: string;
-    /** 相对于项目根目录的模型文件路径，用于区分不同子模块中的同名机型。 */
+    /** 相对于项目根目录的模型文件路径，用于区分不同模型目录中的同名机型。 */
     sourcePath: string;
     /** 懒加载资源并返回构建后 GLB 文件 URL。 */
     loadUrl: () => Promise<string>;
@@ -13,7 +13,7 @@ export interface AircraftModelAsset {
 /** Rspack 返回的模型模块路径中，指向项目根目录的相对前缀。 */
 const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 
-// 每个 Rspack glob 保持为独立的字面量调用，确保构建期分别生成两个模型目录上下文。
+// 每个 Rspack glob 保持为独立的字面量调用，确保构建期分别生成各模型目录上下文。
 const amvModelModules: Record<string, () => Promise<string>> =
     import.meta.glob<string>("../../../aircraft-models/models/**/*.glb", {
         import: "default",
@@ -25,10 +25,17 @@ const fr24ModelModules: Record<string, () => Promise<string>> =
         import: "default",
     });
 
-/** 两个子模块的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
+// 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的 GLB 文件。
+const customModelModules: Record<string, () => Promise<string>> =
+    import.meta.glob<string>("../../../custom_models/**/*.glb", {
+        import: "default",
+    });
+
+/** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
     ...amvModelModules,
     ...fr24ModelModules,
+    ...customModelModules,
 };
 
 /** 从 Rspack 上下文路径派生稳定的模型选择标识。 */
@@ -51,7 +58,9 @@ const getModelLabel = (sourcePath: string): string => {
         : fileStem;
     const sourceLabel = sourcePath.startsWith("fr24-3d-models")
         ? "FR24"
-        : "AMV";
+        : sourcePath.startsWith("custom_models")
+          ? "CUSTOM"
+          : "AMV";
     const variantLabel = isLogoFreeVariant
         ? `${baseLabel} · 无标识`
         : baseLabel;
@@ -64,7 +73,7 @@ const getModelSourcePath = (modulePath: string): string => {
     return modulePath.replace(PROJECT_ROOT_RELATIVE_PREFIX_PATTERN, "");
 };
 
-/** 两个子模块 models 目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录。 */
+/** 各模型目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录。 */
 export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
     Object.entries(modelModules)
         .map(

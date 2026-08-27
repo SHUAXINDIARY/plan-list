@@ -93,7 +93,7 @@ const PlaneRenderPage = (): ReactElement => {
             <header className="plane-render__header">
                 <p className="page-eyebrow">Model Studio</p>
                 <h1 id="plane-render-heading">飞机模型渲染</h1>
-                <p>从 aircraft-models 子模块目录中选择并检查单架 GLB 模型。</p>
+                <p>从模型目录中选择并检查单架 GLB 模型。</p>
             </header>
 
             <div className="plane-render__workspace">
@@ -198,6 +198,13 @@ const PlaneRenderPage = (): ReactElement => {
                     rel="noreferrer"
                 >
                     fr24-3d-models
+                </a>{"、"}
+                <a
+                    href="https://sketchfab.com"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    sketchfab
                 </a>{" "}
                 提供。
             </p>

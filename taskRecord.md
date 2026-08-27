@@ -6918,3 +6918,24 @@
 
 - `src/pages/planeRender/AircraftModelViewport.tsx`：新增展示平面状态、开关处理及场景网格可见性同步。
 - `taskRecord.md`：追加本次展示平面配置记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+扩展飞机模型浏览器，支持加载项目根目录下 `custom_models/` 中的 GLB 模型。
+
+## 完成过程
+
+1. 新增独立的 Rspack `import.meta.glob`，递归收集 `custom_models/**/*.glb` 并合并到模型加载器映射。
+2. 为自定义模型增加 `CUSTOM` 来源标签，保留完整目录前缀以避免与其他模型目录的同名模型冲突。
+3. 更新模型渲染页面说明，使其覆盖所有模型来源目录。
+4. 运行生产构建，确认资源目录扩展可通过项目工具链处理；TypeScript 检查仍受既有的 `AircraftModelViewport.tsx:132` 未使用常量报错影响。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：新增 `custom_models` GLB 扫描、模型映射合并和 `CUSTOM` 来源标签。
+- `src/pages/planeRender/index.tsx`：将页面说明从单一子模块更新为通用模型目录描述。
+- `taskRecord.md`：追加本次自定义模型目录支持记录。
