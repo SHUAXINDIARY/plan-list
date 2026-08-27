@@ -229,7 +229,7 @@
 .plane-render__attitude-gizmo-grid {
     position: absolute;
     inset: 16%;
-    border: 1px dashed var(--pl-border-muted);
+    border: 1px solid var(--pl-border-muted);
     border-radius: 50%;
     opacity: 0.82;
     transform: rotateX(64deg) translateZ(-1.2rem);
@@ -251,73 +251,90 @@
     transform: rotate(90deg);
 }
 
+.plane-render__attitude-gizmo-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 1px solid var(--pl-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--pl-surface-data-state);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
 .plane-render__attitude-gizmo-aircraft {
     position: relative;
-    width: 4.2rem;
-    height: 6.9rem;
+    display: block;
+    width: 4.6rem;
+    height: 7.3rem;
+    overflow: visible;
     transform-style: preserve-3d;
     transition: transform var(--motion-duration-standard)
         var(--motion-ease-out-quart);
     pointer-events: none;
 }
 
-.plane-render__attitude-gizmo-fuselage,
-.plane-render__attitude-gizmo-wing,
-.plane-render__attitude-gizmo-tail {
-    position: absolute;
+.plane-render__attitude-gizmo-svg {
     display: block;
-    background-color: var(--pl-accent);
-    box-shadow: 0 0 0 1px var(--pl-border-focus);
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
-.plane-render__attitude-gizmo-fuselage {
-    top: 50%;
-    left: 50%;
-    width: 0.68rem;
-    height: 6.2rem;
-    border-radius: 50% 50% 42% 42%;
-    transform: translate(-50%, -50%) translateZ(0.9rem);
+.plane-render__attitude-gizmo-svg-wing {
+    fill: var(--pl-accent);
+    stroke: var(--pl-border-focus);
+    stroke-linejoin: round;
+    stroke-width: 1.5;
 }
 
-.plane-render__attitude-gizmo-wing {
-    top: 43%;
-    width: 2.35rem;
-    height: 0.38rem;
-    border-radius: 0.18rem;
-    transform: translateY(-50%) translateZ(0.74rem);
+.plane-render__attitude-gizmo-svg-fuselage {
+    fill: var(--pl-text-heading);
+    stroke: var(--pl-border-focus);
+    stroke-linejoin: round;
+    stroke-width: 1.5;
 }
 
-.plane-render__attitude-gizmo-wing--left {
-    right: 50%;
-    transform-origin: right center;
-    transform: translateY(-50%) rotateY(-8deg) translateZ(0.74rem);
+.plane-render__attitude-gizmo-svg-cockpit {
+    fill: var(--pl-surface-data-state);
+    stroke: var(--pl-text-meta);
+    stroke-width: 1;
 }
 
-.plane-render__attitude-gizmo-wing--right {
-    left: 50%;
-    transform-origin: left center;
-    transform: translateY(-50%) rotateY(8deg) translateZ(0.74rem);
+.plane-render__attitude-gizmo-svg-highlight {
+    fill: none;
+    stroke: var(--pl-accent);
+    stroke-linecap: round;
+    stroke-width: 2;
 }
 
-.plane-render__attitude-gizmo-tail {
-    top: 72%;
-    left: 50%;
-    width: 1.35rem;
-    height: 0.26rem;
-    border-radius: 0.14rem;
-    transform: translate(-50%, -50%) translateZ(0.82rem);
+.plane-render__attitude-gizmo-svg-tail {
+    fill: var(--pl-text-data);
+    stroke: var(--pl-border-focus);
+    stroke-linejoin: round;
+    stroke-width: 1.25;
 }
 
 .plane-render__attitude-gizmo-axis {
     position: absolute;
+    top: 0.56rem;
     right: 0.56rem;
-    bottom: 0.45rem;
+    display: flex;
+    gap: 0.3rem;
+    pointer-events: none;
+}
+
+.plane-render__attitude-gizmo-axis span {
+    padding: 0.2rem 0.3rem;
     color: var(--pl-text-meta);
     font-family: var(--pl-font-mono);
-    font-size: 0.64rem;
+    font-size: 0.62rem;
     font-weight: 750;
-    pointer-events: none;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-divider);
+    border-radius: 0.25rem;
 }
 
 .plane-render__attitude-gizmo-roll {
@@ -343,9 +360,36 @@
     pointer-events: none;
 }
 
-.plane-render__attitude-gizmo-roll span {
-    position: relative;
+.plane-render__attitude-gizmo-roll::after {
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: 0.66rem;
+    background-color: var(--pl-text-meta);
+    content: "";
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.plane-render__attitude-gizmo-roll-indicator {
+    position: absolute;
+    top: 50%;
     z-index: 1;
+    width: 0.56rem;
+    height: 0.56rem;
+    background-color: var(--pl-accent);
+    border: 1px solid var(--pl-text-heading);
+    border-radius: 0.12rem;
+    box-shadow: 0 0 0 2px var(--pl-surface-entry);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: left var(--motion-duration-standard)
+        var(--motion-ease-out-quart);
+    pointer-events: none;
+}
+
+.plane-render__attitude-gizmo-roll-label {
+    position: relative;
+    z-index: 2;
     padding: 0 0.46rem;
     color: var(--pl-accent);
     font-family: var(--pl-font-mono);
@@ -360,6 +404,11 @@
 
 .plane-render__attitude-gizmo--dragging
     .plane-render__attitude-gizmo-aircraft {
+    transition: none;
+}
+
+.plane-render__attitude-gizmo--dragging
+    .plane-render__attitude-gizmo-roll-indicator {
     transition: none;
 }
 
@@ -392,6 +441,7 @@
     font-family: var(--pl-font-mono);
     font-size: 0.72rem;
     font-weight: 750;
+    font-variant-numeric: tabular-nums;
 }
 
 .plane-render__render-controls-heading {

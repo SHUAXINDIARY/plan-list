@@ -1138,20 +1138,50 @@ export const AircraftModelViewport = ({
                                         }
                                     >
                                         <div className="plane-render__attitude-gizmo-grid" />
+                                        <span
+                                            className="plane-render__attitude-gizmo-center"
+                                            aria-hidden="true"
+                                        />
                                         <div
                                             className="plane-render__attitude-gizmo-aircraft"
                                             style={{
                                                 transform: `rotateX(${attitudeSettings.pitch}deg) rotateY(${attitudeSettings.yaw}deg) rotateZ(${attitudeSettings.roll}deg)`,
                                             }}
                                         >
-                                            <span className="plane-render__attitude-gizmo-fuselage" />
-                                            <span className="plane-render__attitude-gizmo-wing plane-render__attitude-gizmo-wing--left" />
-                                            <span className="plane-render__attitude-gizmo-wing plane-render__attitude-gizmo-wing--right" />
-                                            <span className="plane-render__attitude-gizmo-tail" />
+                                            <svg
+                                                className="plane-render__attitude-gizmo-svg"
+                                                viewBox="0 0 120 190"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    className="plane-render__attitude-gizmo-svg-wing"
+                                                    d="M49 62 9 98v14l40-18v34l-22 19v9l22-11v15l-10 23 21 5 21-5-10-23v-15l22 11v-9L71 128V94l40 18V98L71 62Z"
+                                                />
+                                                <path
+                                                    className="plane-render__attitude-gizmo-svg-fuselage"
+                                                    d="M60 6C51 18 48 39 49 62v69l-10 36 21 17 21-17-10-36V62C72 39 69 18 60 6Z"
+                                                />
+                                                <path
+                                                    className="plane-render__attitude-gizmo-svg-cockpit"
+                                                    d="M60 20c-6 9-8 18-8 29h16c0-11-2-20-8-29Z"
+                                                />
+                                                <path
+                                                    className="plane-render__attitude-gizmo-svg-highlight"
+                                                    d="M57 40v85"
+                                                />
+                                                <path
+                                                    className="plane-render__attitude-gizmo-svg-tail"
+                                                    d="m52 132-14 13v8l22-11v-15Zm16 0 14 13v8l-22-11v-15Z"
+                                                />
+                                            </svg>
                                         </div>
-                                        <span className="plane-render__attitude-gizmo-axis">
-                                            PITCH / YAW
-                                        </span>
+                                        <div
+                                            className="plane-render__attitude-gizmo-axis"
+                                            aria-hidden="true"
+                                        >
+                                            <span>俯仰</span>
+                                            <span>偏航</span>
+                                        </div>
                                     </div>
                                     <div
                                         className={`plane-render__attitude-gizmo-roll${isAttitudeDragging && attitudeDragRef.current?.mode === "roll" ? " plane-render__attitude-gizmo--dragging" : ""}`}
@@ -1179,7 +1209,16 @@ export const AircraftModelViewport = ({
                                             handleAttitudeKeyDown("roll", event)
                                         }
                                     >
-                                        <span>ROLL</span>
+                                        <span
+                                            className="plane-render__attitude-gizmo-roll-indicator"
+                                            style={{
+                                                left: `${50 + (attitudeSettings.roll / MAXIMUM_ROLL_ANGLE) * 42}%`,
+                                            }}
+                                            aria-hidden="true"
+                                        />
+                                        <span className="plane-render__attitude-gizmo-roll-label">
+                                            ROLL
+                                        </span>
                                     </div>
                                 </div>
                                 <dl className="plane-render__attitude-readout">
