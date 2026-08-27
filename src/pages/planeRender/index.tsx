@@ -3,10 +3,7 @@ import {
     AircraftModelViewport,
     type AircraftModelLoadingProgress,
 } from "./AircraftModelViewport";
-import {
-    AIRCRAFT_MODEL_ASSETS,
-    type AircraftModelAsset,
-} from "./modelAssets";
+import { AIRCRAFT_MODEL_ASSETS, type AircraftModelAsset } from "./modelAssets";
 import "./index.css";
 
 /** 页面加载模型时使用的初始进度状态。 */
@@ -81,9 +78,7 @@ const PlaneRenderPage = (): ReactElement => {
             <header className="plane-render__header">
                 <p className="page-eyebrow">Model Studio</p>
                 <h1 id="plane-render-heading">飞机模型渲染</h1>
-                <p>
-                    从 aircraft-models 子模块目录中选择并检查单架 GLB 模型。
-                </p>
+                <p>从 aircraft-models 子模块目录中选择并检查单架 GLB 模型。</p>
             </header>
 
             <div className="plane-render__workspace">
@@ -105,14 +100,19 @@ const PlaneRenderPage = (): ReactElement => {
                                     : "status"
                             }
                         >
-                            <strong>{getLoadingStatusTitle(loadingProgress)}</strong>
+                            <strong>
+                                {getLoadingStatusTitle(loadingProgress)}
+                            </strong>
                             <span>
                                 {loadingProgress.message ??
                                     `${loadingProgress.loadedModelCount} / 1 个模型`}
                             </span>
                         </div>
                     ) : null}
-                    <p className="plane-render__viewport-caption" aria-live="polite">
+                    <p
+                        className="plane-render__viewport-caption"
+                        aria-live="polite"
+                    >
                         {selectedModelSummary}
                     </p>
                 </section>
@@ -120,7 +120,9 @@ const PlaneRenderPage = (): ReactElement => {
                 <aside className="plane-render__catalog" aria-label="模型目录">
                     <div className="plane-render__catalog-heading">
                         <div>
-                            <p className="plane-render__catalog-label">模型目录</p>
+                            <p className="plane-render__catalog-label">
+                                模型目录
+                            </p>
                             <h2>{AIRCRAFT_MODEL_ASSETS.length} 个 GLB 文件</h2>
                         </div>
                     </div>
@@ -152,9 +154,7 @@ const PlaneRenderPage = (): ReactElement => {
                 </div>
                 <div>
                     <dt>已载入</dt>
-                    <dd>
-                        {loadingProgress.loadedModelCount} / 1
-                    </dd>
+                    <dd>{loadingProgress.loadedModelCount} / 1</dd>
                 </div>
                 <div>
                     <dt>渲染状态</dt>
@@ -174,16 +174,16 @@ const PlaneRenderPage = (): ReactElement => {
                     rel="noreferrer"
                 >
                     amvlab
-                </a>{" "}
-                提供，遵循{" "}
+                </a>
+                {"、"}
                 <a
-                    href="https://creativecommons.org/licenses/by/4.0/"
+                    href="https://github.com/Flightradar24/fr24-3d-models"
                     target="_blank"
                     rel="noreferrer"
                 >
-                    CC BY 4.0
-                </a>
-                。
+                    fr24-3d-models
+                </a>{" "}
+                提供。
             </p>
         </section>
     );

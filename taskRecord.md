@@ -6626,3 +6626,65 @@
 - `.gitmodules`：新增 `fr24-3d-models` 子模块路径和远端地址。
 - `fr24-3d-models`：新增指向 `dd53267690c6a4ecbb290a3acf0284333a5d68a9` 的 Git 子模块引用。
 - `taskRecord.md`：追加本次子模块接入记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+将 `fr24-3d-models/models` 目录中的可兼容模型加入飞机模型浏览器目录。
+
+## 完成过程
+
+1. 将 Rspack 构建期模型 glob 扩展为同时扫描 `aircraft-models/models` 与 `fr24-3d-models/models` 下的全部 GLB 文件。
+2. 使用项目根目录作为 glob key 基准，将子模块目录保留在模型路径与稳定 id 中，避免同名机型冲突。
+3. 在目录标签中标记 `AMV` 或 `FR24` 来源，便于识别两个子模块中的同名模型。
+4. 确认 FR24 目录内的两个 `.gltf` 为 glTF 1.0，当前 GLTFLoader 仅支持 glTF 2.0，故未将它们加入可选择清单。
+5. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：接入 FR24 GLB 模型目录并消除跨子模块的同名冲突。
+- `taskRecord.md`：追加本次模型目录扩展记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+修复合并模型目录后 Rspack 未发现任何 GLB 资源的问题。
+
+## 完成过程
+
+1. 确认 `import.meta.glob` 的多模式加 `base` 组合未生成模型上下文，导致页面模型目录显示为 0。
+2. 将两个子模块目录拆分为独立的字面量 glob 调用，再在运行时代码中合并返回的资源加载器映射。
+3. 保持项目根目录相对路径转换、来源标签和同名模型 id 隔离逻辑不变。
+4. 按用户要求未运行构建、类型检查或本地服务。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：将多模式 glob 改为两个独立的模型资源上下文。
+- `taskRecord.md`：追加本次模型发现修复记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+新增可由用户执行的 FR24 legacy GLB v1 至 GLB v2 批量转换脚本。
+
+## 完成过程
+
+1. 在脚本中定义根目录输出约定 `fr24-3d-models-glbv2/models`，但按用户要求未实际执行转换。
+2. 新增转换脚本，顺序处理 `fr24-3d-models/models` 中的全部 GLB 文件，降低峰值内存占用。
+3. 脚本使用 `gltf-pipeline` 的 `processGlb` 自动升级 glTF 1.0，并验证每个输出的 GLB v2 头。
+4. 脚本将源仓库 GPLv2 `LICENSE` 复制到输出目录，保留模型来源许可证。
+5. 用户将自行安装转换依赖并执行脚本；未运行构建、类型检查、本地服务或转换命令。
+
+## 修改具体文件
+
+- `scripts/convert-fr24-models.mjs`：新增 FR24 GLB v1 至 v2 的可重复批量转换脚本。
+- `taskRecord.md`：追加本次转换脚本记录。
