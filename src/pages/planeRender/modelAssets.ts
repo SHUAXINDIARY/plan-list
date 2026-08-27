@@ -27,7 +27,7 @@ const fr24ModelModules: Record<string, () => Promise<string>> =
 
 // 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的 GLB 文件。
 const customModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../custom_models/**/*.glb", {
+    import.meta.glob<string>("../../../sketchfab/**/*.glb", {
         import: "default",
     });
 
@@ -58,8 +58,8 @@ const getModelLabel = (sourcePath: string): string => {
         : fileStem;
     const sourceLabel = sourcePath.startsWith("fr24-3d-models")
         ? "FR24"
-        : sourcePath.startsWith("custom_models")
-          ? "CUSTOM"
+        : sourcePath.startsWith("sketchfab")
+          ? "sketchfab"
           : "AMV";
     const variantLabel = isLogoFreeVariant
         ? `${baseLabel} · 无标识`
