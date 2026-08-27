@@ -3,6 +3,8 @@ import {
     useRef,
     useState,
     type ChangeEvent,
+    type KeyboardEvent,
+    type PointerEvent,
     type ReactElement,
 } from "react";
 import * as THREE from "three";
@@ -56,6 +58,27 @@ type AircraftAttitudePreset =
 
 /** 飞行姿态面板中可单独调节的旋转轴。 */
 type AircraftAttitudeAxis = "pitch" | "roll" | "yaw";
+
+/** 3D 姿态操控器当前被拖拽的旋转维度。 */
+type AircraftAttitudeDragMode = "orbit" | "roll";
+
+/** 一次姿态拖拽开始时记录的指针和角度快照。 */
+interface AircraftAttitudeDragState {
+    /** 本次拖拽使用的指针标识。 */
+    pointerId: number;
+    /** 拖拽起点的水平屏幕坐标。 */
+    startX: number;
+    /** 拖拽起点的垂直屏幕坐标。 */
+    startY: number;
+    /** 拖拽开始时的俯仰角。 */
+    startPitch: number;
+    /** 拖拽开始时的滚转角。 */
+    startRoll: number;
+    /** 拖拽开始时的偏航角。 */
+    startYaw: number;
+    /** 当前拖拽区域控制的旋转维度。 */
+    mode: AircraftAttitudeDragMode;
+}
 
 /** 一组以角度表示的飞机旋转参数。 */
 interface AircraftAttitudeSettings {
@@ -137,20 +160,24 @@ const RENDER_CONTROLS_ID = "plane-render-controls";
 const ATTITUDE_CONTROLS_ID = "plane-render-attitude-controls";
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
 const DEGREES_TO_RADIANS = Math.PI / 180;
-/** 俯仰滑块允许的最低角度。 */
-const MINIMUM_PITCH_ANGLE = -20;
-/** 俯仰滑块允许的最高角度。 */
-const MAXIMUM_PITCH_ANGLE = 20;
-/** 滚转滑块允许的最低角度。 */
-const MINIMUM_ROLL_ANGLE = -35;
-/** 滚转滑块允许的最高角度。 */
-const MAXIMUM_ROLL_ANGLE = 35;
-/** 偏航滑块允许的最低角度。 */
-const MINIMUM_YAW_ANGLE = -45;
-/** 偏航滑块允许的最高角度。 */
-const MAXIMUM_YAW_ANGLE = 45;
-/** 姿态滑块的离散精度。 */
+/** 3D 姿态操控器允许的最低俯仰角。 */
+const MINIMUM_PITCH_ANGLE = -60;
+/** 3D 姿态操控器允许的最高俯仰角。 */
+const MAXIMUM_PITCH_ANGLE = 60;
+/** 3D 姿态操控器允许的最低滚转角。 */
+const MINIMUM_ROLL_ANGLE = -180;
+/** 3D 姿态操控器允许的最高滚转角。 */
+const MAXIMUM_ROLL_ANGLE = 180;
+/** 3D 姿态操控器允许的最低偏航角。 */
+const MINIMUM_YAW_ANGLE = -180;
+/** 3D 姿态操控器允许的最高偏航角。 */
+const MAXIMUM_YAW_ANGLE = 180;
+/** 姿态角度控件的离散精度。 */
 const ATTITUDE_ANGLE_STEP = 1;
+/** 3D 操控器每移动一个屏幕像素对应的俯仰/偏航角度。 */
+const ATTITUDE_ORBIT_DRAG_SENSITIVITY = 0.5;
+/** 3D 操控器外圈每移动一个屏幕像素对应的滚转角度。 */
+const ATTITUDE_ROLL_DRAG_SENSITIVITY = 0.8;
 /** 主方向光保持的距离，沿用初始位置 (7, 10, 8) 的向量长度。 */
 const KEY_LIGHT_DISTANCE = Math.hypot(7, 10, 8);
 /** 主光源水平角的默认值，对应初始位置的方位。 */
@@ -273,6 +300,10 @@ const applyAircraftAttitude = (
 /** 为姿态角度生成带方向符号的紧凑读数。 */
 const formatAttitudeAngle = (angle: number): string =>
     `${angle > 0 ? "+" : ""}${angle}°`;
+
+/** 将拖拽计算出的角度限制在指定的安全范围内。 */
+const clampAngle = (angle: number, minimum: number, maximum: number): number =>
+    Math.min(Math.max(angle, minimum), maximum);
 
 /** 根据水平角和高度角重新计算主方向光位置，保持光源距离与强度不变。 */
 const applyKeyLightDirection = (
@@ -398,6 +429,9 @@ export const AircraftModelViewport = ({
     const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
+    const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
+    const [isAttitudeDragging, setIsAttitudeDragging] =
+        useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     attitudeSettingsRef.current = attitudeSettings;
@@ -608,6 +642,164 @@ export const AircraftModelViewport = ({
     /** 将模型姿态恢复为平飞状态，不改变渲染器或相机参数。 */
     const handleAttitudeReset = (): void => {
         setAttitudeSettings(DEFAULT_ATTITUDE_SETTINGS);
+    };
+
+    /** 为可访问的 3D 操控区域提供方向键调整和 Shift 加速。 */
+    const handleAttitudeKeyDown = (
+        mode: AircraftAttitudeDragMode,
+        event: KeyboardEvent<HTMLDivElement>,
+    ): void => {
+        const step = event.shiftKey ? 5 : 1;
+
+        if (mode === "roll") {
+            if (event.key === "ArrowLeft") {
+                handleAttitudeAxisChange(
+                    "roll",
+                    clampAngle(
+                        attitudeSettings.roll - step,
+                        MINIMUM_ROLL_ANGLE,
+                        MAXIMUM_ROLL_ANGLE,
+                    ),
+                );
+            } else if (event.key === "ArrowRight") {
+                handleAttitudeAxisChange(
+                    "roll",
+                    clampAngle(
+                        attitudeSettings.roll + step,
+                        MINIMUM_ROLL_ANGLE,
+                        MAXIMUM_ROLL_ANGLE,
+                    ),
+                );
+            } else {
+                return;
+            }
+        } else if (event.key === "ArrowUp") {
+            handleAttitudeAxisChange(
+                "pitch",
+                clampAngle(
+                    attitudeSettings.pitch + step,
+                    MINIMUM_PITCH_ANGLE,
+                    MAXIMUM_PITCH_ANGLE,
+                ),
+            );
+        } else if (event.key === "ArrowDown") {
+            handleAttitudeAxisChange(
+                "pitch",
+                clampAngle(
+                    attitudeSettings.pitch - step,
+                    MINIMUM_PITCH_ANGLE,
+                    MAXIMUM_PITCH_ANGLE,
+                ),
+            );
+        } else if (event.key === "ArrowLeft") {
+            handleAttitudeAxisChange(
+                "yaw",
+                clampAngle(
+                    attitudeSettings.yaw - step,
+                    MINIMUM_YAW_ANGLE,
+                    MAXIMUM_YAW_ANGLE,
+                ),
+            );
+        } else if (event.key === "ArrowRight") {
+            handleAttitudeAxisChange(
+                "yaw",
+                clampAngle(
+                    attitudeSettings.yaw + step,
+                    MINIMUM_YAW_ANGLE,
+                    MAXIMUM_YAW_ANGLE,
+                ),
+            );
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+    };
+
+    /** 记录 3D 操控器拖拽起点，后续移动量会转换为姿态角度。 */
+    const handleAttitudePointerDown = (
+        mode: AircraftAttitudeDragMode,
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        if (event.button !== 0) {
+            return;
+        }
+
+        event.currentTarget.setPointerCapture(event.pointerId);
+        attitudeDragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            startPitch: attitudeSettings.pitch,
+            startRoll: attitudeSettings.roll,
+            startYaw: attitudeSettings.yaw,
+            mode,
+        };
+        setIsAttitudeDragging(true);
+        event.preventDefault();
+    };
+
+    /** 将 3D 操控器的屏幕位移换算为俯仰、偏航或滚转角度。 */
+    const handleAttitudePointerMove = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        const dragState = attitudeDragRef.current;
+
+        if (dragState === null || dragState.pointerId !== event.pointerId) {
+            return;
+        }
+
+        const deltaX = event.clientX - dragState.startX;
+        const deltaY = event.clientY - dragState.startY;
+
+        if (dragState.mode === "roll") {
+            setAttitudeSettings({
+                preset: "custom",
+                pitch: dragState.startPitch,
+                roll: clampAngle(
+                    dragState.startRoll +
+                        deltaX * ATTITUDE_ROLL_DRAG_SENSITIVITY,
+                    MINIMUM_ROLL_ANGLE,
+                    MAXIMUM_ROLL_ANGLE,
+                ),
+                yaw: dragState.startYaw,
+            });
+        } else {
+            setAttitudeSettings({
+                preset: "custom",
+                pitch: clampAngle(
+                    dragState.startPitch -
+                        deltaY * ATTITUDE_ORBIT_DRAG_SENSITIVITY,
+                    MINIMUM_PITCH_ANGLE,
+                    MAXIMUM_PITCH_ANGLE,
+                ),
+                roll: dragState.startRoll,
+                yaw: clampAngle(
+                    dragState.startYaw +
+                        deltaX * ATTITUDE_ORBIT_DRAG_SENSITIVITY,
+                    MINIMUM_YAW_ANGLE,
+                    MAXIMUM_YAW_ANGLE,
+                ),
+            });
+        }
+    };
+
+    /** 结束一次姿态拖拽并释放指针捕获，避免拖出控件后继续修改模型。 */
+    const handleAttitudePointerUp = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        const dragState = attitudeDragRef.current;
+
+        if (dragState === null || dragState.pointerId !== event.pointerId) {
+            return;
+        }
+
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+
+        attitudeDragRef.current = null;
+        setIsAttitudeDragging(false);
     };
 
     useEffect((): void => {
@@ -1106,87 +1298,104 @@ export const AircraftModelViewport = ({
                                         落地
                                     </button>
                                 </div>
-                                <label className="plane-render__render-field plane-render__render-field--range">
-                                    <span>
-                                        俯仰
-                                        <output>
+                                <div className="plane-render__attitude-gizmo">
+                                    <div
+                                        className={`plane-render__attitude-gizmo-orbit${isAttitudeDragging && attitudeDragRef.current?.mode === "orbit" ? " plane-render__attitude-gizmo--dragging" : ""}`}
+                                        role="slider"
+                                        tabIndex={0}
+                                        aria-label="俯仰与偏航控制"
+                                        aria-valuemin={MINIMUM_PITCH_ANGLE}
+                                        aria-valuemax={MAXIMUM_PITCH_ANGLE}
+                                        aria-valuenow={attitudeSettings.pitch}
+                                        aria-valuetext={`俯仰 ${formatAttitudeAngle(attitudeSettings.pitch)}，偏航 ${formatAttitudeAngle(attitudeSettings.yaw)}`}
+                                        onPointerDown={(
+                                            event: PointerEvent<HTMLDivElement>,
+                                        ): void =>
+                                            handleAttitudePointerDown(
+                                                "orbit",
+                                                event,
+                                            )
+                                        }
+                                        onPointerMove={handleAttitudePointerMove}
+                                        onPointerUp={handleAttitudePointerUp}
+                                        onPointerCancel={handleAttitudePointerUp}
+                                        onKeyDown={(
+                                            event: KeyboardEvent<HTMLDivElement>,
+                                        ): void =>
+                                            handleAttitudeKeyDown("orbit", event)
+                                        }
+                                    >
+                                        <div className="plane-render__attitude-gizmo-grid" />
+                                        <div
+                                            className="plane-render__attitude-gizmo-aircraft"
+                                            style={{
+                                                transform: `rotateX(${attitudeSettings.pitch}deg) rotateY(${attitudeSettings.yaw}deg) rotateZ(${attitudeSettings.roll}deg)`,
+                                            }}
+                                        >
+                                            <span className="plane-render__attitude-gizmo-fuselage" />
+                                            <span className="plane-render__attitude-gizmo-wing plane-render__attitude-gizmo-wing--left" />
+                                            <span className="plane-render__attitude-gizmo-wing plane-render__attitude-gizmo-wing--right" />
+                                            <span className="plane-render__attitude-gizmo-tail" />
+                                        </div>
+                                        <span className="plane-render__attitude-gizmo-axis">
+                                            PITCH / YAW
+                                        </span>
+                                    </div>
+                                    <div
+                                        className={`plane-render__attitude-gizmo-roll${isAttitudeDragging && attitudeDragRef.current?.mode === "roll" ? " plane-render__attitude-gizmo--dragging" : ""}`}
+                                        role="slider"
+                                        tabIndex={0}
+                                        aria-label="滚转控制"
+                                        aria-valuemin={MINIMUM_ROLL_ANGLE}
+                                        aria-valuemax={MAXIMUM_ROLL_ANGLE}
+                                        aria-valuenow={attitudeSettings.roll}
+                                        aria-valuetext={`滚转 ${formatAttitudeAngle(attitudeSettings.roll)}`}
+                                        onPointerDown={(
+                                            event: PointerEvent<HTMLDivElement>,
+                                        ): void =>
+                                            handleAttitudePointerDown(
+                                                "roll",
+                                                event,
+                                            )
+                                        }
+                                        onPointerMove={handleAttitudePointerMove}
+                                        onPointerUp={handleAttitudePointerUp}
+                                        onPointerCancel={handleAttitudePointerUp}
+                                        onKeyDown={(
+                                            event: KeyboardEvent<HTMLDivElement>,
+                                        ): void =>
+                                            handleAttitudeKeyDown("roll", event)
+                                        }
+                                    >
+                                        <span>ROLL</span>
+                                    </div>
+                                </div>
+                                <dl className="plane-render__attitude-readout">
+                                    <div>
+                                        <dt>俯仰</dt>
+                                        <dd>
                                             {formatAttitudeAngle(
                                                 attitudeSettings.pitch,
                                             )}
-                                        </output>
-                                    </span>
-                                    <input
-                                        type="range"
-                                        min={MINIMUM_PITCH_ANGLE}
-                                        max={MAXIMUM_PITCH_ANGLE}
-                                        step={ATTITUDE_ANGLE_STEP}
-                                        value={attitudeSettings.pitch}
-                                        onChange={(
-                                            event: ChangeEvent<HTMLInputElement>,
-                                        ): void =>
-                                            handleAttitudeAxisChange(
-                                                "pitch",
-                                                Number(
-                                                    event.currentTarget.value,
-                                                ),
-                                            )
-                                        }
-                                    />
-                                </label>
-                                <label className="plane-render__render-field plane-render__render-field--range">
-                                    <span>
-                                        滚转
-                                        <output>
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt>滚转</dt>
+                                        <dd>
                                             {formatAttitudeAngle(
                                                 attitudeSettings.roll,
                                             )}
-                                        </output>
-                                    </span>
-                                    <input
-                                        type="range"
-                                        min={MINIMUM_ROLL_ANGLE}
-                                        max={MAXIMUM_ROLL_ANGLE}
-                                        step={ATTITUDE_ANGLE_STEP}
-                                        value={attitudeSettings.roll}
-                                        onChange={(
-                                            event: ChangeEvent<HTMLInputElement>,
-                                        ): void =>
-                                            handleAttitudeAxisChange(
-                                                "roll",
-                                                Number(
-                                                    event.currentTarget.value,
-                                                ),
-                                            )
-                                        }
-                                    />
-                                </label>
-                                <label className="plane-render__render-field plane-render__render-field--range">
-                                    <span>
-                                        偏航
-                                        <output>
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt>偏航</dt>
+                                        <dd>
                                             {formatAttitudeAngle(
                                                 attitudeSettings.yaw,
                                             )}
-                                        </output>
-                                    </span>
-                                    <input
-                                        type="range"
-                                        min={MINIMUM_YAW_ANGLE}
-                                        max={MAXIMUM_YAW_ANGLE}
-                                        step={ATTITUDE_ANGLE_STEP}
-                                        value={attitudeSettings.yaw}
-                                        onChange={(
-                                            event: ChangeEvent<HTMLInputElement>,
-                                        ): void =>
-                                            handleAttitudeAxisChange(
-                                                "yaw",
-                                                Number(
-                                                    event.currentTarget.value,
-                                                ),
-                                            )
-                                        }
-                                    />
-                                </label>
+                                        </dd>
+                                    </div>
+                                </dl>
                                 <button
                                     className="plane-render__render-reset"
                                     type="button"

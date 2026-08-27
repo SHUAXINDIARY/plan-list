@@ -49,7 +49,7 @@ const getModelLabel = (sourcePath: string): string => {
     const baseLabel = isLogoFreeVariant
         ? fileStem.slice(0, -"_nologo".length)
         : fileStem;
-    const sourceLabel = sourcePath.startsWith("fr24-3d-models/")
+    const sourceLabel = sourcePath.startsWith("fr24-3d-models")
         ? "FR24"
         : "AMV";
     const variantLabel = isLogoFreeVariant
