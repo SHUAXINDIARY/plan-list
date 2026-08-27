@@ -6939,3 +6939,24 @@
 - `src/pages/planeRender/modelAssets.ts`：新增 `custom_models` GLB 扫描、模型映射合并和 `CUSTOM` 来源标签。
 - `src/pages/planeRender/index.tsx`：将页面说明从单一子模块更新为通用模型目录描述。
 - `taskRecord.md`：追加本次自定义模型目录支持记录。
+
+## 日期
+
+2026-08-27
+
+## 任务目的
+
+在 WebGPU 模型画布初始化和载入阶段增加覆盖式 Loading 动画。
+
+## 完成过程
+
+1. 在模型视口内部增加全画布遮罩和旋转加载指示器，确保进入浏览器全屏后仍然可见。
+2. 仅在 `initializing` 和 `loading` 阶段通过现有 `data-loading` 状态显示遮罩，保留错误阶段的原有错误提示。
+3. 将模型画布的加载透明度从整个视口容器收敛到实际 canvas，保证工具按钮不被同步淡化；遮罩层阻断画布交互但保留工具层级。
+4. 增加减少动态偏好下的静态回退，并完成 TypeScript 检查、生产构建与差异检查；开发服务器启动因环境权限 `EPERM` 被拒，未进行浏览器视觉验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增全画布 Loading 遮罩结构。
+- `src/pages/planeRender/index.css`：新增遮罩层、旋转指示器、状态显隐和减少动态样式。
+- `taskRecord.md`：追加本次模型画布 Loading 动画记录。

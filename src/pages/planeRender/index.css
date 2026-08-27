@@ -33,11 +33,9 @@
 .plane-render__viewport-canvas {
     --plane-render-toolbar-gap: 20px;
     --plane-render-fullscreen-button-width: 4.8rem;
-    opacity: 1;
-    transition: opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
-.plane-render__viewport[data-loading="true"] .plane-render__viewport-canvas {
+.plane-render__viewport[data-loading="true"] .plane-render__canvas {
     opacity: 0.68;
 }
 
@@ -73,6 +71,8 @@
 
 .plane-render__canvas {
     cursor: grab;
+    opacity: 1;
+    transition: opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
 .plane-render__canvas:active {
@@ -645,6 +645,38 @@
     border-radius: 0.55rem;
 }
 
+.plane-render__loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    background-color: var(--pl-surface-route-loading);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.plane-render__viewport[data-loading="true"] .plane-render__loading-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.plane-render__loading-spinner {
+    width: 2.35rem;
+    height: 2.35rem;
+    border: 2px solid var(--pl-border-loading-ring);
+    border-top-color: var(--pl-accent);
+    border-radius: 999px;
+    animation: plane-render-loading-spin 840ms linear infinite;
+}
+
+@keyframes plane-render-loading-spin {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
 .plane-render__viewport-status,
 .plane-render__viewport-caption {
     position: absolute;
@@ -984,6 +1016,8 @@
 
 @media (prefers-reduced-motion: reduce) {
     .plane-render__viewport-canvas,
+    .plane-render__loading-overlay,
+    .plane-render__loading-spinner,
     .plane-render__model-button,
     .plane-render__render-controls-toggle,
     .plane-render__attitude-controls-toggle,
@@ -993,5 +1027,9 @@
     .plane-render__render-switch input,
     .plane-render__render-switch input::before {
         transition: none;
+    }
+
+    .plane-render__loading-spinner {
+        animation: none;
     }
 }

@@ -1270,6 +1270,12 @@ export const AircraftModelViewport = ({
                     {fullscreenError}
                 </p>
             ) : null}
+            <div
+                className="plane-render__loading-overlay"
+                aria-hidden="true"
+            >
+                <span className="plane-render__loading-spinner" />
+            </div>
         </div>
     );
 };
