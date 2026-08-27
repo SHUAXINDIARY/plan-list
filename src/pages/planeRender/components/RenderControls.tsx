@@ -71,7 +71,7 @@ const RENDER_CONTROLS_ID = "plane-render-controls";
 /** 渲染倍率滑块允许的最低物理像素比。 */
 const MINIMUM_RENDER_PIXEL_RATIO = 0.5;
 /** 渲染倍率滑块允许的最高物理像素比。 */
-const MAXIMUM_RENDER_PIXEL_RATIO = 2;
+const MAXIMUM_RENDER_PIXEL_RATIO = 5;
 /** 渲染倍率滑块的离散精度。 */
 const RENDER_PIXEL_RATIO_STEP = 0.25;
 /** 曝光滑块允许的最低值。 */

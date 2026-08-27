@@ -110,8 +110,8 @@ const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文
 const ALL_MODELS_FAILED_MESSAGE = "所有模型均未能加载。";
 /** 浏览器拒绝全屏请求时的用户可见提示。 */
 const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
-/** 渲染倍率滑块允许的最高物理像素比，限制高密度屏幕的 GPU 开销。 */
-const MAXIMUM_RENDER_PIXEL_RATIO = 2;
+/** 渲染倍率默认采用的物理像素比，兼顾清晰度与常规设备性能。 */
+const DEFAULT_RENDER_PIXEL_RATIO = 2;
 /** 画布内可收起飞行姿态区的 DOM 标识。 */
 const ATTITUDE_CONTROLS_ID = "plane-render-attitude-controls";
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
@@ -195,10 +195,10 @@ const getShadowMapType = (
 ): THREE.ShadowMapType =>
     shadowMode === "vsm" ? THREE.VSMShadowMap : THREE.PCFShadowMap;
 
-/** 基于当前设备像素密度建立与原始视窗一致的初始渲染设置。 */
+/** 建立渲染控制面板的默认设置，默认倍率固定为 2x。 */
 const createDefaultRenderSettings = (): AircraftRenderSettings => ({
     ...DEFAULT_RENDER_SETTINGS,
-    pixelRatio: Math.min(window.devicePixelRatio, MAXIMUM_RENDER_PIXEL_RATIO),
+    pixelRatio: DEFAULT_RENDER_PIXEL_RATIO,
 });
 
 /** 校验 select 元素的字符串值是否为已支持的色调映射预设。 */
