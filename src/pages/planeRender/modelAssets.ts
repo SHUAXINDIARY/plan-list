@@ -91,10 +91,10 @@ export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
                 };
             },
         )
-        .sort(
-            (
-                firstAsset: AircraftModelAsset,
-                secondAsset: AircraftModelAsset,
-            ): number =>
-                firstAsset.sourcePath.localeCompare(secondAsset.sourcePath),
-        );
+        // .sort(
+        //     (
+        //         firstAsset: AircraftModelAsset,
+        //         secondAsset: AircraftModelAsset,
+        //     ): number =>
+        //         firstAsset.sourcePath.localeCompare(secondAsset.sourcePath),
+        // );
