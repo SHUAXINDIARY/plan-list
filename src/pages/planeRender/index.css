@@ -1,5 +1,9 @@
 .plane-render {
+    display: flex;
+    flex-direction: column;
     width: min(100%, 86rem);
+    height: 90vh;
+    min-height: 0;
 }
 
 .plane-render__header {
@@ -9,13 +13,15 @@
 .plane-render__workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 17rem);
+    flex: 1 1 auto;
     gap: 1rem;
+    min-height: 0;
     margin-top: 1.8rem;
 }
 
 .plane-render__viewport {
     position: relative;
-    min-height: 31rem;
+    min-height: 0;
     overflow: hidden;
     touch-action: none;
     background: var(--pl-map-bg);
@@ -78,7 +84,8 @@
     cursor: pointer;
     transition:
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
         border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
         transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
@@ -166,7 +173,10 @@
 }
 
 .plane-render__catalog {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
+    min-height: 0;
     padding: 0.95rem;
     background-color: var(--pl-surface-toolbar);
     border: 1px solid var(--pl-border-default);
@@ -193,8 +203,9 @@
 
 .plane-render__catalog-list {
     display: grid;
+    flex: 1 1 auto;
     gap: 0.38rem;
-    max-height: 27.5rem;
+    min-height: 0;
     padding: 0.75rem 0.18rem 0.1rem 0;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -214,7 +225,8 @@
     cursor: pointer;
     transition:
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast)
+            var(--motion-ease-out-quart),
         border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
         transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
@@ -325,8 +337,19 @@
 }
 
 @media (max-width: 820px) {
+    .plane-render {
+        height: auto;
+    }
+
     .plane-render__workspace {
         grid-template-columns: 1fr;
+        grid-template-rows: minmax(23rem, 1fr) auto;
+        flex: 0 0 auto;
+        min-height: auto;
+    }
+
+    .plane-render__viewport {
+        min-height: 23rem;
     }
 
     .plane-render__catalog-list {
