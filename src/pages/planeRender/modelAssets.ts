@@ -19,21 +19,28 @@ const amvModelModules: Record<string, () => Promise<string>> =
         import: "default",
     });
 
-// FR24 的 glTF 1.0 文件不在 GLTFLoader 2.0 支持范围内，因此只收集兼容的 GLB 模型。
+// FR24 的 glTF 1.0 文件不在 GLTFLoade r 2.0 支持范围内，因此只收集兼容的 GLB 模型。
 const fr24ModelModules: Record<string, () => Promise<string>> =
     import.meta.glob<string>("../../../fr24-3d-models-glbv2/models/**/*.glb", {
         import: "default",
     });
 
-// 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的 GLB 文件。
+// 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的  GLB 文件。
 const customModelModules: Record<string, () => Promise<string>> =
     import.meta.glob<string>("../../../sketchfab/**/*.glb", {
+        import: "default",
+    });
+
+// 787 Family 的主模型位于目录根部；子目录中的组件模型不加入模型列表。
+const boeing787ModelModules: Record<string, () => Promise<string>> =
+    import.meta.glob<string>("../../../787Family_glb/*.glb", {
         import: "default",
     });
 
 /** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
     ...customModelModules,
+    ...boeing787ModelModules,
     ...amvModelModules,
     ...fr24ModelModules,
 };
@@ -58,9 +65,11 @@ const getModelLabel = (sourcePath: string): string => {
         : fileStem;
     const sourceLabel = sourcePath.startsWith("fr24-3d-models")
         ? "FR24"
-        : sourcePath.startsWith("sketchfab")
-          ? "sketchfab"
-          : "AMV";
+        : sourcePath.startsWith("787Family_glb")
+            ? "787 Family"
+            : sourcePath.startsWith("sketchfab")
+              ? "sketchfab"
+              : "AMV";
     const variantLabel = isLogoFreeVariant
         ? `${baseLabel} · 无标识`
         : baseLabel;

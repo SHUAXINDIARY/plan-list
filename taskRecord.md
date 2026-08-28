@@ -7065,3 +7065,61 @@
 - `docs/aircraft-model-viewport.md`：新增飞机模型 WebGPU 视窗技术方案。
 - `README.md`：新增视窗技术方案文档入口。
 - `taskRecord.md`：追加本次技术方案整理记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+新增 JavaScript 脚本，将 `787-family/Models` 下的 AC3D 模型转换为 GLB 并输出到 `787Family_glb`。
+
+## 完成过程
+
+1. 新增递归 AC3D 解析器，读取对象层级、顶点、曲面、材质、UV、纹理引用和基础节点变换。
+2. 在 Node.js 中直接构建 glTF 2.0 JSON 与二进制 chunk，按源目录相对路径输出 `.glb`，并默认内嵌 PNG/JPEG/WebP 纹理。
+3. 增加 `--only`、`--source`、`--output`、`--no-textures` 和 `--dry-run` 参数；非 AC3D 的同扩展名文件会提示并跳过。
+4. 扫描全部 67 个 `.ac` 文件，确认 66 个模型成功转换、1 个 XML 伪 `.ac` 跳过且无失败；抽查输出并通过 `gltf-pipeline` 重新解析。
+
+## 修改具体文件
+
+- `scripts/convert-787-models.mjs`：新增 787-family AC3D 到 GLB 的递归批量转换脚本。
+- `taskRecord.md`：追加本次模型转换脚本记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+在模型渲染页注册 `787Family_glb` 目录下的 GLB 模型。
+
+## 完成过程
+
+1. 新增独立的 Rspack `import.meta.glob`，递归收集 `787Family_glb/**/*.glb`。
+2. 将 787 Family 模型合并到统一模型资源映射，并为列表标签增加 `787 Family` 来源标识。
+3. 保留目录内已有 GLB 文件和其他模型来源配置不变；按用户要求未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：注册 `787Family_glb` 模型目录并增加来源标签。
+- `taskRecord.md`：追加本次模型注册记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+将 `787Family_glb` 模型注册范围收窄为目录根目录下的 GLB 文件。
+
+## 完成过程
+
+1. 将 787 Family 的 glob 从递归模式调整为 `../../../787Family_glb/*.glb`。
+2. 保留来源标签和其他模型目录注册不变；子目录模型不再进入模型列表。
+3. 按用户要求未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：仅注册 `787Family_glb` 根目录下的 GLB。
+- `taskRecord.md`：追加本次注册范围调整记录。
