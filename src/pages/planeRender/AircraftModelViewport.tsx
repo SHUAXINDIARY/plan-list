@@ -21,6 +21,7 @@ import {
     type AircraftShadowMode,
     type AircraftToneMapping,
 } from "./components/RenderControls";
+import ModelDir from "./ModelDir";
 import type { AircraftModelAsset } from "./modelAssets";
 
 /** 模型视窗当前所处的初始化或加载阶段。 */
@@ -65,10 +66,14 @@ export interface AircraftModelLoadingProgress {
 interface AircraftModelViewportProps {
     /** 当前需要加载并渲染的单个 GLB 模型资源。 */
     asset: AircraftModelAsset | undefined;
+    /** 当前页面选中的模型 ID，用于同步全屏目录的 active 状态。 */
+    selectedModelId: string;
     /** 向页面报告 WebGPU 初始化和模型加载进度。 */
     onLoadingProgressChange: (
         progress: AircraftModelLoadingProgress,
     ) => void;
+    /** 从全屏目录选择模型后通知页面重新加载对应资源。 */
+    onModelSelection: (modelId: string) => void;
     /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
     fullscreenTargetRef: RefObject<HTMLElement | null>;
     /** 当前模型重试序号，变化时强制重新初始化渲染器和资源请求。 */
@@ -780,11 +785,14 @@ const focusModel = (
  */
 export const AircraftModelViewport = ({
     asset,
+    selectedModelId,
     onLoadingProgressChange,
+    onModelSelection,
     fullscreenTargetRef,
     retryToken,
 }: AircraftModelViewportProps): ReactElement => {
     const attitudeControlsId = useId();
+    const modelDirectoryId = `${attitudeControlsId}-model-dir`;
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -800,6 +808,8 @@ export const AircraftModelViewport = ({
     const animationClockRef = useRef<THREE.Clock>(new THREE.Clock(false));
     const animationPlayingRef = useRef<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+    const [isModelDirectoryOpen, setIsModelDirectoryOpen] =
+        useState<boolean>(false);
     const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
     const [cameraHudState, setCameraHudState] =
         useState<AircraftCameraHudState | null>(EMPTY_CAMERA_HUD_STATE);
@@ -886,6 +896,10 @@ export const AircraftModelViewport = ({
 
             setIsFullscreen(nextIsFullscreen);
 
+            if (!nextIsFullscreen) {
+                setIsModelDirectoryOpen(false);
+            }
+
             if (nextIsFullscreen || wasFullscreenRef.current) {
                 requestAnimationFrame((): void => {
                     fullscreenToggleRef.current?.focus();
@@ -932,6 +946,26 @@ export const AircraftModelViewport = ({
         void toggleFullscreen();
     };
 
+    /** 切换全屏模式内的模型目录，并关闭同层级的其他工具面板。 */
+    const handleModelDirectoryToggle = (): void => {
+        setIsModelDirectoryOpen((isOpen: boolean): boolean => {
+            const nextIsOpen = !isOpen;
+
+            if (nextIsOpen) {
+                setIsRenderControlsOpen(false);
+                setIsAttitudeControlsOpen(false);
+            }
+
+            return nextIsOpen;
+        });
+    };
+
+    /** 选择全屏目录中的模型后立即收起目录，保持画布观察焦点。 */
+    const handleFullscreenModelSelection = (modelId: string): void => {
+        onModelSelection(modelId);
+        setIsModelDirectoryOpen(false);
+    };
+
     /** 切换画布内渲染控制面板，并保持三维模型的直接操作区域可用。 */
     const handleRenderControlsToggle = (): void => {
         setIsRenderControlsOpen((isOpen: boolean): boolean => {
@@ -965,13 +999,15 @@ export const AircraftModelViewport = ({
         if (
             event.target instanceof Element &&
             (event.target.closest(".plane-render__viewport-tools") !== null ||
-                event.target.closest(".plane-render__lighting-hud") !== null)
+                event.target.closest(".plane-render__lighting-hud") !== null ||
+                event.target.closest(".plane-render__fullscreen-model-dir") !== null)
         ) {
             return;
         }
 
         setIsRenderControlsOpen(false);
         setIsAttitudeControlsOpen(false);
+        setIsModelDirectoryOpen(false);
     };
 
     /** 记录灯光 HUD 拖拽起点，后续位移直接映射为主光方向。 */
@@ -1205,6 +1241,7 @@ export const AircraftModelViewport = ({
 
             setIsRenderControlsOpen(false);
             setIsAttitudeControlsOpen(false);
+            setIsModelDirectoryOpen(false);
         };
 
         document.addEventListener("keydown", handlePanelEscape);
@@ -2465,6 +2502,17 @@ export const AircraftModelViewport = ({
                         </aside>
                     ) : null}
                 </div>
+                {isFullscreen ? (
+                    <button
+                        className="plane-render__model-directory-toggle"
+                        type="button"
+                        aria-controls={modelDirectoryId}
+                        aria-expanded={isModelDirectoryOpen}
+                        onClick={handleModelDirectoryToggle}
+                    >
+                        {isModelDirectoryOpen ? "收起目录" : "模型目录"}
+                    </button>
+                ) : null}
                 <button
                     ref={fullscreenToggleRef}
                     className="plane-render__fullscreen-button"
@@ -2475,6 +2523,17 @@ export const AircraftModelViewport = ({
                     {isFullscreen ? "退出全屏" : "全屏查看"}
                 </button>
             </div>
+            {isFullscreen && isModelDirectoryOpen ? (
+                <div
+                    id={modelDirectoryId}
+                    className="plane-render__fullscreen-model-dir"
+                >
+                    <ModelDir
+                        selectedModelId={selectedModelId}
+                        onModelSelection={handleFullscreenModelSelection}
+                    />
+                </div>
+            ) : null}
             {cameraHudState !== null ? (
                 <div
                     className="plane-render__camera-hud"

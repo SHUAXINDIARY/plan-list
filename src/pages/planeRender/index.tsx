@@ -167,7 +167,9 @@ const PlaneRenderPage = (): ReactElement => {
                 >
                     <AircraftModelViewport
                         asset={selectedModel}
+                        selectedModelId={selectedModelId}
                         onLoadingProgressChange={handleLoadingProgressChange}
+                        onModelSelection={handleModelSelection}
                         fullscreenTargetRef={viewportRef}
                         retryToken={retryToken}
                     />

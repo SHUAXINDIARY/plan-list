@@ -44,10 +44,14 @@
 interface AircraftModelViewportProps {
     /** 当前需要加载并渲染的单个 GLB 模型资源。 */
     asset: AircraftModelAsset | undefined;
+    /** 当前页面选中的模型 ID，用于同步全屏目录的 active 状态。 */
+    selectedModelId: string;
     /** 向页面报告 WebGPU 初始化和模型加载进度。 */
     onLoadingProgressChange: (
         progress: AircraftModelLoadingProgress,
     ) => void;
+    /** 从全屏目录选择模型后通知页面重新加载对应资源。 */
+    onModelSelection: (modelId: string) => void;
     /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
     fullscreenTargetRef: RefObject<HTMLElement | null>;
     /** 当前模型重试序号，变化时强制重新初始化渲染器和资源请求。 */
@@ -210,6 +214,9 @@ aircraftAttitudePivot.rotation.set(
 3. 请求被拒绝或浏览器不支持时，将错误写入 `fullscreenError`，使用 `role="alert"` 告知用户。
 4. 全屏容器使用 `100vw` / `100dvh`，保留工具层、加载遮罩、canvas、状态和 caption；`::backdrop` 提供页面外背景。
 5. 进入和退出全屏时将焦点放在可见的全屏按钮上，避免键盘用户失去当前位置。
+6. 全屏工具栏显示“模型目录”按钮，点击后在右上角唤起复用的 `ModelDir` 半透明面板；面板不阻断画布操作，选择模型后立即收起并通过 `onModelSelection` 触发资源切换。
+
+全屏目录使用从触发按钮向下展开的材质化过渡（轻微位移、缩放和透明度变化），不添加额外遮罩，保持模型观察的连续性。目录面板在 `prefers-reduced-motion: reduce` 下取消动画，在 `prefers-reduced-transparency: reduce` 下取消背景模糊并使用实体背景。
 
 ## 加载、空状态与错误
 
@@ -238,7 +245,7 @@ aircraftAttitudePivot.rotation.set(
 
 ## 响应式布局
 
-页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具条允许换行，控制面板相对于完整工具层定位并限制可视高度；移动端交互目标不小于 44px；全屏状态下 viewport 改为 `100vw` / `100dvh`。新增或调整视窗高度时，必须同时检查：
+页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具条允许换行，控制面板相对于完整工具层定位并限制可视高度；移动端交互目标不小于 44px；全屏状态下 viewport 改为 `100vw` / `100dvh`，模型目录使用 `60vh` 高度并由内部列表滚动，手机宽度下使用左右留边的全宽面板并保留安全区。新增或调整视窗高度时，必须同时检查：
 
 - canvas 是否仍覆盖容器且没有因父级高度塌陷变成 0。
 - 工具面板、状态提示和全屏按钮是否互相遮挡。

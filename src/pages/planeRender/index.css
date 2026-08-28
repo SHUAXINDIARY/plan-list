@@ -100,6 +100,7 @@
 .plane-render__render-controls-toggle,
 .plane-render__attitude-controls-toggle,
 .plane-render__viewport-action,
+.plane-render__model-directory-toggle,
 .plane-render__render-reset {
     min-height: 2.25rem;
     color: var(--pl-text-data);
@@ -126,6 +127,10 @@
 }
 
 .plane-render__viewport-action {
+    padding: 0.45rem 0.62rem;
+}
+
+.plane-render__model-directory-toggle {
     padding: 0.45rem 0.62rem;
 }
 
@@ -164,6 +169,7 @@
 .plane-render__render-controls-toggle:focus-visible,
 .plane-render__attitude-controls-toggle:focus-visible,
 .plane-render__viewport-action:focus-visible,
+.plane-render__model-directory-toggle:focus-visible,
 .plane-render__camera-view-control select:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
@@ -177,6 +183,7 @@
 .plane-render__render-controls-toggle:active,
 .plane-render__attitude-controls-toggle:active,
 .plane-render__viewport-action:active,
+.plane-render__model-directory-toggle:active,
 .plane-render__render-reset:active {
     transform: scale(0.97);
 }
@@ -445,8 +452,7 @@
     cursor: grabbing;
 }
 
-.plane-render__attitude-gizmo--dragging
-    .plane-render__attitude-gizmo-aircraft {
+.plane-render__attitude-gizmo--dragging .plane-render__attitude-gizmo-aircraft {
     transition: none;
 }
 
@@ -683,6 +689,52 @@
 
 .plane-render__fullscreen-button:active {
     transform: scale(0.97);
+}
+
+.plane-render__fullscreen-model-dir {
+    position: absolute;
+    top: 4.3rem;
+    right: 5rem;
+    bottom: auto;
+    z-index: 6;
+    width: clamp(16rem, 28vw, 22rem);
+    height: 60vh;
+    min-height: 0;
+    max-height: calc(100dvh - 5.15rem);
+    transform-origin: top right;
+    animation: plane-render-directory-materialize 260ms
+        var(--motion-ease-out-quart) both;
+}
+
+.plane-render__fullscreen-model-dir .plane-render__catalog {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background-color: color-mix(
+        in srgb,
+        var(--pl-surface-toolbar) 88%,
+        transparent
+    );
+    backdrop-filter: blur(20px) saturate(135%);
+    box-shadow: 0 1.2rem 3rem rgb(2 9 17 / 24%);
+}
+
+.plane-render__fullscreen-model-dir .plane-render__catalog-list {
+    max-height: none;
+    scrollbar-gutter: stable;
+}
+
+@keyframes plane-render-directory-materialize {
+    from {
+        opacity: 0;
+        transform: translate3d(0.65rem, -0.5rem, 0) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
 }
 
 .plane-render__viewport-action:disabled {
@@ -1336,6 +1388,7 @@
     .plane-render__model-button:hover,
     .plane-render__fullscreen-button:hover,
     .plane-render__viewport-action:hover,
+    .plane-render__model-directory-toggle:hover,
     .plane-render__render-controls-toggle:hover,
     .plane-render__attitude-controls-toggle:hover,
     .plane-render__render-reset:hover,
@@ -1366,6 +1419,13 @@
     .plane-render__catalog-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         max-height: 16rem;
+    }
+
+    .plane-render__fullscreen-model-dir {
+        top: clamp(5rem, 12vh, 6.5rem);
+        right: 0.75rem;
+        bottom: auto;
+        width: min(22rem, calc(100% - 1.5rem));
     }
 }
 
@@ -1416,6 +1476,7 @@
     .plane-render__attitude-controls-toggle,
     .plane-render__fullscreen-button,
     .plane-render__viewport-action,
+    .plane-render__model-directory-toggle,
     .plane-render__attitude-preset,
     .plane-render__render-reset,
     .plane-render__retry-button {
@@ -1465,6 +1526,35 @@
         top: 3.25rem;
         right: 0.65rem;
         max-width: calc(100% - 1.3rem);
+    }
+
+    .plane-render__fullscreen-model-dir {
+        top: calc(5rem + env(safe-area-inset-top));
+        right: 0.65rem;
+        bottom: auto;
+        left: 0.65rem;
+        width: auto;
+        height: 60vh;
+        max-height: calc(
+            100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) -
+                5.65rem
+        );
+    }
+
+    .plane-render__fullscreen-model-dir .plane-render__model-button {
+        min-height: 3.5rem;
+        padding: 0.62rem 0.68rem;
+    }
+
+    .plane-render__fullscreen-model-dir .plane-render__model-button span {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .plane-render__fullscreen-model-dir .plane-render__model-button small {
+        max-width: 100%;
     }
 
     .plane-render__snapshot-error {
@@ -1517,10 +1607,12 @@
     .plane-render__viewport-canvas,
     .plane-render__loading-overlay,
     .plane-render__loading-spinner,
+    .plane-render__fullscreen-model-dir,
     .plane-render__model-button,
     .plane-render__render-controls-toggle,
     .plane-render__attitude-controls-toggle,
     .plane-render__viewport-action,
+    .plane-render__model-directory-toggle,
     .plane-render__render-reset,
     .plane-render__attitude-preset,
     .plane-render__attitude-gizmo-aircraft,
@@ -1531,5 +1623,16 @@
 
     .plane-render__loading-spinner {
         animation: none;
+    }
+
+    .plane-render__fullscreen-model-dir {
+        animation: none;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .plane-render__fullscreen-model-dir .plane-render__catalog {
+        background-color: var(--pl-surface-toolbar);
+        backdrop-filter: none;
     }
 }
