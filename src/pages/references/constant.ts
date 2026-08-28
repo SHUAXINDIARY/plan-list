@@ -4,9 +4,7 @@ import type { AirlineReferenceSource } from "../home/type";
 export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     {
         airlineName: "flightradar24",
-        urls: [
-            "https://www.flightradar24.com/"
-        ]
+        urls: ["https://www.flightradar24.com/"],
     },
     {
         airlineName: "模型站点",
@@ -21,7 +19,8 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://top-gun.jp/zh",
             "https://www.jcwings.com/",
             "https://www.modelaircraftdatabase.com",
-            "https://www.collectorwingsmodel.com"
+            "https://www.collectorwingsmodel.com",
+            "https://inflight200-models.com/",
         ],
     },
     {
