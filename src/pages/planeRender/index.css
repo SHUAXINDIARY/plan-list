@@ -23,7 +23,6 @@
     position: relative;
     min-height: 0;
     overflow: hidden;
-    touch-action: none;
     background: var(--pl-map-bg);
     border: 1px solid var(--pl-border-default);
     border-radius: 1rem;
@@ -58,20 +57,24 @@
     height: 100%;
 }
 
-.plane-render__viewport-canvas:fullscreen {
+.plane-render__viewport:fullscreen {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
     background: var(--pl-map-bg);
+    border: 0;
+    border-radius: 0;
 }
 
-.plane-render__viewport-canvas::backdrop {
+.plane-render__viewport::backdrop {
     background: var(--pl-body-gradient);
 }
 
 .plane-render__canvas {
     cursor: grab;
     opacity: 1;
+    touch-action: none;
     transition: opacity var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
@@ -121,8 +124,39 @@
     padding: 0.45rem 0.68rem;
 }
 
+.plane-render__camera-view-control {
+    position: relative;
+    display: block;
+}
+
+.plane-render__camera-view-control select {
+    min-height: 2.25rem;
+    max-width: 8rem;
+    padding: 0.45rem 0.52rem;
+    color: var(--pl-text-data);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.55rem;
+    cursor: pointer;
+}
+
+.plane-render__visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .plane-render__render-controls-toggle:focus-visible,
 .plane-render__attitude-controls-toggle:focus-visible,
+.plane-render__camera-view-control select:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
 .plane-render__render-field input[type="range"]:focus-visible,
@@ -975,12 +1009,28 @@
     }
 
     .plane-render__viewport-tools {
+        width: calc(100% - 1.3rem);
         top: 0.65rem;
         right: 0.65rem;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .plane-render__render-controls,
+    .plane-render__attitude-controls {
+        position: static;
     }
 
     .plane-render__render-controls-panel {
+        width: min(100%, calc(100vw - 1.3rem));
         max-height: min(20rem, calc(100vh - 5.5rem));
+        max-height: min(
+            20rem,
+            calc(
+                100dvh - env(safe-area-inset-top) -
+                    env(safe-area-inset-bottom) - 4.5rem
+            )
+        );
         overflow-y: auto;
         overscroll-behavior: contain;
     }

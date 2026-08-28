@@ -102,8 +102,9 @@ THREE.Scene
 ├── DirectionalLight (keyLight)              # 主光源，可调 X/Y/Z，投射阴影
 ├── DirectionalLight (fillLight)             # 固定的冷色补光
 ├── Mesh (displayFloor, optional visible)    # 展示平面，默认隐藏
-└── Object3D (aircraftModel)                 # 当前唯一模型
-    └── Mesh / material / texture             # GLB 内部资源
+└── Group (aircraftAttitudePivot)            # 姿态旋转枢轴
+    └── Object3D (normalizedModel)           # 当前唯一模型，几何中心归一化到原点
+        └── Mesh / material / texture         # GLB 内部资源
 ```
 
 默认关键参数：
@@ -122,11 +123,12 @@ THREE.Scene
 
 1. 使用 `Box3.setFromObject` 获取源包围盒。
 2. 取 X/Y/Z 最大尺寸，将模型缩放到最大维度 `1.35`。
-3. 重新计算包围盒，把模型水平中心移到原点，并将包围盒最低点移动到 `y = 0`，与展示平面基准保持一致。
-4. 应用当前姿态设置，避免切换模型时丢失用户选择的角度。
-5. 将模型加入场景，并让相机以模型中心为 `controls.target`，从右前上方距离聚焦。
+3. 重新计算包围盒，将模型三轴几何中心移到原点，作为姿态枢轴的稳定旋转中心。
+4. 将模型放入 `aircraftAttitudePivot`，只对 pivot 应用当前姿态设置，避免模型资源根节点同时承担归一化和姿态变换。
+5. 按归一化模型底部定位展示平面；非平飞姿态下展示平面仅作为空间参考。
+6. 将模型加入场景，并按包围球与当前视口 FOV 计算适配距离。
 
-相机使用 `PerspectiveCamera(36, 1, 0.1, 100)`。聚焦距离至少为 `4.2`，并随模型最大尺寸放大；窗口变化时由 `ResizeObserver` 更新 aspect 和绘制缓冲区。
+相机使用 `PerspectiveCamera(36, 1, 0.1, 100)`。适配距离按包围球和水平/垂直 FOV 计算并保留边距；窗口变化时由 `ResizeObserver` 更新 aspect 和绘制缓冲区。
 
 ## 相机与画布交互
 
@@ -138,11 +140,12 @@ THREE.Scene
 | `dampingFactor` | `0.065` | 控制阻尼衰减速度 |
 | `minDistance` | `0.45` | 允许近距离检查纹理和机身细节 |
 | `maxDistance` | `80` | 防止缩放到不可见范围 |
-| `maxPolarAngle` | `0.49π` | 避免相机翻到展示平面下方 |
+| `minPolarAngle` | `0.08` | 避免相机贴近极点时翻转 |
+| `maxPolarAngle` | `π - 0.08` | 允许检查模型底部，同时保留极点安全边距 |
 | `zoomSpeed` | `1.15` | 提高滚轮和双指缩放响应 |
 | `zoomToCursor` | `true` | 以光标位置为缩放关注点 |
 
-画布通过 CSS `touch-action: none` 将触摸手势交给 Three.js；拖拽时显示抓取光标，工具面板位于更高 z-index，不会抢占模型操作区域之外的按钮交互。
+画布通过 CSS `touch-action: none` 将触摸手势交给 Three.js；工具面板和页面 viewport 保留默认触摸行为。工具层提供 `自定义视角`、`适配视图`、`正面`、`侧面`、`顶部` 和 `底部` 菜单，手动轨道操作后视角状态标记为自定义。
 
 ## 渲染控制面板
 
@@ -162,13 +165,14 @@ THREE.Scene
 
 ## 飞行姿态控制
 
-姿态状态以角度保存，写入模型根节点时统一转换为弧度：
+姿态状态以角度保存，写入 `aircraftAttitudePivot` 时统一转换为弧度，并使用 `YXZ` 顺序表达偏航、俯仰、滚转：
 
 ```ts
-model.rotation.set(
+aircraftAttitudePivot.rotation.set(
     pitch * Math.PI / 180,
     yaw * Math.PI / 180,
     roll * Math.PI / 180,
+    "YXZ",
 );
 ```
 
@@ -187,12 +191,13 @@ model.rotation.set(
 
 ## 全屏查看
 
-全屏目标是 `.plane-render__viewport-canvas` 容器，而不是单独的 canvas：
+全屏目标是包含画布、工具、加载状态和模型元信息的 `.plane-render__viewport`，而不是单独的 canvas 或内部画布容器：
 
 1. 点击按钮时调用 `requestFullscreen()`；再次点击或按 Esc 时调用 `document.exitFullscreen()`。
 2. 监听 `fullscreenchange`，以浏览器实际状态同步 `isFullscreen`，覆盖 Esc 和系统级退出。
 3. 请求被拒绝或浏览器不支持时，将错误写入 `fullscreenError`，使用 `role="alert"` 告知用户。
-4. 全屏容器保留工具层、加载遮罩和 canvas 的绝对定位；`::backdrop` 提供页面外背景。
+4. 全屏容器使用 `100vw` / `100dvh`，保留工具层、加载遮罩、canvas、状态和 caption；`::backdrop` 提供页面外背景。
+5. 进入和退出全屏时将焦点放在可见的全屏按钮上，避免键盘用户失去当前位置。
 
 ## 加载、空状态与错误
 
@@ -220,7 +225,7 @@ model.rotation.set(
 
 ## 响应式布局
 
-页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具面板宽度按 viewport 限制；全屏状态下容器改为相对定位并占满可用空间。新增或调整视窗高度时，必须同时检查：
+页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具条允许换行，控制面板相对于完整工具层定位并限制可视高度；全屏状态下 viewport 改为 `100vw` / `100dvh`。新增或调整视窗高度时，必须同时检查：
 
 - canvas 是否仍覆盖容器且没有因父级高度塌陷变成 0。
 - 工具面板、状态提示和全屏按钮是否互相遮挡。
@@ -267,4 +272,3 @@ model.rotation.set(
 - [Three.js OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls)
 - [FR24 模型转换技术方案](./fr24-model-conversion.md)
 - [模型渲染页面源码](../src/pages/planeRender/index.tsx)
-

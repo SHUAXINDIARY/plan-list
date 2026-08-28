@@ -1,4 +1,4 @@
-import { useCallback, useState, type ReactElement } from "react";
+import { useCallback, useRef, useState, type ReactElement } from "react";
 import {
     AircraftModelViewport,
     type AircraftModelLoadingProgress,
@@ -54,6 +54,7 @@ const getSelectedModel = (
  * 使用 WebGPU 每次渲染当前选择的一架飞机模型。
  */
 const PlaneRenderPage = (): ReactElement => {
+    const viewportRef = useRef<HTMLElement | null>(null);
     const [selectedModelId, setSelectedModelId] = useState<string>(
         INITIAL_SELECTED_MODEL_ID,
     );
@@ -98,6 +99,7 @@ const PlaneRenderPage = (): ReactElement => {
 
             <div className="plane-render__workspace">
                 <section
+                    ref={viewportRef}
                     className="plane-render__viewport"
                     aria-label="WebGPU 三维模型视窗，支持拖拽旋转与滚动缩放"
                     aria-busy={isModelLoading}
@@ -106,6 +108,7 @@ const PlaneRenderPage = (): ReactElement => {
                     <AircraftModelViewport
                         asset={selectedModel}
                         onLoadingProgressChange={handleLoadingProgressChange}
+                        fullscreenTargetRef={viewportRef}
                     />
                     {loadingProgress.phase !== "ready" ? (
                         <div

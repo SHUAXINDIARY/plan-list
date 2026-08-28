@@ -7184,3 +7184,28 @@
 
 - `TODO-plane-render.md`：新增飞机模型视窗 TODO 技术方案。
 - `taskRecord.md`：追加本次技术方案整理记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+根据 `TODO-plane-render.md` 实施飞机模型视窗的两个 P0：空间变换与相机取景、全屏与窄屏工具层。
+
+## 完成过程
+
+1. 将模型归一化改为三轴几何中心归零，并通过独立 `aircraftAttitudePivot` 承载姿态旋转，采用 `YXZ` 顺序避免归一化位移与姿态旋转相互影响。
+2. 将相机 fit 改为基于包围球和当前视口 FOV 的距离计算，放宽上下观察范围，并加入自定义、适配、正面、侧面、顶部和底部视角菜单。
+3. 将页面级 `.plane-render__viewport` 作为全屏目标，保留画布、工具、加载状态和模型 caption；增加全屏焦点回收、面板互斥、Esc/空白画布收起和窄屏工具层换行。
+4. 将 `touch-action: none` 收窄到 Three canvas 和姿态操控区域，同步更新模型视窗技术文档和本 TODO 的 T1/T2 状态。
+5. 按用户要求未运行构建、类型检查或开发服务器，浏览器和设备矩阵由用户自行验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加姿态 pivot、FOV fit、标准相机视角、全屏目标协作和面板交互收起逻辑。
+- `src/pages/planeRender/index.tsx`：为完整 viewport 提供全屏目标 ref。
+- `src/pages/planeRender/index.css`：调整全屏覆盖、canvas 触摸行为和窄屏工具面板定位。
+- `docs/aircraft-model-viewport.md`：同步姿态 pivot、相机边界、全屏目标和响应式行为。
+- `TODO-plane-render.md`：将 T1、T2 标记为已完成并记录本次实现。
+- `taskRecord.md`：追加本次 P0 实施记录。

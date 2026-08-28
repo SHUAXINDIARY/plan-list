@@ -5,6 +5,7 @@ import {
     type ChangeEvent,
     type KeyboardEvent,
     type PointerEvent,
+    type RefObject,
     type ReactElement,
 } from "react";
 import * as THREE from "three";
@@ -46,6 +47,8 @@ interface AircraftModelViewportProps {
     onLoadingProgressChange: (
         progress: AircraftModelLoadingProgress,
     ) => void;
+    /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
+    fullscreenTargetRef: RefObject<HTMLElement | null>;
 }
 
 /** 飞行姿态面板可切换的预设状态。 */
@@ -92,12 +95,23 @@ interface AircraftAttitudeSettings {
     yaw: number;
 }
 
+/** 相机视角菜单支持的标准方向和自动适配状态。 */
+type AircraftCameraView =
+    | "custom"
+    | "fit"
+    | "front"
+    | "side"
+    | "top"
+    | "bottom";
+
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
 const NORMALIZED_MODEL_MAX_SIZE = 1.35;
 /** 允许近距离检查机身细节时的相机最小距离。 */
 const MINIMUM_CAMERA_DISTANCE = 0.45;
 /** 允许完整检查模型外形时的相机最大距离。 */
 const MAXIMUM_CAMERA_DISTANCE = 80;
+/** 相机允许接近极点的安全角度，避免 OrbitControls 翻转。 */
+const POLAR_ANGLE_MARGIN = 0.08;
 /** 提升滚轮和双指缩放的响应速度，便于在全屏时检查细节。 */
 const MODEL_VIEWER_ZOOM_SPEED = 1.15;
 /** WebGPU 不可用时的用户可见提示。 */
@@ -132,6 +146,20 @@ const MAXIMUM_YAW_ANGLE = 180;
 const ATTITUDE_ORBIT_DRAG_SENSITIVITY = 0.5;
 /** 3D 操控器外圈每移动一个屏幕像素对应的滚转角度。 */
 const ATTITUDE_ROLL_DRAG_SENSITIVITY = 0.8;
+/** 飞机姿态使用航空常见的偏航、俯仰、滚转组合顺序。 */
+const AIRCRAFT_ROTATION_ORDER: THREE.EulerOrder = "YXZ";
+/** 初始相机 fit 为模型包围球保留的可视边距。 */
+const CAMERA_FIT_MARGIN = 1.18;
+/** 相机标准视角对应的观察方向，坐标系以 Y 轴向上。 */
+const CAMERA_VIEW_DIRECTIONS: Readonly<
+    Record<Exclude<AircraftCameraView, "custom">, THREE.Vector3Tuple>
+> = {
+    fit: [0.8, 0.5, 1],
+    front: [0, 0, 1],
+    side: [1, 0, 0],
+    top: [0, 1, 0],
+    bottom: [0, -1, 0],
+};
 /** 主方向光 X 轴的默认位置。 */
 const DEFAULT_LIGHT_POSITION_X = 7;
 /** 主方向光 Y 轴的默认位置。 */
@@ -216,6 +244,15 @@ const isAircraftShadowMode = (
     value: string,
 ): value is AircraftShadowMode => value === "pcf" || value === "vsm";
 
+/** 校验相机视角菜单的字符串值是否为已支持的标准视角。 */
+const isAircraftCameraView = (value: string): value is AircraftCameraView =>
+    value === "custom" ||
+    value === "fit" ||
+    value === "front" ||
+    value === "side" ||
+    value === "top" ||
+    value === "bottom";
+
 /** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
 const applyRenderSettings = (
     renderer: WebGPURenderer,
@@ -241,6 +278,7 @@ const applyAircraftAttitude = (
         degreesToRadians(settings.pitch),
         degreesToRadians(settings.yaw),
         degreesToRadians(settings.roll),
+        AIRCRAFT_ROTATION_ORDER,
     );
 };
 
@@ -289,7 +327,7 @@ const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
     });
 };
 
-/** 将模型归一化到统一尺寸，并让起落架或机身底部贴合展示平面。 */
+/** 将模型归一化到统一尺寸，并将几何中心移至姿态旋转原点。 */
 const normalizeAircraftModel = (model: THREE.Object3D): void => {
     const sourceBounds = new THREE.Box3().setFromObject(model);
     const sourceSize = sourceBounds.getSize(new THREE.Vector3());
@@ -306,9 +344,7 @@ const normalizeAircraftModel = (model: THREE.Object3D): void => {
     const normalizedBounds = new THREE.Box3().setFromObject(model);
     const normalizedCenter = normalizedBounds.getCenter(new THREE.Vector3());
 
-    model.position.x -= normalizedCenter.x;
-    model.position.y -= normalizedBounds.min.y;
-    model.position.z -= normalizedCenter.z;
+    model.position.sub(normalizedCenter);
     model.traverse((object: THREE.Object3D): void => {
         if (object instanceof THREE.Mesh) {
             object.castShadow = true;
@@ -317,27 +353,58 @@ const normalizeAircraftModel = (model: THREE.Object3D): void => {
     });
 };
 
-/** 将相机聚焦至当前选中的单架模型，保留适合检查机身轮廓的角度。 */
+/** 根据模型包围球和当前视口 FOV 计算标准视角所需距离。 */
+const getCameraFitDistance = (
+    camera: THREE.PerspectiveCamera,
+    model: THREE.Object3D,
+): { center: THREE.Vector3; distance: number } => {
+    const bounds = new THREE.Box3().setFromObject(model);
+    const modelCenter = model.getWorldPosition(new THREE.Vector3());
+    const modelSphere = bounds.getBoundingSphere(new THREE.Sphere());
+    const verticalFov = degreesToRadians(camera.fov);
+    const horizontalFov =
+        2 * Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
+    const limitingFov = Math.min(verticalFov, horizontalFov);
+    const cameraDistance = Math.max(
+        (modelSphere.radius / Math.sin(limitingFov / 2)) * CAMERA_FIT_MARGIN,
+        0.5,
+    );
+
+    return { center: modelCenter, distance: cameraDistance };
+};
+
+/** 应用一个标准相机视角，并让上下视图保持稳定的屏幕朝向。 */
+const applyCameraView = (
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    model: THREE.Object3D,
+    view: Exclude<AircraftCameraView, "custom">,
+): void => {
+    const { center, distance } = getCameraFitDistance(camera, model);
+    const viewDirection = new THREE.Vector3(
+        ...CAMERA_VIEW_DIRECTIONS[view],
+    ).normalize();
+
+    if (view === "top") {
+        camera.up.set(0, 0, -1);
+    } else if (view === "bottom") {
+        camera.up.set(0, 0, 1);
+    } else {
+        camera.up.set(0, 1, 0);
+    }
+
+    controls.target.copy(center);
+    camera.position.copy(center).addScaledVector(viewDirection, distance);
+    controls.update();
+};
+
+/** 按模型包围球和当前视口 FOV 聚焦模型，默认使用右前上方适配视角。 */
 const focusModel = (
     camera: THREE.PerspectiveCamera,
     controls: OrbitControls,
     model: THREE.Object3D,
 ): void => {
-    const bounds = new THREE.Box3().setFromObject(model);
-    const modelCenter = bounds.getCenter(new THREE.Vector3());
-    const modelSize = bounds.getSize(new THREE.Vector3());
-    const cameraDistance = Math.max(
-        Math.max(modelSize.x, modelSize.y, modelSize.z) * 4,
-        4.2,
-    );
-
-    controls.target.copy(modelCenter);
-    camera.position.set(
-        modelCenter.x + cameraDistance * 0.8,
-        modelCenter.y + cameraDistance * 0.5,
-        modelCenter.z + cameraDistance,
-    );
-    controls.update();
+    applyCameraView(camera, controls, model, "fit");
 };
 
 /**
@@ -346,14 +413,19 @@ const focusModel = (
 export const AircraftModelViewport = ({
     asset,
     onLoadingProgressChange,
+    fullscreenTargetRef,
 }: AircraftModelViewportProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
+    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+    const orbitControlsRef = useRef<OrbitControls | null>(null);
     const resizeRendererRef = useRef<(() => void) | null>(null);
     const aircraftModelRef = useRef<THREE.Object3D | null>(null);
+    const aircraftAttitudePivotRef = useRef<THREE.Group | null>(null);
     const displayFloorRef = useRef<THREE.Mesh | null>(null);
     const keyLightRef = useRef<THREE.DirectionalLight | null>(null);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+    const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
         useState<boolean>(false);
     const [isAttitudeControlsOpen, setIsAttitudeControlsOpen] =
@@ -369,16 +441,34 @@ export const AircraftModelViewport = ({
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
     const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
+    const fullscreenToggleRef = useRef<HTMLButtonElement | null>(null);
+    const wasFullscreenRef = useRef<boolean>(false);
+    const isApplyingCameraViewRef = useRef<boolean>(false);
     const [isAttitudeDragging, setIsAttitudeDragging] =
         useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     attitudeSettingsRef.current = attitudeSettings;
 
+    /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
+    const getFullscreenTarget = (): HTMLElement | null =>
+        fullscreenTargetRef.current ?? containerRef.current;
+
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
         const handleFullscreenChange = (): void => {
-            setIsFullscreen(document.fullscreenElement === containerRef.current);
+            const nextIsFullscreen =
+                document.fullscreenElement === getFullscreenTarget();
+
+            setIsFullscreen(nextIsFullscreen);
+
+            if (nextIsFullscreen || wasFullscreenRef.current) {
+                requestAnimationFrame((): void => {
+                    fullscreenToggleRef.current?.focus();
+                });
+            }
+
+            wasFullscreenRef.current = nextIsFullscreen;
         };
 
         document.addEventListener("fullscreenchange", handleFullscreenChange);
@@ -394,16 +484,17 @@ export const AircraftModelViewport = ({
     /** 切换当前画布容器的浏览器全屏状态，并在被拒绝时保留可读反馈。 */
     const toggleFullscreen = async (): Promise<void> => {
         const container = containerRef.current;
+        const fullscreenTarget = getFullscreenTarget();
 
-        if (container === null) {
+        if (container === null || fullscreenTarget === null) {
             return;
         }
 
         try {
-            if (document.fullscreenElement === container) {
+            if (document.fullscreenElement === fullscreenTarget) {
                 await document.exitFullscreen();
             } else {
-                await container.requestFullscreen();
+                await fullscreenTarget.requestFullscreen();
             }
 
             setFullscreenError(null);
@@ -419,13 +510,89 @@ export const AircraftModelViewport = ({
 
     /** 切换画布内渲染控制面板，并保持三维模型的直接操作区域可用。 */
     const handleRenderControlsToggle = (): void => {
-        setIsRenderControlsOpen((isOpen: boolean): boolean => !isOpen);
+        setIsRenderControlsOpen((isOpen: boolean): boolean => {
+            const nextIsOpen = !isOpen;
+
+            if (nextIsOpen) {
+                setIsAttitudeControlsOpen(false);
+            }
+
+            return nextIsOpen;
+        });
     };
 
     /** 切换画布内飞行姿态面板，保留模型目录和轨道操作的空间。 */
     const handleAttitudeControlsToggle = (): void => {
-        setIsAttitudeControlsOpen((isOpen: boolean): boolean => !isOpen);
+        setIsAttitudeControlsOpen((isOpen: boolean): boolean => {
+            const nextIsOpen = !isOpen;
+
+            if (nextIsOpen) {
+                setIsRenderControlsOpen(false);
+            }
+
+            return nextIsOpen;
+        });
     };
+
+    /** 将画布外的空白指针按下视为收起工具面板，面板自身不触发该行为。 */
+    const handleViewportPointerDown = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        if (
+            event.target instanceof Element &&
+            event.target.closest(".plane-render__viewport-tools") !== null
+        ) {
+            return;
+        }
+
+        setIsRenderControlsOpen(false);
+        setIsAttitudeControlsOpen(false);
+    };
+
+    /** 应用标准相机视角，模型尚未就绪时保留菜单选择不变。 */
+    const handleCameraViewChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const nextCameraView = event.currentTarget.value;
+
+        if (
+            !isAircraftCameraView(nextCameraView) ||
+            nextCameraView === "custom"
+        ) {
+            return;
+        }
+
+        const camera = cameraRef.current;
+        const controls = orbitControlsRef.current;
+        const model = aircraftAttitudePivotRef.current;
+
+        if (camera === null || controls === null || model === null) {
+            return;
+        }
+
+        isApplyingCameraViewRef.current = true;
+        applyCameraView(camera, controls, model, nextCameraView);
+        setCameraView(nextCameraView);
+        isApplyingCameraViewRef.current = false;
+    };
+
+    useEffect((): (() => void) => {
+        /** Esc 优先收起当前工具面板，保留浏览器对全屏退出的原生处理。 */
+        const handlePanelEscape = (event: globalThis.KeyboardEvent): void => {
+            if (event.key !== "Escape") {
+                return;
+            }
+
+            setIsRenderControlsOpen(false);
+            setIsAttitudeControlsOpen(false);
+        };
+
+        document.addEventListener("keydown", handlePanelEscape);
+
+        return (): void => {
+            document.removeEventListener("keydown", handlePanelEscape);
+        };
+    }, []);
 
     /** 仅接受已声明的色调映射值，避免 select 意外值破坏渲染器状态。 */
     const handleToneMappingChange = (
@@ -797,7 +964,7 @@ export const AircraftModelViewport = ({
     ]);
 
     useEffect((): void => {
-        const model = aircraftModelRef.current;
+        const model = aircraftAttitudePivotRef.current;
 
         if (model === null) {
             return;
@@ -884,7 +1051,8 @@ export const AircraftModelViewport = ({
             controls.dampingFactor = 0.065;
             controls.minDistance = MINIMUM_CAMERA_DISTANCE;
             controls.maxDistance = MAXIMUM_CAMERA_DISTANCE;
-            controls.maxPolarAngle = Math.PI * 0.49;
+            controls.minPolarAngle = POLAR_ANGLE_MARGIN;
+            controls.maxPolarAngle = Math.PI - POLAR_ANGLE_MARGIN;
             controls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
             controls.zoomToCursor = true;
 
@@ -933,6 +1101,8 @@ export const AircraftModelViewport = ({
             };
 
             rendererRef.current = renderer;
+            cameraRef.current = camera;
+            orbitControlsRef.current = controls;
             resizeRendererRef.current = resizeRenderer;
             applyRenderSettings(renderer, renderSettingsRef.current);
 
@@ -946,10 +1116,19 @@ export const AircraftModelViewport = ({
                 renderer.render(scene, camera);
             };
 
+            const handleControlsChange = (): void => {
+                if (!isApplyingCameraViewRef.current) {
+                    setCameraView("custom");
+                }
+            };
+
+            controls.addEventListener("change", handleControlsChange);
+
             void renderer.setAnimationLoop(renderFrame);
             cleanupRenderer = (): void => {
                 resizeObserver.disconnect();
                 void renderer.setAnimationLoop(null);
+                controls.removeEventListener("change", handleControlsChange);
                 controls.dispose();
                 disposeSceneResources(scene);
                 renderer.dispose();
@@ -960,8 +1139,20 @@ export const AircraftModelViewport = ({
                     resizeRendererRef.current = null;
                 }
 
+                if (cameraRef.current === camera) {
+                    cameraRef.current = null;
+                }
+
+                if (orbitControlsRef.current === controls) {
+                    orbitControlsRef.current = null;
+                }
+
                 if (aircraftModelRef.current !== null) {
                     aircraftModelRef.current = null;
+                }
+
+                if (aircraftAttitudePivotRef.current !== null) {
+                    aircraftAttitudePivotRef.current = null;
                 }
 
                 if (displayFloorRef.current === displayFloor) {
@@ -997,10 +1188,22 @@ export const AircraftModelViewport = ({
 
                 const model = gltf.scene;
                 normalizeAircraftModel(model);
-                applyAircraftAttitude(model, attitudeSettingsRef.current);
-                scene.add(model);
+
+                const aircraftAttitudePivot = new THREE.Group();
+                aircraftAttitudePivot.add(model);
+                applyAircraftAttitude(
+                    aircraftAttitudePivot,
+                    attitudeSettingsRef.current,
+                );
+                scene.add(aircraftAttitudePivot);
                 aircraftModelRef.current = model;
-                focusModel(camera, controls, model);
+                aircraftAttitudePivotRef.current = aircraftAttitudePivot;
+                const normalizedBounds = new THREE.Box3().setFromObject(model);
+                displayFloor.position.y = normalizedBounds.min.y - 0.015;
+                isApplyingCameraViewRef.current = true;
+                focusModel(camera, controls, aircraftAttitudePivot);
+                setCameraView("fit");
+                isApplyingCameraViewRef.current = false;
                 loadedModelCount = 1;
             } catch {
                 failedModelCount = 1;
@@ -1030,8 +1233,27 @@ export const AircraftModelViewport = ({
     }, [asset, onLoadingProgressChange]);
 
     return (
-        <div ref={containerRef} className="plane-render__viewport-canvas">
+        <div
+            ref={containerRef}
+            className="plane-render__viewport-canvas"
+            onPointerDown={handleViewportPointerDown}
+        >
             <div className="plane-render__viewport-tools">
+                <label className="plane-render__camera-view-control">
+                    <span className="plane-render__visually-hidden">相机视角</span>
+                    <select
+                        aria-label="相机视角"
+                        value={cameraView}
+                        onChange={handleCameraViewChange}
+                    >
+                        <option value="custom">自定义视角</option>
+                        <option value="fit">适配视图</option>
+                        <option value="front">正面</option>
+                        <option value="side">侧面</option>
+                        <option value="top">顶部</option>
+                        <option value="bottom">底部</option>
+                    </select>
+                </label>
                 <RenderControls
                     isOpen={isRenderControlsOpen}
                     settings={renderSettings}
@@ -1271,6 +1493,7 @@ export const AircraftModelViewport = ({
                     ) : null}
                 </div>
                 <button
+                    ref={fullscreenToggleRef}
                     className="plane-render__fullscreen-button"
                     type="button"
                     aria-pressed={isFullscreen}
