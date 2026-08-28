@@ -16,8 +16,6 @@ import "./index.css";
 /** 参考资料类型筛选值。 */
 type ReferenceCategory =
     | "official"
-    | "airline"
-    | "airport"
     | "database"
     | "media"
     | "community"
@@ -106,8 +104,6 @@ const COPY_FEEDBACK_VISIBLE_DURATION_MS = 800;
 const CATEGORY_OPTIONS: ReferenceFilterOption[] = [
     { value: "all", label: "全部类型" },
     { value: "official", label: "官方" },
-    { value: "airline", label: "航司" },
-    { value: "airport", label: "机场" },
     { value: "database", label: "数据库" },
     { value: "media", label: "媒体" },
     { value: "community", label: "社区" },
@@ -133,9 +129,7 @@ const SORT_OPTIONS: SelectOption[] = [
 ];
 
 const CATEGORY_DESCRIPTIONS: Record<ReferenceCategory, string> = {
-    official: "政府、监管、年报与公司披露来源，适合确认口径。",
-    airline: "航司官网与机队页面，优先用于核对现役机型。",
-    airport: "机场与航站相关资料，用于补充航点上下文。",
+    official: "政府、航司、机场、年报与公司披露来源，适合确认官方口径。",
     database: "机队数据库与追踪站，适合交叉校验规模。",
     media: "影像、开放媒体与航空新闻来源，适合核对外观与事件。",
     community: "百科、虚拟联盟与社区资料，适合作为辅助线索。",
@@ -144,8 +138,6 @@ const CATEGORY_DESCRIPTIONS: Record<ReferenceCategory, string> = {
 
 const CATEGORY_LABELS: Record<ReferenceCategory, string> = {
     official: "官方",
-    airline: "航司",
-    airport: "机场",
     database: "数据库",
     media: "媒体",
     community: "社区",
@@ -164,11 +156,9 @@ const REGION_LABELS: Record<ReferenceRegion, string> = {
 
 const CATEGORY_ORDER: ReferenceCategory[] = [
     "official",
-    "airline",
     "database",
     "media",
     "community",
-    "airport",
     "other",
 ];
 
@@ -223,17 +213,15 @@ const getReferenceUrlPathLabel = (referenceUrl: string): string => {
 const inferReferenceCategory = (
     referenceSource: AirlineReferenceSource,
 ): ReferenceCategory => {
-    const combinedText = `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
+    const combinedText =
+        `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
     const hosts = referenceSource.urls
         .map(getReferenceUrlHost)
         .join(" ")
         .toLocaleLowerCase();
 
-    if (
-        combinedText.includes("机场") ||
-        combinedText.includes("airport")
-    ) {
-        return "airport";
+    if (combinedText.includes("机场") || combinedText.includes("airport")) {
+        return "official";
     }
     if (
         combinedText.includes("全局机队统计") ||
@@ -274,16 +262,17 @@ const inferReferenceCategory = (
         combinedText.includes("virtual") ||
         combinedText.includes("社区")
     ) {
-        return referenceSource.urls.length > 1 ? "airline" : "community";
+        return referenceSource.urls.length > 1 ? "official" : "community";
     }
-    return "airline";
+    return "official";
 };
 
 // 从中文名称与域名推断地区，用于 prompt 中要求的地区筛选。
 const inferReferenceRegion = (
     referenceSource: AirlineReferenceSource,
 ): ReferenceRegion => {
-    const combinedText = `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
+    const combinedText =
+        `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
 
     if (
         /中国|国泰|香港|澳门|山东|春秋航空$|天津|吉祥|上海|成都|华夏|长龙|祥鹏|西藏|青岛|昆明|重庆|河北|瑞丽|东海|奥凯|贵州|江西|乌鲁木齐|福州|湖南|长安|金鹏|桂林|龙江|大湾区|天骄|大新华|中华航空/.test(
@@ -339,11 +328,9 @@ const getReferenceUsageScore = (
 ): number => {
     const categoryWeight: Record<ReferenceCategory, number> = {
         official: 4,
-        airline: 3,
         database: 3,
         media: 2,
         community: 1,
-        airport: 2,
         other: 0,
     };
 
@@ -375,7 +362,8 @@ const createReferenceDirectoryItems = (
                 category,
                 region: inferReferenceRegion(referenceSource),
                 isRecent:
-                    sourceIndex >= referenceSources.length - RECENT_SOURCE_COUNT,
+                    sourceIndex >=
+                    referenceSources.length - RECENT_SOURCE_COUNT,
                 usageScore: getReferenceUsageScore(
                     category,
                     urlCount,
@@ -480,8 +468,10 @@ const createReferenceSections = (
                 description: CATEGORY_DESCRIPTIONS[category],
                 items,
                 linkCount: items.reduce(
-                    (total: number, referenceItem: ReferenceDirectoryItem):
-                        number => total + referenceItem.urls.length,
+                    (
+                        total: number,
+                        referenceItem: ReferenceDirectoryItem,
+                    ): number => total + referenceItem.urls.length,
                     0,
                 ),
             };
@@ -652,7 +642,8 @@ const ReferenceCard = ({
                 {item.urls.map(
                     (referenceUrl: string, linkIndex: number): ReactElement => {
                         const host = getReferenceUrlHost(referenceUrl);
-                        const pathLabel = getReferenceUrlPathLabel(referenceUrl);
+                        const pathLabel =
+                            getReferenceUrlPathLabel(referenceUrl);
 
                         return (
                             <li key={`${item.name}-${referenceUrl}`}>
@@ -743,12 +734,12 @@ const ReferencesPage = (): ReactElement => {
     const [showsCopiedFeedback, setShowsCopiedFeedback] =
         useState<boolean>(false);
     const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const copyFeedbackTransitionTimerRef = useRef<
-        ReturnType<typeof setTimeout> | null
-    >(null);
-    const copyFeedbackVisibleTimerRef = useRef<
-        ReturnType<typeof setTimeout> | null
-    >(null);
+    const copyFeedbackTransitionTimerRef = useRef<ReturnType<
+        typeof setTimeout
+    > | null>(null);
+    const copyFeedbackVisibleTimerRef = useRef<ReturnType<
+        typeof setTimeout
+    > | null>(null);
 
     const filteredItems = useMemo((): ReferenceDirectoryItem[] => {
         return sortReferenceItems(
@@ -793,7 +784,13 @@ const ReferencesPage = (): ReactElement => {
         setExpandedSectionIds(
             hasActiveFilter ? visibleSectionIds : visibleSectionIds.slice(0, 3),
         );
-    }, [filterKey, selectedCategory, selectedRegion, searchTerm, visibleSectionIds]);
+    }, [
+        filterKey,
+        selectedCategory,
+        selectedRegion,
+        searchTerm,
+        visibleSectionIds,
+    ]);
 
     useEffect((): (() => void) => {
         return (): void => {
@@ -862,7 +859,9 @@ const ReferencesPage = (): ReactElement => {
         setSelectedSortOrder(event.target.value as ReferenceSortOrder);
     };
 
-    const handleCategoryChipClick = (category: ReferenceCategoryFilter): void => {
+    const handleCategoryChipClick = (
+        category: ReferenceCategoryFilter,
+    ): void => {
         setSelectedCategory(category);
     };
 
@@ -957,7 +956,8 @@ const ReferencesPage = (): ReactElement => {
                     <h1 id="references-page-title">参考资料</h1>
                     <p>
                         共 {referenceGroupCount} 个来源、{referenceUrlCount}{" "}
-                        个链接、最近更新 {LAST_UPDATED_DATE}。集中收纳航司官网、公开年报、百科与航空资料站链接。
+                        个链接、最近更新 {LAST_UPDATED_DATE}
+                        。集中收纳航司官网、公开年报、百科与航空资料站链接。
                     </p>
                 </div>
 
@@ -1097,9 +1097,7 @@ const ReferencesPage = (): ReactElement => {
                     aria-label="参考资料分组列表"
                 >
                     {referenceSections.map(
-                        (
-                            sectionGroup: ReferenceSectionGroup,
-                        ): ReactElement => {
+                        (sectionGroup: ReferenceSectionGroup): ReactElement => {
                             const isExpanded = expandedSectionIds.includes(
                                 sectionGroup.id,
                             );
@@ -1130,7 +1128,8 @@ const ReferencesPage = (): ReactElement => {
                                                 {sectionGroup.title}
                                             </strong>
                                             <small>
-                                                {sectionGroup.items.length} 个来源 ·{" "}
+                                                {sectionGroup.items.length}{" "}
+                                                个来源 ·{" "}
                                                 {sectionGroup.linkCount} 条链接
                                             </small>
                                         </span>
