@@ -133,6 +133,30 @@ interface AircraftAnimationState {
     isPlaying: boolean;
 }
 
+/** 相机 HUD 中单个世界轴投影到屏幕后的显示参数。 */
+interface AircraftCameraHudAxis {
+    /** 轴线相对于屏幕水平向右方向的角度。 */
+    angle: number;
+    /** 轴线的可见度，用于弱化背向相机的轴。 */
+    opacity: number;
+}
+
+/** 相机 HUD 展示的观察方位和世界轴投影状态。 */
+interface AircraftCameraHudState {
+    /** 相机相对于 controls.target 的方位角。 */
+    azimuth: number;
+    /** 相机相对于 controls.target 的俯仰角。 */
+    elevation: number;
+    /** 相机相对于 controls.target 的距离。 */
+    distance: number;
+    /** 世界 X 轴在当前相机画面中的投影。 */
+    axisX: AircraftCameraHudAxis;
+    /** 世界 Y 轴在当前相机画面中的投影。 */
+    axisY: AircraftCameraHudAxis;
+    /** 世界 Z 轴在当前相机画面中的投影。 */
+    axisZ: AircraftCameraHudAxis;
+}
+
 /** 相机视角菜单支持的标准方向和自动适配状态。 */
 type AircraftCameraView =
     | "custom"
@@ -223,6 +247,8 @@ const EMPTY_ANIMATION_STATE: AircraftAnimationState = {
     currentTime: 0,
     isPlaying: false,
 };
+/** 尚未建立相机和模型关系时不显示观察 HUD。 */
+const EMPTY_CAMERA_HUD_STATE: AircraftCameraHudState | null = null;
 /** 主方向光 X 轴的默认位置。 */
 const DEFAULT_LIGHT_POSITION_X = 7;
 /** 主方向光 Y 轴的默认位置。 */
@@ -432,6 +458,72 @@ const downloadBlob = (blob: Blob, fileName: string): void => {
     }, 0);
 };
 
+/** 将世界轴投影为 HUD 中的屏幕线段，并按朝向调整可见度。 */
+const getCameraHudAxis = (
+    axis: THREE.Vector3,
+    inverseCameraQuaternion: THREE.Quaternion,
+): AircraftCameraHudAxis => {
+    const cameraAxis = axis.clone().applyQuaternion(inverseCameraQuaternion);
+    const screenAngle =
+        (Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS) || 0;
+
+    return {
+        angle: screenAngle,
+        opacity: 0.34 + Math.abs(cameraAxis.z) * 0.5,
+    };
+};
+
+/** 读取相机相对观察目标的球面方位和世界轴投影。 */
+const getCameraHudState = (
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+): AircraftCameraHudState => {
+    const offset = camera.position.clone().sub(controls.target);
+    const horizontalDistance = Math.hypot(offset.x, offset.z);
+    const inverseCameraQuaternion = camera.quaternion.clone().invert();
+
+    return {
+        azimuth:
+            Math.atan2(offset.x, offset.z) / DEGREES_TO_RADIANS,
+        elevation:
+            Math.atan2(offset.y, horizontalDistance) / DEGREES_TO_RADIANS,
+        distance: offset.length(),
+        axisX: getCameraHudAxis(new THREE.Vector3(1, 0, 0), inverseCameraQuaternion),
+        axisY: getCameraHudAxis(new THREE.Vector3(0, 1, 0), inverseCameraQuaternion),
+        axisZ: getCameraHudAxis(new THREE.Vector3(0, 0, 1), inverseCameraQuaternion),
+    };
+};
+
+/** 判断 HUD 数值变化是否超过用户可感知阈值，避免每帧触发 React 重渲染。 */
+const isCameraHudStateEqual = (
+    currentState: AircraftCameraHudState | null,
+    nextState: AircraftCameraHudState,
+): boolean => {
+    if (currentState === null) {
+        return false;
+    }
+
+    const isAxisEqual = (
+        currentAxis: AircraftCameraHudAxis,
+        nextAxis: AircraftCameraHudAxis,
+    ): boolean =>
+        Math.abs(currentAxis.angle - nextAxis.angle) < 0.2 &&
+        Math.abs(currentAxis.opacity - nextAxis.opacity) < 0.02;
+
+    return (
+        Math.abs(currentState.azimuth - nextState.azimuth) < 0.2 &&
+        Math.abs(currentState.elevation - nextState.elevation) < 0.2 &&
+        Math.abs(currentState.distance - nextState.distance) < 0.01 &&
+        isAxisEqual(currentState.axisX, nextState.axisX) &&
+        isAxisEqual(currentState.axisY, nextState.axisY) &&
+        isAxisEqual(currentState.axisZ, nextState.axisZ)
+    );
+};
+
+/** 为相机 HUD 生成带方向符号的角度读数。 */
+const formatCameraHudAngle = (angle: number): string =>
+    `${angle > 0 ? "+" : ""}${Math.round(angle)}°`;
+
 /** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
 const applyRenderSettings = (
     renderer: WebGPURenderer,
@@ -612,6 +704,8 @@ export const AircraftModelViewport = ({
     const animationPlayingRef = useRef<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
+    const [cameraHudState, setCameraHudState] =
+        useState<AircraftCameraHudState | null>(EMPTY_CAMERA_HUD_STATE);
     const [animationState, setAnimationState] =
         useState<AircraftAnimationState>(EMPTY_ANIMATION_STATE);
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
@@ -644,6 +738,24 @@ export const AircraftModelViewport = ({
     /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
     const getFullscreenTarget = (): HTMLElement | null =>
         fullscreenTargetRef.current ?? containerRef.current;
+
+    /** 从当前 Three.js 相机读取 HUD 状态，并过滤掉无意义的小幅抖动。 */
+    const updateCameraHud = (): void => {
+        const camera = cameraRef.current;
+        const controls = orbitControlsRef.current;
+
+        if (camera === null || controls === null) {
+            return;
+        }
+
+        const nextState = getCameraHudState(camera, controls);
+        setCameraHudState(
+            (currentState: AircraftCameraHudState | null): AircraftCameraHudState =>
+                isCameraHudStateEqual(currentState, nextState)
+                    ? currentState ?? nextState
+                    : nextState,
+        );
+    };
 
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
@@ -764,6 +876,7 @@ export const AircraftModelViewport = ({
         isApplyingCameraViewRef.current = true;
         applyCameraView(camera, controls, model, nextCameraView);
         setCameraView(nextCameraView);
+        updateCameraHud();
         isApplyingCameraViewRef.current = false;
     };
 
@@ -1307,6 +1420,7 @@ export const AircraftModelViewport = ({
             animationPlayingRef.current = false;
             animationClockRef.current.stop();
             setAnimationState(EMPTY_ANIMATION_STATE);
+            setCameraHudState(EMPTY_CAMERA_HUD_STATE);
             setIsSnapshotAvailable(false);
             setSnapshotError(null);
 
@@ -1596,6 +1710,7 @@ export const AircraftModelViewport = ({
                     setCameraView("custom");
                 }
 
+                updateCameraHud();
                 requestRender();
             };
 
@@ -1749,6 +1864,7 @@ export const AircraftModelViewport = ({
                 focusModel(camera, controls, aircraftAttitudePivot);
                 setCameraView("fit");
                 isApplyingCameraViewRef.current = false;
+                updateCameraHud();
                 requestRenderRef.current?.();
                 setIsSnapshotAvailable(true);
                 loadedModelCount = 1;
@@ -1783,7 +1899,7 @@ export const AircraftModelViewport = ({
     return (
         <div
             ref={containerRef}
-            className="plane-render__viewport-canvas"
+            className={`plane-render__viewport-canvas${animationState.available ? " plane-render__viewport-canvas--has-animation" : ""}`}
             onPointerDown={handleViewportPointerDown}
         >
             <div className="plane-render__viewport-tools">
@@ -2141,6 +2257,43 @@ export const AircraftModelViewport = ({
                     {isFullscreen ? "退出全屏" : "全屏查看"}
                 </button>
             </div>
+            {cameraHudState !== null ? (
+                <div
+                    className="plane-render__camera-hud"
+                    role="group"
+                    aria-label="观察相机状态"
+                >
+                    <div className="plane-render__camera-hud-axis" aria-hidden="true">
+                        <span
+                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--x"
+                            style={{
+                                transform: `rotate(${cameraHudState.axisX.angle}deg)`,
+                                opacity: cameraHudState.axisX.opacity,
+                            }}
+                        />
+                        <span
+                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--y"
+                            style={{
+                                transform: `rotate(${cameraHudState.axisY.angle}deg)`,
+                                opacity: cameraHudState.axisY.opacity,
+                            }}
+                        />
+                        <span
+                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--z"
+                            style={{
+                                transform: `rotate(${cameraHudState.axisZ.angle}deg)`,
+                                opacity: cameraHudState.axisZ.opacity,
+                            }}
+                        />
+                        <span className="plane-render__camera-hud-origin" />
+                    </div>
+                    <div className="plane-render__camera-hud-readout">
+                        <span>AZ {formatCameraHudAngle(cameraHudState.azimuth)}</span>
+                        <span>EL {formatCameraHudAngle(cameraHudState.elevation)}</span>
+                        <span>DIST {cameraHudState.distance.toFixed(2)}</span>
+                    </div>
+                </div>
+            ) : null}
             {animationState.available ? (
                 <div className="plane-render__animation-controls">
                     <div className="plane-render__animation-heading">

@@ -7278,3 +7278,26 @@
 
 - `src/pages/planeRender/index.css`：隐藏相机视角 select 的原生下拉箭头。
 - `taskRecord.md`：追加本次控件样式调整记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+为 3D 模型视窗增加当前相机拖拽方向和位置的可视化 HUD。
+
+## 完成过程
+
+1. 读取相机相对 `controls.target` 的方位角、俯仰角和距离，并将世界 X/Y/Z 轴投影到当前相机屏幕空间。
+2. 在画布左下角增加只读相机 HUD，动画时间轴存在时自动上移，避免遮挡渲染后控制。
+3. 使用现有主题统计色 token 渲染三轴，并保留 canvas 拖拽、视角菜单和其他工具交互不变。
+4. 按用户约定未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加相机 HUD 状态计算、更新和渲染。
+- `src/pages/planeRender/index.css`：增加相机轴向 HUD、读数和动画避让样式。
+- `docs/aircraft-model-viewport.md`：补充相机 HUD 行为说明。
+- `TODO-plane-render.md`：记录相机 HUD 附加优化。
+- `taskRecord.md`：追加本次相机 HUD 调整记录。

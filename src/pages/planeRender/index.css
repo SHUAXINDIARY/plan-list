@@ -691,6 +691,106 @@
     opacity: 0.68;
 }
 
+.plane-render__camera-hud {
+    position: absolute;
+    bottom: 1.35rem;
+    left: 1.55rem;
+    z-index: 4;
+    display: grid;
+    gap: 0.35rem;
+    width: 9.5rem;
+    padding: 0.48rem 0.56rem;
+    pointer-events: none;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.58rem;
+}
+
+.plane-render__viewport-canvas--has-animation .plane-render__camera-hud {
+    bottom: 7.2rem;
+}
+
+.plane-render__camera-hud-axis {
+    position: relative;
+    width: 4.2rem;
+    height: 3.55rem;
+    margin: 0 auto;
+}
+
+.plane-render__camera-hud-axis-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 2rem;
+    height: 1px;
+    transform-origin: 0 50%;
+    font-family: var(--pl-font-mono);
+    font-size: 0.62rem;
+    font-weight: 800;
+}
+
+.plane-render__camera-hud-axis-line--x {
+    color: var(--pl-stat-orange-text);
+    background-color: var(--pl-stat-orange-text);
+}
+
+.plane-render__camera-hud-axis-line--y {
+    color: var(--pl-stat-teal-text);
+    background-color: var(--pl-stat-teal-text);
+}
+
+.plane-render__camera-hud-axis-line--z {
+    color: var(--pl-stat-blue-text);
+    background-color: var(--pl-stat-blue-text);
+}
+
+.plane-render__camera-hud-axis-line::after {
+    padding: 0.08rem 0.16rem;
+    background-color: var(--pl-surface-data-state);
+}
+
+.plane-render__camera-hud-axis-line--x::after {
+    content: "X";
+}
+
+.plane-render__camera-hud-axis-line--y::after {
+    content: "Y";
+}
+
+.plane-render__camera-hud-axis-line--z::after {
+    content: "Z";
+}
+
+.plane-render__camera-hud-origin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.34rem;
+    height: 0.34rem;
+    background-color: var(--pl-text-heading);
+    border: 1px solid var(--pl-border-focus);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.plane-render__camera-hud-readout {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.32rem;
+    color: var(--pl-text-meta);
+    font-family: var(--pl-font-mono);
+    font-size: 0.62rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.plane-render__camera-hud-readout span {
+    color: var(--pl-text-data);
+}
+
 .plane-render__fullscreen-error {
     position: absolute;
     top: 3.65rem;
@@ -1204,6 +1304,15 @@
         bottom: 4.2rem;
         left: 0.65rem;
         width: calc(100% - 1.3rem);
+    }
+
+    .plane-render__camera-hud {
+        bottom: 0.65rem;
+        left: 0.65rem;
+    }
+
+    .plane-render__viewport-canvas--has-animation .plane-render__camera-hud {
+        bottom: 9.2rem;
     }
 
     .plane-render__catalog-list {
