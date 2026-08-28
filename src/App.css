@@ -111,6 +111,9 @@
     --pl-text-shadow-flag: 0 0.45rem 1rem rgba(2, 8, 18, 0.46);
 
     --pl-map-bg: linear-gradient(135deg, #edf3f2 0%, #dce8e7 100%);
+    --pl-model-floor-color: #c9d9d6;
+    --pl-model-key-light-color: #ffffff;
+    --pl-model-fill-light-color: #5f9aa5;
     --pl-map-border: rgba(79, 111, 117, 0.32);
     --pl-map-inset: inset 0 0 0 1px rgba(252, 253, 252, 0.74);
     --pl-map-frame: rgba(79, 111, 117, 0.2);
@@ -296,6 +299,9 @@ html[data-theme="dark"] {
             oklch(0.14 0.024 248 / 0.98),
             oklch(0.2 0.03 232 / 0.92)
         );
+    --pl-model-floor-color: #163343;
+    --pl-model-key-light-color: #ffffff;
+    --pl-model-fill-light-color: #8acbe7;
     --pl-map-border: rgba(124, 200, 235, 0.16);
     --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.06);
     --pl-map-frame: rgba(124, 200, 235, 0.12);

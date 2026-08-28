@@ -9,13 +9,15 @@ import {
     useId,
 } from "react";
 import * as THREE from "three";
-import { WebGPURenderer } from "three/webgpu";
+import { PMREMGenerator, WebGPURenderer } from "three/webgpu";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
     RenderControls,
     type AircraftRenderSettings,
     type AircraftRenderQuality,
+    type AircraftLightingPreset,
     type AircraftShadowMode,
     type AircraftToneMapping,
 } from "./components/RenderControls";
@@ -117,6 +119,20 @@ interface AircraftAttitudeSettings {
     yaw: number;
 }
 
+/** 当前 GLB 是否包含可播放动画，以及播放位置和时长。 */
+interface AircraftAnimationState {
+    /** 当前模型是否存在可播放的第一段动画。 */
+    available: boolean;
+    /** 当前动画名称，资源未命名时使用生成名称。 */
+    name: string;
+    /** 当前动画总时长，单位为秒。 */
+    duration: number;
+    /** 当前动画时间，单位为秒。 */
+    currentTime: number;
+    /** 当前是否正在播放动画。 */
+    isPlaying: boolean;
+}
+
 /** 相机视角菜单支持的标准方向和自动适配状态。 */
 type AircraftCameraView =
     | "custom"
@@ -148,6 +164,20 @@ const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文
 const CURRENT_MODEL_FAILED_MESSAGE = "当前模型未能加载。";
 /** 浏览器拒绝全屏请求时的用户可见提示。 */
 const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
+/** 当前模型或浏览器尚不具备截图条件时的用户可见提示。 */
+const SNAPSHOT_UNAVAILABLE_MESSAGE = "当前模型尚未就绪，无法导出。";
+/** 浏览器生成 PNG 失败时的用户可见提示。 */
+const SNAPSHOT_EXPORT_ERROR_MESSAGE = "当前浏览器无法生成模型截图。";
+/** 工作室设置导出失败时的用户可见提示。 */
+const SETTINGS_EXPORT_ERROR_MESSAGE = "当前模型设置无法导出。";
+/** GLB 未提供动画名称时显示的回退名称。 */
+const DEFAULT_MODEL_ANIMATION_NAME = "模型动画";
+/** 工作室地面颜色 token，在深浅主题下由 App.css 提供值。 */
+const MODEL_FLOOR_COLOR_TOKEN = "--pl-model-floor-color";
+/** 工作室主光颜色 token，在深浅主题下由 App.css 提供值。 */
+const MODEL_KEY_LIGHT_COLOR_TOKEN = "--pl-model-key-light-color";
+/** 工作室补光颜色 token，在深浅主题下由 App.css 提供值。 */
+const MODEL_FILL_LIGHT_COLOR_TOKEN = "--pl-model-fill-light-color";
 /** 渲染倍率默认采用的最高物理像素比，兼顾清晰度与常规设备性能。 */
 const DEFAULT_RENDER_PIXEL_RATIO = 2;
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
@@ -184,6 +214,15 @@ const CAMERA_VIEW_DIRECTIONS: Readonly<
     top: [0, 1, 0],
     bottom: [0, -1, 0],
 };
+
+/** 初始动画状态，模型无动画时不渲染播放控件。 */
+const EMPTY_ANIMATION_STATE: AircraftAnimationState = {
+    available: false,
+    name: "",
+    duration: 0,
+    currentTime: 0,
+    isPlaying: false,
+};
 /** 主方向光 X 轴的默认位置。 */
 const DEFAULT_LIGHT_POSITION_X = 7;
 /** 主方向光 Y 轴的默认位置。 */
@@ -214,6 +253,7 @@ const DEFAULT_ATTITUDE_SETTINGS: AircraftAttitudeSettings = {
 /** 模型视窗保留原有画面效果时采用的渲染参数基线。 */
 const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     qualityPreset: "balanced",
+    lightingPreset: "neutral",
     toneMapping: "aces",
     exposure: 1.1,
     shadowsEnabled: true,
@@ -222,6 +262,33 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     lightPositionX: DEFAULT_LIGHT_POSITION_X,
     lightPositionY: DEFAULT_LIGHT_POSITION_Y,
     lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
+};
+
+/** 工作室照明预设，仅调整主光源位置，保留用户对色调和曝光的选择。 */
+const LIGHTING_PRESET_VALUES: Readonly<
+    Record<
+        Exclude<AircraftLightingPreset, "custom">,
+        Pick<
+            AircraftRenderSettings,
+            "lightPositionX" | "lightPositionY" | "lightPositionZ"
+        >
+    >
+> = {
+    neutral: {
+        lightPositionX: DEFAULT_LIGHT_POSITION_X,
+        lightPositionY: DEFAULT_LIGHT_POSITION_Y,
+        lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
+    },
+    silhouette: {
+        lightPositionX: -8,
+        lightPositionY: 6,
+        lightPositionZ: -10,
+    },
+    top: {
+        lightPositionX: 0,
+        lightPositionY: 14,
+        lightPositionZ: 2,
+    },
 };
 
 /** 质量预设可直接修改的渲染参数，不覆盖曝光、色调映射和灯光位置。 */
@@ -330,6 +397,40 @@ const isAircraftRenderQuality = (
     value === "balanced" ||
     value === "quality" ||
     value === "custom";
+
+/** 校验照明预设 select 的字符串值是否为已支持的档位。 */
+const isAircraftLightingPreset = (
+    value: string,
+): value is AircraftLightingPreset =>
+    value === "neutral" ||
+    value === "silhouette" ||
+    value === "top" ||
+    value === "custom";
+
+/** 从当前主题读取颜色 token，缺失时返回模型视窗的稳定回退值。 */
+const readThemeColor = (token: string, fallback: string): string => {
+    if (typeof document === "undefined") {
+        return fallback;
+    }
+
+    return (
+        getComputedStyle(document.documentElement).getPropertyValue(token).trim() ||
+        fallback
+    );
+};
+
+/** 将截图或设置 JSON 转为浏览器下载，下载后立即释放临时 URL。 */
+const downloadBlob = (blob: Blob, fileName: string): void => {
+    const downloadUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+
+    anchor.href = downloadUrl;
+    anchor.download = fileName;
+    anchor.click();
+    window.setTimeout((): void => {
+        URL.revokeObjectURL(downloadUrl);
+    }, 0);
+};
 
 /** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
 const applyRenderSettings = (
@@ -505,8 +606,14 @@ export const AircraftModelViewport = ({
     const aircraftAttitudePivotRef = useRef<THREE.Group | null>(null);
     const displayFloorRef = useRef<THREE.Mesh | null>(null);
     const keyLightRef = useRef<THREE.DirectionalLight | null>(null);
+    const animationMixerRef = useRef<THREE.AnimationMixer | null>(null);
+    const animationActionRef = useRef<THREE.AnimationAction | null>(null);
+    const animationClockRef = useRef<THREE.Clock>(new THREE.Clock(false));
+    const animationPlayingRef = useRef<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
+    const [animationState, setAnimationState] =
+        useState<AircraftAnimationState>(EMPTY_ANIMATION_STATE);
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
         useState<boolean>(false);
     const [isAttitudeControlsOpen, setIsAttitudeControlsOpen] =
@@ -514,6 +621,9 @@ export const AircraftModelViewport = ({
     const [fullscreenError, setFullscreenError] = useState<string | null>(
         null,
     );
+    const [snapshotError, setSnapshotError] = useState<string | null>(null);
+    const [isSnapshotAvailable, setIsSnapshotAvailable] =
+        useState<boolean>(false);
     const [renderSettings, setRenderSettings] =
         useState<AircraftRenderSettings>(createDefaultRenderSettings);
     const [attitudeSettings, setAttitudeSettings] =
@@ -657,6 +767,125 @@ export const AircraftModelViewport = ({
         isApplyingCameraViewRef.current = false;
     };
 
+    /** 将当前 WebGPU canvas 导出为 PNG，并使用模型 ID 生成稳定文件名。 */
+    const handleSnapshotExport = (): void => {
+        const renderer = rendererRef.current;
+
+        if (!isSnapshotAvailable || renderer === null) {
+            setSnapshotError(SNAPSHOT_UNAVAILABLE_MESSAGE);
+            return;
+        }
+
+        setSnapshotError(null);
+        renderer.domElement.toBlob((blob: Blob | null): void => {
+            if (blob === null) {
+                setSnapshotError(SNAPSHOT_EXPORT_ERROR_MESSAGE);
+                return;
+            }
+
+            const timeStamp = new Date().toISOString().replace(/[:.]/g, "-");
+            downloadBlob(
+                blob,
+                `plane-${asset?.id ?? "model"}-${timeStamp}.png`,
+            );
+        }, "image/png");
+    };
+
+    /** 导出可复现当前模型检查状态的 JSON，包括相机、姿态和渲染参数。 */
+    const handleSettingsExport = (): void => {
+        const camera = cameraRef.current;
+        const controls = orbitControlsRef.current;
+
+        if (!isSnapshotAvailable || camera === null || controls === null) {
+            setSnapshotError(SETTINGS_EXPORT_ERROR_MESSAGE);
+            return;
+        }
+
+        setSnapshotError(null);
+        const settings = {
+            schemaVersion: 1,
+            modelId: asset?.id ?? null,
+            camera: {
+                view: cameraView,
+                position: camera.position.toArray(),
+                target: controls.target.toArray(),
+                up: camera.up.toArray(),
+            },
+            attitude: attitudeSettings,
+            render: renderSettings,
+            animation: animationState.available
+                ? {
+                      name: animationState.name,
+                      currentTime: animationState.currentTime,
+                  }
+                : null,
+        };
+        const settingsBlob = new Blob(
+            [JSON.stringify(settings, null, 2)],
+            { type: "application/json" },
+        );
+        downloadBlob(
+            settingsBlob,
+            `plane-${asset?.id ?? "model"}-settings.json`,
+        );
+    };
+
+    /** 切换当前 GLB 动画播放状态，并在播放时恢复按需渲染帧。 */
+    const handleAnimationToggle = (): void => {
+        const action = animationActionRef.current;
+
+        if (action === null || !animationState.available) {
+            return;
+        }
+
+        const isPlaying = !animationState.isPlaying;
+        animationPlayingRef.current = isPlaying;
+        action.paused = !isPlaying;
+
+        if (isPlaying) {
+            animationClockRef.current.start();
+        } else {
+            animationClockRef.current.stop();
+        }
+
+        setAnimationState(
+            (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                ...currentState,
+                isPlaying,
+            }),
+        );
+        requestRenderRef.current?.();
+    };
+
+    /** 拖动动画时间轴时暂停播放并立刻把 mixer 定位到目标秒数。 */
+    const handleAnimationScrub = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const action = animationActionRef.current;
+
+        if (action === null || !animationState.available) {
+            return;
+        }
+
+        const currentTime = Math.min(
+            Math.max(Number(event.currentTarget.value), 0),
+            animationState.duration,
+        );
+        action.time = currentTime;
+        animationMixerRef.current?.setTime(currentTime);
+        action.paused = true;
+        animationPlayingRef.current = false;
+        animationClockRef.current.stop();
+        setAnimationState(
+            (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                ...currentState,
+                currentTime,
+                isPlaying: false,
+            }),
+        );
+        requestRenderRef.current?.();
+    };
+
     useEffect((): (() => void) => {
         /** Esc 优先收起当前工具面板，保留浏览器对全屏退出的原生处理。 */
         const handlePanelEscape = (event: globalThis.KeyboardEvent): void => {
@@ -711,6 +940,28 @@ export const AircraftModelViewport = ({
                 ...currentSettings,
                 ...getQualityPresetSettings(qualityPreset),
                 qualityPreset,
+            }),
+        );
+    };
+
+    /** 应用一档工作室照明预设，仅覆盖主光源的三轴位置。 */
+    const handleLightingPresetChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const lightingPreset = event.currentTarget.value;
+
+        if (
+            !isAircraftLightingPreset(lightingPreset) ||
+            lightingPreset === "custom"
+        ) {
+            return;
+        }
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                ...LIGHTING_PRESET_VALUES[lightingPreset],
+                lightingPreset,
             }),
         );
     };
@@ -783,6 +1034,7 @@ export const AircraftModelViewport = ({
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionX,
+                lightingPreset: "custom",
             }),
         );
     };
@@ -797,6 +1049,7 @@ export const AircraftModelViewport = ({
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionY,
+                lightingPreset: "custom",
             }),
         );
     };
@@ -811,6 +1064,7 @@ export const AircraftModelViewport = ({
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionZ,
+                lightingPreset: "custom",
             }),
         );
     };
@@ -1024,6 +1278,10 @@ export const AircraftModelViewport = ({
         let animationFrameId: number | null = null;
         let isDocumentVisible = document.visibilityState === "visible";
         let isViewportVisible = true;
+        let environmentScene: RoomEnvironment | null = null;
+        let pmremGenerator: PMREMGenerator | null = null;
+        let environmentRenderTarget: THREE.RenderTarget | null = null;
+        let themeObserver: MutationObserver | null = null;
 
         /** 取消尚未执行的按需绘制帧，避免卸载后继续访问 renderer。 */
         const cancelScheduledFrame = (): void => {
@@ -1046,6 +1304,12 @@ export const AircraftModelViewport = ({
 
         /** 初始化 WebGPU 场景，再加载当前选择的单个模型。 */
         const initializeViewport = async (): Promise<void> => {
+            animationPlayingRef.current = false;
+            animationClockRef.current.stop();
+            setAnimationState(EMPTY_ANIMATION_STATE);
+            setIsSnapshotAvailable(false);
+            setSnapshotError(null);
+
             publishProgress({
                 phase: "initializing",
                 loadedModelCount: 0,
@@ -1113,12 +1377,30 @@ export const AircraftModelViewport = ({
                     rendererStatus: "lost",
                     message: WEBGPU_DEVICE_LOST_MESSAGE,
                 });
+                animationPlayingRef.current = false;
+                setAnimationState(
+                    (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                        ...currentState,
+                        isPlaying: false,
+                    }),
+                );
             };
 
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
             const controls = new OrbitControls(camera, renderer.domElement);
             const gltfLoader = new GLTFLoader();
+
+            const roomEnvironment = new RoomEnvironment();
+            const environmentGenerator = new PMREMGenerator(renderer);
+            const environmentTarget = environmentGenerator.fromScene(
+                roomEnvironment,
+            );
+            environmentScene = roomEnvironment;
+            pmremGenerator = environmentGenerator;
+            environmentRenderTarget = environmentTarget;
+            scene.environment = environmentTarget.texture;
+            scene.environmentIntensity = 0.45;
 
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             renderer.domElement.className = "plane-render__canvas";
@@ -1166,6 +1448,27 @@ export const AircraftModelViewport = ({
             displayFloorRef.current = displayFloor;
             scene.add(displayFloor);
 
+            /** 将当前主题的工作室背景与灯光颜色同步到 Three.js 对象。 */
+            const applyThemePalette = (): void => {
+                displayFloor.material.color.set(
+                    readThemeColor(MODEL_FLOOR_COLOR_TOKEN, "#163343"),
+                );
+                keyLight.color.set(
+                    readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"),
+                );
+                fillLight.color.set(
+                    readThemeColor(MODEL_FILL_LIGHT_COLOR_TOKEN, "#8acbe7"),
+                );
+                requestRenderRef.current?.();
+            };
+
+            applyThemePalette();
+            themeObserver = new MutationObserver(applyThemePalette);
+            themeObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ["data-theme"],
+            });
+
             /** 根据容器实际尺寸更新相机投影和 WebGPU 画布分辨率。 */
             const resizeRenderer = (): void => {
                 const { width, height } = container.getBoundingClientRect();
@@ -1189,6 +1492,7 @@ export const AircraftModelViewport = ({
             resizeObserver.observe(container);
 
             /** 更新相机阻尼并绘制一帧；没有变化时不继续占用帧循环。 */
+            let animationUiAccumulator = 0;
             const renderFrame = (): void => {
                 animationFrameId = null;
 
@@ -1202,9 +1506,32 @@ export const AircraftModelViewport = ({
                 }
 
                 const controlsChanged = controls.update();
+
+                if (animationPlayingRef.current && animationMixerRef.current !== null) {
+                    const animationDelta = animationClockRef.current.getDelta();
+                    animationMixerRef.current.update(animationDelta);
+                    animationUiAccumulator += animationDelta;
+
+                    if (animationUiAccumulator >= 0.1) {
+                        animationUiAccumulator = 0;
+                        setAnimationState(
+                            (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                                ...currentState,
+                                currentTime:
+                                    animationActionRef.current?.time ??
+                                    currentState.currentTime,
+                            }),
+                        );
+                    }
+                }
+
                 renderer.render(scene, camera);
 
                 if (controlsChanged) {
+                    requestRenderRef.current?.();
+                }
+
+                if (animationPlayingRef.current) {
                     requestRenderRef.current?.();
                 }
             };
@@ -1233,8 +1560,12 @@ export const AircraftModelViewport = ({
                 isDocumentVisible = document.visibilityState === "visible";
 
                 if (isDocumentVisible) {
+                    if (animationPlayingRef.current) {
+                        animationClockRef.current.start();
+                    }
                     requestRender();
                 } else {
+                    animationClockRef.current.stop();
                     cancelScheduledFrame();
                 }
             };
@@ -1248,8 +1579,12 @@ export const AircraftModelViewport = ({
                           isViewportVisible = entry?.isIntersecting ?? true;
 
                           if (isViewportVisible) {
+                              if (animationPlayingRef.current) {
+                                  animationClockRef.current.start();
+                              }
                               requestRender();
                           } else {
+                              animationClockRef.current.stop();
                               cancelScheduledFrame();
                           }
                       });
@@ -1269,6 +1604,7 @@ export const AircraftModelViewport = ({
             cleanupRenderer = (): void => {
                 resizeObserver.disconnect();
                 intersectionObserver?.disconnect();
+                themeObserver?.disconnect();
                 document.removeEventListener(
                     "visibilitychange",
                     handleVisibilityChange,
@@ -1279,6 +1615,20 @@ export const AircraftModelViewport = ({
                 }
                 controls.removeEventListener("change", handleControlsChange);
                 controls.dispose();
+                animationPlayingRef.current = false;
+                animationClockRef.current.stop();
+                animationMixerRef.current?.stopAllAction();
+                if (aircraftModelRef.current !== null) {
+                    animationMixerRef.current?.uncacheRoot(aircraftModelRef.current);
+                }
+                animationMixerRef.current = null;
+                animationActionRef.current = null;
+                environmentRenderTarget?.dispose();
+                pmremGenerator?.dispose();
+                environmentScene?.dispose();
+                environmentRenderTarget = null;
+                pmremGenerator = null;
+                environmentScene = null;
                 disposeSceneResources(scene);
                 renderer.dispose();
                 renderer.domElement.remove();
@@ -1376,11 +1726,31 @@ export const AircraftModelViewport = ({
                 aircraftAttitudePivotRef.current = aircraftAttitudePivot;
                 const normalizedBounds = new THREE.Box3().setFromObject(model);
                 displayFloor.position.y = normalizedBounds.min.y - 0.015;
+
+                const animationClip = gltf.animations[0];
+                if (animationClip !== undefined && animationClip.duration > 0) {
+                    const animationMixer = new THREE.AnimationMixer(model);
+                    const animationAction = animationMixer.clipAction(animationClip);
+
+                    animationAction.play();
+                    animationAction.paused = true;
+                    animationMixerRef.current = animationMixer;
+                    animationActionRef.current = animationAction;
+                    setAnimationState({
+                        available: true,
+                        name: animationClip.name || DEFAULT_MODEL_ANIMATION_NAME,
+                        duration: animationClip.duration,
+                        currentTime: 0,
+                        isPlaying: false,
+                    });
+                }
+
                 isApplyingCameraViewRef.current = true;
                 focusModel(camera, controls, aircraftAttitudePivot);
                 setCameraView("fit");
                 isApplyingCameraViewRef.current = false;
                 requestRenderRef.current?.();
+                setIsSnapshotAvailable(true);
                 loadedModelCount = 1;
             } catch {
                 failedModelCount = 1;
@@ -1432,12 +1802,29 @@ export const AircraftModelViewport = ({
                         <option value="bottom">底部</option>
                     </select>
                 </label>
+                <button
+                    className="plane-render__viewport-action"
+                    type="button"
+                    disabled={!isSnapshotAvailable}
+                    onClick={handleSnapshotExport}
+                >
+                    导出 PNG
+                </button>
+                <button
+                    className="plane-render__viewport-action"
+                    type="button"
+                    disabled={!isSnapshotAvailable}
+                    onClick={handleSettingsExport}
+                >
+                    导出设置
+                </button>
                 <RenderControls
                     isOpen={isRenderControlsOpen}
                     settings={renderSettings}
                     onToggle={handleRenderControlsToggle}
                     onToneMappingChange={handleToneMappingChange}
                     onQualityPresetChange={handleQualityPresetChange}
+                    onLightingPresetChange={handleLightingPresetChange}
                     onExposureChange={handleExposureChange}
                     onPixelRatioChange={handlePixelRatioChange}
                     onLightPositionXChange={handleLightPositionXChange}
@@ -1754,9 +2141,47 @@ export const AircraftModelViewport = ({
                     {isFullscreen ? "退出全屏" : "全屏查看"}
                 </button>
             </div>
+            {animationState.available ? (
+                <div className="plane-render__animation-controls">
+                    <div className="plane-render__animation-heading">
+                        <span>{animationState.name}</span>
+                        <output>
+                            {animationState.currentTime.toFixed(1)}s / {animationState.duration.toFixed(1)}s
+                        </output>
+                    </div>
+                    <div className="plane-render__animation-row">
+                        <button
+                            className="plane-render__viewport-action"
+                            type="button"
+                            onClick={handleAnimationToggle}
+                        >
+                            {animationState.isPlaying ? "暂停" : "播放"}
+                        </button>
+                        <label className="plane-render__animation-range">
+                            <span className="plane-render__visually-hidden">
+                                动画时间
+                            </span>
+                            <input
+                                aria-label="动画时间"
+                                type="range"
+                                min={0}
+                                max={animationState.duration}
+                                step={0.01}
+                                value={animationState.currentTime}
+                                onChange={handleAnimationScrub}
+                            />
+                        </label>
+                    </div>
+                </div>
+            ) : null}
             {fullscreenError !== null ? (
                 <p className="plane-render__fullscreen-error" role="alert">
                     {fullscreenError}
+                </p>
+            ) : null}
+            {snapshotError !== null ? (
+                <p className="plane-render__snapshot-error" role="alert">
+                    {snapshotError}
                 </p>
             ) : null}
             <div

@@ -99,6 +99,7 @@
 
 .plane-render__render-controls-toggle,
 .plane-render__attitude-controls-toggle,
+.plane-render__viewport-action,
 .plane-render__render-reset {
     min-height: 2.25rem;
     color: var(--pl-text-data);
@@ -122,6 +123,10 @@
 
 .plane-render__attitude-controls-toggle {
     padding: 0.45rem 0.68rem;
+}
+
+.plane-render__viewport-action {
+    padding: 0.45rem 0.62rem;
 }
 
 .plane-render__camera-view-control {
@@ -156,6 +161,7 @@
 
 .plane-render__render-controls-toggle:focus-visible,
 .plane-render__attitude-controls-toggle:focus-visible,
+.plane-render__viewport-action:focus-visible,
 .plane-render__camera-view-control select:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
@@ -168,6 +174,7 @@
 
 .plane-render__render-controls-toggle:active,
 .plane-render__attitude-controls-toggle:active,
+.plane-render__viewport-action:active,
 .plane-render__render-reset:active {
     transform: scale(0.97);
 }
@@ -676,6 +683,12 @@
     transform: scale(0.97);
 }
 
+.plane-render__viewport-action:disabled {
+    color: var(--pl-text-meta);
+    cursor: not-allowed;
+    opacity: 0.68;
+}
+
 .plane-render__fullscreen-error {
     position: absolute;
     top: 3.65rem;
@@ -690,6 +703,78 @@
     background-color: var(--pl-surface-data-state);
     border: 1px solid var(--pl-border-error);
     border-radius: 0.55rem;
+}
+
+.plane-render__snapshot-error {
+    position: absolute;
+    top: 6.5rem;
+    right: 0.85rem;
+    z-index: 4;
+    max-width: min(18rem, calc(100% - 1.7rem));
+    margin: 0;
+    padding: 0.52rem 0.64rem;
+    color: var(--pl-error-text);
+    font-size: 0.76rem;
+    line-height: 1.45;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-error);
+    border-radius: 0.55rem;
+}
+
+.plane-render__animation-controls {
+    position: absolute;
+    bottom: 1.35rem;
+    left: 1.55rem;
+    z-index: 4;
+    display: grid;
+    gap: 0.42rem;
+    width: min(20rem, calc(100% - 3.1rem));
+    padding: 0.56rem 0.64rem;
+    color: var(--pl-text-data);
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.58rem;
+}
+
+.plane-render__animation-heading,
+.plane-render__animation-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.plane-render__animation-heading {
+    justify-content: space-between;
+    min-width: 0;
+    color: var(--pl-text-secondary);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.plane-render__animation-heading span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.plane-render__animation-heading output {
+    flex: 0 0 auto;
+    color: var(--pl-accent);
+    font-family: var(--pl-font-mono);
+    font-size: 0.68rem;
+}
+
+.plane-render__animation-range {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.plane-render__animation-range input[type="range"] {
+    width: 100%;
+    height: 1.3rem;
+    margin: 0;
+    accent-color: var(--pl-accent);
 }
 
 .plane-render__loading-overlay {
@@ -975,6 +1060,7 @@
 @media (hover: hover) and (pointer: fine) {
     .plane-render__model-button:hover,
     .plane-render__fullscreen-button:hover,
+    .plane-render__viewport-action:hover,
     .plane-render__render-controls-toggle:hover,
     .plane-render__attitude-controls-toggle:hover,
     .plane-render__render-reset:hover,
@@ -1054,6 +1140,7 @@
     .plane-render__render-controls-toggle,
     .plane-render__attitude-controls-toggle,
     .plane-render__fullscreen-button,
+    .plane-render__viewport-action,
     .plane-render__attitude-preset,
     .plane-render__render-reset,
     .plane-render__retry-button {
@@ -1105,6 +1192,18 @@
         max-width: calc(100% - 1.3rem);
     }
 
+    .plane-render__snapshot-error {
+        top: 6.1rem;
+        right: 0.65rem;
+        max-width: calc(100% - 1.3rem);
+    }
+
+    .plane-render__animation-controls {
+        bottom: 4.2rem;
+        left: 0.65rem;
+        width: calc(100% - 1.3rem);
+    }
+
     .plane-render__catalog-list {
         grid-template-columns: 1fr;
         max-height: 17rem;
@@ -1127,6 +1226,7 @@
     .plane-render__model-button,
     .plane-render__render-controls-toggle,
     .plane-render__attitude-controls-toggle,
+    .plane-render__viewport-action,
     .plane-render__render-reset,
     .plane-render__attitude-preset,
     .plane-render__attitude-gizmo-aircraft,

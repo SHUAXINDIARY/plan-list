@@ -104,6 +104,7 @@ Three.js 的 `WebGPURenderer.init()` 必须在首次渲染前完成。当前视�
 
 ```text
 THREE.Scene
+├── Texture (RoomEnvironment PMREM)            # PBR 环境反射
 ├── HemisphereLight                         # 环境填充
 ├── DirectionalLight (keyLight)              # 主光源，可调 X/Y/Z，投射阴影
 ├── DirectionalLight (fillLight)             # 固定的冷色补光
@@ -160,6 +161,7 @@ THREE.Scene
 | 设置 | 范围/选项 | 应用位置 |
 | --- | --- | --- |
 | 画质预设 | 性能优先、均衡、质量优先、自定义 | 同步像素倍率和阴影参数 |
+| 照明预设 | 中性检查、轮廓检查、顶部检查、自定义 | 同步主光源位置 |
 | 色调映射 | ACES、AgX、Neutral、关闭 | `renderer.toneMapping` |
 | 曝光 | `0.5..2`，步长 `0.05` | `renderer.toneMappingExposure` |
 | 渲染倍率 | `0.5..3`，步长 `0.25`，默认不超过设备 `2x` | `renderer.setPixelRatio` |
@@ -246,9 +248,11 @@ aircraftAttitudePivot.rotation.set(
 - 渲染倍率有 `3x` 上限，默认不超过设备 `2x`；质量预设可快速在性能、均衡和质量之间切换。
 - `ResizeObserver` 只在容器尺寸变化时更新投影和缓冲区，不依赖全局 window resize。
 - 渲染帧在模型加载、控制器变化、设置变化、尺寸变化和可见性恢复时按需请求，静止状态不持续占用帧循环。
+- 使用 `RoomEnvironment` 和 WebGPU `PMREMGenerator` 为 PBR 材质提供本地环境反射；深浅主题通过 CSS token 和 `MutationObserver` 同步地面与灯光颜色。
+- 若 GLB 提供动画，使用 `AnimationMixer` 驱动单段动画的播放、暂停和时间轴，动画播放期间由按需帧调度持续请求绘制。
 - 后续可增加模型加载缓存，但必须以资源 URL 为 key，并在缓存淘汰时复用同一套 dispose 逻辑。
 - 若未来支持 WebGL 回退，应把 renderer 创建抽成后端适配层，并在进度状态中明确当前后端，不能静默改变画质路径。
-- 若未来加入自动旋转或截图，应挂接现有 animation loop 和全屏容器，避免另起定时器造成清理遗漏。
+- PNG 与设置 JSON 导出均从当前 canvas/状态生成，下载完成后释放 Blob URL；无动画模型不渲染动画控件。
 
 ## 常见问题排查
 

@@ -7234,3 +7234,28 @@
 - `docs/aircraft-model-viewport.md`：同步 P1 状态契约、按需渲染、无障碍和质量预设说明。
 - `TODO-plane-render.md`：将 T3、T4、T5 标记为已完成并记录本次实现。
 - `taskRecord.md`：追加本次 P1 实施记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+根据 `TODO-plane-render.md` 实施剩余的 T6、T7：工作室画面质感、照明预设、主题联动和渲染后产出能力。
+
+## 完成过程
+
+1. 为 WebGPU 场景加入本地 `RoomEnvironment` 与 PMREM 环境反射，增加中性、轮廓和顶部照明预设，并通过 `App.css` token 和主题观察同步地面、主光及补光颜色。
+2. 增加 PNG 截图导出和设置 JSON 导出，设置包含模型、相机、姿态、渲染和可选动画时间信息；下载后释放 Blob URL，失败时保留可读错误。
+3. 检测 GLB 动画并按需创建 `AnimationMixer`，只对存在动画的模型展示播放、暂停和时间轴控制；播放期间复用按需渲染调度。
+4. 同步更新模型视窗技术文档和 TODO 状态；按用户要求未运行构建、类型检查或开发服务器，浏览器与设备矩阵由用户自行验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加环境反射、主题同步、照明预设、截图/设置导出和动画控制。
+- `src/pages/planeRender/components/RenderControls.tsx`：增加照明预设和阴影与展示平面依赖提示。
+- `src/pages/planeRender/index.css`：增加导出操作、动画时间轴和错误状态样式。
+- `src/App.css`：增加模型工作室地面与灯光的深浅主题 token。
+- `docs/aircraft-model-viewport.md`：同步 T6/T7 的场景、控制、性能和产出说明。
+- `TODO-plane-render.md`：将 T6、T7 标记为已完成并记录本次实现。
+- `taskRecord.md`：追加本次 T6/T7 实施记录。

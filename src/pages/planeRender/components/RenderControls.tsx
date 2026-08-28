@@ -13,10 +13,19 @@ export type AircraftRenderQuality =
     | "quality"
     | "custom";
 
+/** 模型视窗可选的工作室照明档位，手动移动主光源后进入 custom。 */
+export type AircraftLightingPreset =
+    | "neutral"
+    | "silhouette"
+    | "top"
+    | "custom";
+
 /** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
 export interface AircraftRenderSettings {
     /** 当前画质预设；任何高级参数手动修改后标记为 custom。 */
     qualityPreset: AircraftRenderQuality;
+    /** 当前照明预设；任何主光源轴向手动修改后标记为 custom。 */
+    lightingPreset: AircraftLightingPreset;
     /** 输出画面使用的色调映射预设。 */
     toneMapping: AircraftToneMapping;
     /** 色调映射在输出前使用的曝光系数。 */
@@ -49,6 +58,8 @@ interface RenderControlsProps {
     onToneMappingChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 处理画质预设 select 的变更。 */
     onQualityPresetChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+    /** 处理照明预设 select 的变更。 */
+    onLightingPresetChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 处理曝光滑块的变更。 */
     onExposureChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理渲染倍率滑块的变更。 */
@@ -95,6 +106,7 @@ export const RenderControls = ({
     onToggle,
     onToneMappingChange,
     onQualityPresetChange,
+    onLightingPresetChange,
     onExposureChange,
     onPixelRatioChange,
     onLightPositionXChange,
@@ -146,6 +158,18 @@ export const RenderControls = ({
                             <option value="performance">性能优先</option>
                             <option value="balanced">均衡</option>
                             <option value="quality">质量优先</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </label>
+                    <label className="plane-render__render-field">
+                        <span>照明预设</span>
+                        <select
+                            value={settings.lightingPreset}
+                            onChange={onLightingPresetChange}
+                        >
+                            <option value="neutral">中性检查</option>
+                            <option value="silhouette">轮廓检查</option>
+                            <option value="top">顶部检查</option>
                             <option value="custom">自定义</option>
                         </select>
                     </label>
@@ -250,7 +274,10 @@ export const RenderControls = ({
                         />
                     </label>
                     <label className="plane-render__render-switch">
-                        <span>实时阴影</span>
+                        <span>
+                            实时阴影
+                            {!settings.displayFloor ? "（展示平面关闭）" : ""}
+                        </span>
                         <input
                             id={shadowsControlId}
                             type="checkbox"
