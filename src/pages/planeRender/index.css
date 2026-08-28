@@ -138,6 +138,8 @@
     min-height: 2.25rem;
     max-width: 8rem;
     padding: 0.45rem 0.52rem;
+    appearance: none;
+    -webkit-appearance: none;
     color: var(--pl-text-data);
     font: inherit;
     font-size: 0.78rem;
