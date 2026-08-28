@@ -1883,7 +1883,7 @@ export const AircraftModelViewport = ({
                                             handleAttitudePresetChange("takeoff")
                                         }
                                     >
-                                        起飞
+                                        下降
                                     </button>
                                     <button
                                         className={`plane-render__attitude-preset${attitudeSettings.preset === "descent" ? " plane-render__attitude-preset--active" : ""}`}
@@ -1895,7 +1895,7 @@ export const AircraftModelViewport = ({
                                             handleAttitudePresetChange("descent")
                                         }
                                     >
-                                        下降
+                                        起飞
                                     </button>
                                     <button
                                         className={`plane-render__attitude-preset${attitudeSettings.preset === "landing" ? " plane-render__attitude-preset--active" : ""}`}
