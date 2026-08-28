@@ -250,7 +250,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     },
     {
         airline: "大韩航空",
-        aircraft: "787-900ER",
+        aircraft: "737-900ER",
         origin: "首尔",
         destination: "北京",
         routeKind: "one-way",
