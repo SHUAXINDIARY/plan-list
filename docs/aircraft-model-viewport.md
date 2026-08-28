@@ -47,6 +47,10 @@ interface AircraftModelViewportProps {
     onLoadingProgressChange: (
         progress: AircraftModelLoadingProgress,
     ) => void;
+    /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
+    fullscreenTargetRef: RefObject<HTMLElement | null>;
+    /** 当前模型重试序号，变化时强制重新初始化渲染器和资源请求。 */
+    retryToken: number;
 }
 ```
 
@@ -60,6 +64,8 @@ interface AircraftModelViewportProps {
 | `error` | 没有资源、WebGPU 初始化失败或模型解析失败 | 0 | 0 或 1 |
 
 `message` 只在错误或需要补充原因时提供。组件通过 `publishProgress` 忽略卸载后的异步回调，避免页面已销毁后继续写入状态。
+
+`rendererStatus` 区分 `initializing`、`webgpu`、`unavailable` 和 `lost`；`loadingStage` 区分 renderer、downloading 和 parsing。下载事件能提供总字节时回传 `progressRatio`，否则页面展示不定量状态。
 
 ## 运行时流程
 
@@ -75,13 +81,13 @@ flowchart TD
     H -- 失败 --> I[释放 renderer 并报告错误]
     H -- 成功 --> J[创建 scene/camera/controls/lights/floor]
     J --> K[挂载 canvas 与 ResizeObserver]
-    K --> L[setAnimationLoop: controls.update + render]
+    K --> L[按需 requestAnimationFrame: controls.update + render]
     L --> M[GLTFLoader.loadAsync(asset.loadUrl())]
     M -- 失败 --> N[报告当前模型加载失败]
     M -- 成功 --> O[归一化尺寸、应用姿态、聚焦相机]
     O --> P[报告 ready]
     P --> Q[asset 变化或组件卸载]
-    Q --> R[停止循环、断开观察器、dispose 场景和 renderer]
+    Q --> R[取消 RAF、断开可见性观察器、dispose 场景和 renderer]
 ```
 
 ## WebGPU 初始化
@@ -92,7 +98,7 @@ flowchart TD
 4. 通过 `applyRenderSettings` 写入色调映射、曝光、像素倍率和阴影设置。
 5. 将 renderer 的 canvas 添加到视窗容器，并设置 `aria-hidden="true"`。三维画布本身不是信息阅读入口，状态和控制由外围语义 HTML 提供。
 
-Three.js 的 `WebGPURenderer.init()` 必须在首次渲染前完成；动画循环使用 `setAnimationLoop`，每帧先调用 `OrbitControls.update()` 处理阻尼，再渲染场景。
+Three.js 的 `WebGPURenderer.init()` 必须在首次渲染前完成。当前视窗使用按需 `requestAnimationFrame`：每帧先调用 `OrbitControls.update()` 处理阻尼，再渲染场景；没有控制器变化时不继续排队下一帧。页面隐藏或视窗离开可视区域时取消待执行帧。
 
 ## 场景结构
 
@@ -153,15 +159,16 @@ THREE.Scene
 
 | 设置 | 范围/选项 | 应用位置 |
 | --- | --- | --- |
+| 画质预设 | 性能优先、均衡、质量优先、自定义 | 同步像素倍率和阴影参数 |
 | 色调映射 | ACES、AgX、Neutral、关闭 | `renderer.toneMapping` |
 | 曝光 | `0.5..2`，步长 `0.05` | `renderer.toneMappingExposure` |
-| 渲染倍率 | `0.5..5`，步长 `0.25`，默认 `2x` | `renderer.setPixelRatio` |
+| 渲染倍率 | `0.5..3`，步长 `0.25`，默认不超过设备 `2x` | `renderer.setPixelRatio` |
 | 主光源 X/Y/Z | `-20..20`，步长 `0.5` | `keyLight.position` |
 | 实时阴影 | 开/关，默认开启 | `renderer.shadowMap.enabled` |
 | 阴影算法 | PCF、VSM，默认 VSM | `renderer.shadowMap.type` |
 | 展示平面 | 开/关，默认关闭 | `displayFloor.visible` |
 
-设置变化不会重新创建 renderer 或重新加载 GLB。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源和展示平面则直接修改现有对象。
+设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；任一高级参数手动修改后标记为自定义。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源和展示平面则直接修改现有对象。
 
 ## 飞行姿态控制
 
@@ -187,7 +194,7 @@ aircraftAttitudePivot.rotation.set(
 
 自定义控制范围为俯仰 `-60..60°`、滚转 `-180..180°`、偏航 `-180..180°`。中心区域拖拽调整俯仰/偏航，外圈横向拖拽调整滚转；方向键可逐度调整，按住 Shift 时步长为 5°。每次手动调整都会把预设标记为 `custom`。
 
-姿态面板的两个操控区使用 `role="slider"`、`tabIndex=0` 和 `aria-valuetext`，保证键盘用户能够读取三轴角度。模型真实姿态和面板中的 SVG 示意图使用同一组状态，避免控制反馈与渲染结果脱节。
+姿态 gizmo 保留指针直接操控；俯仰、滚转、偏航另提供三个独立的原生 range，分别拥有单值范围和可读名称，避免一个 slider 同时表达两个角度。模型真实姿态和面板中的 SVG 示意图使用同一组状态，避免控制反馈与渲染结果脱节。
 
 ## 全屏查看
 
@@ -204,28 +211,29 @@ aircraftAttitudePivot.rotation.set(
 页面根据进度回调显示状态标题和说明：
 
 - `initializing`：正在初始化 WebGPU。
-- `loading`：正在载入模型目录（实际本次只载入选中模型）。
-- `ready`：模型目录已载入。
-- `error`：显示具体失败原因，包括空目录、WebGPU 不可用、renderer 初始化失败和全部模型加载失败。
+- `loading`：正在载入当前选中的模型，并可进一步区分下载和 GLB 解析阶段。
+- `ready`：当前模型已加入场景并完成相机聚焦。
+- `error`：显示具体失败原因，包括空目录、WebGPU 不可用、renderer 初始化失败、当前模型加载失败和设备丢失。
+- `lost`：WebGPU 设备运行中丢失，显示可重试当前模型的错误状态。
 
-加载期间页面给 viewport 设置 `aria-busy="true"`，CSS 在 canvas 上显示半透明状态和遮罩动画；工具按钮仍保持独立层级。减少动态效果偏好下，旋转动画应退化为静态指示，避免影响敏感用户。
+加载期间页面给 viewport 设置 `aria-busy="true"`，CSS 在 canvas 上显示半透明状态和遮罩动画；工具按钮仍保持独立层级。失败状态提供当前模型重试入口。页面隐藏或视窗离开可视区域时暂停按需绘制；减少动态效果偏好下，旋转动画退化为静态指示。
 
 ## 生命周期与资源释放
 
 模型切换会让初始化 effect 重新执行。清理函数按以下顺序释放资源：
 
 1. 断开 `ResizeObserver`。
-2. 调用 `renderer.setAnimationLoop(null)` 停止帧循环。
+2. 取消待执行的 requestAnimationFrame，并断开页面可见性和 `IntersectionObserver` 监听。
 3. `OrbitControls.dispose()` 解除 canvas 事件监听。
 4. 遍历当前场景，移除模型和展示平面引用，并释放网格几何、`MeshStandardMaterial` 常见贴图和材质对象。
 5. 调用 `renderer.dispose()`，移除 renderer 生成的 canvas。
-6. 清空 `rendererRef`、`aircraftModelRef`、`displayFloorRef` 和 `keyLightRef`，防止后续设置 effect 访问旧对象。
+6. 清空 renderer、camera、controls、模型 pivot、展示平面和 key light 引用，防止后续设置 effect 访问旧对象。
 
 异步加载通过 `isDisposed` 标记进行竞态保护：组件卸载或模型切换后，晚到的 GLB 结果会立即释放，且不会再次发布进度。
 
 ## 响应式布局
 
-页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具条允许换行，控制面板相对于完整工具层定位并限制可视高度；全屏状态下 viewport 改为 `100vw` / `100dvh`。新增或调整视窗高度时，必须同时检查：
+页面容器使用 `height: 90vh` 和 `min-height: 0`，工作区通过 flex/grid 将视窗与目录分栏。窄屏时目录移到视窗下方，工具条允许换行，控制面板相对于完整工具层定位并限制可视高度；移动端交互目标不小于 44px；全屏状态下 viewport 改为 `100vw` / `100dvh`。新增或调整视窗高度时，必须同时检查：
 
 - canvas 是否仍覆盖容器且没有因父级高度塌陷变成 0。
 - 工具面板、状态提示和全屏按钮是否互相遮挡。
@@ -235,8 +243,9 @@ aircraftAttitudePivot.rotation.set(
 ## 性能与扩展点
 
 - 单模型加载避免了目录级并发请求和多场景 GPU 占用。
-- 渲染倍率有 `5x` 上限，默认 `2x`；高倍率主要用于高 DPI 屏幕和纹理细节检查，应留意移动设备 GPU 压力。
+- 渲染倍率有 `3x` 上限，默认不超过设备 `2x`；质量预设可快速在性能、均衡和质量之间切换。
 - `ResizeObserver` 只在容器尺寸变化时更新投影和缓冲区，不依赖全局 window resize。
+- 渲染帧在模型加载、控制器变化、设置变化、尺寸变化和可见性恢复时按需请求，静止状态不持续占用帧循环。
 - 后续可增加模型加载缓存，但必须以资源 URL 为 key，并在缓存淘汰时复用同一套 dispose 逻辑。
 - 若未来支持 WebGL 回退，应把 renderer 创建抽成后端适配层，并在进度状态中明确当前后端，不能静默改变画质路径。
 - 若未来加入自动旋转或截图，应挂接现有 animation loop 和全屏容器，避免另起定时器造成清理遗漏。

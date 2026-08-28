@@ -11,6 +11,8 @@ const INITIAL_LOADING_PROGRESS: AircraftModelLoadingProgress = {
     phase: "initializing",
     loadedModelCount: 0,
     failedModelCount: 0,
+    rendererStatus: "initializing",
+    loadingStage: "renderer",
 };
 
 /** 用户切换模型后立即呈现的加载状态，避免旧模型状态延迟停留。 */
@@ -18,6 +20,8 @@ const MODEL_SWITCHING_PROGRESS: AircraftModelLoadingProgress = {
     phase: "loading",
     loadedModelCount: 0,
     failedModelCount: 0,
+    rendererStatus: "initializing",
+    loadingStage: "renderer",
 };
 
 /** 页面首次打开时默认渲染模型目录中的第一架飞机。 */
@@ -32,14 +36,58 @@ const getLoadingStatusTitle = (
     }
 
     if (progress.phase === "loading") {
-        return "正在载入模型目录";
+        return progress.loadingStage === "parsing"
+            ? "正在解析当前模型"
+            : "正在载入当前模型";
     }
 
     if (progress.phase === "error") {
         return "模型视窗不可用";
     }
 
-    return "模型目录已载入";
+    return "当前模型已就绪";
+};
+
+/** 根据加载阶段和可用字节进度生成页面内的状态说明。 */
+const getLoadingStatusDescription = (
+    progress: AircraftModelLoadingProgress,
+): string => {
+    if (progress.message !== undefined) {
+        return progress.message;
+    }
+
+    if (progress.loadingStage === "downloading") {
+        if (progress.progressRatio !== undefined) {
+            return `资源下载 ${Math.round(progress.progressRatio * 100)}%`;
+        }
+
+        return "资源大小未知，正在下载";
+    }
+
+    if (progress.loadingStage === "parsing") {
+        return "正在解析 GLB 场景";
+    }
+
+    return `${progress.loadedModelCount} / 1 个模型`;
+};
+
+/** 将渲染后端状态转换为状态栏中的可读文本。 */
+const getRendererStatusLabel = (
+    progress: AircraftModelLoadingProgress,
+): string => {
+    if (progress.rendererStatus === "initializing") {
+        return "初始化中";
+    }
+
+    if (progress.rendererStatus === "unavailable") {
+        return "不可用";
+    }
+
+    if (progress.rendererStatus === "lost") {
+        return "设备丢失";
+    }
+
+    return "WebGPU 已就绪";
 };
 
 /** 从模型目录中查找当前选择的单架模型。 */
@@ -60,6 +108,7 @@ const PlaneRenderPage = (): ReactElement => {
     );
     const [loadingProgress, setLoadingProgress] =
         useState<AircraftModelLoadingProgress>(INITIAL_LOADING_PROGRESS);
+    const [retryToken, setRetryToken] = useState<number>(0);
 
     /** 接收视窗的异步进度更新，驱动目录与状态区显示。 */
     const handleLoadingProgressChange = useCallback(
@@ -77,6 +126,16 @@ const PlaneRenderPage = (): ReactElement => {
 
         setLoadingProgress(MODEL_SWITCHING_PROGRESS);
         setSelectedModelId(modelId);
+    };
+
+    /** 重新初始化当前模型视窗，并立即清除旧错误状态。 */
+    const handleModelRetry = (): void => {
+        if (selectedModelId === "") {
+            return;
+        }
+
+        setLoadingProgress(MODEL_SWITCHING_PROGRESS);
+        setRetryToken((currentToken: number): number => currentToken + 1);
     };
 
     const selectedModel = getSelectedModel(selectedModelId);
@@ -109,6 +168,7 @@ const PlaneRenderPage = (): ReactElement => {
                         asset={selectedModel}
                         onLoadingProgressChange={handleLoadingProgressChange}
                         fullscreenTargetRef={viewportRef}
+                        retryToken={retryToken}
                     />
                     {loadingProgress.phase !== "ready" ? (
                         <div
@@ -123,9 +183,18 @@ const PlaneRenderPage = (): ReactElement => {
                                 {getLoadingStatusTitle(loadingProgress)}
                             </strong>
                             <span>
-                                {loadingProgress.message ??
-                                    `${loadingProgress.loadedModelCount} / 1 个模型`}
+                                {getLoadingStatusDescription(loadingProgress)}
                             </span>
+                            {loadingProgress.phase === "error" &&
+                            selectedModel !== undefined ? (
+                                <button
+                                    className="plane-render__retry-button"
+                                    type="button"
+                                    onClick={handleModelRetry}
+                                >
+                                    重试当前模型
+                                </button>
+                            ) : null}
                         </div>
                     ) : null}
                     <p
@@ -177,7 +246,7 @@ const PlaneRenderPage = (): ReactElement => {
                 </div>
                 <div>
                     <dt>渲染状态</dt>
-                    <dd>WebGPU</dd>
+                    <dd>{getRendererStatusLabel(loadingProgress)}</dd>
                 </div>
             </dl>
             {hasFailedModels ? (

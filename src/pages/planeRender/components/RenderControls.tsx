@@ -1,4 +1,4 @@
-import type { ChangeEvent, ReactElement } from "react";
+import { useId, type ChangeEvent, type ReactElement } from "react";
 
 /** 可供模型视窗即时切换的色调映射预设。 */
 export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
@@ -6,8 +6,17 @@ export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
 /** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
 export type AircraftShadowMode = "pcf" | "vsm";
 
+/** 模型视窗可选的渲染质量档位，手动调整后进入 custom。 */
+export type AircraftRenderQuality =
+    | "performance"
+    | "balanced"
+    | "quality"
+    | "custom";
+
 /** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
 export interface AircraftRenderSettings {
+    /** 当前画质预设；任何高级参数手动修改后标记为 custom。 */
+    qualityPreset: AircraftRenderQuality;
     /** 输出画面使用的色调映射预设。 */
     toneMapping: AircraftToneMapping;
     /** 色调映射在输出前使用的曝光系数。 */
@@ -38,6 +47,8 @@ interface RenderControlsProps {
     onToggle: () => void;
     /** 处理色调映射 select 的变更。 */
     onToneMappingChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+    /** 处理画质预设 select 的变更。 */
+    onQualityPresetChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 处理曝光滑块的变更。 */
     onExposureChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理渲染倍率滑块的变更。 */
@@ -58,26 +69,10 @@ interface RenderControlsProps {
     onReset: () => void;
 }
 
-/** 曝光控件的 DOM 标识，用于关联数值输出。 */
-const EXPOSURE_CONTROL_ID = "plane-render-exposure";
-/** 渲染倍率控件的 DOM 标识，用于关联数值输出。 */
-const PIXEL_RATIO_CONTROL_ID = "plane-render-pixel-ratio";
-/** 阴影开关的 DOM 标识，用于关联可读标签。 */
-const SHADOWS_CONTROL_ID = "plane-render-shadows";
-/** 展示平面开关的 DOM 标识，用于关联可读标签。 */
-const DISPLAY_FLOOR_CONTROL_ID = "plane-render-display-floor";
-/** 主光源 X 轴位置控件的 DOM 标识。 */
-const LIGHT_POSITION_X_CONTROL_ID = "plane-render-light-position-x";
-/** 主光源 Y 轴位置控件的 DOM 标识。 */
-const LIGHT_POSITION_Y_CONTROL_ID = "plane-render-light-position-y";
-/** 主光源 Z 轴位置控件的 DOM 标识。 */
-const LIGHT_POSITION_Z_CONTROL_ID = "plane-render-light-position-z";
-/** 画布内可收起渲染控制区的 DOM 标识。 */
-const RENDER_CONTROLS_ID = "plane-render-controls";
 /** 渲染倍率滑块允许的最低物理像素比。 */
 const MINIMUM_RENDER_PIXEL_RATIO = 0.5;
 /** 渲染倍率滑块允许的最高物理像素比。 */
-const MAXIMUM_RENDER_PIXEL_RATIO = 5;
+const MAXIMUM_RENDER_PIXEL_RATIO = 3;
 /** 渲染倍率滑块的离散精度。 */
 const RENDER_PIXEL_RATIO_STEP = 0.25;
 /** 曝光滑块允许的最低值。 */
@@ -99,6 +94,7 @@ export const RenderControls = ({
     settings,
     onToggle,
     onToneMappingChange,
+    onQualityPresetChange,
     onExposureChange,
     onPixelRatioChange,
     onLightPositionXChange,
@@ -108,12 +104,23 @@ export const RenderControls = ({
     onDisplayFloorChange,
     onShadowModeChange,
     onReset,
-}: RenderControlsProps): ReactElement => (
-    <div className="plane-render__render-controls">
+}: RenderControlsProps): ReactElement => {
+    const controlIdPrefix = useId();
+    const exposureControlId = `${controlIdPrefix}-exposure`;
+    const pixelRatioControlId = `${controlIdPrefix}-pixel-ratio`;
+    const shadowsControlId = `${controlIdPrefix}-shadows`;
+    const displayFloorControlId = `${controlIdPrefix}-display-floor`;
+    const lightPositionXControlId = `${controlIdPrefix}-light-position-x`;
+    const lightPositionYControlId = `${controlIdPrefix}-light-position-y`;
+    const lightPositionZControlId = `${controlIdPrefix}-light-position-z`;
+    const renderControlsId = `${controlIdPrefix}-panel`;
+
+    return (
+        <div className="plane-render__render-controls">
         <button
             className="plane-render__render-controls-toggle"
             type="button"
-            aria-controls={RENDER_CONTROLS_ID}
+            aria-controls={renderControlsId}
             aria-expanded={isOpen}
             onClick={onToggle}
         >
@@ -121,7 +128,7 @@ export const RenderControls = ({
         </button>
         {isOpen ? (
             <aside
-                id={RENDER_CONTROLS_ID}
+                id={renderControlsId}
                 className="plane-render__render-controls-panel"
                 aria-label="WebGPU 渲染控制"
             >
@@ -130,6 +137,18 @@ export const RenderControls = ({
                     <h2>渲染控制</h2>
                 </div>
                 <div className="plane-render__render-fields">
+                    <label className="plane-render__render-field">
+                        <span>画质预设</span>
+                        <select
+                            value={settings.qualityPreset}
+                            onChange={onQualityPresetChange}
+                        >
+                            <option value="performance">性能优先</option>
+                            <option value="balanced">均衡</option>
+                            <option value="quality">质量优先</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </label>
                     <label className="plane-render__render-field">
                         <span>色调映射</span>
                         <select
@@ -145,12 +164,12 @@ export const RenderControls = ({
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             曝光
-                            <output htmlFor={EXPOSURE_CONTROL_ID}>
+                            <output htmlFor={exposureControlId}>
                                 {settings.exposure.toFixed(2)}
                             </output>
                         </span>
                         <input
-                            id={EXPOSURE_CONTROL_ID}
+                            id={exposureControlId}
                             type="range"
                             min={MINIMUM_TONE_MAPPING_EXPOSURE}
                             max={MAXIMUM_TONE_MAPPING_EXPOSURE}
@@ -162,12 +181,12 @@ export const RenderControls = ({
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             渲染倍率
-                            <output htmlFor={PIXEL_RATIO_CONTROL_ID}>
+                            <output htmlFor={pixelRatioControlId}>
                                 {settings.pixelRatio.toFixed(2)}x
                             </output>
                         </span>
                         <input
-                            id={PIXEL_RATIO_CONTROL_ID}
+                            id={pixelRatioControlId}
                             type="range"
                             min={MINIMUM_RENDER_PIXEL_RATIO}
                             max={MAXIMUM_RENDER_PIXEL_RATIO}
@@ -182,12 +201,12 @@ export const RenderControls = ({
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             X 轴
-                            <output htmlFor={LIGHT_POSITION_X_CONTROL_ID}>
+                            <output htmlFor={lightPositionXControlId}>
                                 {settings.lightPositionX.toFixed(1)}
                             </output>
                         </span>
                         <input
-                            id={LIGHT_POSITION_X_CONTROL_ID}
+                            id={lightPositionXControlId}
                             type="range"
                             min={MINIMUM_LIGHT_POSITION}
                             max={MAXIMUM_LIGHT_POSITION}
@@ -199,12 +218,12 @@ export const RenderControls = ({
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             Y 轴
-                            <output htmlFor={LIGHT_POSITION_Y_CONTROL_ID}>
+                            <output htmlFor={lightPositionYControlId}>
                                 {settings.lightPositionY.toFixed(1)}
                             </output>
                         </span>
                         <input
-                            id={LIGHT_POSITION_Y_CONTROL_ID}
+                            id={lightPositionYControlId}
                             type="range"
                             min={MINIMUM_LIGHT_POSITION}
                             max={MAXIMUM_LIGHT_POSITION}
@@ -216,12 +235,12 @@ export const RenderControls = ({
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             Z 轴
-                            <output htmlFor={LIGHT_POSITION_Z_CONTROL_ID}>
+                            <output htmlFor={lightPositionZControlId}>
                                 {settings.lightPositionZ.toFixed(1)}
                             </output>
                         </span>
                         <input
-                            id={LIGHT_POSITION_Z_CONTROL_ID}
+                            id={lightPositionZControlId}
                             type="range"
                             min={MINIMUM_LIGHT_POSITION}
                             max={MAXIMUM_LIGHT_POSITION}
@@ -233,7 +252,7 @@ export const RenderControls = ({
                     <label className="plane-render__render-switch">
                         <span>实时阴影</span>
                         <input
-                            id={SHADOWS_CONTROL_ID}
+                            id={shadowsControlId}
                             type="checkbox"
                             role="switch"
                             checked={settings.shadowsEnabled}
@@ -243,7 +262,7 @@ export const RenderControls = ({
                     <label className="plane-render__render-switch">
                         <span>展示平面</span>
                         <input
-                            id={DISPLAY_FLOOR_CONTROL_ID}
+                            id={displayFloorControlId}
                             type="checkbox"
                             role="switch"
                             checked={settings.displayFloor}
@@ -272,4 +291,5 @@ export const RenderControls = ({
             </aside>
         ) : null}
     </div>
-);
+    );
+};

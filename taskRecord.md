@@ -7209,3 +7209,28 @@
 - `docs/aircraft-model-viewport.md`：同步姿态 pivot、相机边界、全屏目标和响应式行为。
 - `TODO-plane-render.md`：将 T1、T2 标记为已完成并记录本次实现。
 - `taskRecord.md`：追加本次 P0 实施记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+根据 `TODO-plane-render.md` 实施飞机模型视窗的 P1：状态与失败恢复、操作语义与无障碍、性能与画质预算。
+
+## 完成过程
+
+1. 扩展模型加载进度契约，增加渲染后端状态、下载/解析阶段和字节进度；增加当前模型重试 token 与 WebGPU 设备丢失错误恢复。
+2. 将渲染控制的静态 DOM id 改为 `useId`，把双值姿态 gizmo 改为语义 group 并补充独立俯仰、滚转、偏航原生 range，调整移动端触控高度和状态播报。
+3. 将 renderer 的持续 `setAnimationLoop` 改为按需 requestAnimationFrame，接入 OrbitControls 变化、ResizeObserver、页面可见性和 IntersectionObserver；增加性能、均衡、质量三档预设并限制像素倍率。
+4. 同步更新模型视窗技术文档和 TODO 状态；按用户要求未运行构建、类型检查或开发服务器，浏览器与设备矩阵由用户自行验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加加载阶段与重试状态、设备丢失回调、按需渲染、可见性暂停、质量预设和原生姿态控件。
+- `src/pages/planeRender/index.tsx`：展示真实加载/后端状态并提供当前模型重试入口。
+- `src/pages/planeRender/components/RenderControls.tsx`：增加质量预设、实例安全 DOM id 和 3x 像素倍率上限。
+- `src/pages/planeRender/index.css`：补充错误重试、原生姿态控件和移动端触控尺寸样式。
+- `docs/aircraft-model-viewport.md`：同步 P1 状态契约、按需渲染、无障碍和质量预设说明。
+- `TODO-plane-render.md`：将 T3、T4、T5 标记为已完成并记录本次实现。
+- `taskRecord.md`：追加本次 P1 实施记录。

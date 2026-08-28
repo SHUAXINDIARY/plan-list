@@ -446,6 +446,19 @@
     transition: none;
 }
 
+.plane-render__attitude-native-controls {
+    display: grid;
+    gap: 0.58rem;
+    padding: 0.62rem;
+    background-color: var(--pl-surface-data-state);
+    border: 1px solid var(--pl-border-divider);
+    border-radius: 0.52rem;
+}
+
+.plane-render__attitude-native-controls .plane-render__render-field {
+    gap: 0.22rem;
+}
+
 .plane-render__attitude-readout {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -751,8 +764,36 @@
 }
 
 .plane-render__viewport-status--error {
+    pointer-events: auto;
     color: var(--pl-error-text);
     border-color: var(--pl-border-error);
+}
+
+.plane-render__retry-button {
+    min-height: 2.25rem;
+    margin-top: 0.2rem;
+    padding: 0.4rem 0.58rem;
+    color: var(--pl-text-data);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 750;
+    background-color: transparent;
+    border: 1px solid var(--pl-border-error);
+    border-radius: 0.45rem;
+    cursor: pointer;
+}
+
+.plane-render__retry-button:focus-visible {
+    border-color: var(--pl-border-focus);
+    outline: none;
+    box-shadow: var(--pl-focus-glow);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .plane-render__retry-button:hover {
+        color: var(--pl-text-heading);
+        background-color: var(--pl-surface-entry-hover);
+    }
 }
 
 .plane-render__viewport-caption {
@@ -1006,6 +1047,21 @@
         position: relative;
         top: auto;
         right: auto;
+    }
+
+    .plane-render__camera-view-control select,
+    .plane-render__render-field select,
+    .plane-render__render-controls-toggle,
+    .plane-render__attitude-controls-toggle,
+    .plane-render__fullscreen-button,
+    .plane-render__attitude-preset,
+    .plane-render__render-reset,
+    .plane-render__retry-button {
+        min-height: 2.75rem;
+    }
+
+    .plane-render__render-field input[type="range"] {
+        height: 2.75rem;
     }
 
     .plane-render__viewport-tools {
