@@ -44,6 +44,8 @@ export interface AircraftRenderSettings {
     lightPositionY: number;
     /** 主方向光在场景 Z 轴上的位置。 */
     lightPositionZ: number;
+    /** 主方向光强度，控制模型高光和阴影对比。 */
+    keyLightIntensity: number;
 }
 
 /** 渲染控制面板的输入状态和交互回调。 */
@@ -70,6 +72,10 @@ interface RenderControlsProps {
     onLightPositionYChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理主光源 Z 轴位置滑块的变更。 */
     onLightPositionZChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 处理主光源强度滑块的变更。 */
+    onKeyLightIntensityChange: (
+        event: ChangeEvent<HTMLInputElement>,
+    ) => void;
     /** 处理实时阴影开关的变更。 */
     onShadowsEnabledChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理展示平面开关的变更。 */
@@ -98,6 +104,12 @@ const MINIMUM_LIGHT_POSITION = -20;
 const MAXIMUM_LIGHT_POSITION = 20;
 /** 主光源位置滑块的离散精度。 */
 const LIGHT_POSITION_STEP = 0.5;
+/** 主光源强度滑块的最小值。 */
+const MINIMUM_KEY_LIGHT_INTENSITY = 0;
+/** 主光源强度滑块的最大值。 */
+const MAXIMUM_KEY_LIGHT_INTENSITY = 6;
+/** 主光源强度滑块的离散精度。 */
+const KEY_LIGHT_INTENSITY_STEP = 0.1;
 
 /** 渲染控制面板，集中承载 WebGPU 输出和主光源配置。 */
 export const RenderControls = ({
@@ -112,6 +124,7 @@ export const RenderControls = ({
     onLightPositionXChange,
     onLightPositionYChange,
     onLightPositionZChange,
+    onKeyLightIntensityChange,
     onShadowsEnabledChange,
     onDisplayFloorChange,
     onShadowModeChange,
@@ -125,6 +138,7 @@ export const RenderControls = ({
     const lightPositionXControlId = `${controlIdPrefix}-light-position-x`;
     const lightPositionYControlId = `${controlIdPrefix}-light-position-y`;
     const lightPositionZControlId = `${controlIdPrefix}-light-position-z`;
+    const keyLightIntensityControlId = `${controlIdPrefix}-key-light-intensity`;
     const renderControlsId = `${controlIdPrefix}-panel`;
 
     return (
@@ -222,6 +236,23 @@ export const RenderControls = ({
                     <p className="plane-render__render-section-label">
                         光源位置
                     </p>
+                    <label className="plane-render__render-field plane-render__render-field--range">
+                        <span>
+                            主光强度
+                            <output htmlFor={keyLightIntensityControlId}>
+                                {settings.keyLightIntensity.toFixed(1)}
+                            </output>
+                        </span>
+                        <input
+                            id={keyLightIntensityControlId}
+                            type="range"
+                            min={MINIMUM_KEY_LIGHT_INTENSITY}
+                            max={MAXIMUM_KEY_LIGHT_INTENSITY}
+                            step={KEY_LIGHT_INTENSITY_STEP}
+                            value={settings.keyLightIntensity}
+                            onChange={onKeyLightIntensityChange}
+                        />
+                    </label>
                     <label className="plane-render__render-field plane-render__render-field--range">
                         <span>
                             X 轴

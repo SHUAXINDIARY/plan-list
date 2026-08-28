@@ -157,6 +157,32 @@ interface AircraftCameraHudState {
     axisZ: AircraftCameraHudAxis;
 }
 
+/** 灯光 HUD 展示主方向光相对场景原点的球面参数。 */
+interface AircraftLightingHudState {
+    /** 主方向光绕场景 Y 轴的方位角。 */
+    azimuth: number;
+    /** 主方向光相对水平面的仰角。 */
+    elevation: number;
+    /** 主方向光到场景原点的距离，用于保持拖拽时光照方向连续。 */
+    distance: number;
+}
+
+/** 一次灯光 HUD 拖拽开始时记录的指针和球面坐标快照。 */
+interface AircraftLightingHudDragState {
+    /** 本次拖拽使用的指针标识。 */
+    pointerId: number;
+    /** 拖拽起点的水平屏幕坐标。 */
+    startX: number;
+    /** 拖拽起点的垂直屏幕坐标。 */
+    startY: number;
+    /** 拖拽开始时的主光方位角。 */
+    startAzimuth: number;
+    /** 拖拽开始时的主光仰角。 */
+    startElevation: number;
+    /** 拖拽开始时的主光距离。 */
+    distance: number;
+}
+
 /** 相机视角菜单支持的标准方向和自动适配状态。 */
 type AircraftCameraView =
     | "custom"
@@ -255,6 +281,22 @@ const DEFAULT_LIGHT_POSITION_X = 7;
 const DEFAULT_LIGHT_POSITION_Y = 10;
 /** 主方向光 Z 轴的默认位置。 */
 const DEFAULT_LIGHT_POSITION_Z = 8;
+/** 主方向光默认强度，保持模型轮廓和阴影可读。 */
+const DEFAULT_KEY_LIGHT_INTENSITY = 3.2;
+/** 灯光 HUD 可拖拽至的最低仰角。 */
+const MINIMUM_LIGHT_HUD_ELEVATION = 5;
+/** 灯光 HUD 可拖拽至的最高仰角。 */
+const MAXIMUM_LIGHT_HUD_ELEVATION = 85;
+/** 灯光 HUD 每移动一个屏幕像素对应的方位角变化。 */
+const LIGHT_HUD_AZIMUTH_DRAG_SENSITIVITY = 0.7;
+/** 灯光 HUD 每移动一个屏幕像素对应的仰角变化。 */
+const LIGHT_HUD_ELEVATION_DRAG_SENSITIVITY = 0.45;
+/** 灯光 HUD 中主光 Z 轴坐标的最小值。 */
+const MINIMUM_LIGHT_HUD_POSITION = -20;
+/** 灯光 HUD 中主光 Z 轴坐标的最大值。 */
+const MAXIMUM_LIGHT_HUD_POSITION = 20;
+/** 灯光 HUD 中主光 Z 轴坐标的步长。 */
+const LIGHT_HUD_POSITION_STEP = 0.5;
 
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
@@ -288,15 +330,19 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     lightPositionX: DEFAULT_LIGHT_POSITION_X,
     lightPositionY: DEFAULT_LIGHT_POSITION_Y,
     lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
+    keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
 };
 
-/** 工作室照明预设，仅调整主光源位置，保留用户对色调和曝光的选择。 */
+/** 工作室照明预设，调整主光方向和强度，保留用户对色调和曝光的选择。 */
 const LIGHTING_PRESET_VALUES: Readonly<
     Record<
         Exclude<AircraftLightingPreset, "custom">,
         Pick<
             AircraftRenderSettings,
-            "lightPositionX" | "lightPositionY" | "lightPositionZ"
+            | "lightPositionX"
+            | "lightPositionY"
+            | "lightPositionZ"
+            | "keyLightIntensity"
         >
     >
 > = {
@@ -304,16 +350,19 @@ const LIGHTING_PRESET_VALUES: Readonly<
         lightPositionX: DEFAULT_LIGHT_POSITION_X,
         lightPositionY: DEFAULT_LIGHT_POSITION_Y,
         lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
+        keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
     },
     silhouette: {
         lightPositionX: -8,
         lightPositionY: 6,
         lightPositionZ: -10,
+        keyLightIntensity: 3.8,
     },
     top: {
         lightPositionX: 0,
         lightPositionY: 14,
         lightPositionZ: 2,
+        keyLightIntensity: 3,
     },
 };
 
@@ -524,6 +573,50 @@ const isCameraHudStateEqual = (
 const formatCameraHudAngle = (angle: number): string =>
     `${angle > 0 ? "+" : ""}${Math.round(angle)}°`;
 
+/** 将主方向光的直角坐标转换为灯光 HUD 使用的球面参数。 */
+const getLightingHudState = (
+    settings: AircraftRenderSettings,
+): AircraftLightingHudState => {
+    const horizontalDistance = Math.hypot(
+        settings.lightPositionX,
+        settings.lightPositionZ,
+    );
+    const distance = Math.max(
+        Math.hypot(horizontalDistance, settings.lightPositionY),
+        0.1,
+    );
+
+    return {
+        azimuth:
+            Math.atan2(settings.lightPositionX, settings.lightPositionZ) /
+            DEGREES_TO_RADIANS,
+        elevation:
+            Math.atan2(settings.lightPositionY, horizontalDistance) /
+            DEGREES_TO_RADIANS,
+        distance,
+    };
+};
+
+/** 将灯光 HUD 的方位和仰角还原为主方向光的场景坐标。 */
+const getLightPositionFromHud = (
+    azimuth: number,
+    elevation: number,
+    distance: number,
+): Pick<
+    AircraftRenderSettings,
+    "lightPositionX" | "lightPositionY" | "lightPositionZ"
+> => {
+    const azimuthRadians = degreesToRadians(azimuth);
+    const elevationRadians = degreesToRadians(elevation);
+    const horizontalDistance = Math.cos(elevationRadians) * distance;
+
+    return {
+        lightPositionX: Math.sin(azimuthRadians) * horizontalDistance,
+        lightPositionY: Math.sin(elevationRadians) * distance,
+        lightPositionZ: Math.cos(azimuthRadians) * horizontalDistance,
+    };
+};
+
 /** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
 const applyRenderSettings = (
     renderer: WebGPURenderer,
@@ -561,7 +654,11 @@ const formatAttitudeAngle = (angle: number): string =>
 const clampAngle = (angle: number, minimum: number, maximum: number): number =>
     Math.min(Math.max(angle, minimum), maximum);
 
-/** 将主方向光移动到用户指定的场景坐标，保持光源强度不变。 */
+/** 将连续拖拽后的角度归一化为 -180 到 180 度，保持 HUD 读数紧凑。 */
+const normalizeSignedAngle = (angle: number): number =>
+    ((angle + 180) % 360 + 360) % 360 - 180;
+
+/** 将主方向光移动到用户指定的场景坐标。 */
 const applyKeyLightPosition = (
     light: THREE.DirectionalLight,
     x: number,
@@ -726,14 +823,38 @@ export const AircraftModelViewport = ({
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
     const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
+    const lightingHudDragRef =
+        useRef<AircraftLightingHudDragState | null>(null);
     const fullscreenToggleRef = useRef<HTMLButtonElement | null>(null);
     const wasFullscreenRef = useRef<boolean>(false);
     const isApplyingCameraViewRef = useRef<boolean>(false);
     const [isAttitudeDragging, setIsAttitudeDragging] =
         useState<boolean>(false);
+    const [isLightingHudDragging, setIsLightingHudDragging] =
+        useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     attitudeSettingsRef.current = attitudeSettings;
+
+    const lightingHudState = getLightingHudState(renderSettings);
+    const lightingHudElevationRadians = degreesToRadians(
+        lightingHudState.elevation,
+    );
+    const lightingHudAzimuthRadians = degreesToRadians(
+        lightingHudState.azimuth,
+    );
+    const lightingHudHorizontalFactor = Math.cos(lightingHudElevationRadians);
+    const lightingHudMarkerLeft =
+        50 + Math.sin(lightingHudAzimuthRadians) * lightingHudHorizontalFactor * 42;
+    const lightingHudMarkerTop =
+        50 - Math.sin(lightingHudElevationRadians) * 42;
+    const lightingHudBeamLength = Math.hypot(
+        lightingHudMarkerLeft - 50,
+        lightingHudMarkerTop - 50,
+    );
+    const lightingHudBeamAngle =
+        Math.atan2(lightingHudMarkerTop - 50, lightingHudMarkerLeft - 50) /
+        DEGREES_TO_RADIANS;
 
     /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
     const getFullscreenTarget = (): HTMLElement | null =>
@@ -843,13 +964,89 @@ export const AircraftModelViewport = ({
     ): void => {
         if (
             event.target instanceof Element &&
-            event.target.closest(".plane-render__viewport-tools") !== null
+            (event.target.closest(".plane-render__viewport-tools") !== null ||
+                event.target.closest(".plane-render__lighting-hud") !== null)
         ) {
             return;
         }
 
         setIsRenderControlsOpen(false);
         setIsAttitudeControlsOpen(false);
+    };
+
+    /** 记录灯光 HUD 拖拽起点，后续位移直接映射为主光方向。 */
+    const handleLightingHudPointerDown = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        if (event.button !== 0) {
+            return;
+        }
+
+        event.currentTarget.setPointerCapture(event.pointerId);
+        lightingHudDragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            startAzimuth: lightingHudState.azimuth,
+            startElevation: lightingHudState.elevation,
+            distance: lightingHudState.distance,
+        };
+        setIsLightingHudDragging(true);
+        event.preventDefault();
+    };
+
+    /** 将灯光 HUD 的二维指针位移转换为主方向光的方位和仰角。 */
+    const handleLightingHudPointerMove = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        const dragState = lightingHudDragRef.current;
+
+        if (dragState === null || dragState.pointerId !== event.pointerId) {
+            return;
+        }
+
+        const azimuth = normalizeSignedAngle(
+            dragState.startAzimuth +
+                (event.clientX - dragState.startX) *
+                    LIGHT_HUD_AZIMUTH_DRAG_SENSITIVITY,
+        );
+        const elevation = clampAngle(
+            dragState.startElevation -
+                (event.clientY - dragState.startY) *
+                    LIGHT_HUD_ELEVATION_DRAG_SENSITIVITY,
+            MINIMUM_LIGHT_HUD_ELEVATION,
+            MAXIMUM_LIGHT_HUD_ELEVATION,
+        );
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                ...getLightPositionFromHud(
+                    azimuth,
+                    elevation,
+                    dragState.distance,
+                ),
+                lightingPreset: "custom",
+            }),
+        );
+    };
+
+    /** 结束灯光 HUD 拖拽并释放指针，保留当前主光位置。 */
+    const handleLightingHudPointerUp = (
+        event: PointerEvent<HTMLDivElement>,
+    ): void => {
+        const dragState = lightingHudDragRef.current;
+
+        if (dragState === null || dragState.pointerId !== event.pointerId) {
+            return;
+        }
+
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+
+        lightingHudDragRef.current = null;
+        setIsLightingHudDragging(false);
     };
 
     /** 应用标准相机视角，模型尚未就绪时保留菜单选择不变。 */
@@ -1057,7 +1254,7 @@ export const AircraftModelViewport = ({
         );
     };
 
-    /** 应用一档工作室照明预设，仅覆盖主光源的三轴位置。 */
+    /** 应用一档工作室照明预设，覆盖主光源方向和强度。 */
     const handleLightingPresetChange = (
         event: ChangeEvent<HTMLSelectElement>,
     ): void => {
@@ -1177,6 +1374,21 @@ export const AircraftModelViewport = ({
             (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionZ,
+                lightingPreset: "custom",
+            }),
+        );
+    };
+
+    /** 更新主方向光强度，并将照明预设标记为自定义。 */
+    const handleKeyLightIntensityChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const keyLightIntensity = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+                ...currentSettings,
+                keyLightIntensity,
                 lightingPreset: "custom",
             }),
         );
@@ -1360,11 +1572,13 @@ export const AircraftModelViewport = ({
             renderSettings.lightPositionY,
             renderSettings.lightPositionZ,
         );
+        keyLight.intensity = renderSettings.keyLightIntensity;
         requestRenderRef.current?.();
     }, [
         renderSettings.lightPositionX,
         renderSettings.lightPositionY,
         renderSettings.lightPositionZ,
+        renderSettings.keyLightIntensity,
     ]);
 
     useEffect((): void => {
@@ -1532,7 +1746,10 @@ export const AircraftModelViewport = ({
 
             scene.add(new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1));
 
-            const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+            const keyLight = new THREE.DirectionalLight(
+                0xffffff,
+                renderSettingsRef.current.keyLightIntensity,
+            );
             applyKeyLightPosition(
                 keyLight,
                 renderSettingsRef.current.lightPositionX,
@@ -1946,6 +2163,7 @@ export const AircraftModelViewport = ({
                     onLightPositionXChange={handleLightPositionXChange}
                     onLightPositionYChange={handleLightPositionYChange}
                     onLightPositionZChange={handleLightPositionZChange}
+                    onKeyLightIntensityChange={handleKeyLightIntensityChange}
                     onShadowsEnabledChange={handleShadowsEnabledChange}
                     onDisplayFloorChange={handleDisplayFloorChange}
                     onShadowModeChange={handleShadowModeChange}

@@ -7301,3 +7301,50 @@
 - `docs/aircraft-model-viewport.md`：补充相机 HUD 行为说明。
 - `TODO-plane-render.md`：记录相机 HUD 附加优化。
 - `taskRecord.md`：追加本次相机 HUD 调整记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+在模型视窗右侧中部增加主方向光 HUD，使打光方向和强度可视化并可直接操控。
+
+## 完成过程
+
+1. 将主方向光强度加入渲染设置和照明预设，确保预设、HUD、X/Y/Z 高级控件写入同一状态。
+2. 以主光相对场景原点的方位角和仰角驱动右侧半球 HUD，横向/纵向拖拽分别调整方位和仰角，拖拽中保持光源距离连续。
+3. 增加 `AZ / EL / INT` 读数、强度 range、主题化 HUD 样式和移动端尺寸；HUD 事件不再触发画布相机拖拽。
+4. 按用户约定未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加灯光 HUD 状态换算、拖拽、强度和主光同步逻辑。
+- `src/pages/planeRender/components/RenderControls.tsx`：增加主光强度高级控件。
+- `src/pages/planeRender/index.css`：增加右侧中部 KEY LIGHT HUD 及移动端样式。
+- `docs/aircraft-model-viewport.md`：补充灯光 HUD 控制说明。
+- `TODO-plane-render.md`：记录灯光 HUD 附加优化。
+- `taskRecord.md`：追加本次灯光 HUD 调整记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+修正灯光 HUD 无法明显控制和展示 Z 轴的问题。
+
+## 完成过程
+
+1. 保留半球拖拽对主光方位和仰角的控制，同时新增主光 X/Y/Z 坐标读数。
+2. 增加独立 `Z AXIS` range，直接写入主光 Z 坐标并同步照明预设的自定义状态。
+3. 将灯光 HUD 的光点放大，增加中心到光点的高对比方向线和箭头，强化当前灯光方向的视觉反馈。
+4. 按用户约定未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：增加 Z 轴 HUD 控制、坐标读数和方向线数据。
+- `src/pages/planeRender/index.css`：增强灯光光点、方向线、坐标和 Z 轴滑条展示。
+- `docs/aircraft-model-viewport.md`：补充灯光 HUD 的 Z 轴控制说明。
+- `TODO-plane-render.md`：记录灯光 HUD Z 轴增强。
+- `taskRecord.md`：追加本次灯光 HUD 修正记录。
