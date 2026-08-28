@@ -31,16 +31,10 @@ const customModelModules: Record<string, () => Promise<string>> =
         import: "default",
     });
 
-// 787 Family 的主模型位于目录根部；子目录中的组件模型不加入模型列表。
-const boeing787ModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../787Family_glb/*.glb", {
-        import: "default",
-    });
 
 /** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
     ...customModelModules,
-    ...boeing787ModelModules,
     ...amvModelModules,
     ...fr24ModelModules,
 };

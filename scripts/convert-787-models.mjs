@@ -7,6 +7,7 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
 /** AC3D 模型的文件扩展名；目录中的 XML、贴图和 Blender 源文件不会被当作输入。 */
 const AC3D_EXTENSION = ".ac";
@@ -28,6 +29,16 @@ const PRIMITIVE_MODE = Object.freeze({
 const DEFAULT_SOURCE_DIRECTORY = ["787-family", "Models"];
 /** 默认 GLB 输出目录。 */
 const DEFAULT_OUTPUT_DIRECTORY = "787Family_glb";
+/** 三个 787 机型的 Boeing House 机身图集。 */
+const AIRCRAFT_LIVERY_TEXTURES = Object.freeze({
+    "8": "BOE-8.png",
+    "9": "BOE-9.png",
+    "10": "BOE-10.png",
+});
+/** 默认对 787-10 应用的静态配色方案。 */
+const DEFAULT_AIRCRAFT_PALETTE = "korean-air";
+/** 静态机身图集需要覆盖的基础贴图；窗户和灯光贴图保持原样。 */
+const AIRCRAFT_BASE_TEXTURE_PATTERN = /^(?:787-(?:8|9|10)|wings|landing-gears)\.png$/iu;
 
 /** 由当前脚本路径推导项目根目录，避免依赖调用脚本时的工作目录。 */
 const getProjectRoot = () => {
@@ -41,6 +52,7 @@ const parseArguments = (argumentsList) => {
     const options = {
         dryRun: false,
         includeTextures: true,
+        paletteName: DEFAULT_AIRCRAFT_PALETTE,
         only: undefined,
         outputDirectory: undefined,
         sourceDirectory: undefined,
@@ -59,7 +71,7 @@ const parseArguments = (argumentsList) => {
             continue;
         }
 
-        if (argument === "--source" || argument === "--output" || argument === "--only") {
+        if (argument === "--source" || argument === "--output" || argument === "--only" || argument === "--palette") {
             const value = argumentsList[index + 1];
 
             if (!value || value.startsWith("--")) {
@@ -70,6 +82,8 @@ const parseArguments = (argumentsList) => {
                 options.sourceDirectory = value;
             } else if (argument === "--output") {
                 options.outputDirectory = value;
+            } else if (argument === "--palette") {
+                options.paletteName = value.toLowerCase() === "none" ? undefined : value.toLowerCase();
             } else {
                 options.only = value;
             }
@@ -400,6 +414,122 @@ const getImageMimeType = (filePath) => {
     return mimeTypes[extension];
 };
 
+/** 把 HSL 色值转换为 RGB，用于保留图集明暗关系的配色替换。 */
+const hslToRgb = (hue, saturation, lightness) => {
+    const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
+    const hueSector = hue * 6;
+    const intermediate = chroma * (1 - Math.abs((hueSector % 2) - 1));
+    const match = lightness - chroma / 2;
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    if (hueSector < 1) {
+        red = chroma;
+        green = intermediate;
+    } else if (hueSector < 2) {
+        red = intermediate;
+        green = chroma;
+    } else if (hueSector < 3) {
+        green = chroma;
+        blue = intermediate;
+    } else if (hueSector < 4) {
+        green = intermediate;
+        blue = chroma;
+    } else if (hueSector < 5) {
+        red = intermediate;
+        blue = chroma;
+    } else {
+        red = chroma;
+        blue = intermediate;
+    }
+
+    return [
+        Math.round((red + match) * 255),
+        Math.round((green + match) * 255),
+        Math.round((blue + match) * 255),
+    ];
+};
+
+/** 将 BOE-10 图集上半部的白/蓝机身区域改为韩国航空青蓝色并保留原始阴影。 */
+const recolorKoreanAirTexture = async (filePath) => {
+    const { data, info } = await sharp(filePath)
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+    if (info.channels !== 4) {
+        throw new Error(`纹理 ${filePath} 无法转换为 RGBA 图像。`);
+    }
+
+    const pixels = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    const sourcePixels = pixels.slice();
+    const bodyRegionBottom = Math.floor(info.height * 0.54);
+
+    /** 判断原图邻域是否包含深蓝像素，用于保留图集中的高对比品牌标识。 */
+    const hasNearbyBluePixel = (x, y) => {
+        for (let neighborY = Math.max(0, y - 2); neighborY <= Math.min(info.height - 1, y + 2); neighborY += 1) {
+            for (let neighborX = Math.max(0, x - 2); neighborX <= Math.min(info.width - 1, x + 2); neighborX += 1) {
+                const neighborOffset = (neighborY * info.width + neighborX) * 4;
+                const neighborRed = sourcePixels[neighborOffset];
+                const neighborGreen = sourcePixels[neighborOffset + 1];
+                const neighborBlue = sourcePixels[neighborOffset + 2];
+
+                if (neighborBlue > neighborRed * 1.1 && neighborBlue > neighborGreen * 0.9 && neighborBlue > 55) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    };
+
+    for (let y = 0; y < bodyRegionBottom; y += 1) {
+        for (let x = 0; x < info.width; x += 1) {
+            const offset = (y * info.width + x) * 4;
+            const red = sourcePixels[offset];
+            const green = sourcePixels[offset + 1];
+            const blue = sourcePixels[offset + 2];
+            const alpha = sourcePixels[offset + 3];
+            const maximum = Math.max(red, green, blue);
+            const minimum = Math.min(red, green, blue);
+            const luminance = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255;
+            const isBlueLiveryPixel = blue > red * 1.1 && blue > green * 0.9 && maximum > 55;
+            const isLightBodyPixel = maximum > 145 && maximum - minimum < 70;
+
+            if (alpha === 0 || maximum < 45 || (!isBlueLiveryPixel && !isLightBodyPixel)) {
+                continue;
+            }
+
+            if (isLightBodyPixel && hasNearbyBluePixel(x, y)) {
+                pixels[offset] = 18;
+                pixels[offset + 1] = 48;
+                pixels[offset + 2] = 108;
+                continue;
+            }
+
+            const lightness = isLightBodyPixel
+                ? clamp(0.48 + luminance * 0.26, 0.46, 0.76)
+                : clamp(0.30 + luminance * 0.25, 0.34, 0.60);
+            const [nextRed, nextGreen, nextBlue] = hslToRgb(0.53, isLightBodyPixel ? 0.68 : 0.76, lightness);
+
+            pixels[offset] = nextRed;
+            pixels[offset + 1] = nextGreen;
+            pixels[offset + 2] = nextBlue;
+        }
+    }
+
+    return sharp(pixels, {
+        raw: {
+            channels: info.channels,
+            height: info.height,
+            width: info.width,
+        },
+    })
+        .png()
+        .toBuffer();
+};
+
 /** 将 AC3D 的局部旋转和平移转换为 glTF 使用的列主序节点矩阵。 */
 const getNodeMatrix = (object) => {
     const rotation = object.rotation;
@@ -487,28 +617,21 @@ const createGlbBuilder = () => {
         return accessorIndex;
     };
 
-    /** 将一个内嵌图片注册为 glTF image/texture，并按路径避免同一模型重复写入。 */
-    const addImage = async (filePath, imageCache) => {
-        const cached = imageCache.get(filePath);
+    /** 将一段图片数据注册为 glTF image/texture，允许原图和调色后的图共享同一流程。 */
+    const addImageData = (cacheKey, imageName, imageData, imageCache) => {
+        const cached = imageCache.get(cacheKey);
 
         if (cached !== undefined) {
             return cached;
         }
 
-        const mimeType = getImageMimeType(filePath);
-
-        if (!mimeType) {
-            return undefined;
-        }
-
-        const imageData = await readFile(filePath);
         const imageIndex = gltf.images.length;
         const bufferView = addBinary(imageData);
 
         gltf.images.push({
             bufferView,
-            mimeType,
-            name: basename(filePath),
+            mimeType: "image/png",
+            name: imageName,
         });
         gltf.samplers.push({
             magFilter: 9729,
@@ -522,9 +645,20 @@ const createGlbBuilder = () => {
         });
 
         const textureIndex = gltf.textures.length - 1;
-        imageCache.set(filePath, textureIndex);
+        imageCache.set(cacheKey, textureIndex);
 
         return textureIndex;
+    };
+
+    /** 将文件图片读入并注册为 glTF image/texture。 */
+    const addImage = async (filePath, imageCache) => {
+        const mimeType = getImageMimeType(filePath);
+
+        if (!mimeType) {
+            return undefined;
+        }
+
+        return addImageData(filePath, basename(filePath), await readFile(filePath), imageCache);
     };
 
     /** 完成 JSON/BIN 两个 chunk 的对齐和 GLB 文件头写入。 */
@@ -561,18 +695,22 @@ const createGlbBuilder = () => {
         ]);
     };
 
-    return { addAccessor, addImage, gltf, toGlb };
+    return { addAccessor, addImage, addImageData, gltf, toGlb };
 };
 
 /** 生成对象曲面的可渲染 primitive，按材质和曲线标志拆分索引。 */
 const buildObjectPrimitives = async (object, builder, options) => {
     const objectDirectory = options.objectDirectory;
     const imageCache = options.imageCache;
+    const shouldUseAircraftTexture = options.aircraftTextureData !== undefined &&
+        AIRCRAFT_BASE_TEXTURE_PATTERN.test(object.texture ?? "");
     const texturePath = options.includeTextures
-        ? await resolveTexturePath(object.texture, objectDirectory, options.sourceDirectory)
+        ? shouldUseAircraftTexture
+            ? options.aircraftTextureName
+            : await resolveTexturePath(object.texture, objectDirectory, options.sourceDirectory)
         : undefined;
 
-    if (object.texture && options.includeTextures && !texturePath) {
+    if (object.texture && !shouldUseAircraftTexture && options.includeTextures && !texturePath) {
         const warningKey = `missing:${object.texture}`;
 
         if (!options.warningCache.has(warningKey)) {
@@ -590,7 +728,16 @@ const buildObjectPrimitives = async (object, builder, options) => {
         }
     }
 
-    const textureIndex = texturePath ? await builder.addImage(texturePath, imageCache) : undefined;
+    const textureIndex = options.includeTextures && shouldUseAircraftTexture
+        ? builder.addImageData(
+            options.aircraftTextureKey,
+            options.aircraftTextureName,
+            options.aircraftTextureData,
+            imageCache,
+        )
+        : texturePath
+            ? await builder.addImage(texturePath, imageCache)
+            : undefined;
     const groups = new Map();
 
     for (const surface of object.surfaces) {
@@ -855,12 +1002,48 @@ const addObjectTree = async (object, builder, options) => {
     return nodeIndex;
 };
 
+/** 准备 787 机身图集；787-10 默认生成一份韩国航空青蓝色变体并直接嵌入 GLB。 */
+const resolveAircraftTexture = async (sourcePath, sourceDirectory, paletteName) => {
+    const sourceStem = basename(sourcePath, extname(sourcePath));
+    const aircraftMatch = sourceStem.match(/^787-(8|9|10)$/u);
+
+    if (!aircraftMatch?.[1]) {
+        return undefined;
+    }
+
+    const variant = aircraftMatch[1];
+    const textureName = AIRCRAFT_LIVERY_TEXTURES[variant];
+    const texturePath = resolve(sourceDirectory, textureName);
+    const fileStats = await stat(texturePath);
+
+    if (!fileStats.isFile()) {
+        throw new Error(`找不到 787-${variant} 的机身贴图：${texturePath}`);
+    }
+
+    const isKoreanAirPalette = paletteName === DEFAULT_AIRCRAFT_PALETTE && variant === "10";
+    const textureData = isKoreanAirPalette
+        ? await recolorKoreanAirTexture(texturePath)
+        : await readFile(texturePath);
+
+    return {
+        data: textureData,
+        key: `${texturePath}#${isKoreanAirPalette ? DEFAULT_AIRCRAFT_PALETTE : "original"}`,
+        name: isKoreanAirPalette ? "Korean-Air-10.png" : textureName,
+    };
+};
+
 /** 转换一个 AC3D 文件并返回 GLB Buffer 与统计信息。 */
-const convertAc3dFile = async (sourcePath, sourceDirectory, includeTextures) => {
+const convertAc3dFile = async (sourcePath, sourceDirectory, includeTextures, paletteName) => {
     const source = await readFile(sourcePath, "utf8");
     const { root } = parseAc3d(source, sourcePath);
     const builder = createGlbBuilder();
+    const aircraftTexture = includeTextures
+        ? await resolveAircraftTexture(sourcePath, sourceDirectory, paletteName)
+        : undefined;
     const nodeIndex = await addObjectTree(root, builder, {
+        aircraftTextureData: aircraftTexture?.data,
+        aircraftTextureKey: aircraftTexture?.key,
+        aircraftTextureName: aircraftTexture?.name,
         imageCache: new Map(),
         includeTextures,
         materialCache: new Map(),
@@ -954,7 +1137,12 @@ const convertModels = async (options) => {
                 continue;
             }
 
-            const result = await convertAc3dFile(sourcePath, sourceDirectory, options.includeTextures);
+            const result = await convertAc3dFile(
+                sourcePath,
+                sourceDirectory,
+                options.includeTextures,
+                options.paletteName,
+            );
             const relativePath = relative(sourceDirectory, sourcePath);
             const outputPath = join(outputDirectory, relativePath.replace(/\.ac$/iu, ".glb"));
 
