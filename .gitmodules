@@ -4,3 +4,6 @@
 [submodule "fr24-3d-models"]
 	path = fr24-3d-models
 	url = https://github.com/Flightradar24/fr24-3d-models.git
+[submodule "787-family"]
+	path = 787-family
+	url = https://github.com/IskenderWang/787-family.git
