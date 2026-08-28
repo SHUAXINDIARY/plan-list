@@ -3,6 +3,7 @@ import {
     AircraftModelViewport,
     type AircraftModelLoadingProgress,
 } from "./AircraftModelViewport";
+import ModelDir from "./ModelDir";
 import { AIRCRAFT_MODEL_ASSETS, type AircraftModelAsset } from "./modelAssets";
 import "./index.css";
 
@@ -205,34 +206,10 @@ const PlaneRenderPage = (): ReactElement => {
                     </p>
                 </section>
 
-                <aside className="plane-render__catalog" aria-label="模型目录">
-                    <div className="plane-render__catalog-heading">
-                        <div>
-                            <p className="plane-render__catalog-label">
-                                模型目录
-                            </p>
-                            <h2>{AIRCRAFT_MODEL_ASSETS.length} 个 GLB 文件</h2>
-                        </div>
-                    </div>
-                    <div className="plane-render__catalog-list scroll-area-night">
-                        {AIRCRAFT_MODEL_ASSETS.map(
-                            (asset): ReactElement => (
-                                <button
-                                    key={asset.id}
-                                    className={`plane-render__model-button${selectedModelId === asset.id ? " plane-render__model-button--active" : ""}`}
-                                    type="button"
-                                    aria-pressed={selectedModelId === asset.id}
-                                    onClick={(): void =>
-                                        handleModelSelection(asset.id)
-                                    }
-                                >
-                                    <span>{asset.label}</span>
-                                    <small>{asset.sourcePath}</small>
-                                </button>
-                            ),
-                        )}
-                    </div>
-                </aside>
+                <ModelDir
+                    selectedModelId={selectedModelId}
+                    onModelSelection={handleModelSelection}
+                />
             </div>
 
             <dl className="plane-render__status-list">

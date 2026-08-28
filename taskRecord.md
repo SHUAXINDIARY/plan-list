@@ -7348,3 +7348,25 @@
 - `docs/aircraft-model-viewport.md`：补充灯光 HUD 的 Z 轴控制说明。
 - `TODO-plane-render.md`：记录灯光 HUD Z 轴增强。
 - `taskRecord.md`：追加本次灯光 HUD 修正记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+将模型目录选择区域拆分为独立的 `ModelDir` 组件，降低页面组件的职责范围。
+
+## 完成过程
+
+1. 新增 `ModelDir.tsx`，独立维护模型目录标题、GLB 数量、滚动列表、模型标签、来源路径和选中样式。
+2. 由父页面继续持有 `selectedModelId`，通过 `onModelSelection` 回调驱动模型视窗切换，保持单向数据流和现有加载状态逻辑。
+3. 将 `index.tsx` 中的目录内联 JSX 替换为 `ModelDir` 调用，并同步更新模型视窗技术文档的文件职责说明。
+4. 按用户约定未运行构建、类型检查或开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/ModelDir.tsx`：新增独立模型目录组件。
+- `src/pages/planeRender/index.tsx`：接入 `ModelDir` 并移除目录内联结构。
+- `docs/aircraft-model-viewport.md`：补充 `ModelDir` 文件职责。
+- `taskRecord.md`：追加本次目录组件拆分记录。

@@ -30,6 +30,7 @@
 | --- | --- |
 | `src/pages/planeRender/AircraftModelViewport.tsx` | WebGPU 渲染器、Three.js 场景、模型加载、相机/姿态交互、全屏和清理逻辑 |
 | `src/pages/planeRender/components/RenderControls.tsx` | 渲染控制面板的表单结构与控件范围，不直接操作 Three.js 对象 |
+| `src/pages/planeRender/ModelDir.tsx` | GLB 模型目录标题、滚动列表、选中样式和模型选择回调 |
 | `src/pages/planeRender/modelAssets.ts` | 通过构建期 glob 生成模型资源清单及 `loadUrl()` 加载函数 |
 | `src/pages/planeRender/index.tsx` | 选择单个模型、消费加载进度并展示目录和页面级状态 |
 | `src/pages/planeRender/index.css` | 画布、工具面板、全屏、加载遮罩、响应式布局和减少动态效果样式 |
