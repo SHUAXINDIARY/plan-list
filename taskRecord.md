@@ -7436,3 +7436,23 @@
 - `src/pages/planeRender/index.css`：将全屏模型目录调整为 `60vh` 高度并修正窄屏定位与内部滚动。
 - `docs/aircraft-model-viewport.md`：更新全屏目录高度和滚动策略说明。
 - `taskRecord.md`：追加本次目录裁断修正记录。
+
+## 日期
+
+2026-08-28
+
+## 任务目的
+
+清理 `AircraftModelViewport.tsx` 中已经没有引用的灯光 HUD 位置常量。
+
+## 完成过程
+
+1. 通过静态引用检查核对组件中的 import、类型、函数、状态、ref 和常量使用情况。
+2. 确认灯光 HUD 的 Z 轴位置范围常量已不再参与控件或计算逻辑，删除对应的 3 个声明及注释。
+3. 保留所有仍被渲染、事件处理、动画循环和资源清理使用的代码。
+4. 按用户约定未运行构建、类型检查或启动开发服务器。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：删除 3 个未使用的灯光 HUD 位置常量。
+- `taskRecord.md`：追加本次无用代码清理记录。

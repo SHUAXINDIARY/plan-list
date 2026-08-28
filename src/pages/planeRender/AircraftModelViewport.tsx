@@ -39,10 +39,7 @@ export type AircraftRendererStatus =
     | "lost";
 
 /** 当前模型资源加载所处的细分阶段。 */
-export type AircraftModelLoadingStage =
-    | "renderer"
-    | "downloading"
-    | "parsing";
+export type AircraftModelLoadingStage = "renderer" | "downloading" | "parsing";
 
 /** 模型目录加载进度，供页面显示可访问的状态信息。 */
 export interface AircraftModelLoadingProgress {
@@ -69,9 +66,7 @@ interface AircraftModelViewportProps {
     /** 当前页面选中的模型 ID，用于同步全屏目录的 active 状态。 */
     selectedModelId: string;
     /** 向页面报告 WebGPU 初始化和模型加载进度。 */
-    onLoadingProgressChange: (
-        progress: AircraftModelLoadingProgress,
-    ) => void;
+    onLoadingProgressChange: (progress: AircraftModelLoadingProgress) => void;
     /** 从全屏目录选择模型后通知页面重新加载对应资源。 */
     onModelSelection: (modelId: string) => void;
     /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
@@ -160,32 +155,6 @@ interface AircraftCameraHudState {
     axisY: AircraftCameraHudAxis;
     /** 世界 Z 轴在当前相机画面中的投影。 */
     axisZ: AircraftCameraHudAxis;
-}
-
-/** 灯光 HUD 展示主方向光相对场景原点的球面参数。 */
-interface AircraftLightingHudState {
-    /** 主方向光绕场景 Y 轴的方位角。 */
-    azimuth: number;
-    /** 主方向光相对水平面的仰角。 */
-    elevation: number;
-    /** 主方向光到场景原点的距离，用于保持拖拽时光照方向连续。 */
-    distance: number;
-}
-
-/** 一次灯光 HUD 拖拽开始时记录的指针和球面坐标快照。 */
-interface AircraftLightingHudDragState {
-    /** 本次拖拽使用的指针标识。 */
-    pointerId: number;
-    /** 拖拽起点的水平屏幕坐标。 */
-    startX: number;
-    /** 拖拽起点的垂直屏幕坐标。 */
-    startY: number;
-    /** 拖拽开始时的主光方位角。 */
-    startAzimuth: number;
-    /** 拖拽开始时的主光仰角。 */
-    startElevation: number;
-    /** 拖拽开始时的主光距离。 */
-    distance: number;
 }
 
 /** 相机视角菜单支持的标准方向和自动适配状态。 */
@@ -288,21 +257,6 @@ const DEFAULT_LIGHT_POSITION_Y = 10;
 const DEFAULT_LIGHT_POSITION_Z = 8;
 /** 主方向光默认强度，保持模型轮廓和阴影可读。 */
 const DEFAULT_KEY_LIGHT_INTENSITY = 3.2;
-/** 灯光 HUD 可拖拽至的最低仰角。 */
-const MINIMUM_LIGHT_HUD_ELEVATION = 5;
-/** 灯光 HUD 可拖拽至的最高仰角。 */
-const MAXIMUM_LIGHT_HUD_ELEVATION = 85;
-/** 灯光 HUD 每移动一个屏幕像素对应的方位角变化。 */
-const LIGHT_HUD_AZIMUTH_DRAG_SENSITIVITY = 0.7;
-/** 灯光 HUD 每移动一个屏幕像素对应的仰角变化。 */
-const LIGHT_HUD_ELEVATION_DRAG_SENSITIVITY = 0.45;
-/** 灯光 HUD 中主光 Z 轴坐标的最小值。 */
-const MINIMUM_LIGHT_HUD_POSITION = -20;
-/** 灯光 HUD 中主光 Z 轴坐标的最大值。 */
-const MAXIMUM_LIGHT_HUD_POSITION = 20;
-/** 灯光 HUD 中主光 Z 轴坐标的步长。 */
-const LIGHT_HUD_POSITION_STEP = 0.5;
-
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
     Record<
@@ -375,7 +329,10 @@ const LIGHTING_PRESET_VALUES: Readonly<
 const RENDER_QUALITY_PRESET_VALUES: Readonly<
     Record<
         Exclude<AircraftRenderQuality, "custom">,
-        Pick<AircraftRenderSettings, "pixelRatio" | "shadowsEnabled" | "shadowMode">
+        Pick<
+            AircraftRenderSettings,
+            "pixelRatio" | "shadowsEnabled" | "shadowMode"
+        >
     >
 > = {
     performance: {
@@ -397,12 +354,17 @@ const RENDER_QUALITY_PRESET_VALUES: Readonly<
 
 /** 读取设备像素比并限制在当前视窗的基础安全上限内。 */
 const getDevicePixelRatio = (): number =>
-    typeof window === "undefined" ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    typeof window === "undefined"
+        ? 1
+        : Math.min(window.devicePixelRatio || 1, 2);
 
 /** 根据设备像素比解析质量预设，避免低 DPI 设备被强制放大。 */
 const getQualityPresetSettings = (
     qualityPreset: Exclude<AircraftRenderQuality, "custom">,
-): Pick<AircraftRenderSettings, "pixelRatio" | "shadowsEnabled" | "shadowMode"> => {
+): Pick<
+    AircraftRenderSettings,
+    "pixelRatio" | "shadowsEnabled" | "shadowMode"
+> => {
     const presetSettings = RENDER_QUALITY_PRESET_VALUES[qualityPreset];
 
     return {
@@ -447,18 +409,15 @@ const createDefaultRenderSettings = (): AircraftRenderSettings => ({
 });
 
 /** 校验 select 元素的字符串值是否为已支持的色调映射预设。 */
-const isAircraftToneMapping = (
-    value: string,
-): value is AircraftToneMapping =>
+const isAircraftToneMapping = (value: string): value is AircraftToneMapping =>
     value === "aces" ||
     value === "agx" ||
     value === "neutral" ||
     value === "none";
 
 /** 校验 select 元素的字符串值是否为已支持的 WebGPU 阴影算法。 */
-const isAircraftShadowMode = (
-    value: string,
-): value is AircraftShadowMode => value === "pcf" || value === "vsm";
+const isAircraftShadowMode = (value: string): value is AircraftShadowMode =>
+    value === "pcf" || value === "vsm";
 
 /** 校验相机视角菜单的字符串值是否为已支持的标准视角。 */
 const isAircraftCameraView = (value: string): value is AircraftCameraView =>
@@ -494,8 +453,9 @@ const readThemeColor = (token: string, fallback: string): string => {
     }
 
     return (
-        getComputedStyle(document.documentElement).getPropertyValue(token).trim() ||
-        fallback
+        getComputedStyle(document.documentElement)
+            .getPropertyValue(token)
+            .trim() || fallback
     );
 };
 
@@ -519,7 +479,7 @@ const getCameraHudAxis = (
 ): AircraftCameraHudAxis => {
     const cameraAxis = axis.clone().applyQuaternion(inverseCameraQuaternion);
     const screenAngle =
-        (Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS) || 0;
+        Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS || 0;
 
     return {
         angle: screenAngle,
@@ -537,14 +497,22 @@ const getCameraHudState = (
     const inverseCameraQuaternion = camera.quaternion.clone().invert();
 
     return {
-        azimuth:
-            Math.atan2(offset.x, offset.z) / DEGREES_TO_RADIANS,
+        azimuth: Math.atan2(offset.x, offset.z) / DEGREES_TO_RADIANS,
         elevation:
             Math.atan2(offset.y, horizontalDistance) / DEGREES_TO_RADIANS,
         distance: offset.length(),
-        axisX: getCameraHudAxis(new THREE.Vector3(1, 0, 0), inverseCameraQuaternion),
-        axisY: getCameraHudAxis(new THREE.Vector3(0, 1, 0), inverseCameraQuaternion),
-        axisZ: getCameraHudAxis(new THREE.Vector3(0, 0, 1), inverseCameraQuaternion),
+        axisX: getCameraHudAxis(
+            new THREE.Vector3(1, 0, 0),
+            inverseCameraQuaternion,
+        ),
+        axisY: getCameraHudAxis(
+            new THREE.Vector3(0, 1, 0),
+            inverseCameraQuaternion,
+        ),
+        axisZ: getCameraHudAxis(
+            new THREE.Vector3(0, 0, 1),
+            inverseCameraQuaternion,
+        ),
     };
 };
 
@@ -577,50 +545,6 @@ const isCameraHudStateEqual = (
 /** 为相机 HUD 生成带方向符号的角度读数。 */
 const formatCameraHudAngle = (angle: number): string =>
     `${angle > 0 ? "+" : ""}${Math.round(angle)}°`;
-
-/** 将主方向光的直角坐标转换为灯光 HUD 使用的球面参数。 */
-const getLightingHudState = (
-    settings: AircraftRenderSettings,
-): AircraftLightingHudState => {
-    const horizontalDistance = Math.hypot(
-        settings.lightPositionX,
-        settings.lightPositionZ,
-    );
-    const distance = Math.max(
-        Math.hypot(horizontalDistance, settings.lightPositionY),
-        0.1,
-    );
-
-    return {
-        azimuth:
-            Math.atan2(settings.lightPositionX, settings.lightPositionZ) /
-            DEGREES_TO_RADIANS,
-        elevation:
-            Math.atan2(settings.lightPositionY, horizontalDistance) /
-            DEGREES_TO_RADIANS,
-        distance,
-    };
-};
-
-/** 将灯光 HUD 的方位和仰角还原为主方向光的场景坐标。 */
-const getLightPositionFromHud = (
-    azimuth: number,
-    elevation: number,
-    distance: number,
-): Pick<
-    AircraftRenderSettings,
-    "lightPositionX" | "lightPositionY" | "lightPositionZ"
-> => {
-    const azimuthRadians = degreesToRadians(azimuth);
-    const elevationRadians = degreesToRadians(elevation);
-    const horizontalDistance = Math.cos(elevationRadians) * distance;
-
-    return {
-        lightPositionX: Math.sin(azimuthRadians) * horizontalDistance,
-        lightPositionY: Math.sin(elevationRadians) * distance,
-        lightPositionZ: Math.cos(azimuthRadians) * horizontalDistance,
-    };
-};
 
 /** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
 const applyRenderSettings = (
@@ -658,10 +582,6 @@ const formatAttitudeAngle = (angle: number): string =>
 /** 将拖拽计算出的角度限制在指定的安全范围内。 */
 const clampAngle = (angle: number, minimum: number, maximum: number): number =>
     Math.min(Math.max(angle, minimum), maximum);
-
-/** 将连续拖拽后的角度归一化为 -180 到 180 度，保持 HUD 读数紧凑。 */
-const normalizeSignedAngle = (angle: number): number =>
-    ((angle + 180) % 360 + 360) % 360 - 180;
 
 /** 将主方向光移动到用户指定的场景坐标。 */
 const applyKeyLightPosition = (
@@ -704,11 +624,7 @@ const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
 const normalizeAircraftModel = (model: THREE.Object3D): void => {
     const sourceBounds = new THREE.Box3().setFromObject(model);
     const sourceSize = sourceBounds.getSize(new THREE.Vector3());
-    const largestDimension = Math.max(
-        sourceSize.x,
-        sourceSize.y,
-        sourceSize.z,
-    );
+    const largestDimension = Math.max(sourceSize.x, sourceSize.y, sourceSize.z);
 
     if (largestDimension > 0) {
         model.scale.setScalar(NORMALIZED_MODEL_MAX_SIZE / largestDimension);
@@ -736,7 +652,8 @@ const getCameraFitDistance = (
     const modelSphere = bounds.getBoundingSphere(new THREE.Sphere());
     const verticalFov = degreesToRadians(camera.fov);
     const horizontalFov =
-        2 * Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
+        2 *
+        Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
     const limitingFov = Math.min(verticalFov, horizontalFov);
     const cameraDistance = Math.max(
         (modelSphere.radius / Math.sin(limitingFov / 2)) * CAMERA_FIT_MARGIN,
@@ -819,9 +736,7 @@ export const AircraftModelViewport = ({
         useState<boolean>(false);
     const [isAttitudeControlsOpen, setIsAttitudeControlsOpen] =
         useState<boolean>(false);
-    const [fullscreenError, setFullscreenError] = useState<string | null>(
-        null,
-    );
+    const [fullscreenError, setFullscreenError] = useState<string | null>(null);
     const [snapshotError, setSnapshotError] = useState<string | null>(null);
     const [isSnapshotAvailable, setIsSnapshotAvailable] =
         useState<boolean>(false);
@@ -833,38 +748,14 @@ export const AircraftModelViewport = ({
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
     const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
-    const lightingHudDragRef =
-        useRef<AircraftLightingHudDragState | null>(null);
     const fullscreenToggleRef = useRef<HTMLButtonElement | null>(null);
     const wasFullscreenRef = useRef<boolean>(false);
     const isApplyingCameraViewRef = useRef<boolean>(false);
     const [isAttitudeDragging, setIsAttitudeDragging] =
         useState<boolean>(false);
-    const [isLightingHudDragging, setIsLightingHudDragging] =
-        useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     attitudeSettingsRef.current = attitudeSettings;
-
-    const lightingHudState = getLightingHudState(renderSettings);
-    const lightingHudElevationRadians = degreesToRadians(
-        lightingHudState.elevation,
-    );
-    const lightingHudAzimuthRadians = degreesToRadians(
-        lightingHudState.azimuth,
-    );
-    const lightingHudHorizontalFactor = Math.cos(lightingHudElevationRadians);
-    const lightingHudMarkerLeft =
-        50 + Math.sin(lightingHudAzimuthRadians) * lightingHudHorizontalFactor * 42;
-    const lightingHudMarkerTop =
-        50 - Math.sin(lightingHudElevationRadians) * 42;
-    const lightingHudBeamLength = Math.hypot(
-        lightingHudMarkerLeft - 50,
-        lightingHudMarkerTop - 50,
-    );
-    const lightingHudBeamAngle =
-        Math.atan2(lightingHudMarkerTop - 50, lightingHudMarkerLeft - 50) /
-        DEGREES_TO_RADIANS;
 
     /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
     const getFullscreenTarget = (): HTMLElement | null =>
@@ -881,9 +772,11 @@ export const AircraftModelViewport = ({
 
         const nextState = getCameraHudState(camera, controls);
         setCameraHudState(
-            (currentState: AircraftCameraHudState | null): AircraftCameraHudState =>
+            (
+                currentState: AircraftCameraHudState | null,
+            ): AircraftCameraHudState =>
                 isCameraHudStateEqual(currentState, nextState)
-                    ? currentState ?? nextState
+                    ? (currentState ?? nextState)
                     : nextState,
         );
     };
@@ -1000,7 +893,8 @@ export const AircraftModelViewport = ({
             event.target instanceof Element &&
             (event.target.closest(".plane-render__viewport-tools") !== null ||
                 event.target.closest(".plane-render__lighting-hud") !== null ||
-                event.target.closest(".plane-render__fullscreen-model-dir") !== null)
+                event.target.closest(".plane-render__fullscreen-model-dir") !==
+                    null)
         ) {
             return;
         }
@@ -1008,81 +902,6 @@ export const AircraftModelViewport = ({
         setIsRenderControlsOpen(false);
         setIsAttitudeControlsOpen(false);
         setIsModelDirectoryOpen(false);
-    };
-
-    /** 记录灯光 HUD 拖拽起点，后续位移直接映射为主光方向。 */
-    const handleLightingHudPointerDown = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        if (event.button !== 0) {
-            return;
-        }
-
-        event.currentTarget.setPointerCapture(event.pointerId);
-        lightingHudDragRef.current = {
-            pointerId: event.pointerId,
-            startX: event.clientX,
-            startY: event.clientY,
-            startAzimuth: lightingHudState.azimuth,
-            startElevation: lightingHudState.elevation,
-            distance: lightingHudState.distance,
-        };
-        setIsLightingHudDragging(true);
-        event.preventDefault();
-    };
-
-    /** 将灯光 HUD 的二维指针位移转换为主方向光的方位和仰角。 */
-    const handleLightingHudPointerMove = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        const dragState = lightingHudDragRef.current;
-
-        if (dragState === null || dragState.pointerId !== event.pointerId) {
-            return;
-        }
-
-        const azimuth = normalizeSignedAngle(
-            dragState.startAzimuth +
-                (event.clientX - dragState.startX) *
-                    LIGHT_HUD_AZIMUTH_DRAG_SENSITIVITY,
-        );
-        const elevation = clampAngle(
-            dragState.startElevation -
-                (event.clientY - dragState.startY) *
-                    LIGHT_HUD_ELEVATION_DRAG_SENSITIVITY,
-            MINIMUM_LIGHT_HUD_ELEVATION,
-            MAXIMUM_LIGHT_HUD_ELEVATION,
-        );
-
-        setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
-                ...currentSettings,
-                ...getLightPositionFromHud(
-                    azimuth,
-                    elevation,
-                    dragState.distance,
-                ),
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 结束灯光 HUD 拖拽并释放指针，保留当前主光位置。 */
-    const handleLightingHudPointerUp = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        const dragState = lightingHudDragRef.current;
-
-        if (dragState === null || dragState.pointerId !== event.pointerId) {
-            return;
-        }
-
-        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-            event.currentTarget.releasePointerCapture(event.pointerId);
-        }
-
-        lightingHudDragRef.current = null;
-        setIsLightingHudDragging(false);
     };
 
     /** 应用标准相机视角，模型尚未就绪时保留菜单选择不变。 */
@@ -1166,10 +985,9 @@ export const AircraftModelViewport = ({
                   }
                 : null,
         };
-        const settingsBlob = new Blob(
-            [JSON.stringify(settings, null, 2)],
-            { type: "application/json" },
-        );
+        const settingsBlob = new Blob([JSON.stringify(settings, null, 2)], {
+            type: "application/json",
+        });
         downloadBlob(
             settingsBlob,
             `plane-${asset?.id ?? "model"}-settings.json`,
@@ -1262,7 +1080,9 @@ export const AircraftModelViewport = ({
         }
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 toneMapping,
             }),
@@ -1283,7 +1103,9 @@ export const AircraftModelViewport = ({
         }
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 ...getQualityPresetSettings(qualityPreset),
                 qualityPreset,
@@ -1305,7 +1127,9 @@ export const AircraftModelViewport = ({
         }
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 ...LIGHTING_PRESET_VALUES[lightingPreset],
                 lightingPreset,
@@ -1320,7 +1144,9 @@ export const AircraftModelViewport = ({
         const exposure = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 exposure,
             }),
@@ -1334,7 +1160,9 @@ export const AircraftModelViewport = ({
         const pixelRatio = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 pixelRatio,
                 qualityPreset: "custom",
@@ -1349,7 +1177,9 @@ export const AircraftModelViewport = ({
         const shadowsEnabled = event.currentTarget.checked;
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 shadowsEnabled,
                 qualityPreset: "custom",
@@ -1364,7 +1194,9 @@ export const AircraftModelViewport = ({
         const displayFloor = event.currentTarget.checked;
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 displayFloor,
             }),
@@ -1378,7 +1210,9 @@ export const AircraftModelViewport = ({
         const lightPositionX = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionX,
                 lightingPreset: "custom",
@@ -1393,7 +1227,9 @@ export const AircraftModelViewport = ({
         const lightPositionY = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionY,
                 lightingPreset: "custom",
@@ -1408,7 +1244,9 @@ export const AircraftModelViewport = ({
         const lightPositionZ = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 lightPositionZ,
                 lightingPreset: "custom",
@@ -1423,7 +1261,9 @@ export const AircraftModelViewport = ({
         const keyLightIntensity = Number(event.currentTarget.value);
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 keyLightIntensity,
                 lightingPreset: "custom",
@@ -1442,7 +1282,9 @@ export const AircraftModelViewport = ({
         }
 
         setRenderSettings(
-            (currentSettings: AircraftRenderSettings): AircraftRenderSettings => ({
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
                 ...currentSettings,
                 shadowMode,
                 qualityPreset: "custom",
@@ -1473,7 +1315,9 @@ export const AircraftModelViewport = ({
         value: number,
     ): void => {
         setAttitudeSettings(
-            (currentSettings: AircraftAttitudeSettings): AircraftAttitudeSettings => ({
+            (
+                currentSettings: AircraftAttitudeSettings,
+            ): AircraftAttitudeSettings => ({
                 ...currentSettings,
                 preset: "custom",
                 [axis]: value,
@@ -1744,7 +1588,9 @@ export const AircraftModelViewport = ({
                 });
                 animationPlayingRef.current = false;
                 setAnimationState(
-                    (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                    (
+                        currentState: AircraftAnimationState,
+                    ): AircraftAnimationState => ({
                         ...currentState,
                         isPlaying: false,
                     }),
@@ -1758,9 +1604,8 @@ export const AircraftModelViewport = ({
 
             const roomEnvironment = new RoomEnvironment();
             const environmentGenerator = new PMREMGenerator(renderer);
-            const environmentTarget = environmentGenerator.fromScene(
-                roomEnvironment,
-            );
+            const environmentTarget =
+                environmentGenerator.fromScene(roomEnvironment);
             environmentScene = roomEnvironment;
             pmremGenerator = environmentGenerator;
             environmentRenderTarget = environmentTarget;
@@ -1875,7 +1720,10 @@ export const AircraftModelViewport = ({
 
                 const controlsChanged = controls.update();
 
-                if (animationPlayingRef.current && animationMixerRef.current !== null) {
+                if (
+                    animationPlayingRef.current &&
+                    animationMixerRef.current !== null
+                ) {
                     const animationDelta = animationClockRef.current.getDelta();
                     animationMixerRef.current.update(animationDelta);
                     animationUiAccumulator += animationDelta;
@@ -1883,7 +1731,9 @@ export const AircraftModelViewport = ({
                     if (animationUiAccumulator >= 0.1) {
                         animationUiAccumulator = 0;
                         setAnimationState(
-                            (currentState: AircraftAnimationState): AircraftAnimationState => ({
+                            (
+                                currentState: AircraftAnimationState,
+                            ): AircraftAnimationState => ({
                                 ...currentState,
                                 currentTime:
                                     animationActionRef.current?.time ??
@@ -1938,7 +1788,10 @@ export const AircraftModelViewport = ({
                 }
             };
 
-            document.addEventListener("visibilitychange", handleVisibilityChange);
+            document.addEventListener(
+                "visibilitychange",
+                handleVisibilityChange,
+            );
 
             const intersectionObserver =
                 typeof IntersectionObserver === "undefined"
@@ -1988,7 +1841,9 @@ export const AircraftModelViewport = ({
                 animationClockRef.current.stop();
                 animationMixerRef.current?.stopAllAction();
                 if (aircraftModelRef.current !== null) {
-                    animationMixerRef.current?.uncacheRoot(aircraftModelRef.current);
+                    animationMixerRef.current?.uncacheRoot(
+                        aircraftModelRef.current,
+                    );
                 }
                 animationMixerRef.current = null;
                 animationActionRef.current = null;
@@ -2099,7 +1954,8 @@ export const AircraftModelViewport = ({
                 const animationClip = gltf.animations[0];
                 if (animationClip !== undefined && animationClip.duration > 0) {
                     const animationMixer = new THREE.AnimationMixer(model);
-                    const animationAction = animationMixer.clipAction(animationClip);
+                    const animationAction =
+                        animationMixer.clipAction(animationClip);
 
                     animationAction.play();
                     animationAction.paused = true;
@@ -2107,7 +1963,8 @@ export const AircraftModelViewport = ({
                     animationActionRef.current = animationAction;
                     setAnimationState({
                         available: true,
-                        name: animationClip.name || DEFAULT_MODEL_ANIMATION_NAME,
+                        name:
+                            animationClip.name || DEFAULT_MODEL_ANIMATION_NAME,
                         duration: animationClip.duration,
                         currentTime: 0,
                         isPlaying: false,
@@ -2158,7 +2015,9 @@ export const AircraftModelViewport = ({
         >
             <div className="plane-render__viewport-tools">
                 <label className="plane-render__camera-view-control">
-                    <span className="plane-render__visually-hidden">相机视角</span>
+                    <span className="plane-render__visually-hidden">
+                        相机视角
+                    </span>
                     <select
                         aria-label="相机视角"
                         value={cameraView}
@@ -2248,10 +2107,13 @@ export const AircraftModelViewport = ({
                                         className={`plane-render__attitude-preset${attitudeSettings.preset === "takeoff" ? " plane-render__attitude-preset--active" : ""}`}
                                         type="button"
                                         aria-pressed={
-                                            attitudeSettings.preset === "takeoff"
+                                            attitudeSettings.preset ===
+                                            "takeoff"
                                         }
                                         onClick={(): void =>
-                                            handleAttitudePresetChange("takeoff")
+                                            handleAttitudePresetChange(
+                                                "takeoff",
+                                            )
                                         }
                                     >
                                         下降
@@ -2260,10 +2122,13 @@ export const AircraftModelViewport = ({
                                         className={`plane-render__attitude-preset${attitudeSettings.preset === "descent" ? " plane-render__attitude-preset--active" : ""}`}
                                         type="button"
                                         aria-pressed={
-                                            attitudeSettings.preset === "descent"
+                                            attitudeSettings.preset ===
+                                            "descent"
                                         }
                                         onClick={(): void =>
-                                            handleAttitudePresetChange("descent")
+                                            handleAttitudePresetChange(
+                                                "descent",
+                                            )
                                         }
                                     >
                                         起飞
@@ -2272,10 +2137,13 @@ export const AircraftModelViewport = ({
                                         className={`plane-render__attitude-preset${attitudeSettings.preset === "landing" ? " plane-render__attitude-preset--active" : ""}`}
                                         type="button"
                                         aria-pressed={
-                                            attitudeSettings.preset === "landing"
+                                            attitudeSettings.preset ===
+                                            "landing"
                                         }
                                         onClick={(): void =>
-                                            handleAttitudePresetChange("landing")
+                                            handleAttitudePresetChange(
+                                                "landing",
+                                            )
                                         }
                                     >
                                         落地
@@ -2294,9 +2162,13 @@ export const AircraftModelViewport = ({
                                                 event,
                                             )
                                         }
-                                        onPointerMove={handleAttitudePointerMove}
+                                        onPointerMove={
+                                            handleAttitudePointerMove
+                                        }
                                         onPointerUp={handleAttitudePointerUp}
-                                        onPointerCancel={handleAttitudePointerUp}
+                                        onPointerCancel={
+                                            handleAttitudePointerUp
+                                        }
                                     >
                                         <div className="plane-render__attitude-gizmo-grid" />
                                         <span
@@ -2355,9 +2227,13 @@ export const AircraftModelViewport = ({
                                                 event,
                                             )
                                         }
-                                        onPointerMove={handleAttitudePointerMove}
+                                        onPointerMove={
+                                            handleAttitudePointerMove
+                                        }
                                         onPointerUp={handleAttitudePointerUp}
-                                        onPointerCancel={handleAttitudePointerUp}
+                                        onPointerCancel={
+                                            handleAttitudePointerUp
+                                        }
                                     >
                                         <span
                                             className="plane-render__attitude-gizmo-roll-indicator"
@@ -2398,7 +2274,8 @@ export const AircraftModelViewport = ({
                                                 handleAttitudeAxisChange(
                                                     "pitch",
                                                     Number(
-                                                        event.currentTarget.value,
+                                                        event.currentTarget
+                                                            .value,
                                                     ),
                                                 )
                                             }
@@ -2426,7 +2303,8 @@ export const AircraftModelViewport = ({
                                                 handleAttitudeAxisChange(
                                                     "roll",
                                                     Number(
-                                                        event.currentTarget.value,
+                                                        event.currentTarget
+                                                            .value,
                                                     ),
                                                 )
                                             }
@@ -2454,7 +2332,8 @@ export const AircraftModelViewport = ({
                                                 handleAttitudeAxisChange(
                                                     "yaw",
                                                     Number(
-                                                        event.currentTarget.value,
+                                                        event.currentTarget
+                                                            .value,
                                                     ),
                                                 )
                                             }
@@ -2540,7 +2419,10 @@ export const AircraftModelViewport = ({
                     role="group"
                     aria-label="观察相机状态"
                 >
-                    <div className="plane-render__camera-hud-axis" aria-hidden="true">
+                    <div
+                        className="plane-render__camera-hud-axis"
+                        aria-hidden="true"
+                    >
                         <span
                             className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--x"
                             style={{
@@ -2565,8 +2447,12 @@ export const AircraftModelViewport = ({
                         <span className="plane-render__camera-hud-origin" />
                     </div>
                     <div className="plane-render__camera-hud-readout">
-                        <span>AZ {formatCameraHudAngle(cameraHudState.azimuth)}</span>
-                        <span>EL {formatCameraHudAngle(cameraHudState.elevation)}</span>
+                        <span>
+                            AZ {formatCameraHudAngle(cameraHudState.azimuth)}
+                        </span>
+                        <span>
+                            EL {formatCameraHudAngle(cameraHudState.elevation)}
+                        </span>
                         <span>DIST {cameraHudState.distance.toFixed(2)}</span>
                     </div>
                 </div>
@@ -2576,7 +2462,8 @@ export const AircraftModelViewport = ({
                     <div className="plane-render__animation-heading">
                         <span>{animationState.name}</span>
                         <output>
-                            {animationState.currentTime.toFixed(1)}s / {animationState.duration.toFixed(1)}s
+                            {animationState.currentTime.toFixed(1)}s /{" "}
+                            {animationState.duration.toFixed(1)}s
                         </output>
                     </div>
                     <div className="plane-render__animation-row">
@@ -2614,10 +2501,7 @@ export const AircraftModelViewport = ({
                     {snapshotError}
                 </p>
             ) : null}
-            <div
-                className="plane-render__loading-overlay"
-                aria-hidden="true"
-            >
+            <div className="plane-render__loading-overlay" aria-hidden="true">
                 <span className="plane-render__loading-spinner" />
             </div>
         </div>
