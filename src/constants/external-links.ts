@@ -1,6 +1,5 @@
 import type { CheckedAirport, FlightRecord } from "./type";
 
-
 /** 当前个人档案中的机场打卡数据，后续可迁移到后端接口。 */
 export const CHECKED_AIRPORTS: CheckedAirport[] = [
     {
@@ -215,7 +214,6 @@ export const CHECKED_AIRPORTS: CheckedAirport[] = [
     },
 ];
 
-
 /** 当前个人档案中的乘机记录，按出发日期从新到旧排列。 */
 export const FLIGHT_RECORDS: FlightRecord[] = [
     {
@@ -252,7 +250,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     },
     {
         airline: "大韩航空",
-        aircraft: "321",
+        aircraft: "787-900ER",
         origin: "首尔",
         destination: "北京",
         routeKind: "one-way",
@@ -260,7 +258,7 @@ export const FLIGHT_RECORDS: FlightRecord[] = [
     },
     {
         airline: "大韩航空",
-        aircraft: "321",
+        aircraft: "321NEO",
         origin: "北京",
         destination: "首尔",
         routeKind: "one-way",
