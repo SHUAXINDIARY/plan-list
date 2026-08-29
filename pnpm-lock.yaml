@@ -51,6 +51,9 @@ importers:
       gltf-pipeline:
         specifier: ^4.3.1
         version: 4.3.1
+      obj2gltf:
+        specifier: ^3.2.0
+        version: 3.2.0
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -873,6 +876,9 @@ packages:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
 
+  jpeg-js@0.4.4:
+    resolution: {integrity: sha512-WZzeDOEtTOBK4Mdsar0IqEU5sMr3vSV2RqkAIzUEV2BHnUfKGyswWFPFwK5EeDo93K3FohSHbLAjj0s1Wzd+dg==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -961,6 +967,11 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
+  obj2gltf@3.2.0:
+    resolution: {integrity: sha512-1pCbHSK55tiTkJG8Td0Nfqx97jcCtIKNeoukWhmuiyEtty3gmLBxHRN6WdYM6XKKAVgZVgeJ/PxXAizeRbQFxQ==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   object-hash@3.0.0:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
@@ -982,6 +993,10 @@ packages:
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
+
+  pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
 
   portfinder@1.0.38:
     resolution: {integrity: sha512-rEwq/ZHlJIKw++XtLAO8PPuOQA/zaPJOZJ37BVuN97nLpMJeuDVLVGRwbFoBgLudgdTMP2hdRJP++H+8QOA3vg==}
@@ -2001,6 +2016,8 @@ snapshots:
 
   is-fullwidth-code-point@3.0.0: {}
 
+  jpeg-js@0.4.4: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@4.3.1:
@@ -2071,6 +2088,16 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
+  obj2gltf@3.2.0:
+    dependencies:
+      bluebird: 3.7.2
+      cesium: 1.144.0
+      fs-extra: 11.4.0
+      jpeg-js: 0.4.4
+      mime: 3.0.0
+      pngjs: 7.0.0
+      yargs: 17.7.3
+
   object-hash@3.0.0: {}
 
   pako@3.0.1: {}
@@ -2089,6 +2116,8 @@ snapshots:
   path-type@4.0.0: {}
 
   picocolors@1.1.1: {}
+
+  pngjs@7.0.0: {}
 
   portfinder@1.0.38:
     dependencies:

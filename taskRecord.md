@@ -7456,3 +7456,46 @@
 
 - `src/pages/planeRender/AircraftModelViewport.tsx`：删除 3 个未使用的灯光 HUD 位置常量。
 - `taskRecord.md`：追加本次无用代码清理记录。
+
+## 日期
+
+2026-08-29
+
+## 任务目的
+
+新增通用 OBJ 资源目录打包脚本，将目录内多个 OBJ、MTL 和图片资源合并为一个内嵌贴图的 GLB 文件，并把产物写回处理目录。
+
+## 完成过程
+
+1. 阅读项目规则、现有模型转换脚本和 `Airbus_beluga_xl` 资源结构，确认输入包含多个 OBJ 和 PNG 贴图，部分 OBJ 缺少 MTL 文件。
+2. 使用 Context7 查询 `obj2gltf` 当前 Node.js API，确认其支持二进制 GLB、MTL 材质和嵌入式贴图。
+3. 安装 `obj2gltf` 开发依赖，编写 `scripts/bundleGlb.js`：递归收集 OBJ，重写局部面索引并合并为临时 OBJ；缺失 MTL 时自动生成材料和贴图引用；转换成功后校验 GLB v2 并输出到输入目录。
+4. 在临时资源副本上运行脚本，确认输出 GLB 头为 `glTF`/版本 `2`，包含 3 个节点、3 个网格、3 个材料和 3 张图片，临时文件已清理。
+5. 运行 `node --check scripts/bundleGlb.js`、`node scripts/bundleGlb.js --help`、`pnpm run type-check` 和 `pnpm run build`，均通过；构建中的远程照片预览超时为既有回退日志。
+
+## 修改具体文件
+
+- `scripts/bundleGlb.js`：新增通用目录级 OBJ/MTL/贴图合并与 GLB 打包脚本，支持位置参数输入目录和 `--output` 输出路径。
+- `package.json`：新增 `obj2gltf` 开发依赖。
+- `pnpm-lock.yaml`：记录 `obj2gltf` 及其依赖锁定信息。
+- `taskRecord.md`：追加本次 GLB 打包脚本任务记录。
+
+## 日期
+
+2026-08-29
+
+## 任务目的
+
+修复无 MTL 的 OBJ 目录在自动选择多张 diffuse 贴图时导致的模型贴图错位。
+
+## 完成过程
+
+1. 对用户提供的截图、OBJ UV 范围和生成 GLB 的材质元数据进行对照，确认合并过程没有改变 UV；错位来自缺失 MTL 时的贴图归属猜测。
+2. 调整无 MTL 场景的多贴图回退策略，采用稳定的反向材质顺序，使主网格匹配 `Material.005_diffuse.png`，另一个带 UV 的部件匹配 `Material.004_diffuse.png`，并保留对应 occlusion 贴图。
+3. 在资源临时副本上重新打包，确认 GLB v2 合法、包含 3 个节点、3 个材料以及 3 张内嵌图片，材料贴图顺序符合预期。
+4. 运行脚本语法检查、类型检查和生产构建验证。
+
+## 修改具体文件
+
+- `scripts/bundleGlb.js`：修正无 MTL 多 diffuse 贴图的默认匹配顺序。
+- `taskRecord.md`：追加本次贴图错位修复记录。
