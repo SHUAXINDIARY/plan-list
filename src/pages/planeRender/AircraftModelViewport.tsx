@@ -2065,7 +2065,7 @@ export const AircraftModelViewport = ({
                     onShadowModeChange={handleShadowModeChange}
                     onReset={handleRenderSettingsReset}
                 />
-                <div className="plane-render__attitude-controls">
+                {/* <div className="plane-render__attitude-controls">
                     <button
                         className="plane-render__attitude-controls-toggle"
                         type="button"
@@ -2380,7 +2380,7 @@ export const AircraftModelViewport = ({
                             </div>
                         </aside>
                     ) : null}
-                </div>
+                </div> */}
                 {isFullscreen ? (
                     <button
                         className="plane-render__model-directory-toggle"
