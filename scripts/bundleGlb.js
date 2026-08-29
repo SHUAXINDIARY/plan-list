@@ -23,18 +23,19 @@ const GLB_MAGIC = 0x46546c67;
 const GLB_VERSION = 2;
 /** 生成材料时用于识别各类纹理的文件名关键词。 */
 const TEXTURE_PATTERNS = Object.freeze({
-    DIFFUSE: /(albedo|base.?color|color|diffuse|map.?kd|texture)/iu,
+    DIFFUSE: /(albedo|base.?color|colou?r|coloe|diffuse|map.?kd|texture)/iu,
     NORMAL: /(normal|norm|bump)/iu,
     OCCLUSION: /(ambient|ao|occlusion)/iu,
+    ROUGHNESS: /(roughness|metallic|specular|(?:^|[_-])r(?:[_-]|\.|$))/iu,
 });
 /** 可选参数默认值。输出文件默认使用输入目录名称。 */
 const DEFAULT_OPTIONS = Object.freeze({
-    inputUpAxis: "Z",
+    inputUpAxis: "AUTO",
     output: undefined,
     outputUpAxis: "Y",
 });
-/** obj2gltf 支持的三种输入/输出上方向。 */
-const UP_AXES = new Set(["X", "Y", "Z"]);
+/** obj2gltf 支持的三种输入/输出上方向，以及自动检测输入轴的特殊值。 */
+const UP_AXES = new Set(["AUTO", "X", "Y", "Z"]);
 
 /** 将依赖加载失败转换为包含安装命令的可操作错误。 */
 const loadObj2Gltf = () => {
@@ -80,7 +81,7 @@ const parseArguments = (argumentsList) => {
                 const axis = value.toUpperCase();
 
                 if (!UP_AXES.has(axis)) {
-                    throw new Error(`${argument} 只支持 X、Y 或 Z。`);
+                    throw new Error(`${argument} 只支持 AUTO、X、Y 或 Z。`);
                 }
 
                 if (argument === "--input-up-axis") {
@@ -119,7 +120,7 @@ const printHelp = () => {
 
 选项：
   -o, --output <文件>  输出 GLB 文件名或路径（默认：<资源目录>/<目录名>.glb）
-      --input-up-axis <轴>  输入 OBJ 的上方向 X/Y/Z（默认：Z）
+      --input-up-axis <轴>  输入 OBJ 的上方向 AUTO/X/Y/Z（默认：AUTO）
       --output-up-axis <轴> 输出 GLB 的上方向 X/Y/Z（默认：Y）
   -h, --help           显示帮助
 
@@ -164,6 +165,47 @@ const collectFiles = async (directory, extensionSet) => {
     return files;
 };
 
+/** 根据所有 OBJ 顶点的最小包围盒推断上方向；飞机模型通常高度是最小跨度。 */
+const detectInputUpAxis = async (objFiles) => {
+    const minimum = [Infinity, Infinity, Infinity];
+    const maximum = [-Infinity, -Infinity, -Infinity];
+
+    for (const objPath of objFiles) {
+        const sourceText = await readFile(objPath, "utf8");
+
+        for (const line of sourceText.split(/\r?\n/u)) {
+            const trimmedLine = line.trim();
+
+            if (!/^v\s/iu.test(trimmedLine)) {
+                continue;
+            }
+
+            const values = trimmedLine.slice(1).trim().split(/\s+/u).slice(0, 3).map(Number);
+
+            if (values.length < 3 || values.some((value) => !Number.isFinite(value))) {
+                continue;
+            }
+
+            values.forEach((value, axis) => {
+                minimum[axis] = Math.min(minimum[axis], value);
+                maximum[axis] = Math.max(maximum[axis], value);
+            });
+        }
+    }
+
+    const spans = maximum.map((value, axis) => value - minimum[axis]);
+    const smallestAxis = spans.indexOf(Math.min(...spans));
+    const axisName = ["X", "Y", "Z"][smallestAxis];
+
+    if (axisName === undefined || !Number.isFinite(spans[smallestAxis])) {
+        throw new Error("无法根据 OBJ 顶点推断输入上方向，请使用 --input-up-axis 指定。");
+    }
+
+    console.log(`自动检测输入上方向：${axisName}（跨度 X=${spans[0].toFixed(3)}，Y=${spans[1].toFixed(3)}，Z=${spans[2].toFixed(3)}）`);
+
+    return axisName;
+};
+
 /** 把文件名归一化后用于模糊匹配 OBJ 与贴图的共同命名片段。 */
 const normalizeName = (filePath) => {
     return basename(filePath, extname(filePath))
@@ -199,17 +241,26 @@ const createGeneratedMaterial = (objPath, objectIndex, textureIndex, vertexCount
 
         return TEXTURE_PATTERNS.DIFFUSE.test(fileName) && !TEXTURE_PATTERNS.OCCLUSION.test(fileName) && !TEXTURE_PATTERNS.NORMAL.test(fileName);
     });
-    const diffuseTexture = selectTexture(objPath, diffuseCandidates, textureIndex, vertexCount);
+    const fallbackDiffuseCandidates = imageFiles.filter((filePath) => {
+        const fileName = basename(filePath);
+
+        return !TEXTURE_PATTERNS.OCCLUSION.test(fileName) && !TEXTURE_PATTERNS.NORMAL.test(fileName) && !TEXTURE_PATTERNS.ROUGHNESS.test(fileName);
+    });
+    const diffuseTexture = selectTexture(objPath, diffuseCandidates.length > 0 ? diffuseCandidates : fallbackDiffuseCandidates, textureIndex, vertexCount);
     const matchingName = diffuseTexture === undefined ? "" : normalizeName(diffuseTexture);
     const findRelated = (pattern) => {
-        return imageFiles.find((filePath) => {
+        const relatedCandidates = imageFiles.filter((filePath) => pattern.test(basename(filePath)));
+        const namedRelated = relatedCandidates.find((filePath) => {
             const fileName = basename(filePath);
 
-            return pattern.test(fileName) && (matchingName === "" || normalizeName(filePath).includes(matchingName));
+            return matchingName === "" || normalizeName(filePath).includes(matchingName);
         });
+
+        return namedRelated ?? relatedCandidates[0];
     };
     const occlusionTexture = findRelated(TEXTURE_PATTERNS.OCCLUSION);
     const normalTexture = findRelated(TEXTURE_PATTERNS.NORMAL);
+    const roughnessTexture = findRelated(TEXTURE_PATTERNS.ROUGHNESS);
     const materialName = `generated_${objectIndex}_${basename(objPath, EXTENSIONS.OBJ).replace(/[^a-z0-9_]+/giu, "_")}`;
     const lines = [`newmtl ${materialName}`, "Kd 1.0 1.0 1.0", "Ns 0.0"];
 
@@ -223,6 +274,10 @@ const createGeneratedMaterial = (objPath, objectIndex, textureIndex, vertexCount
 
     if (normalTexture !== undefined) {
         lines.push(`map_Bump ${normalTexture}`);
+    }
+
+    if (roughnessTexture !== undefined) {
+        lines.push(`map_Ns ${roughnessTexture}`);
     }
 
     return {
@@ -403,6 +458,9 @@ const bundleDirectory = async (options) => {
     }
 
     const imageFiles = await collectFiles(sourceDirectory, EXTENSIONS.IMAGE);
+    const inputUpAxis = options.inputUpAxis === "AUTO"
+        ? await detectInputUpAxis(objFiles)
+        : options.inputUpAxis;
     const outputPath = resolve(sourceDirectory, options.output ?? `${basename(sourceDirectory)}.glb`);
 
     if (!isAbsolute(outputPath) || !outputPath.startsWith(`${sourceDirectory}/`)) {
@@ -422,7 +480,7 @@ const bundleDirectory = async (options) => {
             binary: true,
             checkTransparency: true,
             doubleSidedMaterial: true,
-            inputUpAxis: options.inputUpAxis,
+            inputUpAxis,
             outputUpAxis: options.outputUpAxis,
             triangleWindingOrderSanitization: true,
         });

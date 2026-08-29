@@ -7520,3 +7520,25 @@
 - `scripts/bundleGlb.js`：增加坐标轴参数，默认按 OBJ Z-up 转换为 glTF Y-up。
 - `sketchfab/Airbus_beluga_xl.glb`：使用新坐标轴约定重新生成模型资源。
 - `taskRecord.md`：追加本次模型初始朝向修复记录。
+
+## 日期
+
+2026-08-29
+
+## 任务目的
+
+修复 Boeing 727 资源目录打包后贴图缺失和初始朝向错误的问题。
+
+## 完成过程
+
+1. 检查 Boeing 727 目录，确认 OBJ 缺少实际 MTL，主颜色文件名为 `Boeing727_coloe.png`，且 `R`、Normal、AO 贴图使用了不同命名约定。
+2. 扩展自动材质识别，支持 `coloe` 颜色拼写变体、独立 R 粗糙度贴图，以及在材质名称不一致时回退到同类型贴图。
+3. 增加 AUTO 输入上方向检测：根据 OBJ 顶点包围盒最小跨度推断高度轴；Boeing 727 自动识别为 Y-up，转换为视窗使用的 Y-up 时不再旋转模型。
+4. 从桌面源目录重新生成 `sketchfab/Boeing_727.glb`，确认 GLB v2 合法，包含 base color、roughness、normal 和 AO 贴图。
+5. 运行脚本语法检查、类型检查、生产构建和 `git diff --check`。
+
+## 修改具体文件
+
+- `scripts/bundleGlb.js`：增加自动上方向检测和 Boeing 727 贴图命名兼容处理。
+- `sketchfab/Boeing_727.glb`：使用修复后的材质和坐标轴重新生成模型资源。
+- `taskRecord.md`：追加本次 Boeing 727 资源修复记录。
