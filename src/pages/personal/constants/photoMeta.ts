@@ -1,4 +1,5 @@
-const modelPhotoUrls = [
+// 飞机模型目录图片URL列表
+const MODEL_PHOTO_URLS = [
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model/PANA9814.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model/PANA9815.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model/PANA9853.jpg",
@@ -45,13 +46,10 @@ const modelPhotoUrls = [
 ];
 /** 飞机照片原图 URL 列表，不含构建期预览数据，供统计与异步相册模块复用。 */
 export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_0304.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_1567.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2559.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2716.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2717.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2718.JPG",
-    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2719.JPG",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=arknights&key=1787967669888_IMG_2431.JPG",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=arknights&key=1787967670578_IMG_2432.jpg",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=arknights&key=1787967670920_IMG_2433.jpg",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=arknights&key=1787967671732_IMG_2435.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2720.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_2721.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=IMG_6066.jpg",
@@ -120,7 +118,7 @@ export const AIRCRAFT_PHOTO_ORIGINAL_URLS: readonly string[] = [
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=PANA1322.jpg",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=dblack%202026-03-30%201852465D953797B18F.JPG",
     // 分界线 - 模型目录
-    ...modelPhotoUrls,
+    ...MODEL_PHOTO_URLS,
 ] as const;
 
 /** 相册目录筛选「全部」选项值。 */
