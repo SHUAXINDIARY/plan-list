@@ -29,8 +29,12 @@ const TEXTURE_PATTERNS = Object.freeze({
 });
 /** 可选参数默认值。输出文件默认使用输入目录名称。 */
 const DEFAULT_OPTIONS = Object.freeze({
+    inputUpAxis: "Z",
     output: undefined,
+    outputUpAxis: "Y",
 });
+/** obj2gltf 支持的三种输入/输出上方向。 */
+const UP_AXES = new Set(["X", "Y", "Z"]);
 
 /** 将依赖加载失败转换为包含安装命令的可操作错误。 */
 const loadObj2Gltf = () => {
@@ -63,14 +67,29 @@ const parseArguments = (argumentsList) => {
             process.exit(0);
         }
 
-        if (argument === "--output" || argument === "-o") {
+        if (argument === "--output" || argument === "-o" || argument === "--input-up-axis" || argument === "--output-up-axis") {
             const value = argumentsList[index + 1];
 
             if (!value || value.startsWith("-")) {
-                throw new Error(`${argument} 需要一个输出文件路径。`);
+                throw new Error(`${argument} 需要一个参数。`);
             }
 
-            options.output = value;
+            if (argument === "--output" || argument === "-o") {
+                options.output = value;
+            } else {
+                const axis = value.toUpperCase();
+
+                if (!UP_AXES.has(axis)) {
+                    throw new Error(`${argument} 只支持 X、Y 或 Z。`);
+                }
+
+                if (argument === "--input-up-axis") {
+                    options.inputUpAxis = axis;
+                } else {
+                    options.outputUpAxis = axis;
+                }
+            }
+
             index += 1;
             continue;
         }
@@ -100,6 +119,8 @@ const printHelp = () => {
 
 选项：
   -o, --output <文件>  输出 GLB 文件名或路径（默认：<资源目录>/<目录名>.glb）
+      --input-up-axis <轴>  输入 OBJ 的上方向 X/Y/Z（默认：Z）
+      --output-up-axis <轴> 输出 GLB 的上方向 X/Y/Z（默认：Y）
   -h, --help           显示帮助
 
 示例：
@@ -401,6 +422,8 @@ const bundleDirectory = async (options) => {
             binary: true,
             checkTransparency: true,
             doubleSidedMaterial: true,
+            inputUpAxis: options.inputUpAxis,
+            outputUpAxis: options.outputUpAxis,
             triangleWindingOrderSanitization: true,
         });
 

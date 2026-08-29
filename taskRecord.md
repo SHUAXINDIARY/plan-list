@@ -7499,3 +7499,24 @@
 
 - `scripts/bundleGlb.js`：修正无 MTL 多 diffuse 贴图的默认匹配顺序。
 - `taskRecord.md`：追加本次贴图错位修复记录。
+
+## 日期
+
+2026-08-29
+
+## 任务目的
+
+修复 Airbus Beluga GLB 加载后的初始朝向异常，使模型坐标约定与模型视窗及参考 `air1_747.glb` 一致。
+
+## 完成过程
+
+1. 对比生成 GLB 与 `air1_747.glb` 的节点矩阵和顶点包围盒，确认 Beluga OBJ 使用 Z 轴作为高度、Y 轴作为机身长度，而视窗按 Y 轴向上、Z 轴为机身长度处理。
+2. 将 `obj2gltf` 转换参数从默认 Y→Y 调整为 Z→Y，让转换阶段完成坐标轴变换；同时增加 `--input-up-axis` 和 `--output-up-axis` 参数，保留其他模型来源的覆盖能力。
+3. 重新生成 `sketchfab/Airbus_beluga_xl.glb`，确认位置访问器包围盒已变为 X=翼展、Y=高度、Z=机身长度，且 GLB v2 和贴图资源保持有效。
+4. 运行脚本语法检查、类型检查和生产构建验证。
+
+## 修改具体文件
+
+- `scripts/bundleGlb.js`：增加坐标轴参数，默认按 OBJ Z-up 转换为 glTF Y-up。
+- `sketchfab/Airbus_beluga_xl.glb`：使用新坐标轴约定重新生成模型资源。
+- `taskRecord.md`：追加本次模型初始朝向修复记录。
