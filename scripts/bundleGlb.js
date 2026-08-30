@@ -30,12 +30,29 @@ const TEXTURE_PATTERNS = Object.freeze({
 });
 /** 可选参数默认值。输出文件默认使用输入目录名称。 */
 const DEFAULT_OPTIONS = Object.freeze({
+    flipForward: "AUTO",
     inputUpAxis: "AUTO",
     output: undefined,
     outputUpAxis: "Y",
 });
 /** obj2gltf 支持的三种输入/输出上方向，以及自动检测输入轴的特殊值。 */
 const UP_AXES = new Set(["AUTO", "X", "Y", "Z"]);
+/** 自动识别需要与视窗约定翻转前后方向的资源目录名称。 */
+const FORWARD_FLIP_DIRECTORY_PATTERN = /(?:^|[-_ ])(?:an)?225(?:$|[-_ ])/iu;
+/** 绕输出 Y 轴旋转 180 度，将机头前后方向翻转但保持上下方向不变。 */
+const FORWARD_FLIP_MATRIX = Object.freeze([
+    -1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, -1, 0,
+    0, 0, 0, 1,
+]);
+/** An-225 OBJ 的 X 轴为机身长度、Z 轴为翼展且 Y 轴向下；按列主序映射 x'=z、y'=-y、z'=-x。 */
+const AN225_AXIS_ALIGNMENT_MATRIX = Object.freeze([
+    0, 0, -1, 0,
+    0, -1, 0, 0,
+    1, 0, 0, 0,
+    0, 0, 0, 1,
+]);
 
 /** 将依赖加载失败转换为包含安装命令的可操作错误。 */
 const loadObj2Gltf = () => {
@@ -66,6 +83,16 @@ const parseArguments = (argumentsList) => {
         if (argument === "--help" || argument === "-h") {
             printHelp();
             process.exit(0);
+        }
+
+        if (argument === "--flip-forward") {
+            options.flipForward = true;
+            continue;
+        }
+
+        if (argument === "--no-flip-forward") {
+            options.flipForward = false;
+            continue;
         }
 
         if (argument === "--output" || argument === "-o" || argument === "--input-up-axis" || argument === "--output-up-axis") {
@@ -122,6 +149,8 @@ const printHelp = () => {
   -o, --output <文件>  输出 GLB 文件名或路径（默认：<资源目录>/<目录名>.glb）
       --input-up-axis <轴>  输入 OBJ 的上方向 AUTO/X/Y/Z（默认：AUTO）
       --output-up-axis <轴> 输出 GLB 的上方向 X/Y/Z（默认：Y）
+      --flip-forward       绕竖直轴旋转 180°，翻转机头前后方向
+      --no-flip-forward    禁用自动前后方向翻转
   -h, --help           显示帮助
 
 示例：
@@ -443,6 +472,52 @@ const assertGlbV2 = (glb) => {
     }
 };
 
+/** 根据目录名和显式参数决定需要写入 GLB 根节点的模型变换。 */
+const getRootTransformMatrix = (sourceDirectory, option) => {
+    if (typeof option === "boolean") {
+        return option ? FORWARD_FLIP_MATRIX : undefined;
+    }
+
+    return FORWARD_FLIP_DIRECTORY_PATTERN.test(basename(sourceDirectory)) || /antonov/iu.test(basename(sourceDirectory))
+        ? AN225_AXIS_ALIGNMENT_MATRIX
+        : undefined;
+};
+
+/** 在 GLB 场景根部增加旋转节点，保留原始网格、材质和访问器数据。 */
+const wrapGlbWithTransform = (glb, matrix) => {
+    const jsonLength = glb.readUInt32LE(12);
+    const json = JSON.parse(glb.subarray(20, 20 + jsonLength).toString("utf8").trim());
+    const sceneIndex = json.scene ?? 0;
+    const scene = json.scenes?.[sceneIndex];
+
+    if (scene === undefined || !Array.isArray(scene.nodes) || !Array.isArray(json.nodes)) {
+        throw new Error("GLB 缺少可包装的场景根节点。");
+    }
+
+    const rootNodeIndex = json.nodes.length;
+    json.nodes.push({
+        children: [...scene.nodes],
+        matrix: [...matrix],
+        name: "bundleGlb_root_transform",
+    });
+    scene.nodes = [rootNodeIndex];
+
+    const jsonBuffer = Buffer.from(JSON.stringify(json), "utf8");
+    const paddedJsonLength = Math.ceil(jsonBuffer.length / 4) * 4;
+    const paddedJson = Buffer.concat([jsonBuffer, Buffer.alloc(paddedJsonLength - jsonBuffer.length, 0x20)]);
+    const binaryChunks = glb.subarray(20 + jsonLength);
+    const header = Buffer.alloc(12);
+    const jsonHeader = Buffer.alloc(8);
+
+    header.writeUInt32LE(GLB_MAGIC, 0);
+    header.writeUInt32LE(GLB_VERSION, 4);
+    header.writeUInt32LE(12 + 8 + paddedJson.length + binaryChunks.length, 8);
+    jsonHeader.writeUInt32LE(paddedJson.length, 0);
+    jsonHeader.writeUInt32LE(0x4e4f534a, 4);
+
+    return Buffer.concat([header, jsonHeader, paddedJson, binaryChunks]);
+};
+
 /** 将输入目录转换为单个内嵌资源的 GLB，并在失败时保留清晰上下文。 */
 const bundleDirectory = async (options) => {
     const sourceDirectory = resolve(options.sourceDirectory);
@@ -461,6 +536,7 @@ const bundleDirectory = async (options) => {
     const inputUpAxis = options.inputUpAxis === "AUTO"
         ? await detectInputUpAxis(objFiles)
         : options.inputUpAxis;
+    const rootTransformMatrix = getRootTransformMatrix(sourceDirectory, options.flipForward);
     const outputPath = resolve(sourceDirectory, options.output ?? `${basename(sourceDirectory)}.glb`);
 
     if (!isAbsolute(outputPath) || !outputPath.startsWith(`${sourceDirectory}/`)) {
@@ -485,11 +561,15 @@ const bundleDirectory = async (options) => {
             triangleWindingOrderSanitization: true,
         });
 
-        assertGlbV2(glb);
+        const outputGlb = rootTransformMatrix !== undefined
+            ? wrapGlbWithTransform(glb, rootTransformMatrix)
+            : glb;
+
+        assertGlbV2(outputGlb);
         await mkdir(dirname(outputPath), { recursive: true });
-        await writeFile(outputPath, glb);
+        await writeFile(outputPath, outputGlb);
         console.log(`打包完成：${objFiles.length} 个 OBJ，${imageFiles.length} 张图片`);
-        console.log(`输出文件：${outputPath}（${glb.length} bytes）`);
+        console.log(`输出文件：${outputPath}（${outputGlb.length} bytes，根节点变换：${rootTransformMatrix === undefined ? "无" : "有"}）`);
     } finally {
         await rm(temporaryDirectory, { recursive: true, force: true });
     }
