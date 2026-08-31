@@ -1,5 +1,8 @@
 // 飞机模型目录图片URL列表
 const MODEL_PHOTO_URLS = [
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788144426906_PANA2716.JPG",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788144428697_PANA2728.JPG",
+    "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788144430508_PANA2730.JPG",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788000286363_PANA2696.jpg",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788000288568_PANA2694.jpg",
     "https://akdb.nixideshuaxin.workers.dev/images/file?bucket=plan&key=plane-model%2F1788000290434_PANA2688.jpg",
