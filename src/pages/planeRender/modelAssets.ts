@@ -75,6 +75,13 @@ const getModelSourcePath = (modulePath: string): string => {
     return modulePath.replace(PROJECT_ROOT_RELATIVE_PREFIX_PATTERN, "");
 };
 
+const SOURCE_PATH_OSS = {
+    Boeing_727: "https://img.shuaxinjs.cn/glb/Boeing_727.glb",
+    air1_747: "https://img.shuaxinjs.cn/glb/air1_747.glb",
+    "antonov_an-225": "https://img.shuaxinjs.cn/glb/antonov_an-225.glb",
+    "225": "https://img.shuaxinjs.cn/glb/225.glb",
+};
+
 /** 各模型目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录。 */
 export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
     Object.entries(modelModules).map(
@@ -83,12 +90,18 @@ export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
             () => Promise<string>,
         ]): AircraftModelAsset => {
             const sourcePath = getModelSourcePath(modulePath);
+            const label = getModelLabel(sourcePath);
+            const id = getModelId(sourcePath);
+            const key = sourcePath.split("/")?.[1];
+            const newPath = SOURCE_PATH_OSS?.[key?.split(".")?.[0]];
 
             return {
-                id: getModelId(sourcePath),
-                label: getModelLabel(sourcePath),
-                sourcePath,
-                loadUrl,
+                id,
+                label,
+                sourcePath: newPath ? newPath : sourcePath,
+                loadUrl: newPath ? () => Promise.resolve(newPath) : loadUrl,
             };
         },
     );
+
+console.log(AIRCRAFT_MODEL_ASSETS);
