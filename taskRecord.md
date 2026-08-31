@@ -7787,3 +7787,26 @@
 
 - `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：将超限文件处理从删除改为移动到 `upload_oss_glb/`。
 - `taskRecord.md`：追加本次处理记录。
+
+## 日期
+
+2026-08-31
+
+## 任务目的
+
+移除模型资源中的静态 OSS 映射，改为构建期读取 `upload_oss_glb/` 目录并生成远程模型资源。
+
+## 完成过程
+
+1. 调整 Sketchfab 体积检查插件，在移动超限文件后扫描 `upload_oss_glb/` 中的 GLB 文件。
+2. 生成 `uploadOssGlbAssets.generated.ts` 清单，记录原始模型相对路径和 OSS 文件名。
+3. 移除 `SOURCE_PATH_OSS` 及旧删除路径映射，页面端统一使用 `https://img.shuaxinjs.cn/glb/` 加文件名作为资源和加载路径。
+4. 按用户要求未执行构建或测试。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：构建期生成 `upload_oss_glb` GLB 资源清单。
+- `src/pages/planeRender/modelAssets.ts`：改用构建期清单生成 OSS 模型资源，删除静态 OSS 映射。
+- `src/pages/planeRender/deletedSketchfabAssets.generated.ts`：移除旧删除路径生成模块。
+- `src/pages/planeRender/uploadOssGlbAssets.generated.ts`：新增构建期清单的开发兜底文件。
+- `taskRecord.md`：追加本次资源加载调整记录。
