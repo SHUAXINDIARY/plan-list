@@ -2,6 +2,7 @@ import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { pluginSvgr } from "@rsbuild/plugin-svgr";
 import { pluginAircraftPhotoPreviews } from "./rsbuild_plugins/pluginAircraftPhotoPreviews";
+import { pluginSketchfabFileSizeGuard } from "./rsbuild_plugins/pluginSketchfabFileSizeGuard";
 import { codeInspectorPlugin } from 'code-inspector-plugin';
 
 
@@ -40,5 +41,10 @@ export default defineConfig({
             ]
         }
     },
-    plugins: [pluginReact(), pluginSvgr(), pluginAircraftPhotoPreviews()],
+    plugins: [
+        pluginReact(),
+        pluginSvgr(),
+        pluginSketchfabFileSizeGuard(),
+        pluginAircraftPhotoPreviews(),
+    ],
 });

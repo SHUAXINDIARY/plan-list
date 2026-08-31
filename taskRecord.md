@@ -7723,3 +7723,25 @@
 ## 修改具体文件
 
 - `taskRecord.md`：记录类型检查的既有阻断及其与本次变更的边界。
+
+## 日期
+
+2026-08-31
+
+## 任务目的
+
+新增构建期插件，清理 `sketchfab/` 目录中超过 25 MiB 的文件，避免超大模型参与构建。
+
+## 完成过程
+
+1. 阅读项目规则、Rsbuild 插件约定和现有构建插件，确认使用 `onBeforeBuild` 在生产构建开始前执行清理。
+2. 新增递归文件扫描与删除逻辑，跳过符号链接；缺少 `sketchfab/` 时跳过，其他扫描或删除错误中止构建。
+3. 将新插件加入 `rsbuild.config.ts` 的插件列表，并运行生产构建；构建前成功删除 `sketchfab/Boeing_727.glb`，构建流程通过。
+4. 检查清理后的 `sketchfab/` 文件大小和变更 diff，确认没有剩余超过 25 MiB 的文件或空白错误。
+5. 插件文件独立 TypeScript 编译检查通过；项目 `pnpm run type-check` 仍被 `AircraftModelViewport.tsx` 和 `modelAssets.ts` 中既有错误阻断。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：新增 Sketchfab 超大文件构建前检查与删除插件。
+- `rsbuild.config.ts`：注册 `pluginSketchfabFileSizeGuard`。
+- `taskRecord.md`：追加本次插件实现记录。
