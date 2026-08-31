@@ -82,6 +82,8 @@ const SOURCE_PATH_OSS = {
     "225": "https://img.shuaxinjs.cn/glb/225.glb",
 };
 
+const isDev = () => window.location.href.includes("localhost");
+
 /** 各模型目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录。 */
 export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
     Object.entries(modelModules).map(
@@ -93,7 +95,9 @@ export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
             const label = getModelLabel(sourcePath);
             const id = getModelId(sourcePath);
             const key = sourcePath.split("/")?.[1];
-            const newPath = SOURCE_PATH_OSS?.[key?.split(".")?.[0]];
+            const newPath = isDev
+                ? ""
+                : SOURCE_PATH_OSS?.[key?.split(".")?.[0]];
 
             return {
                 id,
@@ -103,5 +107,3 @@ export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
             };
         },
     );
-
-console.log(AIRCRAFT_MODEL_ASSETS);
