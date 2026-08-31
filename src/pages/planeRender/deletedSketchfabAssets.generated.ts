@@ -2,4 +2,5 @@
 // Do not edit by hand.
 export const deletedSketchfabAssetPaths = {
     "sketchfab/Boeing_727.glb": true,
+    "sketchfab/boeing_727.glb": true,
 } as const satisfies Record<string, true>;

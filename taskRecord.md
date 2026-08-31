@@ -7768,3 +7768,22 @@
 - `src/pages/planeRender/deletedSketchfabAssets.generated.ts`：新增开发模式下的空映射兜底。
 - `src/pages/planeRender/modelAssets.ts`：仅为实际删除的 Sketchfab 文件切换 OSS 地址。
 - `taskRecord.md`：追加本次 OSS 替换联动记录。
+
+## 日期
+
+2026-08-31
+
+## 任务目的
+
+将超过 25 MiB 的 Sketchfab 文件从删除改为移动到项目根目录的 `upload_oss_glb/` 目录。
+
+## 完成过程
+
+1. 保留原有超限文件扫描、路径记录和 OSS 替换联动逻辑。
+2. 将超限文件按 `sketchfab/` 下的相对目录移动到根目录 `upload_oss_glb/`，移动前自动创建目标目录。
+3. 按用户要求未执行构建或测试。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：将超限文件处理从删除改为移动到 `upload_oss_glb/`。
+- `taskRecord.md`：追加本次处理记录。

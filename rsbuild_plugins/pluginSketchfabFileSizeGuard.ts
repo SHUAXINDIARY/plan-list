@@ -1,4 +1,4 @@
-import { readFile, readdir, stat, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { RsbuildPlugin } from "@rsbuild/core";
@@ -6,13 +6,14 @@ import type { RsbuildPlugin } from "@rsbuild/core";
 const PLUGIN_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(PLUGIN_DIRECTORY, "..");
 const SKETCHFAB_DIRECTORY = join(PROJECT_ROOT, "sketchfab");
+const UPLOAD_OSS_GLB_DIRECTORY = join(PROJECT_ROOT, "upload_oss_glb");
 const MAX_SKETCHFAB_FILE_SIZE_BYTES = 25 * 1024 * 1024;
 const DELETED_SKETCHFAB_ASSETS_MODULE_PATH = join(
     PROJECT_ROOT,
     "src/pages/planeRender/deletedSketchfabAssets.generated.ts",
 );
 
-// 读取历史删除记录，保证本地文件删除后后续构建仍能使用对应的 OSS 兜底资源。
+// 读取历史超限记录，保证本地文件移出后后续构建仍能使用对应的 OSS 兜底资源。
 const readDeletedSketchfabAssetPaths = async (): Promise<string[]> => {
     try {
         const moduleSource = await readFile(DELETED_SKETCHFAB_ASSETS_MODULE_PATH, "utf8");
@@ -31,7 +32,7 @@ const readDeletedSketchfabAssetPaths = async (): Promise<string[]> => {
     }
 };
 
-// 仅保留当前文件系统中仍不存在的历史路径；文件恢复后不再被误判为已删除资源。
+// 仅保留当前文件系统中仍不存在的历史路径；文件恢复后不再被误判为已移出资源。
 const retainMissingDeletedSketchfabAssetPaths = async (
     deletedFilePaths: string[],
 ): Promise<string[]> => {
@@ -85,7 +86,7 @@ const findOversizedSketchfabFiles = async (directoryPath: string): Promise<strin
     return oversizedFiles;
 };
 
-// 写入当前仍被删除的路径，供页面端只替换这些模型的 OSS 地址。
+// 写入当前仍被移出的路径，供页面端只替换这些模型的 OSS 地址。
 const writeDeletedSketchfabAssetsModule = async (deletedFilePaths: string[]): Promise<void> => {
     const deletedFileEntries = deletedFilePaths
         .map((filePath: string): string => `    ${JSON.stringify(filePath)}: true,`)
@@ -105,8 +106,8 @@ ${deletedFileEntries}
     await writeFile(DELETED_SKETCHFAB_ASSETS_MODULE_PATH, moduleSource, "utf8");
 };
 
-// 读取并删除所有超限模型，同时返回本次实际删除的项目相对路径。
-const removeOversizedSketchfabFiles = async (): Promise<string[]> => {
+// 读取并移动所有超限模型，同时返回本次实际移出的项目相对路径。
+const moveOversizedSketchfabFiles = async (): Promise<string[]> => {
     let oversizedFiles: string[];
     const previousDeletedFilePaths = await readDeletedSketchfabAssetPaths();
 
@@ -129,11 +130,15 @@ const removeOversizedSketchfabFiles = async (): Promise<string[]> => {
     const currentDeletedFilePaths: string[] = [];
 
     for (const filePath of oversizedFiles) {
-        await unlink(filePath);
         const relativeFilePath = relative(PROJECT_ROOT, filePath).split(sep).join("/");
+        const relativeSketchfabFilePath = relative(SKETCHFAB_DIRECTORY, filePath);
+        const uploadFilePath = join(UPLOAD_OSS_GLB_DIRECTORY, relativeSketchfabFilePath);
+
+        await mkdir(dirname(uploadFilePath), { recursive: true });
+        await rename(filePath, uploadFilePath);
         currentDeletedFilePaths.push(relativeFilePath);
         console.warn(
-            `[sketchfab-size-guard] 已删除超过 25 MiB 的文件：${relativeFilePath}`,
+            `[sketchfab-size-guard] 已移动超过 25 MiB 的文件：${relativeFilePath} -> ${relative(uploadFilePath, UPLOAD_OSS_GLB_DIRECTORY).split(sep).join("/")}`,
         );
     }
 
@@ -153,12 +158,12 @@ const removeOversizedSketchfabFiles = async (): Promise<string[]> => {
     return deletedFilePaths;
 };
 
-// 在生产构建开始前清理超大 Sketchfab 模型，避免它们参与资源处理和最终产物生成。
+// 在生产构建开始前移出超大 Sketchfab 模型，避免它们参与资源处理和最终产物生成。
 export const pluginSketchfabFileSizeGuard = (): RsbuildPlugin => ({
     name: "plugin-sketchfab-file-size-guard",
     setup(api): void {
         api.onBeforeBuild(async (): Promise<void> => {
-            await removeOversizedSketchfabFiles();
+            await moveOversizedSketchfabFiles();
         });
     },
 });

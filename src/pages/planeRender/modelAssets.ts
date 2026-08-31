@@ -78,7 +78,7 @@ const getModelSourcePath = (modulePath: string): string => {
 };
 
 const SOURCE_PATH_OSS: Record<string, string> = {
-    Boeing_727: "https://img.shuaxinjs.cn/glb/Boeing_727.glb",
+    boeing_727: "https://img.shuaxinjs.cn/glb/boeing_727.glb",
     air1_747: "https://img.shuaxinjs.cn/glb/air1_747.glb",
     "antonov_an-225": "https://img.shuaxinjs.cn/glb/antonov_an-225.glb",
     "225": "https://img.shuaxinjs.cn/glb/225.glb",
