@@ -7810,3 +7810,22 @@
 - `src/pages/planeRender/deletedSketchfabAssets.generated.ts`：移除旧删除路径生成模块。
 - `src/pages/planeRender/uploadOssGlbAssets.generated.ts`：新增构建期清单的开发兜底文件。
 - `taskRecord.md`：追加本次资源加载调整记录。
+
+## 日期
+
+2026-08-31
+
+## 任务目的
+
+统一 `fr24-3d-models-glbv2/models/` 模型进入渲染视窗时的初始朝向，使机身保持 Y-up、机头朝向视窗约定的 +Z 前方。
+
+## 完成过程
+
+1. 检查 FR24 转换模型的节点与包围盒方向，确认代表性模型的机头位于 -Z 端，而视窗适配/正面相机从 +Z 观察。
+2. 在 `AircraftModelViewport` 的 GLB 加载阶段识别 FR24 模型路径，并为其根节点追加绕 Y 轴 180° 的前后方向校正。
+3. 保留现有尺寸归一化、Y-up、姿态 Pivot、动画和其他来源模型的处理方式；按要求不运行构建或测试。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：为 FR24 模型统一追加 180° Y 轴导入方向校正。
+- `taskRecord.md`：追加本次 FR24 模型初始姿态修正记录。

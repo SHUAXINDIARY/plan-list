@@ -206,6 +206,10 @@ const MODEL_FILL_LIGHT_COLOR_TOKEN = "--pl-model-fill-light-color";
 const DEFAULT_RENDER_PIXEL_RATIO = 2;
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
 const DEGREES_TO_RADIANS = Math.PI / 180;
+/** 需要进行导入姿态校正的 FR24 GLB 资源路径前缀。 */
+const FR24_MODEL_SOURCE_PREFIX = "fr24-3d-models-glbv2/models/";
+/** FR24 模型以 -Z 为机头方向，绕 Y 轴 180° 后与视窗 +Z 前方约定一致。 */
+const FR24_MODEL_FORWARD_CORRECTION = Math.PI;
 /** 3D 姿态操控器允许的最低俯仰角。 */
 const MINIMUM_PITCH_ANGLE = -60;
 /** 3D 姿态操控器允许的最高俯仰角。 */
@@ -561,6 +565,18 @@ const applyRenderSettings = (
 /** 将控制面板中的角度单位转换为 Three.js 使用的弧度。 */
 const degreesToRadians = (degrees: number): number =>
     degrees * DEGREES_TO_RADIANS;
+
+/** 将模型资源的导入坐标方向统一到视窗约定的机头朝 +Z、机身 Y-up。 */
+const applyModelSourceOrientation = (
+    model: THREE.Object3D,
+    sourcePath: string,
+): void => {
+    if (!sourcePath.startsWith(FR24_MODEL_SOURCE_PREFIX)) {
+        return;
+    }
+
+    model.rotateY(FR24_MODEL_FORWARD_CORRECTION);
+};
 
 /** 将姿态面板的三轴角度写入模型根节点，保持模型资源本身不变。 */
 const applyAircraftAttitude = (
@@ -1938,6 +1954,7 @@ export const AircraftModelViewport = ({
 
                 const model = gltf.scene;
                 normalizeAircraftModel(model);
+                applyModelSourceOrientation(model, asset.sourcePath);
 
                 const aircraftAttitudePivot = new THREE.Group();
                 aircraftAttitudePivot.add(model);
