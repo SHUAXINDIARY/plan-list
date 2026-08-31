@@ -1,3 +1,5 @@
+import { deletedSketchfabAssetPaths } from "./deletedSketchfabAssets.generated";
+
 /** 可由模型浏览器加载的单个 GLB 静态资源。 */
 export interface AircraftModelAsset {
     /** 由资源相对路径派生的稳定选择标识。 */
@@ -75,35 +77,78 @@ const getModelSourcePath = (modulePath: string): string => {
     return modulePath.replace(PROJECT_ROOT_RELATIVE_PREFIX_PATTERN, "");
 };
 
-const SOURCE_PATH_OSS = {
+const SOURCE_PATH_OSS: Record<string, string> = {
     Boeing_727: "https://img.shuaxinjs.cn/glb/Boeing_727.glb",
     air1_747: "https://img.shuaxinjs.cn/glb/air1_747.glb",
     "antonov_an-225": "https://img.shuaxinjs.cn/glb/antonov_an-225.glb",
     "225": "https://img.shuaxinjs.cn/glb/225.glb",
 };
 
-const isDev = () => window.location.href.includes("localhost");
+const deletedSketchfabAssetPathSet = new Set(Object.keys(deletedSketchfabAssetPaths));
 
-/** 各模型目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录。 */
-export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] =
-    Object.entries(modelModules).map(
-        ([modulePath, loadUrl]: [
-            string,
-            () => Promise<string>,
-        ]): AircraftModelAsset => {
-            const sourcePath = getModelSourcePath(modulePath);
-            const label = getModelLabel(sourcePath);
-            const id = getModelId(sourcePath);
-            const key = sourcePath.split("/")?.[1];
-            const newPath = isDev
-                ? ""
-                : SOURCE_PATH_OSS?.[key?.split(".")?.[0]];
+// 判断当前页面是否运行在本地开发服务器，开发模式不启用 OSS 替换。
+const isDev = (): boolean => window.location.href.includes("localhost");
 
-            return {
-                id,
-                label,
-                sourcePath: newPath ? newPath : sourcePath,
-                loadUrl: newPath ? () => Promise.resolve(newPath) : loadUrl,
-            };
-        },
-    );
+// 从模型相对路径中提取 OSS 映射使用的文件名键，兼容 sketchfab 子目录。
+const getSourceFileKey = (sourcePath: string): string => {
+    const pathSegments = sourcePath.split("/");
+    const sourceFileName = pathSegments[pathSegments.length - 1] ?? sourcePath;
+
+    return sourceFileName.replace(/\.glb$/i, "");
+};
+
+// 仅为构建期确认删除的模型解析 OSS 地址，其他模型保持本地加载路径。
+const getDeletedSketchfabOssPath = (sourcePath: string): string | undefined => {
+    if (isDev() || !deletedSketchfabAssetPathSet.has(sourcePath)) {
+        return undefined;
+    }
+
+    return SOURCE_PATH_OSS[getSourceFileKey(sourcePath)];
+};
+
+/** 各模型目录内可由 glTF 2.0 loader 加载的本地模型资源。 */
+const localAircraftModelAssets: AircraftModelAsset[] = Object.entries(modelModules).map(
+    ([modulePath, loadUrl]: [string, () => Promise<string>]): AircraftModelAsset => {
+        const sourcePath = getModelSourcePath(modulePath);
+        const ossPath = getDeletedSketchfabOssPath(sourcePath);
+
+        return {
+            id: getModelId(sourcePath),
+            label: getModelLabel(sourcePath),
+            sourcePath: ossPath ?? sourcePath,
+            loadUrl: ossPath ? () => Promise.resolve(ossPath) : loadUrl,
+        };
+    },
+);
+const localAircraftModelIdSet = new Set(
+    localAircraftModelAssets.map((asset: AircraftModelAsset): string => asset.id),
+);
+
+// 已被删除的本地模型不再出现在 import.meta.glob 中，这里补充可由 OSS 加载的虚拟资源。
+const deletedSketchfabModelAssets: AircraftModelAsset[] = Object.keys(
+    deletedSketchfabAssetPaths,
+)
+    .map((sourcePath: string): AircraftModelAsset | null => {
+        const ossPath = getDeletedSketchfabOssPath(sourcePath);
+
+        if (!ossPath) {
+            return null;
+        }
+
+        return {
+            id: getModelId(sourcePath),
+            label: getModelLabel(sourcePath),
+            sourcePath: ossPath,
+            loadUrl: () => Promise.resolve(ossPath),
+        };
+    })
+    .filter((asset: AircraftModelAsset | null): asset is AircraftModelAsset => asset !== null);
+
+/** 各模型目录内可由 glTF 2.0 loader 加载的完整 GLB 模型目录，含被清理模型的 OSS 兜底资源。 */
+export const AIRCRAFT_MODEL_ASSETS: readonly AircraftModelAsset[] = [
+    ...localAircraftModelAssets,
+    ...deletedSketchfabModelAssets.filter(
+        (deletedAsset: AircraftModelAsset): boolean =>
+            !localAircraftModelIdSet.has(deletedAsset.id),
+    ),
+];

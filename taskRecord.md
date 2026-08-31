@@ -7745,3 +7745,26 @@
 - `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：新增 Sketchfab 超大文件构建前检查与删除插件。
 - `rsbuild.config.ts`：注册 `pluginSketchfabFileSizeGuard`。
 - `taskRecord.md`：追加本次插件实现记录。
+
+## 日期
+
+2026-08-31
+
+## 任务目的
+
+让模型资源的 OSS 替换逻辑与构建期实际删除的 Sketchfab 文件保持一致。
+
+## 完成过程
+
+1. 在超大文件清理插件中生成当前仍被删除路径的 TypeScript 映射，生产构建前完成写入，并保留历史删除记录。
+2. 在模型资源清单中读取删除路径映射，仅对被删除的 Sketchfab 文件使用 `SOURCE_PATH_OSS`，其他模型继续使用本地构建资源。
+3. 修正生产环境判断为调用 `isDev()`，并按文件名解析 OSS 映射键以兼容嵌套目录。
+4. 运行插件独立类型检查、空白检查和生产构建，确认关联逻辑可正常编译和执行。
+5. 项目 `pnpm run type-check` 仍被 `AircraftModelViewport.tsx` 中既有的未使用变量错误阻断；本次修改已消除 `modelAssets.ts` 的动态索引错误。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginSketchfabFileSizeGuard.ts`：生成本次构建删除文件路径映射。
+- `src/pages/planeRender/deletedSketchfabAssets.generated.ts`：新增开发模式下的空映射兜底。
+- `src/pages/planeRender/modelAssets.ts`：仅为实际删除的 Sketchfab 文件切换 OSS 地址。
+- `taskRecord.md`：追加本次 OSS 替换联动记录。
