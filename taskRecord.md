@@ -8116,3 +8116,23 @@
 - `src/pages/aircraftWiki/index.tsx`：逐项渲染发动机列表。
 - `src/pages/aircraftWiki/index.css`：增加发动机列表的逐行布局样式。
 - `taskRecord.md`：追加发动机逐行展示记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+补充 Boeing 707 与 727 系列机型数据。
+
+## 完成过程
+
+1. 依据 Boeing 707/727 Wikipedia 变体说明和规格资料整理民用主型号。
+2. 新增 Boeing 707 的 `-120/-120B/-220/-320/-320B/-320C/-420` 七个变体。
+3. 新增 Boeing 727 的 `-100/-200` 两个变体，按统一 schema 补齐生产状态、首飞、发动机、座位、航程、尺寸、MTOW 和 Wikipedia 链接。
+4. 完成 JSON 结构复核，目录共 72 条机型记录且新记录字段集合一致。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：新增 Boeing 707、727 两个系列及九条机型记录。
+- `taskRecord.md`：追加 707/727 数据补充记录。

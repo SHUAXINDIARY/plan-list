@@ -1,5 +1,147 @@
 {
   "Boeing": {
+    "707": {
+      "manufacturer": "Boeing",
+      "family": "707",
+      "generation": {
+        "default": {
+          "707-120": {
+            "model": "707-120",
+            "icaoType": "B701",
+            "status": "discontinued",
+            "firstFlight": "1957-12-20",
+            "engines": [
+              "Pratt & Whitney JT3C-6"
+            ],
+            "seats": {
+              "typical": 137,
+              "max": 174
+            },
+            "rangeKm": 6308,
+            "lengthM": 44.22,
+            "wingspanM": 39.88,
+            "heightM": 12.93,
+            "mtowKg": 112000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-120B": {
+            "model": "707-120B",
+            "icaoType": "B701",
+            "status": "discontinued",
+            "firstFlight": "1960-06-22",
+            "engines": [
+              "Pratt & Whitney JT3D-1",
+              "Pratt & Whitney JT3D-3"
+            ],
+            "seats": {
+              "typical": 137,
+              "max": 189
+            },
+            "rangeKm": 6630,
+            "lengthM": 44.22,
+            "wingspanM": 39.88,
+            "heightM": 12.93,
+            "mtowKg": 117000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-220": {
+            "model": "707-220",
+            "icaoType": "B702",
+            "status": "discontinued",
+            "firstFlight": "1959-06-11",
+            "engines": [
+              "Pratt & Whitney JT4A-3"
+            ],
+            "seats": {
+              "typical": 137,
+              "max": 189
+            },
+            "rangeKm": 6660,
+            "lengthM": 44.22,
+            "wingspanM": 39.88,
+            "heightM": 12.93,
+            "mtowKg": 115700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-320": {
+            "model": "707-320",
+            "icaoType": "B703",
+            "status": "discontinued",
+            "firstFlight": "1959-01-11",
+            "engines": [
+              "Pratt & Whitney JT4A-11"
+            ],
+            "seats": {
+              "typical": 141,
+              "max": 189
+            },
+            "rangeKm": 7023,
+            "lengthM": 46.61,
+            "wingspanM": 43.41,
+            "heightM": 12.93,
+            "mtowKg": 141000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-320B": {
+            "model": "707-320B",
+            "icaoType": "B703",
+            "status": "discontinued",
+            "firstFlight": "1962-01-31",
+            "engines": [
+              "Pratt & Whitney JT3D-3B"
+            ],
+            "seats": {
+              "typical": 141,
+              "max": 189
+            },
+            "rangeKm": 9260,
+            "lengthM": 46.61,
+            "wingspanM": 44.42,
+            "heightM": 12.93,
+            "mtowKg": 149700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-320C": {
+            "model": "707-320C",
+            "icaoType": "B703",
+            "status": "discontinued",
+            "firstFlight": "1963-02-19",
+            "engines": [
+              "Pratt & Whitney JT3D-7"
+            ],
+            "seats": {
+              "typical": 147,
+              "max": 219
+            },
+            "rangeKm": 9260,
+            "lengthM": 46.61,
+            "wingspanM": 44.42,
+            "heightM": 12.93,
+            "mtowKg": 152400,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-420": {
+            "model": "707-420",
+            "icaoType": "B704",
+            "status": "discontinued",
+            "firstFlight": "1959-05-19",
+            "engines": [
+              "Rolls-Royce Conway 508"
+            ],
+            "seats": {
+              "typical": 141,
+              "max": 189
+            },
+            "rangeKm": 6940,
+            "lengthM": 46.61,
+            "wingspanM": 43.41,
+            "heightM": 12.93,
+            "mtowKg": 151300,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          }
+        }
+      }
+    },
     "717": {
       "manufacturer": "Boeing",
       "family": "717",
@@ -23,6 +165,56 @@
             "heightM": 8.92,
             "mtowKg": 54885,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_717"
+          }
+        }
+      }
+    },
+    "727": {
+      "manufacturer": "Boeing",
+      "family": "727",
+      "generation": {
+        "default": {
+          "727-100": {
+            "model": "727-100",
+            "icaoType": "B721",
+            "status": "discontinued",
+            "firstFlight": "1963-02-09",
+            "engines": [
+              "Pratt & Whitney JT8D-7",
+              "Pratt & Whitney JT8D-9",
+              "Pratt & Whitney JT8D-11"
+            ],
+            "seats": {
+              "typical": 106,
+              "max": 131
+            },
+            "rangeKm": 4170,
+            "lengthM": 40.59,
+            "wingspanM": 32.92,
+            "heightM": 10.44,
+            "mtowKg": 77000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_727"
+          },
+          "727-200": {
+            "model": "727-200",
+            "icaoType": "B722",
+            "status": "discontinued",
+            "firstFlight": "1967-07-27",
+            "engines": [
+              "Pratt & Whitney JT8D-9",
+              "Pratt & Whitney JT8D-11",
+              "Pratt & Whitney JT8D-15"
+            ],
+            "seats": {
+              "typical": 134,
+              "max": 155
+            },
+            "rangeKm": 4720,
+            "lengthM": 46.69,
+            "wingspanM": 32.92,
+            "heightM": 10.64,
+            "mtowKg": 78000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_727"
           }
         }
       }
