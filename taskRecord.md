@@ -7829,3 +7829,26 @@
 
 - `src/pages/planeRender/AircraftModelViewport.tsx`：为 FR24 模型统一追加 180° Y 轴导入方向校正。
 - `taskRecord.md`：追加本次 FR24 模型初始姿态修正记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+新增“机型WIKI”导航入口，展示 Boeing 与 Airbus 喷气客机型号目录。
+
+## 完成过程
+
+1. 新增机型 WIKI 页面，从现有 `/data/airplan.json` 汇总 Airbus 与 Boeing 型号，并按航司去重统计覆盖数量。
+2. 排除货机及 P2F 货运改型，提供型号搜索、总数概览、加载失败和无匹配状态。
+3. 将页面接入主导航与 `/aircraft-wiki` 路由，并为原有异常文件名保留转发入口。
+4. 按用户要求不进行构建和启动验收；此前的静态检查未发现本次改动空白问题，类型检查受既有 `AircraftModelViewport.tsx` 未使用变量错误阻断。
+
+## 修改具体文件
+
+- `src/App.tsx`：新增“机型WIKI”导航项、懒加载页面和 `/aircraft-wiki` 路由。
+- `src/pages/aircraftWiki/index.tsx`：新增机型目录页面、数据汇总、搜索和状态处理。
+- `src/pages/aircraftWiki/index.css`：新增页面布局、列表、主题和移动端响应式样式。
+- `src/pages/aircraftWiki/index,.tsx`：保留原文件名并转发到规范入口。
+- `taskRecord.md`：追加本次机型 WIKI 页面记录。

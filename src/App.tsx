@@ -37,6 +37,7 @@ interface NavigationItem {
 // 应用主导航配置，后续新增页面时从这里扩展入口。
 const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/", label: "航司WIKI", end: true },
+    { path: "/aircraft-wiki", label: "机型WIKI", end: false },
     { path: "/personal", label: "飞行日志", end: false },
     { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
@@ -46,6 +47,7 @@ const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
+const AircraftWikiPage = lazy(async () => import("./pages/aircraftWiki"));
 const PersonalPage = lazy(async () => import("./pages/personal"));
 const PhotosPage = lazy(async () => import("./pages/photos"));
 const ReferencesPage = lazy(async () => import("./pages/references"));
@@ -140,6 +142,10 @@ const App = (): ReactElement => {
                         <Routes>
                             <Route element={<RouteTransitionLayout />}>
                                 <Route path="/" element={<HomePage />} />
+                                <Route
+                                    path="/aircraft-wiki"
+                                    element={<AircraftWikiPage />}
+                                />
                                 <Route
                                     path="/personal"
                                     element={<PersonalPage />}
