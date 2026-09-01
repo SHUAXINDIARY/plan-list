@@ -43,7 +43,8 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/references", label: "参考资料", end: false },
     { path: "/plane-render", label: "机型模型", end: false },
 ];
-const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
+const AUTHOR_EMAIL = "shuaxinjs@qq.com";
+const REPOSITORY_URL = "https://github.com/SHUAXINDIARY/plane-list";
 
 // 页面组件按路由拆分，避免应用启动时一次性加载全部页面代码。
 const HomePage = lazy(async () => import("./pages/home"));
@@ -125,14 +126,6 @@ const App = (): ReactElement => {
                                     </NavLink>
                                 ),
                             )}
-                            <a
-                                className="app-nav__link"
-                                href={AUTHOR_PROFILE_URL}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                联系作者
-                            </a>
                         </nav>
                     </div>
                 </header>
@@ -166,6 +159,22 @@ const App = (): ReactElement => {
                         </Routes>
                     </Suspense>
                 </main>
+                <footer className="app-footer" aria-label="联系与项目">
+                    <a
+                        className="app-footer__link"
+                        href={`mailto:${AUTHOR_EMAIL}`}
+                    >
+                        联系作者
+                    </a>
+                    <a
+                        className="app-footer__link"
+                        href={REPOSITORY_URL}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        仓库地址
+                    </a>
+                </footer>
                 <BackToTop />
             </div>
         </BrowserRouter>

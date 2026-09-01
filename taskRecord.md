@@ -8198,3 +8198,23 @@
 - `src/pages/planeRender/ModelDir.tsx`：按所属目录分组渲染模型分类。
 - `src/pages/planeRender/index.css`：增加目录分类标题、分组列表及响应式布局样式。
 - `taskRecord.md`：追加模型目录分类记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+移除顶部导航中的联系作者项，并将作者邮箱和项目仓库地址改为全站常显入口。
+
+## 完成过程
+
+1. 从顶部主导航移除“联系作者”外链。
+2. 在应用壳层底部恢复语义化 footer，展示 `shuaxinjs@qq.com` 邮箱和项目 GitHub 仓库地址。
+3. 增加 footer 外链的悬停、键盘焦点及移动端布局样式，避免影响主内容阅读和点击区域。
+
+## 修改具体文件
+
+- `src/App.tsx`：移除顶部作者链接，新增邮箱和仓库常显 footer。
+- `src/App.css`：新增 footer 布局、外链状态和小屏适配样式。
+- `taskRecord.md`：追加联系信息位置调整记录。

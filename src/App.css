@@ -649,6 +649,48 @@ a {
     padding: 1.5rem 1rem max(2rem, env(safe-area-inset-bottom, 0px));
 }
 
+.app-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    width: min(100% - 2rem, 72rem);
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0 1.5rem max(1rem, env(safe-area-inset-bottom, 0px));
+    color: var(--pl-text-meta);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.app-footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    color: var(--pl-text-secondary);
+    text-decoration-line: underline;
+    text-decoration-color: var(--pl-link-decoration);
+    text-underline-offset: 0.16em;
+    overflow-wrap: anywhere;
+    transition: color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.app-footer__link:focus-visible {
+    color: var(--pl-text-heading);
+    outline: 2px solid var(--pl-border-focus);
+    outline-offset: 0.15rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .app-footer__link:hover {
+        color: var(--pl-link-hover);
+        text-decoration-color: var(--pl-link-hover-decoration);
+    }
+}
+
 .page-panel {
     position: relative;
     isolation: isolate;
@@ -789,6 +831,13 @@ a {
     .app-main {
         align-self: stretch;
         padding: 0.85rem 0.75rem max(0.85rem, env(safe-area-inset-bottom, 0px));
+    }
+
+    .app-footer {
+        justify-content: flex-start;
+        width: min(100% - 1.5rem, 72rem);
+        padding-right: 0;
+        padding-left: 0;
     }
 
     .page-panel {
