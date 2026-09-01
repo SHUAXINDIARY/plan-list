@@ -8413,3 +8413,23 @@
 - `src/pages/planeRender/components/RenderControls.tsx`：新增 HDRI loading 状态提示。
 - `src/pages/planeRender/index.css`：新增 loading 文案、指示器和 reduced-motion 样式。
 - `taskRecord.md`：追加 HDRI loading 反馈记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+增强大体积 HDRI 加载期间的可见 loading 反馈。
+
+## 完成过程
+
+1. 保留 HDRI select 下方的可访问状态提示和旋转指示器。
+2. 让 `environmentLoading` 为 true 时给模型画布添加环境加载状态类，复用现有 loading overlay 覆盖 canvas。
+3. 保持工具栏高于 overlay 的层级，HDRI 加载期间仍可切换环境或执行其他视窗操作；减少动态偏好下停止指示器动画。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：根据 HDRI loading 状态挂载画布状态类。
+- `src/pages/planeRender/index.css`：新增 HDRI loading 时的画布 overlay 显示规则。
+- `taskRecord.md`：追加大 HDRI loading 可见性增强记录。

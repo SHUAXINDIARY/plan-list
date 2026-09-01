@@ -2484,7 +2484,7 @@ export const AircraftModelViewport = ({
     return (
         <div
             ref={containerRef}
-            className={`plane-render__viewport-canvas${animationState.available ? " plane-render__viewport-canvas--has-animation" : ""}`}
+            className={`plane-render__viewport-canvas${animationState.available ? " plane-render__viewport-canvas--has-animation" : ""}${environmentLoading ? " plane-render__viewport-canvas--environment-loading" : ""}`}
             onPointerDown={handleViewportPointerDown}
         >
             <div className="plane-render__viewport-tools">

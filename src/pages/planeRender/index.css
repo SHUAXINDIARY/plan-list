@@ -1149,6 +1149,12 @@
     pointer-events: auto;
 }
 
+.plane-render__viewport-canvas--environment-loading
+    .plane-render__loading-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .plane-render__loading-spinner {
     width: 2.35rem;
     height: 2.35rem;
