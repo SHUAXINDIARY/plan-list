@@ -8177,3 +8177,24 @@
 
 - `src/pages/planeRender/index.css`：调整模型目录按钮的 flex 对齐、文本宽度和居中样式。
 - `taskRecord.md`：追加模型目录按钮样式优化记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+按模型所属目录对 3D 模型目录进行分类展示。
+
+## 完成过程
+
+1. 为模型资源补充稳定的所属目录字段，避免 OSS 远程加载地址覆盖原始目录信息。
+2. 在模型目录组件中按直接所属目录分组渲染分类标题和模型按钮。
+3. 为分类标题及桌面、移动端分组网格补充对应样式，保留模型选择交互和全屏目录布局。
+
+## 修改具体文件
+
+- `src/pages/planeRender/modelAssets.ts`：增加模型所属目录字段并在本地、OSS 资源构建时填充。
+- `src/pages/planeRender/ModelDir.tsx`：按所属目录分组渲染模型分类。
+- `src/pages/planeRender/index.css`：增加目录分类标题、分组列表及响应式布局样式。
+- `taskRecord.md`：追加模型目录分类记录。

@@ -8,6 +8,8 @@ export interface AircraftModelAsset {
     label: string;
     /** 相对于项目根目录的模型文件路径，用于区分不同模型目录中的同名机型。 */
     sourcePath: string;
+    /** 模型所属的相对目录，用于在模型目录中进行分类展示。 */
+    sourceDirectory: string;
     /** 懒加载资源并返回构建后 GLB 文件 URL。 */
     loadUrl: () => Promise<string>;
 }
@@ -73,6 +75,14 @@ const getModelLabel = (sourcePath: string): string => {
     return variantLabel
 };
 
+/** 从模型相对路径中提取文件所在目录，用于目录分类标题。 */
+const getModelSourceDirectory = (sourcePath: string): string => {
+    const pathSegments = sourcePath.split("/");
+    const directoryPath = pathSegments.slice(0, -1).join("/");
+
+    return directoryPath || sourcePath;
+};
+
 /** 将 Rspack 返回的构建期模块路径转换为相对于项目根目录的可读路径。 */
 const getModelSourcePath = (modulePath: string): string => {
     return modulePath.replace(PROJECT_ROOT_RELATIVE_PREFIX_PATTERN, "");
@@ -80,6 +90,9 @@ const getModelSourcePath = (modulePath: string): string => {
 
 /** 上传至 OSS 的 GLB 公共 URL 前缀。 */
 const OSS_GLB_URL_PREFIX = "https://img.shuaxinjs.cn/glb/";
+
+/** 上传至 OSS 的模型在目录分类中使用的本地目录名。 */
+const UPLOAD_OSS_GLB_DIRECTORY = "upload_oss_glb";
 
 /** 各模型目录内可由 glTF 2.0 loader 加载的本地模型资源。 */
 const localAircraftModelAssets: AircraftModelAsset[] = Object.entries(modelModules).map(
@@ -90,6 +103,7 @@ const localAircraftModelAssets: AircraftModelAsset[] = Object.entries(modelModul
             id: getModelId(sourcePath),
             label: getModelLabel(sourcePath),
             sourcePath,
+            sourceDirectory: getModelSourceDirectory(sourcePath),
             loadUrl,
         };
     },
@@ -107,6 +121,7 @@ const uploadOssGlbModelAssets: AircraftModelAsset[] = uploadOssGlbAssets.map(
             id: getModelId(uploadAsset.sourcePath),
             label: getModelLabel(uploadAsset.sourcePath),
             sourcePath: ossPath,
+            sourceDirectory: UPLOAD_OSS_GLB_DIRECTORY,
             loadUrl: () => Promise.resolve(ossPath),
         };
     },
