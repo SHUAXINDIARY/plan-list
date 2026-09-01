@@ -13,6 +13,7 @@
 - 每次只在场景中加载一架当前选中的 GLB 模型。
 - 使用 WebGPU 渲染并保持模型在不同尺寸下具有可比较的视图尺度。
 - 提供轨道旋转、滚轮/双指缩放、全屏查看和飞行姿态调整。
+- 提供 Perspective（透视）与 Orthographic（正交）两种摄像机投影模式。
 - 允许在不重新加载模型的情况下调整输出画质、阴影、展示平面和主光源位置。
 - 支持内置 RoomEnvironment 与运行时 HDRI 切换，并提供可调的三点灯光强度。
 - 在切换模型或卸载组件时释放 Three.js 对象和 GPU 资源。
@@ -145,7 +146,18 @@ THREE.Scene
 5. 按归一化模型底部定位展示平面；非平飞姿态下展示平面仅作为空间参考。
 6. 将模型加入场景，并按包围球与当前视口 FOV 计算适配距离。
 
-相机使用 `PerspectiveCamera(36, 1, 0.1, 100)`。适配距离按包围球和水平/垂直 FOV 计算并保留边距；窗口变化时由 `ResizeObserver` 更新 aspect 和绘制缓冲区。
+默认相机使用 `PerspectiveCamera(36, 1, 0.1, 100)`。透视模式的适配距离按包围球和水平/垂直 FOV 计算并保留边距；正交模式使用固定基础视锥。窗口变化时由 `ResizeObserver` 更新 aspect、视锥和绘制缓冲区。
+
+### 摄像机投影模式
+
+工具栏中的“摄像机投影模式”提供两个选项：
+
+| 模式 | Three.js 相机 | 视觉语义 | 适配方式 |
+| --- | --- | --- | --- |
+| Perspective（透视） | `PerspectiveCamera` | 近大远小，保留空间纵深 | 由 FOV、aspect 和模型包围球计算相机距离 |
+| Orthographic（正交） | `OrthographicCamera` | 无视距离，物体尺寸保持一致 | 固定基础视锥高度，按包围球设置 `zoom` |
+
+两种模式切换时不重新加载模型。组件创建新的 camera 与 `OrbitControls`，复制旧相机的位置、up 向量和 controls target，再按当前容器 aspect 更新投影矩阵；切换到正交模式时会重新计算模型 fit zoom，切换回透视模式时保留当前轨道距离。`OrbitControls` 的最小/最大距离继续约束透视 dolly，正交模式则使用 `minZoom = 0.25`、`maxZoom = 8` 约束缩放。设置导出 JSON 的 `schemaVersion` 已提升为 `2`，并在 `camera.projectionMode` 写入当前模式。
 
 ## 相机与画布交互
 
@@ -162,7 +174,7 @@ THREE.Scene
 | `zoomSpeed` | `1.15` | 提高滚轮和双指缩放响应 |
 | `zoomToCursor` | `true` | 以光标位置为缩放关注点 |
 
-画布通过 CSS `touch-action: none` 将触摸手势交给 Three.js；工具面板和页面 viewport 保留默认触摸行为。工具层提供 `自定义视角`、`适配视图`、`正面`、`侧面`、`顶部` 和 `底部` 菜单，手动轨道操作后视角状态标记为自定义。画布左下角观察 HUD 显示世界 X/Y/Z 轴投影及相对 `controls.target` 的方位角、俯仰角和距离；它是只读状态层，不拦截 canvas 指针事件。
+画布通过 CSS `touch-action: none` 将触摸手势交给 Three.js；工具面板和页面 viewport 保留默认触摸行为。工具层提供投影模式、`自定义视角`、`适配视图`、`正面`、`侧面`、`顶部` 和 `底部` 菜单，手动轨道操作后视角状态标记为自定义。画布左下角观察 HUD 显示世界 X/Y/Z 轴投影及相对 `controls.target` 的方位角、俯仰角和距离；它是只读状态层，不拦截 canvas 指针事件。
 
 ## 渲染控制面板
 

@@ -8263,3 +8263,45 @@
 - `src/App.css`：新增深浅主题轮廓光颜色 token。
 - `docs/aircraft-model-viewport.md`：补充 HDRI、PMREM、三点灯光模块拆分和实现细节。
 - `taskRecord.md`：追加本次 HDRI 与三点灯光扩展记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+为飞机模型视窗增加 Perspective（透视）与 Orthographic（正交）摄像机投影模式。
+
+## 完成过程
+
+1. 将相机引用、HUD、fit 计算和渲染循环改为兼容透视/正交相机的联合类型。
+2. 新增投影模式选择器，切换时创建对应 camera 和 `OrbitControls`，保留当前观察位置、目标点和 up 向量。
+3. 为正交相机设置固定视锥高度、包围球 fit zoom 以及 `minZoom/maxZoom`，同时让 `ResizeObserver` 更新正交视锥宽度。
+4. 设置导出 JSON 增加 `camera.projectionMode`，schema 版本提升为 `2`；同步补充视窗技术文档。
+5. 按本轮约定仅做开发代码修改，未启动服务或执行构建、类型和浏览器验收。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：新增投影模式状态、相机切换、正交 fit/resize 与导出字段。
+- `src/pages/planeRender/index.css`：补充投影模式选择器的桌面、移动端和焦点样式。
+- `docs/aircraft-model-viewport.md`：增加透视/正交模式说明、参数和切换策略。
+- `taskRecord.md`：追加摄像机投影模式记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+修复透视/正交投影切换中 `OrbitControls` 相机泛型不一致导致的 TypeScript 赋值错误。
+
+## 完成过程
+
+1. 确认初始化 controls 被推断为 `OrbitControls<AircraftCamera>`，而工厂函数、ref 和辅助函数仍使用默认的 `OrbitControls<Camera>`。
+2. 将 controls ref、HUD/视角辅助函数、初始化实例和切换工厂统一显式标注为 `OrbitControls<AircraftCamera>`。
+3. 保持投影切换和运行时行为不变，仅收窄类型契约，避免 `Camera` 缺少正交相机属性的报错。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：统一 `OrbitControls<AircraftCamera>` 泛型标注。
+- `taskRecord.md`：追加 TypeScript 泛型错误修复记录。

@@ -134,14 +134,16 @@
     padding: 0.45rem 0.62rem;
 }
 
-.plane-render__camera-view-control {
+.plane-render__camera-view-control,
+.plane-render__camera-projection-control {
     position: relative;
     display: block;
 }
 
-.plane-render__camera-view-control select {
+.plane-render__camera-view-control select,
+.plane-render__camera-projection-control select {
     min-height: 2.25rem;
-    max-width: 8rem;
+    max-width: 10rem;
     padding: 0.45rem 0.52rem;
     appearance: none;
     -webkit-appearance: none;
@@ -171,6 +173,7 @@
 .plane-render__viewport-action:focus-visible,
 .plane-render__model-directory-toggle:focus-visible,
 .plane-render__camera-view-control select:focus-visible,
+.plane-render__camera-projection-control select:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
 .plane-render__render-field input[type="url"]:focus-visible,
@@ -1537,6 +1540,7 @@
     }
 
     .plane-render__camera-view-control select,
+    .plane-render__camera-projection-control select,
     .plane-render__render-field select,
     .plane-render__render-field input[type="url"],
     .plane-render__render-controls-toggle,

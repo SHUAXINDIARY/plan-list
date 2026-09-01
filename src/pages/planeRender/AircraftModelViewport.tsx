@@ -176,6 +176,12 @@ type AircraftCameraView =
     | "top"
     | "bottom";
 
+/** 模型视窗支持的摄像机投影模式。 */
+type AircraftProjectionMode = "perspective" | "orthographic";
+
+/** 视窗当前可用的透视或正交相机实例。 */
+type AircraftCamera = THREE.PerspectiveCamera | THREE.OrthographicCamera;
+
 /** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
 const NORMALIZED_MODEL_MAX_SIZE = 1.35;
 /** 允许近距离检查机身细节时的相机最小距离。 */
@@ -184,6 +190,12 @@ const MINIMUM_CAMERA_DISTANCE = 0.45;
 const MAXIMUM_CAMERA_DISTANCE = 80;
 /** 相机允许接近极点的安全角度，避免 OrbitControls 翻转。 */
 const POLAR_ANGLE_MARGIN = 0.08;
+/** 正交相机的基础视锥高度，zoom 负责模型适配与细节检查。 */
+const ORTHOGRAPHIC_FRUSTUM_HEIGHT = 2.4;
+/** 正交相机允许的最小缩放值，避免模型完全超出视窗。 */
+const MINIMUM_ORTHOGRAPHIC_ZOOM = 0.25;
+/** 正交相机允许的最大缩放值，便于检查局部细节。 */
+const MAXIMUM_ORTHOGRAPHIC_ZOOM = 8;
 /** 提升滚轮和双指缩放的响应速度，便于在全屏时检查细节。 */
 const MODEL_VIEWER_ZOOM_SPEED = 1.15;
 /** WebGPU 不可用时的用户可见提示。 */
@@ -471,6 +483,12 @@ const isAircraftCameraView = (value: string): value is AircraftCameraView =>
     value === "top" ||
     value === "bottom";
 
+/** 校验投影模式 select 的字符串值是否为已支持的相机类型。 */
+const isAircraftProjectionMode = (
+    value: string,
+): value is AircraftProjectionMode =>
+    value === "perspective" || value === "orthographic";
+
 /** 校验画质预设 select 的字符串值是否为已支持的质量档位。 */
 const isAircraftRenderQuality = (
     value: string,
@@ -538,8 +556,8 @@ const getCameraHudAxis = (
 
 /** 读取相机相对观察目标的球面方位和世界轴投影。 */
 const getCameraHudState = (
-    camera: THREE.PerspectiveCamera,
-    controls: OrbitControls,
+    camera: AircraftCamera,
+    controls: OrbitControls<AircraftCamera>,
 ): AircraftCameraHudState => {
     const offset = camera.position.clone().sub(controls.target);
     const horizontalDistance = Math.hypot(offset.x, offset.z);
@@ -563,6 +581,28 @@ const getCameraHudState = (
             inverseCameraQuaternion,
         ),
     };
+};
+
+/** 创建指定投影模式的相机，并使用统一的近远裁剪范围。 */
+const createAircraftCamera = (
+    projectionMode: AircraftProjectionMode,
+    aspect: number,
+): AircraftCamera => {
+    if (projectionMode === "orthographic") {
+        const halfHeight = ORTHOGRAPHIC_FRUSTUM_HEIGHT / 2;
+        const halfWidth = halfHeight * Math.max(aspect, 0.01);
+
+        return new THREE.OrthographicCamera(
+            -halfWidth,
+            halfWidth,
+            halfHeight,
+            -halfHeight,
+            0.1,
+            100,
+        );
+    }
+
+    return new THREE.PerspectiveCamera(36, Math.max(aspect, 0.01), 0.1, 100);
 };
 
 /** 判断 HUD 数值变化是否超过用户可感知阈值，避免每帧触发 React 重渲染。 */
@@ -695,12 +735,32 @@ const normalizeAircraftModel = (model: THREE.Object3D): void => {
 
 /** 根据模型包围球和当前视口 FOV 计算标准视角所需距离。 */
 const getCameraFitDistance = (
-    camera: THREE.PerspectiveCamera,
+    camera: AircraftCamera,
     model: THREE.Object3D,
 ): { center: THREE.Vector3; distance: number } => {
     const bounds = new THREE.Box3().setFromObject(model);
     const modelCenter = model.getWorldPosition(new THREE.Vector3());
     const modelSphere = bounds.getBoundingSphere(new THREE.Sphere());
+    if (camera instanceof THREE.OrthographicCamera) {
+        const modelDiameter = Math.max(modelSphere.radius * 2, 0.01);
+        const availableWidth = Math.max(camera.right - camera.left, 0.01);
+        const availableHeight = Math.max(camera.top - camera.bottom, 0.01);
+        const fitZoom = Math.min(
+            availableWidth / (modelDiameter * CAMERA_FIT_MARGIN),
+            availableHeight / (modelDiameter * CAMERA_FIT_MARGIN),
+        );
+        camera.zoom = Math.min(
+            Math.max(fitZoom, MINIMUM_ORTHOGRAPHIC_ZOOM),
+            MAXIMUM_ORTHOGRAPHIC_ZOOM,
+        );
+        camera.updateProjectionMatrix();
+
+        return {
+            center: modelCenter,
+            distance: Math.max(modelSphere.radius * 3.2, 1),
+        };
+    }
+
     const verticalFov = degreesToRadians(camera.fov);
     const horizontalFov =
         2 *
@@ -716,8 +776,8 @@ const getCameraFitDistance = (
 
 /** 应用一个标准相机视角，并让上下视图保持稳定的屏幕朝向。 */
 const applyCameraView = (
-    camera: THREE.PerspectiveCamera,
-    controls: OrbitControls,
+    camera: AircraftCamera,
+    controls: OrbitControls<AircraftCamera>,
     model: THREE.Object3D,
     view: Exclude<AircraftCameraView, "custom">,
 ): void => {
@@ -741,8 +801,8 @@ const applyCameraView = (
 
 /** 按模型包围球和当前视口 FOV 聚焦模型，默认使用右前上方适配视角。 */
 const focusModel = (
-    camera: THREE.PerspectiveCamera,
-    controls: OrbitControls,
+    camera: AircraftCamera,
+    controls: OrbitControls<AircraftCamera>,
     model: THREE.Object3D,
 ): void => {
     applyCameraView(camera, controls, model, "fit");
@@ -764,8 +824,11 @@ export const AircraftModelViewport = ({
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
-    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-    const orbitControlsRef = useRef<OrbitControls | null>(null);
+    const cameraRef = useRef<AircraftCamera | null>(null);
+    const orbitControlsRef = useRef<OrbitControls<AircraftCamera> | null>(null);
+    const projectionModeApplyRef = useRef<
+        ((mode: AircraftProjectionMode) => void) | null
+    >(null);
     const requestRenderRef = useRef<(() => void) | null>(null);
     const resizeRendererRef = useRef<(() => void) | null>(null);
     const aircraftModelRef = useRef<THREE.Object3D | null>(null);
@@ -784,6 +847,8 @@ export const AircraftModelViewport = ({
     const [isModelDirectoryOpen, setIsModelDirectoryOpen] =
         useState<boolean>(false);
     const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
+    const [projectionMode, setProjectionMode] =
+        useState<AircraftProjectionMode>("perspective");
     const [cameraHudState, setCameraHudState] =
         useState<AircraftCameraHudState | null>(EMPTY_CAMERA_HUD_STATE);
     const [animationState, setAnimationState] =
@@ -804,6 +869,7 @@ export const AircraftModelViewport = ({
     const [attitudeSettings, setAttitudeSettings] =
         useState<AircraftAttitudeSettings>(DEFAULT_ATTITUDE_SETTINGS);
     const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
+    const projectionModeRef = useRef<AircraftProjectionMode>(projectionMode);
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
     const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
@@ -814,6 +880,7 @@ export const AircraftModelViewport = ({
         useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
+    projectionModeRef.current = projectionMode;
     attitudeSettingsRef.current = attitudeSettings;
 
     /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
@@ -839,6 +906,23 @@ export const AircraftModelViewport = ({
                     : nextState,
         );
     };
+
+    /** 切换 Perspective 与 Orthographic，并由场景生命周期替换相机实例。 */
+    const handleProjectionModeChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const nextProjectionMode = event.currentTarget.value;
+
+        if (!isAircraftProjectionMode(nextProjectionMode)) {
+            return;
+        }
+
+        setProjectionMode(nextProjectionMode);
+    };
+
+    useEffect((): void => {
+        projectionModeApplyRef.current?.(projectionMode);
+    }, [projectionMode]);
 
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
@@ -1027,9 +1111,10 @@ export const AircraftModelViewport = ({
 
         setSnapshotError(null);
         const settings = {
-            schemaVersion: 1,
+            schemaVersion: 2,
             modelId: asset?.id ?? null,
             camera: {
+                projectionMode,
                 view: cameraView,
                 position: camera.position.toArray(),
                 target: controls.target.toArray(),
@@ -1770,8 +1855,14 @@ export const AircraftModelViewport = ({
             };
 
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-            const controls = new OrbitControls(camera, renderer.domElement);
+            let camera: AircraftCamera = createAircraftCamera(
+                projectionModeRef.current,
+                1,
+            );
+            let controls: OrbitControls<AircraftCamera> = new OrbitControls<AircraftCamera>(
+                camera,
+                renderer.domElement,
+            );
             const gltfLoader = new GLTFLoader();
             const environmentGenerator = new PMREMGenerator(renderer);
             const createdEnvironmentResources =
@@ -1795,6 +1886,8 @@ export const AircraftModelViewport = ({
             controls.maxPolarAngle = Math.PI - POLAR_ANGLE_MARGIN;
             controls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
             controls.zoomToCursor = true;
+            controls.minZoom = MINIMUM_ORTHOGRAPHIC_ZOOM;
+            controls.maxZoom = MAXIMUM_ORTHOGRAPHIC_ZOOM;
 
             const lightingRig = createAircraftLightingRig(
                 renderSettingsRef.current,
@@ -1929,7 +2022,20 @@ export const AircraftModelViewport = ({
                 const resolvedWidth = Math.max(width, 1);
                 const resolvedHeight = Math.max(height, 1);
 
-                camera.aspect = resolvedWidth / resolvedHeight;
+                const aspect = resolvedWidth / resolvedHeight;
+
+                if (camera instanceof THREE.OrthographicCamera) {
+                    const halfHeight = ORTHOGRAPHIC_FRUSTUM_HEIGHT / 2;
+                    const halfWidth = halfHeight * aspect;
+
+                    camera.left = -halfWidth;
+                    camera.right = halfWidth;
+                    camera.top = halfHeight;
+                    camera.bottom = -halfHeight;
+                } else {
+                    camera.aspect = aspect;
+                }
+
                 camera.updateProjectionMatrix();
                 renderer.setPixelRatio(renderSettingsRef.current.pixelRatio);
                 renderer.setSize(resolvedWidth, resolvedHeight, false);
@@ -2065,7 +2171,101 @@ export const AircraftModelViewport = ({
                 requestRender();
             };
 
+            /** 创建与当前相机行为一致的新 OrbitControls，供投影切换复用。 */
+            const createConfiguredControls = (
+                nextCamera: AircraftCamera,
+            ): OrbitControls<AircraftCamera> => {
+                const nextControls = new OrbitControls<AircraftCamera>(
+                    nextCamera,
+                    renderer.domElement,
+                );
+
+                nextControls.enableDamping = true;
+                nextControls.dampingFactor = 0.065;
+                nextControls.minDistance = MINIMUM_CAMERA_DISTANCE;
+                nextControls.maxDistance = MAXIMUM_CAMERA_DISTANCE;
+                nextControls.minPolarAngle = POLAR_ANGLE_MARGIN;
+                nextControls.maxPolarAngle = Math.PI - POLAR_ANGLE_MARGIN;
+                nextControls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
+                nextControls.zoomToCursor = true;
+                nextControls.minZoom = MINIMUM_ORTHOGRAPHIC_ZOOM;
+                nextControls.maxZoom = MAXIMUM_ORTHOGRAPHIC_ZOOM;
+
+                return nextControls;
+            };
+
+            /** 即时替换投影相机，保留观察目标和当前轨道位置。 */
+            const applyProjectionMode = (
+                nextProjectionMode: AircraftProjectionMode,
+            ): void => {
+                if (
+                    isDisposed ||
+                    (nextProjectionMode === "orthographic" &&
+                        camera instanceof THREE.OrthographicCamera) ||
+                    (nextProjectionMode === "perspective" &&
+                        camera instanceof THREE.PerspectiveCamera)
+                ) {
+                    return;
+                }
+
+                const previousCamera = camera;
+                const previousControls = controls;
+                const { width, height } = container.getBoundingClientRect();
+                const aspect = Math.max(width, 1) / Math.max(height, 1);
+                const nextCamera = createAircraftCamera(
+                    nextProjectionMode,
+                    aspect,
+                );
+
+                nextCamera.position.copy(previousCamera.position);
+                nextCamera.up.copy(previousCamera.up);
+                nextCamera.lookAt(previousControls.target);
+                nextCamera.updateProjectionMatrix();
+
+                const aircraftModel = aircraftAttitudePivotRef.current;
+                if (aircraftModel !== null) {
+                    if (nextCamera instanceof THREE.OrthographicCamera) {
+                        getCameraFitDistance(nextCamera, aircraftModel);
+                    } else if (
+                        previousCamera instanceof THREE.OrthographicCamera
+                    ) {
+                        const viewDirection = nextCamera.position
+                            .clone()
+                            .sub(previousControls.target)
+                            .normalize();
+                        const fitDistance = getCameraFitDistance(
+                            nextCamera,
+                            aircraftModel,
+                        ).distance;
+
+                        nextCamera.position
+                            .copy(previousControls.target)
+                            .addScaledVector(viewDirection, fitDistance);
+                    }
+                }
+
+                const nextControls = createConfiguredControls(nextCamera);
+                nextControls.target.copy(previousControls.target);
+                nextControls.addEventListener("change", handleControlsChange);
+
+                previousControls.removeEventListener(
+                    "change",
+                    handleControlsChange,
+                );
+                previousControls.dispose();
+
+                camera = nextCamera;
+                controls = nextControls;
+                cameraRef.current = nextCamera;
+                orbitControlsRef.current = nextControls;
+                nextControls.update();
+                updateCameraHud();
+                requestRender();
+            };
+
             controls.addEventListener("change", handleControlsChange);
+            projectionModeApplyRef.current = applyProjectionMode;
+            applyProjectionMode(projectionModeRef.current);
 
             cleanupRenderer = (): void => {
                 resizeObserver.disconnect();
@@ -2081,6 +2281,9 @@ export const AircraftModelViewport = ({
                 }
                 controls.removeEventListener("change", handleControlsChange);
                 controls.dispose();
+                if (projectionModeApplyRef.current === applyProjectionMode) {
+                    projectionModeApplyRef.current = null;
+                }
                 animationPlayingRef.current = false;
                 animationClockRef.current.stop();
                 animationMixerRef.current?.stopAllAction();
@@ -2285,6 +2488,19 @@ export const AircraftModelViewport = ({
                         <option value="side">侧面</option>
                         <option value="top">顶部</option>
                         <option value="bottom">底部</option>
+                    </select>
+                </label>
+                <label className="plane-render__camera-projection-control">
+                    <span className="plane-render__visually-hidden">
+                        摄像机投影模式
+                    </span>
+                    <select
+                        aria-label="摄像机投影模式"
+                        value={projectionMode}
+                        onChange={handleProjectionModeChange}
+                    >
+                        <option value="perspective">Perspective 透视</option>
+                        <option value="orthographic">Orthographic 正交</option>
                     </select>
                 </label>
                 <button
