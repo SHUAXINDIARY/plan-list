@@ -77,6 +77,8 @@ interface RenderControlsProps {
     onHdriChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 当前 HDRI 加载失败或配置不完整时的回退提示。 */
     environmentError: string | null;
+    /** 当前 HDRI 是否正在下载和生成 PMREM。 */
+    environmentLoading: boolean;
     /** 处理环境强度滑块的变更。 */
     onEnvironmentIntensityChange: (
         event: ChangeEvent<HTMLInputElement>,
@@ -162,6 +164,7 @@ export const RenderControls = ({
     hdriAssets,
     onHdriChange,
     environmentError,
+    environmentLoading,
     onEnvironmentIntensityChange,
     onExposureChange,
     onPixelRatioChange,
@@ -272,6 +275,15 @@ export const RenderControls = ({
                                 ),
                             )}
                         </select>
+                        {environmentLoading ? (
+                            <small
+                                className="plane-render__render-field-note plane-render__render-field-note--loading"
+                                role="status"
+                                aria-live="polite"
+                            >
+                                正在加载 HDRI 环境...
+                            </small>
+                        ) : null}
                         {environmentError !== null ? (
                             <small
                                 className="plane-render__render-field-note"

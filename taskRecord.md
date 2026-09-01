@@ -8392,3 +8392,24 @@
 - `src/pages/planeRender/AircraftModelViewport.tsx`：移除弃用 Clock，接入 Timer 生命周期。
 - `src/pages/personal/sections/EarthMap.tsx`：移除弃用 Clock，接入 Timer 帧更新和释放。
 - `taskRecord.md`：追加 Clock 弃用 warn 修复记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+为 HDRI 大文件异步加载增加明确的 loading 状态反馈。
+
+## 完成过程
+
+1. 在 `AircraftModelViewport` 增加 `environmentLoading` 状态，HDRLoader 请求开始时置为 true。
+2. 在成功、失败、空选择和回退分支结束 loading，并保留已有 token 竞态保护，避免旧请求关闭新请求的状态。
+3. 在 `RenderControls` 的 HDRI select 下方增加可访问的加载提示和旋转指示；减少动态偏好下停止旋转动画。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：维护 HDRI 加载状态并传递给控制面板。
+- `src/pages/planeRender/components/RenderControls.tsx`：新增 HDRI loading 状态提示。
+- `src/pages/planeRender/index.css`：新增 loading 文案、指示器和 reduced-motion 样式。
+- `taskRecord.md`：追加 HDRI loading 反馈记录。

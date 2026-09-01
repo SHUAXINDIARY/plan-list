@@ -592,6 +592,24 @@
     line-height: 1.35;
 }
 
+.plane-render__render-field-note--loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.34rem;
+    color: var(--pl-accent);
+}
+
+.plane-render__render-field-note--loading::before {
+    width: 0.62rem;
+    height: 0.62rem;
+    flex: 0 0 auto;
+    border: 1px solid var(--pl-border-loading-ring);
+    border-top-color: var(--pl-accent);
+    border-radius: 999px;
+    animation: plane-render-loading-spin 840ms linear infinite;
+    content: "";
+}
+
 .plane-render__render-field select:disabled {
     color: var(--pl-text-meta);
     cursor: not-allowed;
@@ -1670,6 +1688,10 @@
     }
 
     .plane-render__loading-spinner {
+        animation: none;
+    }
+
+    .plane-render__render-field-note--loading::before {
         animation: none;
     }
 

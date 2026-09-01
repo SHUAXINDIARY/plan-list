@@ -864,6 +864,8 @@ export const AircraftModelViewport = ({
     const [environmentError, setEnvironmentError] = useState<string | null>(
         null,
     );
+    const [environmentLoading, setEnvironmentLoading] =
+        useState<boolean>(false);
     const [isSnapshotAvailable, setIsSnapshotAvailable] =
         useState<boolean>(false);
     const [renderSettings, setRenderSettings] =
@@ -1782,6 +1784,7 @@ export const AircraftModelViewport = ({
             setIsSnapshotAvailable(false);
             setSnapshotError(null);
             setEnvironmentError(null);
+            setEnvironmentLoading(false);
 
             publishProgress({
                 phase: "initializing",
@@ -1967,6 +1970,7 @@ export const AircraftModelViewport = ({
                 ) {
                     disposeHdriEnvironment(resources);
                     scene.environment = resources.roomRenderTarget.texture;
+                    setEnvironmentLoading(false);
                     setEnvironmentError(
                         settings.environmentPreset === "hdri"
                             ? "请选择 HDRI 环境，当前已回退内置工作室。"
@@ -1977,6 +1981,7 @@ export const AircraftModelViewport = ({
                 }
 
                 setEnvironmentError(null);
+                setEnvironmentLoading(true);
 
                 try {
                     const hdriRenderTarget = await loadHdriEnvironment(
@@ -1996,6 +2001,7 @@ export const AircraftModelViewport = ({
                     disposeHdriEnvironment(resources);
                     resources.hdriRenderTarget = hdriRenderTarget;
                     scene.environment = hdriRenderTarget.texture;
+                    setEnvironmentLoading(false);
                     setEnvironmentError(null);
                     requestRenderRef.current?.();
                 } catch {
@@ -2009,6 +2015,7 @@ export const AircraftModelViewport = ({
 
                     disposeHdriEnvironment(resources);
                     scene.environment = resources.roomRenderTarget.texture;
+                    setEnvironmentLoading(false);
                     setEnvironmentError(
                         "HDRI 加载失败，当前已回退内置工作室。",
                     );
@@ -2538,6 +2545,7 @@ export const AircraftModelViewport = ({
                     hdriAssets={AIRCRAFT_HDRI_ASSETS}
                     onHdriChange={handleHdriChange}
                     environmentError={environmentError}
+                    environmentLoading={environmentLoading}
                     onEnvironmentIntensityChange={
                         handleEnvironmentIntensityChange
                     }
