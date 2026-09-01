@@ -1,65 +1,13 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
+import AircraftCard, {
+    formatInteger,
+    type AircraftCatalogEntry,
+    type AircraftDetail,
+    type JetManufacturer,
+    type JsonRecord,
+    type JsonValue,
+} from "./Card";
 import "./index.css";
-
-/** 机型 WIKI 当前展示的制造商。 */
-type JetManufacturer = "Airbus" | "Boeing";
-
-/** 静态 JSON 中允许出现的基础值类型，用于安全遍历嵌套目录。 */
-type JsonPrimitive = string | number | boolean | null;
-
-/** 静态 JSON 的递归值类型；undefined 表示读取缺失的可选字段。 */
-type JsonValue = JsonPrimitive | JsonValue[] | JsonRecord | undefined;
-
-interface JsonRecord {
-    /** JSON 对象的动态字段，字段名由 aircraft.json 的目录层级决定。 */
-    [key: string]: JsonValue;
-}
-
-/** 机型生产状态，对应 aircraft.json 中的状态枚举。 */
-type AircraftStatus = "in_production" | "discontinued";
-
-interface AircraftSeats extends JsonRecord {
-    /** 典型客舱布局的座位数。 */
-    typical?: number | null;
-    /** 认证或布局允许的最大座位数。 */
-    max?: number | null;
-}
-
-interface AircraftDetail extends JsonRecord {
-    /** 机型展示名称。 */
-    model: string;
-    /** 对应的 Wikipedia 系列词条链接。 */
-    wikipedia?: string | null;
-    /** ICAO 机型代码。 */
-    icaoType?: string | null;
-    /** 当前机型的生产状态，不表示是否仍在服役。 */
-    status?: AircraftStatus | null;
-    /** 首次飞行日期，使用 YYYY-MM-DD；部分目录记录未提供。 */
-    firstFlight?: string | null;
-    /** 可用发动机型号列表。 */
-    engines?: string[] | null;
-    /** 典型和最大座位数。 */
-    seats?: AircraftSeats | null;
-    /** 公开标称航程，单位为公里。 */
-    rangeKm?: number | null;
-    /** 机身长度，单位为米。 */
-    lengthM?: number | null;
-    /** 翼展，单位为米。 */
-    wingspanM?: number | null;
-    /** 机身高度，单位为米。 */
-    heightM?: number | null;
-    /** 最大起飞重量，单位为千克。 */
-    mtowKg?: number | null;
-}
-
-interface AircraftCatalogEntry extends AircraftDetail {
-    /** 目录所属制造商。 */
-    manufacturer: JetManufacturer;
-    /** 目录所属系列，例如 737 或 A320。 */
-    family: string;
-    /** `generation` 目录层级的键名，例如 Original、NG 或 MAX。 */
-    generation?: string;
-}
 
 interface ManufacturerCatalog {
     /** 制造商名称，用于分组标题和稳定 key。 */
@@ -79,12 +27,6 @@ const MANUFACTURER_WEBSITE_URLS: Record<JetManufacturer, string> = {
 
 /** 统一 schema 为无代际系列使用的占位分组，页面不把它展示为代际标签。 */
 const DEFAULT_GENERATION_KEY = "default";
-
-/** 将状态枚举转换为页面可读文案。 */
-const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
-    in_production: "生产中",
-    discontinued: "停产",
-};
 
 // 判断 JSON 值是否为非数组对象，供递归目录遍历和字段读取使用。
 const isJsonRecord = (value: JsonValue): value is JsonRecord => {
@@ -220,23 +162,6 @@ const filterAircraftCatalog = (
             }),
         }),
     );
-};
-
-// 格式化整数规格，保持卡片中的数字可快速扫描。
-const formatInteger = (value: number): string => {
-    return Math.round(value).toLocaleString("en-US");
-};
-
-// 格式化可选整数规格，缺失或为空值统一使用短横线占位。
-const formatOptionalInteger = (value: number | null | undefined): string => {
-    return value === null || value === undefined ? "-" : formatInteger(value);
-};
-
-// 格式化小数规格，避免尺寸数据在卡片中占用过多宽度。
-const formatMeasurement = (value: number): string => {
-    return value.toLocaleString("en-US", {
-        maximumFractionDigits: 1,
-    });
 };
 
 /**
@@ -401,108 +326,10 @@ const AircraftWikiPage = (): ReactElement => {
                                 <div className="aircraft-model-wiki__cards">
                                     {manufacturerCatalog.models.map(
                                         (model): ReactElement => (
-                                            <article
-                                                className="aircraft-model-card"
+                                            <AircraftCard
                                                 key={`${model.manufacturer}-${model.family}-${model.generation ?? ""}-${model.model}`}
-                                            >
-                                                <header className="aircraft-model-card__header">
-                                                    <div>
-                                                        <span className="aircraft-model-card__family">
-                                                            {model.family}
-                                                            {model.generation
-                                                                ? ` / ${model.generation}`
-                                                                : ""}
-                                                        </span>
-                                                        <div className="aircraft-model-card__model-title">
-                                                            <h3>{model.model}</h3>
-                                                            {model.wikipedia ? (
-                                                                <a
-                                                                    className="aircraft-model-card__wikipedia"
-                                                                    href={model.wikipedia}
-                                                                    target="_blank"
-                                                                    rel="noreferrer"
-                                                                >
-                                                                    Wikipedia
-                                                                </a>
-                                                            ) : null}
-                                                        </div>
-                                                    </div>
-                                                    <span
-                                                        className={`aircraft-model-card__status${model.status ? ` aircraft-model-card__status--${model.status}` : ""}`}
-                                                    >
-                                                        {model.status
-                                                            ? AIRCRAFT_STATUS_LABELS[model.status]
-                                                            : "-"}
-                                                    </span>
-                                                </header>
-                                                <dl className="aircraft-model-card__specs">
-                                                    <div>
-                                                        <dt>ICAO</dt>
-                                                        <dd>{model.icaoType ?? "-"}</dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt>首飞日期</dt>
-                                                        <dd>
-                                                            {model.firstFlight ? (
-                                                                <time dateTime={model.firstFlight}>
-                                                                    {model.firstFlight}
-                                                                </time>
-                                                            ) : (
-                                                                "-"
-                                                            )}
-                                                        </dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt>座位</dt>
-                                                        <dd>
-                                                            {model.seats
-                                                                ? `${formatOptionalInteger(model.seats.typical)}-${formatOptionalInteger(model.seats.max)}`
-                                                                : "-"}
-                                                        </dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt>航程</dt>
-                                                        <dd>
-                                                            {model.rangeKm === null || model.rangeKm === undefined
-                                                                ? "-"
-                                                                : `${formatInteger(model.rangeKm)} km`}
-                                                        </dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt>机长</dt>
-                                                        <dd>
-                                                            {model.lengthM === null || model.lengthM === undefined
-                                                                ? "-"
-                                                                : `${formatMeasurement(model.lengthM)} m`}
-                                                        </dd>
-                                                    </div>
-                                                    <div>
-                                                        <dt>翼展</dt>
-                                                        <dd>
-                                                            {model.wingspanM === null || model.wingspanM === undefined
-                                                                ? "-"
-                                                                : `${formatMeasurement(model.wingspanM)} m`}
-                                                        </dd>
-                                                    </div>
-                                                </dl>
-                                                <p className="aircraft-model-card__engines scroll-area-night">
-                                                    <span>发动机</span>
-                                                    <span className="aircraft-model-card__engine-list">
-                                                        {model.engines && model.engines.length > 0
-                                                            ? model.engines.map(
-                                                                  (engine): ReactElement => (
-                                                                      <span
-                                                                          className="aircraft-model-card__engine-item"
-                                                                          key={engine}
-                                                                      >
-                                                                          {engine}
-                                                                      </span>
-                                                                  ),
-                                                              )
-                                                            : "-"}
-                                                    </span>
-                                                </p>
-                                            </article>
+                                                model={model}
+                                            />
                                         ),
                                     )}
                                 </div>

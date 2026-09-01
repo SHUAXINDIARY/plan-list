@@ -8136,3 +8136,26 @@
 
 - `public/data/aircraft.json`：新增 Boeing 707、727 两个系列及九条机型记录。
 - `taskRecord.md`：追加 707/727 数据补充记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将机型卡片的展示逻辑与样式抽离为独立的 `AircraftCard` 组件。
+
+## 完成过程
+
+1. 将机型卡片所需的目录类型、状态文案和规格格式化逻辑集中到 `Card.tsx`。
+2. 将原页面内联卡片 JSX 替换为 `AircraftCard`，保留稳定 key、Wikipedia 外链、规格占位符和发动机逐项展示行为。
+3. 将卡片样式、移动端断点和 reduced motion/transparency 规则移动到组件引入的 `Card.css`，页面样式只保留目录布局职责。
+4. 按用户要求未执行构建、测试或启动服务验证。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/Card.tsx`：新增机型卡片组件、类型、状态映射和规格格式化逻辑。
+- `src/pages/aircraftWiki/Card.css`：新增并承接机型卡片样式及相关响应式/辅助偏好规则。
+- `src/pages/aircraftWiki/index.tsx`：引入 `AircraftCard`，移除内联卡片结构和卡片专属逻辑。
+- `src/pages/aircraftWiki/index.css`：移除已转移至 `Card.css` 的卡片样式。
+- `taskRecord.md`：追加本次组件抽离记录。
