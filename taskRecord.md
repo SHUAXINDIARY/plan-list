@@ -8351,3 +8351,24 @@
 - `src/pages/planeRender/AircraftModelViewport.tsx`：移除 HDRI select 的定时延迟，保持异步竞态保护。
 - `docs/aircraft-model-viewport.md`：更新 HDRI 选择生效说明。
 - `taskRecord.md`：追加 HDRI select 即时生效记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将 HDRI 灯光、三点灯光以及 Perspective/Orthographic 摄像机实现整理为独立技术实现文档，并输出到 `doc/` 目录。
+
+## 完成过程
+
+1. 基于当前 `AircraftModelViewport`、`lighting.ts`、`hdriAssets.ts` 和 `RenderControls` 实现读取实际模块职责与运行时流程。
+2. 整理 HDRI 资源扫描、Rsbuild 资源处理、HDRLoader/PMREM、竞态保护、失败回退和资源释放说明。
+3. 整理 key/fill/rim 三点灯光参数、预设、主题 token、阴影策略和按需渲染行为。
+4. 整理 Perspective/Orthographic 相机参数、正交视锥与 zoom 计算、投影切换、OrbitControls 泛型和 resize/fit 逻辑。
+5. 增加性能约束、错误策略、开发验收清单和后续扩展方向；本次仅新增文档，不执行构建或服务验收。
+
+## 修改具体文件
+
+- `doc/aircraft-render-lighting-camera.md`：新增 HDRI 灯光与摄像机投影技术实现文档。
+- `taskRecord.md`：追加技术文档输出记录。
