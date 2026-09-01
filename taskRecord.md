@@ -8433,3 +8433,32 @@
 - `src/pages/planeRender/AircraftModelViewport.tsx`：根据 HDRI loading 状态挂载画布状态类。
 - `src/pages/planeRender/index.css`：新增 HDRI loading 时的画布 overlay 显示规则。
 - `taskRecord.md`：追加大 HDRI loading 可见性增强记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+按业务语义拆分 `AircraftModelViewport`，降低渲染器、场景、模型、相机、交互、可视化、动画和诊断逻辑之间的耦合。
+
+## 完成过程
+
+1. 新增 `viewport` 领域目录，抽取共享类型、渲染器设置、场景设置与主题读取、模型归一化/姿态/资源释放、相机适配/HUD、下载诊断和指针命中判断。
+2. 通过 `renderer`、`scene`、`aircraft`、`camera`、`animation`、`visualization`、`diagnostics`、`interaction` 入口统一导入边界，保留 `AircraftModelViewport` 现有对外导出。
+3. 将相机 HUD 与 GLB 动画时间轴控制条拆为独立业务组件，并移除未启用姿态面板的死状态与处理器。
+4. 执行 `git diff --check` 和 `pnpm run build`；构建成功，构建过程中的 photo-preview 超时仍按既有策略回退原图。`pnpm run type-check` 仍受仓库原有 `modelAssets.ts` 未使用 `sourceLabel` 报错影响。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：改为领域模块导入和生命周期/页面协调器，接入 CameraHud、AnimationControls 与交互命中判断。
+- `src/pages/planeRender/viewport/types.ts`：新增模型视窗领域类型与 props 契约。
+- `src/pages/planeRender/viewport/renderer/`：新增 WebGPU 设置、质量预设、色调映射和阴影映射模块。
+- `src/pages/planeRender/viewport/scene/`：新增场景配置、主题 token 读取和场景领域入口。
+- `src/pages/planeRender/viewport/aircraft/`：新增模型方向校正、归一化、姿态和资源释放模块。
+- `src/pages/planeRender/viewport/camera/`：新增相机创建、fit、标准视角与 HUD 数据模块。
+- `src/pages/planeRender/viewport/animation/`：新增动画状态常量和动画控制组件。
+- `src/pages/planeRender/viewport/visualization/`：新增相机 HUD 组件及可视化入口。
+- `src/pages/planeRender/viewport/diagnostics/`：新增下载工具和用户可见错误消息。
+- `src/pages/planeRender/viewport/interaction/`：新增工具面板指针命中判断。
+- `taskRecord.md`：追加本次架构拆分记录。

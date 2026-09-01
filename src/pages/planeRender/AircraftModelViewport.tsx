@@ -4,21 +4,16 @@ import {
     useState,
     type ChangeEvent,
     type PointerEvent,
-    type RefObject,
     type ReactElement,
     useId,
 } from "react";
 import * as THREE from "three";
-import { PMREMGenerator, WebGPURenderer } from "three/webgpu";
+import { PMREMGenerator, type WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
     RenderControls,
     type AircraftRenderSettings,
-    type AircraftRenderQuality,
-    type AircraftLightingPreset,
-    type AircraftShadowMode,
-    type AircraftToneMapping,
 } from "./components/RenderControls";
 import {
     applyAircraftLightingSettings,
@@ -27,788 +22,86 @@ import {
     disposeEnvironmentResources,
     disposeHdriEnvironment,
     loadHdriEnvironment,
-    type AircraftEnvironmentPreset,
     type AircraftEnvironmentResources,
     type AircraftLightingRig,
-} from "./lighting";
+} from "./viewport/scene";
 import ModelDir from "./ModelDir";
 import { AIRCRAFT_HDRI_ASSETS } from "./hdriAssets";
-import type { AircraftModelAsset } from "./modelAssets";
+import type {
+    AircraftAttitudeSettings,
+    AircraftAnimationState,
+    AircraftCamera,
+    AircraftCameraHudState,
+    AircraftCameraView,
+    AircraftModelLoadingProgress,
+    AircraftModelViewportProps,
+    AircraftProjectionMode,
+} from "./viewport/types";
+import {
+    applyAircraftAttitude,
+    applyModelSourceOrientation,
+    normalizeAircraftModel,
+    disposeSceneResources,
+} from "./viewport/aircraft";
+import {
+    applyCameraView,
+    createAircraftCamera,
+    focusModel,
+    getCameraFitDistance,
+    getCameraHudState,
+    isAircraftCameraView,
+    isCameraHudStateEqual,
+    isAircraftProjectionMode,
+    configureAircraftOrbitControls,
+    ORTHOGRAPHIC_FRUSTUM_HEIGHT,
+} from "./viewport/camera";
+import {
+    applyRenderSettings,
+    createDefaultRenderSettings,
+    getQualityPresetSettings,
+    hasAircraftWebGPUSupport,
+    initializeAircraftWebGPURenderer,
+    isAircraftRenderQuality,
+    isAircraftShadowMode,
+    isAircraftToneMapping,
+    WEBGPU_DEVICE_LOST_MESSAGE,
+    WEBGPU_INITIALIZATION_ERROR_MESSAGE,
+    WEBGPU_UNAVAILABLE_MESSAGE,
+} from "./viewport/renderer";
+import {
+    CURRENT_MODEL_FAILED_MESSAGE,
+    DEFAULT_ATTITUDE_SETTINGS,
+    EMPTY_MODEL_DIRECTORY_MESSAGE,
+    isAircraftEnvironmentPreset,
+    isAircraftLightingPreset,
+    LIGHTING_PRESET_VALUES,
+    MODEL_FILL_LIGHT_COLOR_TOKEN,
+    MODEL_FLOOR_COLOR_TOKEN,
+    MODEL_KEY_LIGHT_COLOR_TOKEN,
+    MODEL_RIM_LIGHT_COLOR_TOKEN,
+    createAircraftDisplayFloor,
+    readThemeColor,
+} from "./viewport/scene";
+import {
+    EMPTY_ANIMATION_STATE,
+    DEFAULT_MODEL_ANIMATION_NAME,
+    AnimationControls,
+} from "./viewport/animation";
+import {
+    downloadBlob,
+    FULLSCREEN_REQUEST_ERROR_MESSAGE,
+    SETTINGS_EXPORT_ERROR_MESSAGE,
+    SNAPSHOT_EXPORT_ERROR_MESSAGE,
+    SNAPSHOT_UNAVAILABLE_MESSAGE,
+} from "./viewport/diagnostics";
+import { isViewportControlTarget } from "./viewport/interaction";
+import { CameraHud } from "./viewport/visualization";
 
-/** 模型视窗当前所处的初始化或加载阶段。 */
-export type AircraftModelLoadingPhase =
-    | "initializing"
-    | "loading"
-    | "ready"
-    | "error";
+/** 保持页面级导入路径兼容，加载进度类型由 viewport 领域模块统一维护。 */
+export type { AircraftModelLoadingProgress } from "./viewport/types";
 
-/** 当前 WebGPU 渲染后端的可读状态。 */
-export type AircraftRendererStatus =
-    | "initializing"
-    | "webgpu"
-    | "unavailable"
-    | "lost";
-
-/** 当前模型资源加载所处的细分阶段。 */
-export type AircraftModelLoadingStage = "renderer" | "downloading" | "parsing";
-
-/** 模型目录加载进度，供页面显示可访问的状态信息。 */
-export interface AircraftModelLoadingProgress {
-    /** 当前渲染器或模型资源的处理阶段。 */
-    phase: AircraftModelLoadingPhase;
-    /** 已成功加入 Three.js 场景的模型数量。 */
-    loadedModelCount: number;
-    /** 无法加载的模型数量。 */
-    failedModelCount: number;
-    /** 当前渲染后端状态，避免页面在错误时仍显示 WebGPU 已就绪。 */
-    rendererStatus: AircraftRendererStatus;
-    /** loading 阶段的细分步骤。 */
-    loadingStage?: AircraftModelLoadingStage;
-    /** 可获得 Content-Length 时的资源下载比例，范围为 0 到 1。 */
-    progressRatio?: number;
-    /** 初始化或全部加载失败时展示的具体原因。 */
-    message?: string;
-}
-
-/** 模型视窗的输入数据和对外状态回调。 */
-interface AircraftModelViewportProps {
-    /** 当前需要加载并渲染的单个 GLB 模型资源。 */
-    asset: AircraftModelAsset | undefined;
-    /** 当前页面选中的模型 ID，用于同步全屏目录的 active 状态。 */
-    selectedModelId: string;
-    /** 向页面报告 WebGPU 初始化和模型加载进度。 */
-    onLoadingProgressChange: (progress: AircraftModelLoadingProgress) => void;
-    /** 从全屏目录选择模型后通知页面重新加载对应资源。 */
-    onModelSelection: (modelId: string) => void;
-    /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
-    fullscreenTargetRef: RefObject<HTMLElement | null>;
-    /** 当前模型重试序号，变化时强制重新初始化渲染器和资源请求。 */
-    retryToken: number;
-}
-
-/** 飞行姿态面板可切换的预设状态。 */
-type AircraftAttitudePreset =
-    | "level"
-    | "takeoff"
-    | "descent"
-    | "landing"
-    | "custom";
-
-/** 飞行姿态面板中可单独调节的旋转轴。 */
-type AircraftAttitudeAxis = "pitch" | "roll" | "yaw";
-
-/** 3D 姿态操控器当前被拖拽的旋转维度。 */
-type AircraftAttitudeDragMode = "orbit" | "roll";
-
-/** 一次姿态拖拽开始时记录的指针和角度快照。 */
-interface AircraftAttitudeDragState {
-    /** 本次拖拽使用的指针标识。 */
-    pointerId: number;
-    /** 拖拽起点的水平屏幕坐标。 */
-    startX: number;
-    /** 拖拽起点的垂直屏幕坐标。 */
-    startY: number;
-    /** 拖拽开始时的俯仰角。 */
-    startPitch: number;
-    /** 拖拽开始时的滚转角。 */
-    startRoll: number;
-    /** 拖拽开始时的偏航角。 */
-    startYaw: number;
-    /** 当前拖拽区域控制的旋转维度。 */
-    mode: AircraftAttitudeDragMode;
-}
-
-/** 一组以角度表示的飞机旋转参数。 */
-interface AircraftAttitudeSettings {
-    /** 当前姿态预设，手动调节后变为 custom。 */
-    preset: AircraftAttitudePreset;
-    /** 机头上下摆动角度，正值表示抬头。 */
-    pitch: number;
-    /** 机翼左右倾斜角度，正值表示右侧下倾。 */
-    roll: number;
-    /** 机身水平转向角度，正值表示向右偏航。 */
-    yaw: number;
-}
-
-/** 当前 GLB 是否包含可播放动画，以及播放位置和时长。 */
-interface AircraftAnimationState {
-    /** 当前模型是否存在可播放的第一段动画。 */
-    available: boolean;
-    /** 当前动画名称，资源未命名时使用生成名称。 */
-    name: string;
-    /** 当前动画总时长，单位为秒。 */
-    duration: number;
-    /** 当前动画时间，单位为秒。 */
-    currentTime: number;
-    /** 当前是否正在播放动画。 */
-    isPlaying: boolean;
-}
-
-/** 相机 HUD 中单个世界轴投影到屏幕后的显示参数。 */
-interface AircraftCameraHudAxis {
-    /** 轴线相对于屏幕水平向右方向的角度。 */
-    angle: number;
-    /** 轴线的可见度，用于弱化背向相机的轴。 */
-    opacity: number;
-}
-
-/** 相机 HUD 展示的观察方位和世界轴投影状态。 */
-interface AircraftCameraHudState {
-    /** 相机相对于 controls.target 的方位角。 */
-    azimuth: number;
-    /** 相机相对于 controls.target 的俯仰角。 */
-    elevation: number;
-    /** 相机相对于 controls.target 的距离。 */
-    distance: number;
-    /** 世界 X 轴在当前相机画面中的投影。 */
-    axisX: AircraftCameraHudAxis;
-    /** 世界 Y 轴在当前相机画面中的投影。 */
-    axisY: AircraftCameraHudAxis;
-    /** 世界 Z 轴在当前相机画面中的投影。 */
-    axisZ: AircraftCameraHudAxis;
-}
-
-/** 相机视角菜单支持的标准方向和自动适配状态。 */
-type AircraftCameraView =
-    | "custom"
-    | "fit"
-    | "front"
-    | "side"
-    | "top"
-    | "bottom";
-
-/** 模型视窗支持的摄像机投影模式。 */
-type AircraftProjectionMode = "perspective" | "orthographic";
-
-/** 视窗当前可用的透视或正交相机实例。 */
-type AircraftCamera = THREE.PerspectiveCamera | THREE.OrthographicCamera;
-
-/** 归一化后单架模型的最大尺寸，确保不同机型能在同一场景对比。 */
-const NORMALIZED_MODEL_MAX_SIZE = 1.35;
-/** 允许近距离检查机身细节时的相机最小距离。 */
-const MINIMUM_CAMERA_DISTANCE = 0.45;
-/** 允许完整检查模型外形时的相机最大距离。 */
-const MAXIMUM_CAMERA_DISTANCE = 80;
-/** 相机允许接近极点的安全角度，避免 OrbitControls 翻转。 */
-const POLAR_ANGLE_MARGIN = 0.08;
-/** 正交相机的基础视锥高度，zoom 负责模型适配与细节检查。 */
-const ORTHOGRAPHIC_FRUSTUM_HEIGHT = 2.4;
-/** 正交相机允许的最小缩放值，避免模型完全超出视窗。 */
-const MINIMUM_ORTHOGRAPHIC_ZOOM = 0.25;
-/** 正交相机允许的最大缩放值，便于检查局部细节。 */
-const MAXIMUM_ORTHOGRAPHIC_ZOOM = 8;
-/** 提升滚轮和双指缩放的响应速度，便于在全屏时检查细节。 */
-const MODEL_VIEWER_ZOOM_SPEED = 1.15;
-/** WebGPU 不可用时的用户可见提示。 */
-const WEBGPU_UNAVAILABLE_MESSAGE = "当前浏览器或设备未提供 WebGPU 支持。";
-/** WebGPU 初始化失败时的用户可见提示。 */
-const WEBGPU_INITIALIZATION_ERROR_MESSAGE = "WebGPU 渲染器初始化失败。";
-/** WebGPU 设备运行中丢失时的用户可见提示。 */
-const WEBGPU_DEVICE_LOST_MESSAGE = "WebGPU 设备已丢失，请重试当前模型。";
-/** 模型目录为空时的用户可见提示。 */
-const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文件。";
-/** 当前选中模型加载失败时的用户可见提示。 */
-const CURRENT_MODEL_FAILED_MESSAGE = "当前模型未能加载。";
-/** 浏览器拒绝全屏请求时的用户可见提示。 */
-const FULLSCREEN_REQUEST_ERROR_MESSAGE = "当前浏览器无法进入全屏查看。";
-/** 当前模型或浏览器尚不具备截图条件时的用户可见提示。 */
-const SNAPSHOT_UNAVAILABLE_MESSAGE = "当前模型尚未就绪，无法导出。";
-/** 浏览器生成 PNG 失败时的用户可见提示。 */
-const SNAPSHOT_EXPORT_ERROR_MESSAGE = "当前浏览器无法生成模型截图。";
-/** 工作室设置导出失败时的用户可见提示。 */
-const SETTINGS_EXPORT_ERROR_MESSAGE = "当前模型设置无法导出。";
-/** GLB 未提供动画名称时显示的回退名称。 */
-const DEFAULT_MODEL_ANIMATION_NAME = "模型动画";
-/** 工作室地面颜色 token，在深浅主题下由 App.css 提供值。 */
-const MODEL_FLOOR_COLOR_TOKEN = "--pl-model-floor-color";
-/** 工作室主光颜色 token，在深浅主题下由 App.css 提供值。 */
-const MODEL_KEY_LIGHT_COLOR_TOKEN = "--pl-model-key-light-color";
-/** 工作室补光颜色 token，在深浅主题下由 App.css 提供值。 */
-const MODEL_FILL_LIGHT_COLOR_TOKEN = "--pl-model-fill-light-color";
-/** 工作室轮廓光颜色 token，在深浅主题下由 App.css 提供值。 */
-const MODEL_RIM_LIGHT_COLOR_TOKEN = "--pl-model-rim-light-color";
-/** 渲染倍率默认采用的最高物理像素比，兼顾清晰度与常规设备性能。 */
-const DEFAULT_RENDER_PIXEL_RATIO = 2;
-/** 姿态角度换算为 Three.js 弧度时使用的比例。 */
-const DEGREES_TO_RADIANS = Math.PI / 180;
-/** 需要进行导入姿态校正的 FR24 GLB 资源路径前缀。 */
-const FR24_MODEL_SOURCE_PREFIX = "fr24-3d-models-glbv2/models/";
-/** FR24 模型以 -Z 为机头方向，绕 Y 轴 180° 后与视窗 +Z 前方约定一致。 */
-const FR24_MODEL_FORWARD_CORRECTION = Math.PI;
-/** 3D 姿态操控器允许的最低俯仰角。 */
-const MINIMUM_PITCH_ANGLE = -60;
-/** 3D 姿态操控器允许的最高俯仰角。 */
-const MAXIMUM_PITCH_ANGLE = 60;
-/** 3D 姿态操控器允许的最低滚转角。 */
-const MINIMUM_ROLL_ANGLE = -180;
-/** 3D 姿态操控器允许的最高滚转角。 */
-const MAXIMUM_ROLL_ANGLE = 180;
-/** 3D 姿态操控器允许的最低偏航角。 */
-const MINIMUM_YAW_ANGLE = -180;
-/** 3D 姿态操控器允许的最高偏航角。 */
-const MAXIMUM_YAW_ANGLE = 180;
-/** 3D 操控器每移动一个屏幕像素对应的俯仰/偏航角度。 */
-const ATTITUDE_ORBIT_DRAG_SENSITIVITY = 0.5;
-/** 3D 操控器外圈每移动一个屏幕像素对应的滚转角度。 */
-const ATTITUDE_ROLL_DRAG_SENSITIVITY = 0.8;
-/** 原生姿态 range 每次键盘或指针调整的角度步长。 */
-const ATTITUDE_ANGLE_STEP = 1;
-/** 飞机姿态使用航空常见的偏航、俯仰、滚转组合顺序。 */
-const AIRCRAFT_ROTATION_ORDER: THREE.EulerOrder = "YXZ";
-/** 初始相机 fit 为模型包围球保留的可视边距。 */
-const CAMERA_FIT_MARGIN = 1.18;
-/** 相机标准视角对应的观察方向，坐标系以 Y 轴向上。 */
-const CAMERA_VIEW_DIRECTIONS: Readonly<
-    Record<Exclude<AircraftCameraView, "custom">, THREE.Vector3Tuple>
-> = {
-    fit: [0.8, 0.5, 1],
-    front: [0, 0, 1],
-    side: [1, 0, 0],
-    top: [0, 1, 0],
-    bottom: [0, -1, 0],
-};
-
-/** 初始动画状态，模型无动画时不渲染播放控件。 */
-const EMPTY_ANIMATION_STATE: AircraftAnimationState = {
-    available: false,
-    name: "",
-    duration: 0,
-    currentTime: 0,
-    isPlaying: false,
-};
 /** 尚未建立相机和模型关系时不显示观察 HUD。 */
 const EMPTY_CAMERA_HUD_STATE: AircraftCameraHudState | null = null;
-/** 主方向光 X 轴的默认位置。 */
-const DEFAULT_LIGHT_POSITION_X = 7;
-/** 主方向光 Y 轴的默认位置。 */
-const DEFAULT_LIGHT_POSITION_Y = 10;
-/** 主方向光 Z 轴的默认位置。 */
-const DEFAULT_LIGHT_POSITION_Z = 8;
-/** 主方向光默认强度，保持模型轮廓和阴影可读。 */
-const DEFAULT_KEY_LIGHT_INTENSITY = 3.2;
-/** 默认冷色补光强度，保留现有视窗的暗部亮度。 */
-const DEFAULT_FILL_LIGHT_INTENSITY = 1.2;
-/** 默认关闭轮廓光，避免改变既有 neutral 画面。 */
-const DEFAULT_RIM_LIGHT_INTENSITY = 0;
-/** 内置 RoomEnvironment 的环境反射强度。 */
-const DEFAULT_ENVIRONMENT_INTENSITY = 0.45;
-/** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
-const ATTITUDE_PRESET_VALUES: Readonly<
-    Record<
-        Exclude<AircraftAttitudePreset, "custom">,
-        Omit<AircraftAttitudeSettings, "preset">
-    >
-> = {
-    level: { pitch: 0, roll: 0, yaw: 0 },
-    takeoff: { pitch: 10, roll: 0, yaw: 0 },
-    descent: { pitch: -8, roll: 0, yaw: 0 },
-    landing: { pitch: 3, roll: 0, yaw: 0 },
-};
-/** 模型视窗打开时采用的平飞姿态基线。 */
-const DEFAULT_ATTITUDE_SETTINGS: AircraftAttitudeSettings = {
-    preset: "level",
-    pitch: 0,
-    roll: 0,
-    yaw: 0,
-};
-
-/** 模型视窗保留原有画面效果时采用的渲染参数基线。 */
-const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
-    qualityPreset: "balanced",
-    lightingPreset: "neutral",
-    toneMapping: "aces",
-    exposure: 1.1,
-    shadowsEnabled: true,
-    shadowMode: "vsm",
-    displayFloor: false,
-    lightPositionX: DEFAULT_LIGHT_POSITION_X,
-    lightPositionY: DEFAULT_LIGHT_POSITION_Y,
-    lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
-    keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
-    fillLightIntensity: DEFAULT_FILL_LIGHT_INTENSITY,
-    rimLightIntensity: DEFAULT_RIM_LIGHT_INTENSITY,
-    environmentPreset: "room",
-    hdriUrl: "",
-    environmentIntensity: DEFAULT_ENVIRONMENT_INTENSITY,
-};
-
-/** 工作室照明预设，调整主光方向和强度，保留用户对色调和曝光的选择。 */
-const LIGHTING_PRESET_VALUES: Readonly<
-    Record<
-        Exclude<AircraftLightingPreset, "custom">,
-        Pick<
-            AircraftRenderSettings,
-            | "lightPositionX"
-            | "lightPositionY"
-            | "lightPositionZ"
-            | "keyLightIntensity"
-            | "fillLightIntensity"
-            | "rimLightIntensity"
-        >
-    >
-> = {
-    neutral: {
-        lightPositionX: DEFAULT_LIGHT_POSITION_X,
-        lightPositionY: DEFAULT_LIGHT_POSITION_Y,
-        lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
-        keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
-        fillLightIntensity: DEFAULT_FILL_LIGHT_INTENSITY,
-        rimLightIntensity: DEFAULT_RIM_LIGHT_INTENSITY,
-    },
-    silhouette: {
-        lightPositionX: -8,
-        lightPositionY: 6,
-        lightPositionZ: -10,
-        keyLightIntensity: 3.8,
-        fillLightIntensity: 0.65,
-        rimLightIntensity: 1.8,
-    },
-    top: {
-        lightPositionX: 0,
-        lightPositionY: 14,
-        lightPositionZ: 2,
-        keyLightIntensity: 3,
-        fillLightIntensity: 1,
-        rimLightIntensity: 0.9,
-    },
-    "three-point": {
-        lightPositionX: 7,
-        lightPositionY: 10,
-        lightPositionZ: 8,
-        keyLightIntensity: 3.2,
-        fillLightIntensity: 1.25,
-        rimLightIntensity: 2.1,
-    },
-};
-
-/** 质量预设可直接修改的渲染参数，不覆盖曝光、色调映射和灯光位置。 */
-const RENDER_QUALITY_PRESET_VALUES: Readonly<
-    Record<
-        Exclude<AircraftRenderQuality, "custom">,
-        Pick<
-            AircraftRenderSettings,
-            "pixelRatio" | "shadowsEnabled" | "shadowMode"
-        >
-    >
-> = {
-    performance: {
-        pixelRatio: 1,
-        shadowsEnabled: false,
-        shadowMode: "pcf",
-    },
-    balanced: {
-        pixelRatio: 1.5,
-        shadowsEnabled: true,
-        shadowMode: "vsm",
-    },
-    quality: {
-        pixelRatio: 2,
-        shadowsEnabled: true,
-        shadowMode: "vsm",
-    },
-};
-
-/** 读取设备像素比并限制在当前视窗的基础安全上限内。 */
-const getDevicePixelRatio = (): number =>
-    typeof window === "undefined"
-        ? 1
-        : Math.min(window.devicePixelRatio || 1, 2);
-
-/** 根据设备像素比解析质量预设，避免低 DPI 设备被强制放大。 */
-const getQualityPresetSettings = (
-    qualityPreset: Exclude<AircraftRenderQuality, "custom">,
-): Pick<
-    AircraftRenderSettings,
-    "pixelRatio" | "shadowsEnabled" | "shadowMode"
-> => {
-    const presetSettings = RENDER_QUALITY_PRESET_VALUES[qualityPreset];
-
-    return {
-        ...presetSettings,
-        pixelRatio: Math.min(presetSettings.pixelRatio, getDevicePixelRatio()),
-    };
-};
-
-/** 将用户可读的预设名称映射至模型视窗可用的色调映射值。 */
-const getToneMappingValue = (
-    toneMapping: AircraftToneMapping,
-): THREE.ToneMapping => {
-    if (toneMapping === "agx") {
-        return THREE.AgXToneMapping;
-    }
-
-    if (toneMapping === "neutral") {
-        return THREE.NeutralToneMapping;
-    }
-
-    if (toneMapping === "none") {
-        return THREE.NoToneMapping;
-    }
-
-    return THREE.ACESFilmicToneMapping;
-};
-
-/** 将界面中的阴影模式映射至 WebGPU 渲染器的阴影贴图类型。 */
-const getShadowMapType = (
-    shadowMode: AircraftShadowMode,
-): THREE.ShadowMapType =>
-    shadowMode === "vsm" ? THREE.VSMShadowMap : THREE.PCFShadowMap;
-
-/** 建立渲染控制面板的默认设置，高 DPI 设备最多使用 2x。 */
-const createDefaultRenderSettings = (): AircraftRenderSettings => ({
-    ...DEFAULT_RENDER_SETTINGS,
-    pixelRatio: Math.min(
-        RENDER_QUALITY_PRESET_VALUES.balanced.pixelRatio,
-        getDevicePixelRatio(),
-        DEFAULT_RENDER_PIXEL_RATIO,
-    ),
-});
-
-/** 校验 select 元素的字符串值是否为已支持的色调映射预设。 */
-const isAircraftToneMapping = (value: string): value is AircraftToneMapping =>
-    value === "aces" ||
-    value === "agx" ||
-    value === "neutral" ||
-    value === "none";
-
-/** 校验 select 元素的字符串值是否为已支持的 WebGPU 阴影算法。 */
-const isAircraftShadowMode = (value: string): value is AircraftShadowMode =>
-    value === "pcf" || value === "vsm";
-
-/** 校验相机视角菜单的字符串值是否为已支持的标准视角。 */
-const isAircraftCameraView = (value: string): value is AircraftCameraView =>
-    value === "custom" ||
-    value === "fit" ||
-    value === "front" ||
-    value === "side" ||
-    value === "top" ||
-    value === "bottom";
-
-/** 校验投影模式 select 的字符串值是否为已支持的相机类型。 */
-const isAircraftProjectionMode = (
-    value: string,
-): value is AircraftProjectionMode =>
-    value === "perspective" || value === "orthographic";
-
-/** 校验画质预设 select 的字符串值是否为已支持的质量档位。 */
-const isAircraftRenderQuality = (
-    value: string,
-): value is AircraftRenderQuality =>
-    value === "performance" ||
-    value === "balanced" ||
-    value === "quality" ||
-    value === "custom";
-
-/** 校验照明预设 select 的字符串值是否为已支持的档位。 */
-const isAircraftLightingPreset = (
-    value: string,
-): value is AircraftLightingPreset =>
-    value === "neutral" ||
-    value === "silhouette" ||
-    value === "top" ||
-    value === "three-point" ||
-    value === "custom";
-
-/** 校验环境来源 select 的字符串值是否为已支持的环境类型。 */
-const isAircraftEnvironmentPreset = (
-    value: string,
-): value is AircraftEnvironmentPreset => value === "room" || value === "hdri";
-
-/** 从当前主题读取颜色 token，缺失时返回模型视窗的稳定回退值。 */
-const readThemeColor = (token: string, fallback: string): string => {
-    if (typeof document === "undefined") {
-        return fallback;
-    }
-
-    return (
-        getComputedStyle(document.documentElement)
-            .getPropertyValue(token)
-            .trim() || fallback
-    );
-};
-
-/** 将截图或设置 JSON 转为浏览器下载，下载后立即释放临时 URL。 */
-const downloadBlob = (blob: Blob, fileName: string): void => {
-    const downloadUrl = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-
-    anchor.href = downloadUrl;
-    anchor.download = fileName;
-    anchor.click();
-    window.setTimeout((): void => {
-        URL.revokeObjectURL(downloadUrl);
-    }, 0);
-};
-
-/** 将世界轴投影为 HUD 中的屏幕线段，并按朝向调整可见度。 */
-const getCameraHudAxis = (
-    axis: THREE.Vector3,
-    inverseCameraQuaternion: THREE.Quaternion,
-): AircraftCameraHudAxis => {
-    const cameraAxis = axis.clone().applyQuaternion(inverseCameraQuaternion);
-    const screenAngle =
-        Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS || 0;
-
-    return {
-        angle: screenAngle,
-        opacity: 0.34 + Math.abs(cameraAxis.z) * 0.5,
-    };
-};
-
-/** 读取相机相对观察目标的球面方位和世界轴投影。 */
-const getCameraHudState = (
-    camera: AircraftCamera,
-    controls: OrbitControls<AircraftCamera>,
-): AircraftCameraHudState => {
-    const offset = camera.position.clone().sub(controls.target);
-    const horizontalDistance = Math.hypot(offset.x, offset.z);
-    const inverseCameraQuaternion = camera.quaternion.clone().invert();
-
-    return {
-        azimuth: Math.atan2(offset.x, offset.z) / DEGREES_TO_RADIANS,
-        elevation:
-            Math.atan2(offset.y, horizontalDistance) / DEGREES_TO_RADIANS,
-        distance: offset.length(),
-        axisX: getCameraHudAxis(
-            new THREE.Vector3(1, 0, 0),
-            inverseCameraQuaternion,
-        ),
-        axisY: getCameraHudAxis(
-            new THREE.Vector3(0, 1, 0),
-            inverseCameraQuaternion,
-        ),
-        axisZ: getCameraHudAxis(
-            new THREE.Vector3(0, 0, 1),
-            inverseCameraQuaternion,
-        ),
-    };
-};
-
-/** 创建指定投影模式的相机，并使用统一的近远裁剪范围。 */
-const createAircraftCamera = (
-    projectionMode: AircraftProjectionMode,
-    aspect: number,
-): AircraftCamera => {
-    if (projectionMode === "orthographic") {
-        const halfHeight = ORTHOGRAPHIC_FRUSTUM_HEIGHT / 2;
-        const halfWidth = halfHeight * Math.max(aspect, 0.01);
-
-        return new THREE.OrthographicCamera(
-            -halfWidth,
-            halfWidth,
-            halfHeight,
-            -halfHeight,
-            0.1,
-            100,
-        );
-    }
-
-    return new THREE.PerspectiveCamera(36, Math.max(aspect, 0.01), 0.1, 100);
-};
-
-/** 判断 HUD 数值变化是否超过用户可感知阈值，避免每帧触发 React 重渲染。 */
-const isCameraHudStateEqual = (
-    currentState: AircraftCameraHudState | null,
-    nextState: AircraftCameraHudState,
-): boolean => {
-    if (currentState === null) {
-        return false;
-    }
-
-    const isAxisEqual = (
-        currentAxis: AircraftCameraHudAxis,
-        nextAxis: AircraftCameraHudAxis,
-    ): boolean =>
-        Math.abs(currentAxis.angle - nextAxis.angle) < 0.2 &&
-        Math.abs(currentAxis.opacity - nextAxis.opacity) < 0.02;
-
-    return (
-        Math.abs(currentState.azimuth - nextState.azimuth) < 0.2 &&
-        Math.abs(currentState.elevation - nextState.elevation) < 0.2 &&
-        Math.abs(currentState.distance - nextState.distance) < 0.01 &&
-        isAxisEqual(currentState.axisX, nextState.axisX) &&
-        isAxisEqual(currentState.axisY, nextState.axisY) &&
-        isAxisEqual(currentState.axisZ, nextState.axisZ)
-    );
-};
-
-/** 为相机 HUD 生成带方向符号的角度读数。 */
-const formatCameraHudAngle = (angle: number): string =>
-    `${angle > 0 ? "+" : ""}${Math.round(angle)}°`;
-
-/** 将当前控制面板设置一次性写入已初始化的 WebGPU 渲染器。 */
-const applyRenderSettings = (
-    renderer: WebGPURenderer,
-    settings: AircraftRenderSettings,
-): void => {
-    renderer.toneMapping = getToneMappingValue(settings.toneMapping);
-    renderer.toneMappingExposure = settings.exposure;
-    renderer.setPixelRatio(settings.pixelRatio);
-    renderer.shadowMap.enabled = settings.shadowsEnabled;
-    renderer.shadowMap.type = getShadowMapType(settings.shadowMode);
-};
-
-/** 将控制面板中的角度单位转换为 Three.js 使用的弧度。 */
-const degreesToRadians = (degrees: number): number =>
-    degrees * DEGREES_TO_RADIANS;
-
-/** 将模型资源的导入坐标方向统一到视窗约定的机头朝 +Z、机身 Y-up。 */
-const applyModelSourceOrientation = (
-    model: THREE.Object3D,
-    sourcePath: string,
-): void => {
-    if (!sourcePath.startsWith(FR24_MODEL_SOURCE_PREFIX)) {
-        return;
-    }
-
-    model.rotateY(FR24_MODEL_FORWARD_CORRECTION);
-};
-
-/** 将姿态面板的三轴角度写入模型根节点，保持模型资源本身不变。 */
-const applyAircraftAttitude = (
-    model: THREE.Object3D,
-    settings: AircraftAttitudeSettings,
-): void => {
-    model.rotation.set(
-        degreesToRadians(settings.pitch),
-        degreesToRadians(settings.yaw),
-        degreesToRadians(settings.roll),
-        AIRCRAFT_ROTATION_ORDER,
-    );
-};
-
-/** 为姿态角度生成带方向符号的紧凑读数。 */
-const formatAttitudeAngle = (angle: number): string =>
-    `${angle > 0 ? "+" : ""}${angle}°`;
-
-/** 将拖拽计算出的角度限制在指定的安全范围内。 */
-const clampAngle = (angle: number, minimum: number, maximum: number): number =>
-    Math.min(Math.max(angle, minimum), maximum);
-
-/** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
-const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
-    objectRoot.traverse((object: THREE.Object3D): void => {
-        if (!(object instanceof THREE.Mesh)) {
-            return;
-        }
-
-        object.geometry.dispose();
-
-        const materials = Array.isArray(object.material)
-            ? object.material
-            : [object.material];
-        materials.forEach((material: THREE.Material): void => {
-            if (material instanceof THREE.MeshStandardMaterial) {
-                material.map?.dispose();
-                material.aoMap?.dispose();
-                material.emissiveMap?.dispose();
-                material.metalnessMap?.dispose();
-                material.normalMap?.dispose();
-                material.roughnessMap?.dispose();
-            }
-
-            material.dispose();
-        });
-    });
-};
-
-/** 将模型归一化到统一尺寸，并将几何中心移至姿态旋转原点。 */
-const normalizeAircraftModel = (model: THREE.Object3D): void => {
-    const sourceBounds = new THREE.Box3().setFromObject(model);
-    const sourceSize = sourceBounds.getSize(new THREE.Vector3());
-    const largestDimension = Math.max(sourceSize.x, sourceSize.y, sourceSize.z);
-
-    if (largestDimension > 0) {
-        model.scale.setScalar(NORMALIZED_MODEL_MAX_SIZE / largestDimension);
-    }
-
-    const normalizedBounds = new THREE.Box3().setFromObject(model);
-    const normalizedCenter = normalizedBounds.getCenter(new THREE.Vector3());
-
-    model.position.sub(normalizedCenter);
-    model.traverse((object: THREE.Object3D): void => {
-        if (object instanceof THREE.Mesh) {
-            object.castShadow = true;
-            object.receiveShadow = true;
-        }
-    });
-};
-
-/** 根据模型包围球和当前视口 FOV 计算标准视角所需距离。 */
-const getCameraFitDistance = (
-    camera: AircraftCamera,
-    model: THREE.Object3D,
-): { center: THREE.Vector3; distance: number } => {
-    const bounds = new THREE.Box3().setFromObject(model);
-    const modelCenter = model.getWorldPosition(new THREE.Vector3());
-    const modelSphere = bounds.getBoundingSphere(new THREE.Sphere());
-    if (camera instanceof THREE.OrthographicCamera) {
-        const modelDiameter = Math.max(modelSphere.radius * 2, 0.01);
-        const availableWidth = Math.max(camera.right - camera.left, 0.01);
-        const availableHeight = Math.max(camera.top - camera.bottom, 0.01);
-        const fitZoom = Math.min(
-            availableWidth / (modelDiameter * CAMERA_FIT_MARGIN),
-            availableHeight / (modelDiameter * CAMERA_FIT_MARGIN),
-        );
-        camera.zoom = Math.min(
-            Math.max(fitZoom, MINIMUM_ORTHOGRAPHIC_ZOOM),
-            MAXIMUM_ORTHOGRAPHIC_ZOOM,
-        );
-        camera.updateProjectionMatrix();
-
-        return {
-            center: modelCenter,
-            distance: Math.max(modelSphere.radius * 3.2, 1),
-        };
-    }
-
-    const verticalFov = degreesToRadians(camera.fov);
-    const horizontalFov =
-        2 *
-        Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
-    const limitingFov = Math.min(verticalFov, horizontalFov);
-    const cameraDistance = Math.max(
-        (modelSphere.radius / Math.sin(limitingFov / 2)) * CAMERA_FIT_MARGIN,
-        0.5,
-    );
-
-    return { center: modelCenter, distance: cameraDistance };
-};
-
-/** 应用一个标准相机视角，并让上下视图保持稳定的屏幕朝向。 */
-const applyCameraView = (
-    camera: AircraftCamera,
-    controls: OrbitControls<AircraftCamera>,
-    model: THREE.Object3D,
-    view: Exclude<AircraftCameraView, "custom">,
-): void => {
-    const { center, distance } = getCameraFitDistance(camera, model);
-    const viewDirection = new THREE.Vector3(
-        ...CAMERA_VIEW_DIRECTIONS[view],
-    ).normalize();
-
-    if (view === "top") {
-        camera.up.set(0, 0, -1);
-    } else if (view === "bottom") {
-        camera.up.set(0, 0, 1);
-    } else {
-        camera.up.set(0, 1, 0);
-    }
-
-    controls.target.copy(center);
-    camera.position.copy(center).addScaledVector(viewDirection, distance);
-    controls.update();
-};
-
-/** 按模型包围球和当前视口 FOV 聚焦模型，默认使用右前上方适配视角。 */
-const focusModel = (
-    camera: AircraftCamera,
-    controls: OrbitControls<AircraftCamera>,
-    model: THREE.Object3D,
-): void => {
-    applyCameraView(camera, controls, model, "fit");
-};
-
 /**
  * 使用 Three.js WebGPU 渲染器加载当前选择的单个 GLB 模型。
  */
@@ -857,8 +150,6 @@ export const AircraftModelViewport = ({
         useState<AircraftAnimationState>(EMPTY_ANIMATION_STATE);
     const [isRenderControlsOpen, setIsRenderControlsOpen] =
         useState<boolean>(false);
-    const [isAttitudeControlsOpen, setIsAttitudeControlsOpen] =
-        useState<boolean>(false);
     const [fullscreenError, setFullscreenError] = useState<string | null>(null);
     const [snapshotError, setSnapshotError] = useState<string | null>(null);
     const [environmentError, setEnvironmentError] = useState<string | null>(
@@ -870,18 +161,16 @@ export const AircraftModelViewport = ({
         useState<boolean>(false);
     const [renderSettings, setRenderSettings] =
         useState<AircraftRenderSettings>(createDefaultRenderSettings);
-    const [attitudeSettings, setAttitudeSettings] =
-        useState<AircraftAttitudeSettings>(DEFAULT_ATTITUDE_SETTINGS);
+    const [attitudeSettings] = useState<AircraftAttitudeSettings>(
+        DEFAULT_ATTITUDE_SETTINGS,
+    );
     const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
     const projectionModeRef = useRef<AircraftProjectionMode>(projectionMode);
     const attitudeSettingsRef =
         useRef<AircraftAttitudeSettings>(attitudeSettings);
-    const attitudeDragRef = useRef<AircraftAttitudeDragState | null>(null);
     const fullscreenToggleRef = useRef<HTMLButtonElement | null>(null);
     const wasFullscreenRef = useRef<boolean>(false);
     const isApplyingCameraViewRef = useRef<boolean>(false);
-    const [isAttitudeDragging, setIsAttitudeDragging] =
-        useState<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     projectionModeRef.current = projectionMode;
@@ -993,7 +282,6 @@ export const AircraftModelViewport = ({
 
             if (nextIsOpen) {
                 setIsRenderControlsOpen(false);
-                setIsAttitudeControlsOpen(false);
             }
 
             return nextIsOpen;
@@ -1009,26 +297,7 @@ export const AircraftModelViewport = ({
     /** 切换画布内渲染控制面板，并保持三维模型的直接操作区域可用。 */
     const handleRenderControlsToggle = (): void => {
         setIsRenderControlsOpen((isOpen: boolean): boolean => {
-            const nextIsOpen = !isOpen;
-
-            if (nextIsOpen) {
-                setIsAttitudeControlsOpen(false);
-            }
-
-            return nextIsOpen;
-        });
-    };
-
-    /** 切换画布内飞行姿态面板，保留模型目录和轨道操作的空间。 */
-    const handleAttitudeControlsToggle = (): void => {
-        setIsAttitudeControlsOpen((isOpen: boolean): boolean => {
-            const nextIsOpen = !isOpen;
-
-            if (nextIsOpen) {
-                setIsRenderControlsOpen(false);
-            }
-
-            return nextIsOpen;
+            return !isOpen;
         });
     };
 
@@ -1036,18 +305,11 @@ export const AircraftModelViewport = ({
     const handleViewportPointerDown = (
         event: PointerEvent<HTMLDivElement>,
     ): void => {
-        if (
-            event.target instanceof Element &&
-            (event.target.closest(".plane-render__viewport-tools") !== null ||
-                event.target.closest(".plane-render__lighting-hud") !== null ||
-                event.target.closest(".plane-render__fullscreen-model-dir") !==
-                    null)
-        ) {
+        if (isViewportControlTarget(event.target)) {
             return;
         }
 
         setIsRenderControlsOpen(false);
-        setIsAttitudeControlsOpen(false);
         setIsModelDirectoryOpen(false);
     };
 
@@ -1206,7 +468,6 @@ export const AircraftModelViewport = ({
             }
 
             setIsRenderControlsOpen(false);
-            setIsAttitudeControlsOpen(false);
             setIsModelDirectoryOpen(false);
         };
 
@@ -1541,124 +802,6 @@ export const AircraftModelViewport = ({
     };
 
     /** 应用一组飞行阶段预设，并将手动角度同步至三维模型。 */
-    const handleAttitudePresetChange = (
-        preset: Exclude<AircraftAttitudePreset, "custom">,
-    ): void => {
-        const presetSettings = ATTITUDE_PRESET_VALUES[preset];
-
-        setAttitudeSettings({
-            preset,
-            ...presetSettings,
-        });
-    };
-
-    /** 更新单个姿态轴，并将预设标记为自定义，保留其他轴当前值。 */
-    const handleAttitudeAxisChange = (
-        axis: AircraftAttitudeAxis,
-        value: number,
-    ): void => {
-        setAttitudeSettings(
-            (
-                currentSettings: AircraftAttitudeSettings,
-            ): AircraftAttitudeSettings => ({
-                ...currentSettings,
-                preset: "custom",
-                [axis]: value,
-            }),
-        );
-    };
-
-    /** 将模型姿态恢复为平飞状态，不改变渲染器或相机参数。 */
-    const handleAttitudeReset = (): void => {
-        setAttitudeSettings(DEFAULT_ATTITUDE_SETTINGS);
-    };
-
-    /** 记录 3D 操控器拖拽起点，后续移动量会转换为姿态角度。 */
-    const handleAttitudePointerDown = (
-        mode: AircraftAttitudeDragMode,
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        if (event.button !== 0) {
-            return;
-        }
-
-        event.currentTarget.setPointerCapture(event.pointerId);
-        attitudeDragRef.current = {
-            pointerId: event.pointerId,
-            startX: event.clientX,
-            startY: event.clientY,
-            startPitch: attitudeSettings.pitch,
-            startRoll: attitudeSettings.roll,
-            startYaw: attitudeSettings.yaw,
-            mode,
-        };
-        setIsAttitudeDragging(true);
-        event.preventDefault();
-    };
-
-    /** 将 3D 操控器的屏幕位移换算为俯仰、偏航或滚转角度。 */
-    const handleAttitudePointerMove = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        const dragState = attitudeDragRef.current;
-
-        if (dragState === null || dragState.pointerId !== event.pointerId) {
-            return;
-        }
-
-        const deltaX = event.clientX - dragState.startX;
-        const deltaY = event.clientY - dragState.startY;
-
-        if (dragState.mode === "roll") {
-            setAttitudeSettings({
-                preset: "custom",
-                pitch: dragState.startPitch,
-                roll: clampAngle(
-                    dragState.startRoll +
-                        deltaX * ATTITUDE_ROLL_DRAG_SENSITIVITY,
-                    MINIMUM_ROLL_ANGLE,
-                    MAXIMUM_ROLL_ANGLE,
-                ),
-                yaw: dragState.startYaw,
-            });
-        } else {
-            setAttitudeSettings({
-                preset: "custom",
-                pitch: clampAngle(
-                    dragState.startPitch -
-                        deltaY * ATTITUDE_ORBIT_DRAG_SENSITIVITY,
-                    MINIMUM_PITCH_ANGLE,
-                    MAXIMUM_PITCH_ANGLE,
-                ),
-                roll: dragState.startRoll,
-                yaw: clampAngle(
-                    dragState.startYaw +
-                        deltaX * ATTITUDE_ORBIT_DRAG_SENSITIVITY,
-                    MINIMUM_YAW_ANGLE,
-                    MAXIMUM_YAW_ANGLE,
-                ),
-            });
-        }
-    };
-
-    /** 结束一次姿态拖拽并释放指针捕获，避免拖出控件后继续修改模型。 */
-    const handleAttitudePointerUp = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
-        const dragState = attitudeDragRef.current;
-
-        if (dragState === null || dragState.pointerId !== event.pointerId) {
-            return;
-        }
-
-        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-            event.currentTarget.releasePointerCapture(event.pointerId);
-        }
-
-        attitudeDragRef.current = null;
-        setIsAttitudeDragging(false);
-    };
-
     useEffect((): void => {
         const renderer = rendererRef.current;
 
@@ -1805,7 +948,7 @@ export const AircraftModelViewport = ({
                 return;
             }
 
-            if (!("gpu" in navigator)) {
+            if (!hasAircraftWebGPUSupport()) {
                 publishProgress({
                     phase: "error",
                     loadedModelCount: 0,
@@ -1816,15 +959,11 @@ export const AircraftModelViewport = ({
                 return;
             }
 
-            const renderer = new WebGPURenderer({
-                alpha: true,
-                antialias: true,
-            });
+            let renderer: WebGPURenderer;
 
             try {
-                await renderer.init();
+                renderer = await initializeAircraftWebGPURenderer();
             } catch {
-                renderer.dispose();
                 publishProgress({
                     phase: "error",
                     loadedModelCount: 0,
@@ -1888,16 +1027,7 @@ export const AircraftModelViewport = ({
             renderer.domElement.setAttribute("aria-hidden", "true");
             container.appendChild(renderer.domElement);
 
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.065;
-            controls.minDistance = MINIMUM_CAMERA_DISTANCE;
-            controls.maxDistance = MAXIMUM_CAMERA_DISTANCE;
-            controls.minPolarAngle = POLAR_ANGLE_MARGIN;
-            controls.maxPolarAngle = Math.PI - POLAR_ANGLE_MARGIN;
-            controls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
-            controls.zoomToCursor = true;
-            controls.minZoom = MINIMUM_ORTHOGRAPHIC_ZOOM;
-            controls.maxZoom = MAXIMUM_ORTHOGRAPHIC_ZOOM;
+            configureAircraftOrbitControls(controls);
 
             const lightingRig = createAircraftLightingRig(
                 renderSettingsRef.current,
@@ -1915,26 +1045,19 @@ export const AircraftModelViewport = ({
             keyLightRef.current = keyLight;
             lightingRigRef.current = lightingRig;
 
-            const displayFloor = new THREE.Mesh(
-                new THREE.PlaneGeometry(24, 10),
-                new THREE.MeshStandardMaterial({
-                    color: 0x163343,
-                    roughness: 0.82,
-                    metalness: 0.08,
-                }),
+            const displayFloor = createAircraftDisplayFloor(
+                renderSettingsRef.current.displayFloor,
             );
-            displayFloor.rotation.x = -Math.PI / 2;
-            displayFloor.position.y = -0.015;
-            displayFloor.receiveShadow = true;
-            displayFloor.visible = renderSettingsRef.current.displayFloor;
             displayFloorRef.current = displayFloor;
             scene.add(displayFloor);
 
             /** 将当前主题的工作室背景与灯光颜色同步到 Three.js 对象。 */
             const applyThemePalette = (): void => {
-                displayFloor.material.color.set(
-                    readThemeColor(MODEL_FLOOR_COLOR_TOKEN, "#163343"),
-                );
+                if (displayFloor.material instanceof THREE.MeshStandardMaterial) {
+                    displayFloor.material.color.set(
+                        readThemeColor(MODEL_FLOOR_COLOR_TOKEN, "#163343"),
+                    );
+                }
                 keyLight.color.set(
                     readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"),
                 );
@@ -2195,16 +1318,7 @@ export const AircraftModelViewport = ({
                     renderer.domElement,
                 );
 
-                nextControls.enableDamping = true;
-                nextControls.dampingFactor = 0.065;
-                nextControls.minDistance = MINIMUM_CAMERA_DISTANCE;
-                nextControls.maxDistance = MAXIMUM_CAMERA_DISTANCE;
-                nextControls.minPolarAngle = POLAR_ANGLE_MARGIN;
-                nextControls.maxPolarAngle = Math.PI - POLAR_ANGLE_MARGIN;
-                nextControls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
-                nextControls.zoomToCursor = true;
-                nextControls.minZoom = MINIMUM_ORTHOGRAPHIC_ZOOM;
-                nextControls.maxZoom = MAXIMUM_ORTHOGRAPHIC_ZOOM;
+                configureAircraftOrbitControls(nextControls);
 
                 return nextControls;
             };
@@ -2910,83 +2024,13 @@ export const AircraftModelViewport = ({
                     />
                 </div>
             ) : null}
-            {cameraHudState !== null ? (
-                <div
-                    className="plane-render__camera-hud"
-                    role="group"
-                    aria-label="观察相机状态"
-                >
-                    <div
-                        className="plane-render__camera-hud-axis"
-                        aria-hidden="true"
-                    >
-                        <span
-                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--x"
-                            style={{
-                                transform: `rotate(${cameraHudState.axisX.angle}deg)`,
-                                opacity: cameraHudState.axisX.opacity,
-                            }}
-                        />
-                        <span
-                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--y"
-                            style={{
-                                transform: `rotate(${cameraHudState.axisY.angle}deg)`,
-                                opacity: cameraHudState.axisY.opacity,
-                            }}
-                        />
-                        <span
-                            className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--z"
-                            style={{
-                                transform: `rotate(${cameraHudState.axisZ.angle}deg)`,
-                                opacity: cameraHudState.axisZ.opacity,
-                            }}
-                        />
-                        <span className="plane-render__camera-hud-origin" />
-                    </div>
-                    <div className="plane-render__camera-hud-readout">
-                        <span>
-                            AZ {formatCameraHudAngle(cameraHudState.azimuth)}
-                        </span>
-                        <span>
-                            EL {formatCameraHudAngle(cameraHudState.elevation)}
-                        </span>
-                        <span>DIST {cameraHudState.distance.toFixed(2)}</span>
-                    </div>
-                </div>
-            ) : null}
+            {cameraHudState !== null ? <CameraHud state={cameraHudState} /> : null}
             {animationState.available ? (
-                <div className="plane-render__animation-controls">
-                    <div className="plane-render__animation-heading">
-                        <span>{animationState.name}</span>
-                        <output>
-                            {animationState.currentTime.toFixed(1)}s /{" "}
-                            {animationState.duration.toFixed(1)}s
-                        </output>
-                    </div>
-                    <div className="plane-render__animation-row">
-                        <button
-                            className="plane-render__viewport-action"
-                            type="button"
-                            onClick={handleAnimationToggle}
-                        >
-                            {animationState.isPlaying ? "暂停" : "播放"}
-                        </button>
-                        <label className="plane-render__animation-range">
-                            <span className="plane-render__visually-hidden">
-                                动画时间
-                            </span>
-                            <input
-                                aria-label="动画时间"
-                                type="range"
-                                min={0}
-                                max={animationState.duration}
-                                step={0.01}
-                                value={animationState.currentTime}
-                                onChange={handleAnimationScrub}
-                            />
-                        </label>
-                    </div>
-                </div>
+                <AnimationControls
+                    state={animationState}
+                    onToggle={handleAnimationToggle}
+                    onScrub={handleAnimationScrub}
+                />
             ) : null}
             {fullscreenError !== null ? (
                 <p className="plane-render__fullscreen-error" role="alert">
