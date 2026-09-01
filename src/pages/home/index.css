@@ -101,7 +101,6 @@ html[data-theme="dark"] .aircraft-wiki__hero {
 }
 
 .aircraft-wiki__hero h1 {
-  max-width: 10ch;
   margin-top: 0.55rem;
   color: var(--aircraft-hero-heading);
   font-size: 3.8rem;

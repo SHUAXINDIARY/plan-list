@@ -884,9 +884,9 @@ const HomePage = (): ReactElement => {
         >
             <div className="aircraft-wiki__hero">
                 <div className="aircraft-wiki__intro">
-                    <p className="page-eyebrow">飞机日志</p>
-                    <h1 id="home-page-title">飞机日志</h1>
-                    <p>浏览全球航司机队，整理属于你的飞行足迹。</p>
+                <p className="page-eyebrow">Aircraft Wiki</p>
+                    <h1 id="home-page-title">航司机型资料库</h1>
+                    <p>按航司浏览当前机队中的制造商与机型。</p>
                     <div
                         className="aircraft-wiki__hero-actions"
                         aria-label="首页快速入口"

@@ -36,7 +36,7 @@ interface NavigationItem {
 
 // 应用主导航配置，后续新增页面时从这里扩展入口。
 const NAVIGATION_ITEMS: NavigationItem[] = [
-    { path: "/", label: "机型资料库", end: true },
+    { path: "/", label: "航司WIKI", end: true },
     { path: "/personal", label: "飞行日志", end: false },
     { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
