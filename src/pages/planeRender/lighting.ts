@@ -26,7 +26,7 @@ export interface AircraftLightingSettings {
 export interface AircraftEnvironmentSettings {
     /** 当前使用内置工作室环境还是 HDRI 环境。 */
     environmentPreset: AircraftEnvironmentPreset;
-    /** HDRI 的运行时 URL，支持 public 路径或允许跨域的 HTTPS 地址。 */
+    /** 当前目录 HDRI 资源生成的运行时 URL。 */
     hdriUrl: string;
     /** 场景环境反射与漫反射的整体强度。 */
     environmentIntensity: number;
@@ -124,7 +124,7 @@ export const loadHdriEnvironment = async (
     const normalizedUrl = url.trim();
 
     if (normalizedUrl.length === 0) {
-        throw new Error("HDRI URL 不能为空。");
+        throw new Error("HDRI 资源不能为空。");
     }
 
     const hdrTexture = await new HDRLoader().loadAsync(normalizedUrl);

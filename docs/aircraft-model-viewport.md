@@ -185,7 +185,7 @@ THREE.Scene
 | 画质预设 | 性能优先、均衡、质量优先、自定义 | 同步像素倍率和阴影参数 |
 | 照明预设 | 中性检查、轮廓检查、顶部检查、三点灯光、自定义 | 同步 key/fill/rim 三盏方向光参数 |
 | 环境来源 | 内置工作室、HDRI 环境 | 选择 PMREM 环境贴图来源 |
-| HDRI URL | `public` 路径或允许 CORS 的 HTTPS `.hdr` | 异步加载并转换为 PMREM，失败回退内置环境 |
+| HDRI 环境 | `hdri/*.hdr` 构建期清单 | 通过 select 选择并异步转换为 PMREM，失败回退内置环境 |
 | 环境强度 | `0..2`，步长 `0.05` | `scene.environmentIntensity` |
 | 右侧 KEY LIGHT HUD | 拖拽方位/仰角 + 强度滑条 | 同步主方向光方向和强度 |
 | 色调映射 | ACES、AgX、Neutral、关闭 | `renderer.toneMapping` |
@@ -199,7 +199,7 @@ THREE.Scene
 | 阴影算法 | PCF、VSM，默认 VSM | `renderer.shadowMap.type` |
 | 展示平面 | 开/关，默认关闭 | `displayFloor.visible` |
 
-设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向、key/fill/rim 强度；任一高级参数手动修改后标记为自定义。环境 URL 输入使用约 `240ms` 去抖，避免逐字符触发网络请求；每次请求带递增 token，旧请求完成后会被丢弃并释放 PMREM。HDRI 先由 `HDRLoader` 解析为 equirectangular 纹理，再经 `PMREMGenerator.fromEquirectangular()` 转为 PBR 可用环境；原始 HDR 纹理在转换后立即释放，当前 HDRI PMREM 只保留一份。加载失败或 URL 为空时恢复 RoomEnvironment，并在控件内给出回退提示。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源、环境强度和展示平面则直接修改现有对象。
+设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向、key/fill/rim 强度；任一高级参数手动修改后标记为自定义。`hdriAssets.ts` 在构建期扫描 `hdri/*.hdr` 并导出资源 URL，控制面板只允许从该清单选择，避免任意 URL 请求；select 变更会直接触发异步加载，旧请求完成后会被丢弃并释放 PMREM。HDRI 先由 `HDRLoader` 解析为 equirectangular 纹理，再经 `PMREMGenerator.fromEquirectangular()` 转为 PBR 可用环境；原始 HDR 纹理在转换后立即释放，当前 HDRI PMREM 只保留一份。加载失败或未选择资源时恢复 RoomEnvironment，并在控件内给出回退提示。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源、环境强度和展示平面则直接修改现有对象。
 
 ## 飞行姿态控制
 
@@ -284,7 +284,7 @@ aircraftAttitudePivot.rotation.set(
 - 若 GLB 提供动画，使用 `AnimationMixer` 驱动单段动画的播放、暂停和时间轴，动画播放期间由按需帧调度持续请求绘制。
 - 后续可增加模型加载缓存，但必须以资源 URL 为 key，并在缓存淘汰时复用同一套 dispose 逻辑。
 - 若未来支持 WebGL 回退，应把 renderer 创建抽成后端适配层，并在进度状态中明确当前后端，不能静默改变画质路径。
-- 若需要内置 HDRI，应将经过压缩和许可确认的 `.hdr` 放到 `public/hdri/`，控制面板 URL 填写 `/hdri/<name>.hdr`；不要把大尺寸 HDR 文件直接内嵌到 TS bundle。
+- 内置 HDRI 应放在项目根目录 `hdri/`，由 `hdriAssets.ts` 在构建期生成 URL 清单；不要把大尺寸 HDR 文件直接内嵌到 TS bundle。
 - 若需要 EXR 或 HDRI 列表，可在 `lighting.ts` 增加 loader/preset 适配，不应让 `AircraftModelViewport` 直接依赖具体文件格式。
 - PNG 与设置 JSON 导出均从当前 canvas/状态生成，下载完成后释放 Blob URL；无动画模型不渲染动画控件。
 

@@ -3,6 +3,7 @@ import type {
     AircraftEnvironmentPreset,
     AircraftLightingSettings,
 } from "../lighting";
+import type { AircraftHdriAsset } from "../hdriAssets";
 
 /** 可供模型视窗即时切换的色调映射预设。 */
 export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
@@ -46,7 +47,7 @@ export interface AircraftRenderSettings
     displayFloor: boolean;
     /** 当前使用内置工作室环境还是 HDRI 环境。 */
     environmentPreset: AircraftEnvironmentPreset;
-    /** HDRI 运行时 URL，输入后会在画布中异步替换环境反射。 */
+    /** 当前从 hdri 目录选择的运行时资源 URL。 */
     hdriUrl: string;
     /** 场景环境反射与漫反射的整体强度。 */
     environmentIntensity: number;
@@ -70,8 +71,10 @@ interface RenderControlsProps {
     onEnvironmentPresetChange: (
         event: ChangeEvent<HTMLSelectElement>,
     ) => void;
-    /** 处理 HDRI URL 输入的变更。 */
-    onHdriUrlChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 当前构建期扫描到的 HDRI 资源目录。 */
+    hdriAssets: readonly AircraftHdriAsset[];
+    /** 处理 HDRI select 的变更。 */
+    onHdriChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 当前 HDRI 加载失败或配置不完整时的回退提示。 */
     environmentError: string | null;
     /** 处理环境强度滑块的变更。 */
@@ -156,7 +159,8 @@ export const RenderControls = ({
     onQualityPresetChange,
     onLightingPresetChange,
     onEnvironmentPresetChange,
-    onHdriUrlChange,
+    hdriAssets,
+    onHdriChange,
     environmentError,
     onEnvironmentIntensityChange,
     onExposureChange,
@@ -245,18 +249,34 @@ export const RenderControls = ({
                         </select>
                     </label>
                     <label className="plane-render__render-field">
-                        <span>HDRI URL</span>
-                        <input
+                        <span>HDRI 环境</span>
+                        <select
                             id={hdriUrlControlId}
-                            type="url"
-                            inputMode="url"
-                            placeholder="/hdri/studio.hdr 或 https://..."
                             value={settings.hdriUrl}
-                            disabled={settings.environmentPreset !== "hdri"}
-                            onChange={onHdriUrlChange}
-                        />
+                            disabled={
+                                settings.environmentPreset !== "hdri" ||
+                                hdriAssets.length === 0
+                            }
+                            onChange={onHdriChange}
+                        >
+                            <option value="">
+                                {hdriAssets.length === 0
+                                    ? "hdri 目录为空"
+                                    : "选择 HDRI 环境"}
+                            </option>
+                            {hdriAssets.map(
+                                (asset: AircraftHdriAsset): ReactElement => (
+                                    <option key={asset.id} value={asset.url}>
+                                        {asset.label}
+                                    </option>
+                                ),
+                            )}
+                        </select>
                         {environmentError !== null ? (
-                            <small className="plane-render__render-field-note" role="status">
+                            <small
+                                className="plane-render__render-field-note"
+                                role="status"
+                            >
                                 {environmentError}
                             </small>
                         ) : null}

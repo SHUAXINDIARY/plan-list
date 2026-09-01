@@ -32,6 +32,7 @@ import {
     type AircraftLightingRig,
 } from "./lighting";
 import ModelDir from "./ModelDir";
+import { AIRCRAFT_HDRI_ASSETS } from "./hdriAssets";
 import type { AircraftModelAsset } from "./modelAssets";
 
 /** 模型视窗当前所处的初始化或加载阶段。 */
@@ -1294,16 +1295,25 @@ export const AircraftModelViewport = ({
         setRenderSettings(
             (
                 currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                environmentPreset,
-            }),
+            ): AircraftRenderSettings => {
+                const firstHdriUrl = AIRCRAFT_HDRI_ASSETS[0]?.url ?? "";
+
+                return {
+                    ...currentSettings,
+                    environmentPreset,
+                    hdriUrl:
+                        environmentPreset === "hdri" &&
+                        currentSettings.hdriUrl.length === 0
+                            ? firstHdriUrl
+                            : currentSettings.hdriUrl,
+                };
+            },
         );
     };
 
-    /** 保存 HDRI URL，异步加载 effect 会对连续输入做短暂去抖。 */
-    const handleHdriUrlChange = (
-        event: ChangeEvent<HTMLInputElement>,
+    /** 切换目录中的 HDRI 资源，异步加载 effect 会对选择结果做短暂去抖。 */
+    const handleHdriChange = (
+        event: ChangeEvent<HTMLSelectElement>,
     ): void => {
         const hdriUrl = event.currentTarget.value;
 
@@ -1710,13 +1720,9 @@ export const AircraftModelViewport = ({
             return (): void => undefined;
         }
 
-        const timeoutId = window.setTimeout((): void => {
-            void applyEnvironment(renderSettings);
-        }, 240);
+        void applyEnvironment(renderSettings);
 
-        return (): void => {
-            window.clearTimeout(timeoutId);
-        };
+        return (): void => undefined;
     }, [renderSettings.environmentPreset, renderSettings.hdriUrl]);
 
     useEffect((): void => {
@@ -1962,7 +1968,7 @@ export const AircraftModelViewport = ({
                     scene.environment = resources.roomRenderTarget.texture;
                     setEnvironmentError(
                         settings.environmentPreset === "hdri"
-                            ? "请输入 HDRI URL，当前已回退内置工作室。"
+                            ? "请选择 HDRI 环境，当前已回退内置工作室。"
                             : null,
                     );
                     requestRenderRef.current?.();
@@ -2527,7 +2533,8 @@ export const AircraftModelViewport = ({
                     onQualityPresetChange={handleQualityPresetChange}
                     onLightingPresetChange={handleLightingPresetChange}
                     onEnvironmentPresetChange={handleEnvironmentPresetChange}
-                    onHdriUrlChange={handleHdriUrlChange}
+                    hdriAssets={AIRCRAFT_HDRI_ASSETS}
+                    onHdriChange={handleHdriChange}
                     environmentError={environmentError}
                     onEnvironmentIntensityChange={
                         handleEnvironmentIntensityChange

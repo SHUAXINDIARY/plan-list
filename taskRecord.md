@@ -8305,3 +8305,49 @@
 
 - `src/pages/planeRender/AircraftModelViewport.tsx`：统一 `OrbitControls<AircraftCamera>` 泛型标注。
 - `taskRecord.md`：追加 TypeScript 泛型错误修复记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将 HDRI 自由 URL 输入改为从项目根目录 `hdri/*` 构建期清单中选择并生效。
+
+## 完成过程
+
+1. 新增 `hdriAssets.ts`，通过 `import.meta.glob` 扫描 `hdri/*.hdr`，过滤非 HDR 文件并导出稳定排序的资源目录。
+2. 将 `.hdr` 加入 Rsbuild `assetsInclude`，使选择项使用构建后的资源 URL。
+3. 将 `RenderControls` 的文本 URL 输入替换为 HDRI select；切换到 HDRI 环境且尚未选择资源时自动选中第一项。
+4. 保留原有 HDRLoader、PMREM、去抖、竞态保护和失败回退逻辑。
+
+## 修改具体文件
+
+- `src/pages/planeRender/hdriAssets.ts`：新增 `hdri/*.hdr` 构建期资源清单。
+- `rsbuild.config.ts`：允许 `.hdr` 作为源资源处理。
+- `src/pages/planeRender/components/RenderControls.tsx`：将 HDRI URL 输入改为目录 select。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：接入 HDRI 目录清单与 select 事件。
+- `src/pages/planeRender/lighting.ts`：同步 HDRI URL 字段语义为目录资源 URL。
+- `src/pages/planeRender/index.css`：移除 URL 输入专用样式，复用 select 样式。
+- `docs/aircraft-model-viewport.md`：更新 HDRI 资源来源和选择方式说明。
+- `taskRecord.md`：追加 HDRI select 改造记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+让 HDRI 目录 select 的选择结果直接生效，去除不再需要的文本输入去抖。
+
+## 完成过程
+
+1. 将 HDRI 选择 effect 改为 select 变更后立即触发异步 HDRLoader 请求。
+2. 保留递增 token、旧 PMREM 释放和失败回退，确保快速切换时不会应用过期资源。
+3. 同步更新 HDRI 技术文档中的运行时行为说明。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：移除 HDRI select 的定时延迟，保持异步竞态保护。
+- `docs/aircraft-model-viewport.md`：更新 HDRI 选择生效说明。
+- `taskRecord.md`：追加 HDRI select 即时生效记录。

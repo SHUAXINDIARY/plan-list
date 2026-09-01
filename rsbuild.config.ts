@@ -9,7 +9,7 @@ import { codeInspectorPlugin } from 'code-inspector-plugin';
 // Docs: https://rsbuild.rs/config/
 export default defineConfig({
     source: {
-        assetsInclude: /\.(geojson|glb)$/,
+        assetsInclude: /\.(geojson|glb|hdr)$/,
     },
     html: {
         favicon: "https://avatars.githubusercontent.com/u/32100575?v=4",
