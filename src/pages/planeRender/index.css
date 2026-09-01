@@ -173,6 +173,7 @@
 .plane-render__camera-view-control select:focus-visible,
 .plane-render__render-reset:focus-visible,
 .plane-render__render-field select:focus-visible,
+.plane-render__render-field input[type="url"]:focus-visible,
 .plane-render__render-field input[type="range"]:focus-visible,
 .plane-render__render-switch input:focus-visible {
     border-color: var(--pl-border-focus);
@@ -580,6 +581,37 @@
     border: 1px solid var(--pl-border-default);
     border-radius: 0.48rem;
     cursor: pointer;
+}
+
+.plane-render__render-field input[type="url"] {
+    width: 100%;
+    min-height: 2.2rem;
+    padding: 0.42rem 0.52rem;
+    color: var(--pl-text-data);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 650;
+    background-color: var(--pl-surface-entry);
+    border: 1px solid var(--pl-border-default);
+    border-radius: 0.48rem;
+}
+
+.plane-render__render-field input[type="url"]::placeholder {
+    color: var(--pl-text-meta);
+    opacity: 0.9;
+}
+
+.plane-render__render-field input[type="url"]:disabled {
+    color: var(--pl-text-meta);
+    cursor: not-allowed;
+    opacity: 0.68;
+}
+
+.plane-render__render-field-note {
+    color: var(--pl-error-text);
+    font-size: 0.7rem;
+    font-weight: 650;
+    line-height: 1.35;
 }
 
 .plane-render__render-field select:disabled {
@@ -1506,6 +1538,7 @@
 
     .plane-render__camera-view-control select,
     .plane-render__render-field select,
+    .plane-render__render-field input[type="url"],
     .plane-render__render-controls-toggle,
     .plane-render__attitude-controls-toggle,
     .plane-render__fullscreen-button,

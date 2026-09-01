@@ -10,7 +10,6 @@ import {
 } from "react";
 import * as THREE from "three";
 import { PMREMGenerator, WebGPURenderer } from "three/webgpu";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
@@ -21,6 +20,17 @@ import {
     type AircraftShadowMode,
     type AircraftToneMapping,
 } from "./components/RenderControls";
+import {
+    applyAircraftLightingSettings,
+    createAircraftLightingRig,
+    createRoomEnvironmentResources,
+    disposeEnvironmentResources,
+    disposeHdriEnvironment,
+    loadHdriEnvironment,
+    type AircraftEnvironmentPreset,
+    type AircraftEnvironmentResources,
+    type AircraftLightingRig,
+} from "./lighting";
 import ModelDir from "./ModelDir";
 import type { AircraftModelAsset } from "./modelAssets";
 
@@ -202,6 +212,8 @@ const MODEL_FLOOR_COLOR_TOKEN = "--pl-model-floor-color";
 const MODEL_KEY_LIGHT_COLOR_TOKEN = "--pl-model-key-light-color";
 /** 工作室补光颜色 token，在深浅主题下由 App.css 提供值。 */
 const MODEL_FILL_LIGHT_COLOR_TOKEN = "--pl-model-fill-light-color";
+/** 工作室轮廓光颜色 token，在深浅主题下由 App.css 提供值。 */
+const MODEL_RIM_LIGHT_COLOR_TOKEN = "--pl-model-rim-light-color";
 /** 渲染倍率默认采用的最高物理像素比，兼顾清晰度与常规设备性能。 */
 const DEFAULT_RENDER_PIXEL_RATIO = 2;
 /** 姿态角度换算为 Three.js 弧度时使用的比例。 */
@@ -261,6 +273,12 @@ const DEFAULT_LIGHT_POSITION_Y = 10;
 const DEFAULT_LIGHT_POSITION_Z = 8;
 /** 主方向光默认强度，保持模型轮廓和阴影可读。 */
 const DEFAULT_KEY_LIGHT_INTENSITY = 3.2;
+/** 默认冷色补光强度，保留现有视窗的暗部亮度。 */
+const DEFAULT_FILL_LIGHT_INTENSITY = 1.2;
+/** 默认关闭轮廓光，避免改变既有 neutral 画面。 */
+const DEFAULT_RIM_LIGHT_INTENSITY = 0;
+/** 内置 RoomEnvironment 的环境反射强度。 */
+const DEFAULT_ENVIRONMENT_INTENSITY = 0.45;
 /** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
 const ATTITUDE_PRESET_VALUES: Readonly<
     Record<
@@ -294,6 +312,11 @@ const DEFAULT_RENDER_SETTINGS: Omit<AircraftRenderSettings, "pixelRatio"> = {
     lightPositionY: DEFAULT_LIGHT_POSITION_Y,
     lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
     keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
+    fillLightIntensity: DEFAULT_FILL_LIGHT_INTENSITY,
+    rimLightIntensity: DEFAULT_RIM_LIGHT_INTENSITY,
+    environmentPreset: "room",
+    hdriUrl: "",
+    environmentIntensity: DEFAULT_ENVIRONMENT_INTENSITY,
 };
 
 /** 工作室照明预设，调整主光方向和强度，保留用户对色调和曝光的选择。 */
@@ -306,6 +329,8 @@ const LIGHTING_PRESET_VALUES: Readonly<
             | "lightPositionY"
             | "lightPositionZ"
             | "keyLightIntensity"
+            | "fillLightIntensity"
+            | "rimLightIntensity"
         >
     >
 > = {
@@ -314,18 +339,32 @@ const LIGHTING_PRESET_VALUES: Readonly<
         lightPositionY: DEFAULT_LIGHT_POSITION_Y,
         lightPositionZ: DEFAULT_LIGHT_POSITION_Z,
         keyLightIntensity: DEFAULT_KEY_LIGHT_INTENSITY,
+        fillLightIntensity: DEFAULT_FILL_LIGHT_INTENSITY,
+        rimLightIntensity: DEFAULT_RIM_LIGHT_INTENSITY,
     },
     silhouette: {
         lightPositionX: -8,
         lightPositionY: 6,
         lightPositionZ: -10,
         keyLightIntensity: 3.8,
+        fillLightIntensity: 0.65,
+        rimLightIntensity: 1.8,
     },
     top: {
         lightPositionX: 0,
         lightPositionY: 14,
         lightPositionZ: 2,
         keyLightIntensity: 3,
+        fillLightIntensity: 1,
+        rimLightIntensity: 0.9,
+    },
+    "three-point": {
+        lightPositionX: 7,
+        lightPositionY: 10,
+        lightPositionZ: 8,
+        keyLightIntensity: 3.2,
+        fillLightIntensity: 1.25,
+        rimLightIntensity: 2.1,
     },
 };
 
@@ -448,7 +487,13 @@ const isAircraftLightingPreset = (
     value === "neutral" ||
     value === "silhouette" ||
     value === "top" ||
+    value === "three-point" ||
     value === "custom";
+
+/** 校验环境来源 select 的字符串值是否为已支持的环境类型。 */
+const isAircraftEnvironmentPreset = (
+    value: string,
+): value is AircraftEnvironmentPreset => value === "room" || value === "hdri";
 
 /** 从当前主题读取颜色 token，缺失时返回模型视窗的稳定回退值。 */
 const readThemeColor = (token: string, fallback: string): string => {
@@ -599,16 +644,6 @@ const formatAttitudeAngle = (angle: number): string =>
 const clampAngle = (angle: number, minimum: number, maximum: number): number =>
     Math.min(Math.max(angle, minimum), maximum);
 
-/** 将主方向光移动到用户指定的场景坐标。 */
-const applyKeyLightPosition = (
-    light: THREE.DirectionalLight,
-    x: number,
-    y: number,
-    z: number,
-): void => {
-    light.position.set(x, y, z);
-};
-
 /** 释放 GLB 对象树中使用的网格几何、材质和常见贴图资源。 */
 const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
     objectRoot.traverse((object: THREE.Object3D): void => {
@@ -728,6 +763,7 @@ export const AircraftModelViewport = ({
     const modelDirectoryId = `${attitudeControlsId}-model-dir`;
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
+    const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
     const orbitControlsRef = useRef<OrbitControls | null>(null);
     const requestRenderRef = useRef<(() => void) | null>(null);
@@ -736,6 +772,10 @@ export const AircraftModelViewport = ({
     const aircraftAttitudePivotRef = useRef<THREE.Group | null>(null);
     const displayFloorRef = useRef<THREE.Mesh | null>(null);
     const keyLightRef = useRef<THREE.DirectionalLight | null>(null);
+    const lightingRigRef = useRef<AircraftLightingRig | null>(null);
+    const environmentApplyRef = useRef<
+        ((settings: AircraftRenderSettings) => Promise<void>) | null
+    >(null);
     const animationMixerRef = useRef<THREE.AnimationMixer | null>(null);
     const animationActionRef = useRef<THREE.AnimationAction | null>(null);
     const animationClockRef = useRef<THREE.Clock>(new THREE.Clock(false));
@@ -754,6 +794,9 @@ export const AircraftModelViewport = ({
         useState<boolean>(false);
     const [fullscreenError, setFullscreenError] = useState<string | null>(null);
     const [snapshotError, setSnapshotError] = useState<string | null>(null);
+    const [environmentError, setEnvironmentError] = useState<string | null>(
+        null,
+    );
     const [isSnapshotAvailable, setIsSnapshotAvailable] =
         useState<boolean>(false);
     const [renderSettings, setRenderSettings] =
@@ -1153,6 +1196,58 @@ export const AircraftModelViewport = ({
         );
     };
 
+    /** 切换内置工作室与 HDRI 环境，环境贴图由场景生命周期异步替换。 */
+    const handleEnvironmentPresetChange = (
+        event: ChangeEvent<HTMLSelectElement>,
+    ): void => {
+        const environmentPreset = event.currentTarget.value;
+
+        if (!isAircraftEnvironmentPreset(environmentPreset)) {
+            return;
+        }
+
+        setRenderSettings(
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
+                ...currentSettings,
+                environmentPreset,
+            }),
+        );
+    };
+
+    /** 保存 HDRI URL，异步加载 effect 会对连续输入做短暂去抖。 */
+    const handleHdriUrlChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const hdriUrl = event.currentTarget.value;
+
+        setRenderSettings(
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
+                ...currentSettings,
+                hdriUrl,
+            }),
+        );
+    };
+
+    /** 更新环境反射强度，不触发 renderer 或模型重建。 */
+    const handleEnvironmentIntensityChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const environmentIntensity = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
+                ...currentSettings,
+                environmentIntensity,
+            }),
+        );
+    };
+
     /** 更新色调映射曝光，并由滑块范围约束有效数值。 */
     const handleExposureChange = (
         event: ChangeEvent<HTMLInputElement>,
@@ -1282,6 +1377,40 @@ export const AircraftModelViewport = ({
             ): AircraftRenderSettings => ({
                 ...currentSettings,
                 keyLightIntensity,
+                lightingPreset: "custom",
+            }),
+        );
+    };
+
+    /** 更新三点灯光补光强度，并将照明预设标记为自定义。 */
+    const handleFillLightIntensityChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const fillLightIntensity = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
+                ...currentSettings,
+                fillLightIntensity,
+                lightingPreset: "custom",
+            }),
+        );
+    };
+
+    /** 更新三点灯光轮廓光强度，并将照明预设标记为自定义。 */
+    const handleRimLightIntensityChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        const rimLightIntensity = Number(event.currentTarget.value);
+
+        setRenderSettings(
+            (
+                currentSettings: AircraftRenderSettings,
+            ): AircraftRenderSettings => ({
+                ...currentSettings,
+                rimLightIntensity,
                 lightingPreset: "custom",
             }),
         );
@@ -1441,6 +1570,13 @@ export const AircraftModelViewport = ({
 
         // 更新渲染器后重新使用当前容器尺寸分配物理绘制缓冲区。
         applyRenderSettings(renderer, renderSettings);
+        if (sceneRef.current !== null) {
+            sceneRef.current.environmentIntensity =
+                renderSettings.environmentIntensity;
+        }
+        if (lightingRigRef.current !== null) {
+            applyAircraftLightingSettings(lightingRigRef.current, renderSettings);
+        }
         resizeRendererRef.current?.();
         requestRenderRef.current?.();
     }, [renderSettings]);
@@ -1457,26 +1593,46 @@ export const AircraftModelViewport = ({
     }, [renderSettings.displayFloor]);
 
     useEffect((): void => {
-        const keyLight = keyLightRef.current;
+        const lightingRig = lightingRigRef.current;
 
-        if (keyLight === null) {
+        if (lightingRig === null) {
             return;
         }
 
-        applyKeyLightPosition(
-            keyLight,
-            renderSettings.lightPositionX,
-            renderSettings.lightPositionY,
-            renderSettings.lightPositionZ,
-        );
-        keyLight.intensity = renderSettings.keyLightIntensity;
+        applyAircraftLightingSettings(lightingRig, renderSettings);
         requestRenderRef.current?.();
     }, [
         renderSettings.lightPositionX,
         renderSettings.lightPositionY,
         renderSettings.lightPositionZ,
         renderSettings.keyLightIntensity,
+        renderSettings.fillLightIntensity,
+        renderSettings.rimLightIntensity,
     ]);
+
+    useEffect((): void => {
+        if (sceneRef.current !== null) {
+            sceneRef.current.environmentIntensity =
+                renderSettings.environmentIntensity;
+            requestRenderRef.current?.();
+        }
+    }, [renderSettings.environmentIntensity]);
+
+    useEffect((): (() => void) => {
+        const applyEnvironment = environmentApplyRef.current;
+
+        if (applyEnvironment === null) {
+            return (): void => undefined;
+        }
+
+        const timeoutId = window.setTimeout((): void => {
+            void applyEnvironment(renderSettings);
+        }, 240);
+
+        return (): void => {
+            window.clearTimeout(timeoutId);
+        };
+    }, [renderSettings.environmentPreset, renderSettings.hdriUrl]);
 
     useEffect((): void => {
         const model = aircraftAttitudePivotRef.current;
@@ -1502,9 +1658,8 @@ export const AircraftModelViewport = ({
         let animationFrameId: number | null = null;
         let isDocumentVisible = document.visibilityState === "visible";
         let isViewportVisible = true;
-        let environmentScene: RoomEnvironment | null = null;
-        let pmremGenerator: PMREMGenerator | null = null;
-        let environmentRenderTarget: THREE.RenderTarget | null = null;
+        let environmentResources: AircraftEnvironmentResources | null = null;
+        let environmentRequestToken = 0;
         let themeObserver: MutationObserver | null = null;
 
         /** 取消尚未执行的按需绘制帧，避免卸载后继续访问 renderer。 */
@@ -1534,6 +1689,7 @@ export const AircraftModelViewport = ({
             setCameraHudState(EMPTY_CAMERA_HUD_STATE);
             setIsSnapshotAvailable(false);
             setSnapshotError(null);
+            setEnvironmentError(null);
 
             publishProgress({
                 phase: "initializing",
@@ -1617,16 +1773,14 @@ export const AircraftModelViewport = ({
             const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
             const controls = new OrbitControls(camera, renderer.domElement);
             const gltfLoader = new GLTFLoader();
-
-            const roomEnvironment = new RoomEnvironment();
             const environmentGenerator = new PMREMGenerator(renderer);
-            const environmentTarget =
-                environmentGenerator.fromScene(roomEnvironment);
-            environmentScene = roomEnvironment;
-            pmremGenerator = environmentGenerator;
-            environmentRenderTarget = environmentTarget;
-            scene.environment = environmentTarget.texture;
-            scene.environmentIntensity = 0.45;
+            const createdEnvironmentResources =
+                createRoomEnvironmentResources(environmentGenerator);
+            environmentResources = createdEnvironmentResources;
+            scene.environment =
+                createdEnvironmentResources.roomRenderTarget.texture;
+            scene.environmentIntensity =
+                renderSettingsRef.current.environmentIntensity;
 
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             renderer.domElement.className = "plane-render__canvas";
@@ -1642,25 +1796,21 @@ export const AircraftModelViewport = ({
             controls.zoomSpeed = MODEL_VIEWER_ZOOM_SPEED;
             controls.zoomToCursor = true;
 
-            scene.add(new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1));
-
-            const keyLight = new THREE.DirectionalLight(
-                0xffffff,
-                renderSettingsRef.current.keyLightIntensity,
+            const lightingRig = createAircraftLightingRig(
+                renderSettingsRef.current,
+                readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"),
+                readThemeColor(MODEL_FILL_LIGHT_COLOR_TOKEN, "#8acbe7"),
+                readThemeColor(MODEL_FILL_LIGHT_COLOR_TOKEN, "#8acbe7"),
             );
-            applyKeyLightPosition(
-                keyLight,
-                renderSettingsRef.current.lightPositionX,
-                renderSettingsRef.current.lightPositionY,
-                renderSettingsRef.current.lightPositionZ,
+            scene.add(
+                lightingRig.hemisphereLight,
+                lightingRig.keyLight,
+                lightingRig.fillLight,
+                lightingRig.rimLight,
             );
-            keyLight.castShadow = true;
+            const keyLight = lightingRig.keyLight;
             keyLightRef.current = keyLight;
-            scene.add(keyLight);
-
-            const fillLight = new THREE.DirectionalLight(0x8acbe7, 1.2);
-            fillLight.position.set(-9, 4, -5);
-            scene.add(fillLight);
+            lightingRigRef.current = lightingRig;
 
             const displayFloor = new THREE.Mesh(
                 new THREE.PlaneGeometry(24, 10),
@@ -1685,10 +1835,85 @@ export const AircraftModelViewport = ({
                 keyLight.color.set(
                     readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"),
                 );
-                fillLight.color.set(
+                lightingRig.fillLight.color.set(
                     readThemeColor(MODEL_FILL_LIGHT_COLOR_TOKEN, "#8acbe7"),
                 );
+                lightingRig.rimLight.color.set(
+                    readThemeColor(MODEL_RIM_LIGHT_COLOR_TOKEN, "#b8d8ff"),
+                );
                 requestRenderRef.current?.();
+            };
+
+            /** 根据当前环境设置异步加载 HDRI，失败时回退到内置工作室。 */
+            const applyEnvironment = async (
+                settings: AircraftRenderSettings,
+            ): Promise<void> => {
+                const resources = environmentResources;
+
+                if (resources === null || isDisposed) {
+                    return;
+                }
+
+                const requestToken = ++environmentRequestToken;
+                scene.environmentIntensity = settings.environmentIntensity;
+                const isCurrentEnvironmentSelection = (): boolean =>
+                    renderSettingsRef.current.environmentPreset ===
+                        settings.environmentPreset &&
+                    renderSettingsRef.current.hdriUrl === settings.hdriUrl;
+
+                if (
+                    settings.environmentPreset === "room" ||
+                    settings.hdriUrl.trim().length === 0
+                ) {
+                    disposeHdriEnvironment(resources);
+                    scene.environment = resources.roomRenderTarget.texture;
+                    setEnvironmentError(
+                        settings.environmentPreset === "hdri"
+                            ? "请输入 HDRI URL，当前已回退内置工作室。"
+                            : null,
+                    );
+                    requestRenderRef.current?.();
+                    return;
+                }
+
+                setEnvironmentError(null);
+
+                try {
+                    const hdriRenderTarget = await loadHdriEnvironment(
+                        environmentGenerator,
+                        settings.hdriUrl,
+                    );
+
+                    if (
+                        isDisposed ||
+                        requestToken !== environmentRequestToken ||
+                        !isCurrentEnvironmentSelection()
+                    ) {
+                        hdriRenderTarget.dispose();
+                        return;
+                    }
+
+                    disposeHdriEnvironment(resources);
+                    resources.hdriRenderTarget = hdriRenderTarget;
+                    scene.environment = hdriRenderTarget.texture;
+                    setEnvironmentError(null);
+                    requestRenderRef.current?.();
+                } catch {
+                    if (
+                        isDisposed ||
+                        requestToken !== environmentRequestToken ||
+                        !isCurrentEnvironmentSelection()
+                    ) {
+                        return;
+                    }
+
+                    disposeHdriEnvironment(resources);
+                    scene.environment = resources.roomRenderTarget.texture;
+                    setEnvironmentError(
+                        "HDRI 加载失败，当前已回退内置工作室。",
+                    );
+                    requestRenderRef.current?.();
+                }
             };
 
             applyThemePalette();
@@ -1712,10 +1937,13 @@ export const AircraftModelViewport = ({
             };
 
             rendererRef.current = renderer;
+            sceneRef.current = scene;
             cameraRef.current = camera;
             orbitControlsRef.current = controls;
             resizeRendererRef.current = resizeRenderer;
+            environmentApplyRef.current = applyEnvironment;
             applyRenderSettings(renderer, renderSettingsRef.current);
+            void applyEnvironment(renderSettingsRef.current);
 
             const resizeObserver = new ResizeObserver(resizeRenderer);
             resizeObserver.observe(container);
@@ -1863,12 +2091,15 @@ export const AircraftModelViewport = ({
                 }
                 animationMixerRef.current = null;
                 animationActionRef.current = null;
-                environmentRenderTarget?.dispose();
-                pmremGenerator?.dispose();
-                environmentScene?.dispose();
-                environmentRenderTarget = null;
-                pmremGenerator = null;
-                environmentScene = null;
+                environmentRequestToken += 1;
+                if (environmentResources !== null) {
+                    disposeEnvironmentResources(environmentResources);
+                    environmentResources = null;
+                }
+                environmentGenerator.dispose();
+                if (environmentApplyRef.current === applyEnvironment) {
+                    environmentApplyRef.current = null;
+                }
                 disposeSceneResources(scene);
                 renderer.dispose();
                 renderer.domElement.remove();
@@ -1880,6 +2111,10 @@ export const AircraftModelViewport = ({
 
                 if (cameraRef.current === camera) {
                     cameraRef.current = null;
+                }
+
+                if (sceneRef.current === scene) {
+                    sceneRef.current = null;
                 }
 
                 if (orbitControlsRef.current === controls) {
@@ -1900,6 +2135,10 @@ export const AircraftModelViewport = ({
 
                 if (keyLightRef.current === keyLight) {
                     keyLightRef.current = null;
+                }
+
+                if (lightingRigRef.current === lightingRig) {
+                    lightingRigRef.current = null;
                 }
             };
 
@@ -2071,12 +2310,20 @@ export const AircraftModelViewport = ({
                     onToneMappingChange={handleToneMappingChange}
                     onQualityPresetChange={handleQualityPresetChange}
                     onLightingPresetChange={handleLightingPresetChange}
+                    onEnvironmentPresetChange={handleEnvironmentPresetChange}
+                    onHdriUrlChange={handleHdriUrlChange}
+                    environmentError={environmentError}
+                    onEnvironmentIntensityChange={
+                        handleEnvironmentIntensityChange
+                    }
                     onExposureChange={handleExposureChange}
                     onPixelRatioChange={handlePixelRatioChange}
                     onLightPositionXChange={handleLightPositionXChange}
                     onLightPositionYChange={handleLightPositionYChange}
                     onLightPositionZChange={handleLightPositionZChange}
                     onKeyLightIntensityChange={handleKeyLightIntensityChange}
+                    onFillLightIntensityChange={handleFillLightIntensityChange}
+                    onRimLightIntensityChange={handleRimLightIntensityChange}
                     onShadowsEnabledChange={handleShadowsEnabledChange}
                     onDisplayFloorChange={handleDisplayFloorChange}
                     onShadowModeChange={handleShadowModeChange}

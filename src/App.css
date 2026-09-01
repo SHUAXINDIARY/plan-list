@@ -114,6 +114,7 @@
     --pl-model-floor-color: #c9d9d6;
     --pl-model-key-light-color: #ffffff;
     --pl-model-fill-light-color: #5f9aa5;
+    --pl-model-rim-light-color: #8aa7c4;
     --pl-map-border: rgba(79, 111, 117, 0.32);
     --pl-map-inset: inset 0 0 0 1px rgba(252, 253, 252, 0.74);
     --pl-map-frame: rgba(79, 111, 117, 0.2);
@@ -302,6 +303,7 @@ html[data-theme="dark"] {
     --pl-model-floor-color: #163343;
     --pl-model-key-light-color: #ffffff;
     --pl-model-fill-light-color: #8acbe7;
+    --pl-model-rim-light-color: #b8d8ff;
     --pl-map-border: rgba(124, 200, 235, 0.16);
     --pl-map-inset: inset 0 0 0 1px rgba(124, 200, 235, 0.06);
     --pl-map-frame: rgba(124, 200, 235, 0.12);

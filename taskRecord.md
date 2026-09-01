@@ -8237,3 +8237,29 @@
 
 - `README.md`：更新项目联系信息和模型资源说明。
 - `taskRecord.md`：追加 README 文档更新记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+为飞机模型 WebGPU 视窗新增可切换 HDRI 环境和实时三点灯光支持，并整理可扩展的模块边界与实现方案。
+
+## 完成过程
+
+1. 新增 `lighting.ts`，集中定义环境/HDRI 与三点灯光类型，封装 RoomEnvironment/PMREM 资源、HDRLoader 异步加载、竞态回退和释放逻辑。
+2. 扩展渲染设置与控制面板，加入环境来源、HDRI URL、环境强度、三点灯光预设、补光强度和轮廓光强度控件，保留原有 neutral/silhouette/top 预设。
+3. 在 `AircraftModelViewport` 中接入 lighting rig 和环境切换 effect，HDRI 请求使用 240ms 去抖和递增 token，加载失败或 URL 为空时回退内置工作室环境。
+4. 更新深浅主题的轮廓光 token，并补充模块职责、运行时流程、PMREM 处理、资源释放和后续 EXR/内置 HDRI 扩展说明。
+5. 运行 `pnpm run type-check`；新增代码未引入额外错误，检查仍受仓库既有未使用变量错误阻断。
+
+## 修改具体文件
+
+- `src/pages/planeRender/lighting.ts`：新增 HDRI/环境与三点灯光运行时模块。
+- `src/pages/planeRender/AircraftModelViewport.tsx`：接入环境异步切换、三点灯光 rig、设置同步和资源清理。
+- `src/pages/planeRender/components/RenderControls.tsx`：扩展环境、HDRI 和三点灯光控件及事件契约。
+- `src/pages/planeRender/index.css`：补充 HDRI URL 输入、状态提示和移动端焦点/触控样式。
+- `src/App.css`：新增深浅主题轮廓光颜色 token。
+- `docs/aircraft-model-viewport.md`：补充 HDRI、PMREM、三点灯光模块拆分和实现细节。
+- `taskRecord.md`：追加本次 HDRI 与三点灯光扩展记录。

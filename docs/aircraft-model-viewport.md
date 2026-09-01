@@ -14,6 +14,7 @@
 - 使用 WebGPU 渲染并保持模型在不同尺寸下具有可比较的视图尺度。
 - 提供轨道旋转、滚轮/双指缩放、全屏查看和飞行姿态调整。
 - 允许在不重新加载模型的情况下调整输出画质、阴影、展示平面和主光源位置。
+- 支持内置 RoomEnvironment 与运行时 HDRI 切换，并提供可调的三点灯光强度。
 - 在切换模型或卸载组件时释放 Three.js 对象和 GPU 资源。
 - 对空目录、WebGPU 不可用、初始化失败和模型加载失败提供状态反馈。
 
@@ -29,6 +30,7 @@
 | 文件 | 职责 |
 | --- | --- |
 | `src/pages/planeRender/AircraftModelViewport.tsx` | WebGPU 渲染器、Three.js 场景、模型加载、相机/姿态交互、全屏和清理逻辑 |
+| `src/pages/planeRender/lighting.ts` | 环境/HDRI 类型、PMREM 生成与释放、三点灯光 rig 工厂和参数同步 |
 | `src/pages/planeRender/components/RenderControls.tsx` | 渲染控制面板的表单结构与控件范围，不直接操作 Three.js 对象 |
 | `src/pages/planeRender/ModelDir.tsx` | GLB 模型目录标题、滚动列表、选中样式和模型选择回调 |
 | `src/pages/planeRender/modelAssets.ts` | 通过构建期 glob 生成模型资源清单及 `loadUrl()` 加载函数 |
@@ -84,7 +86,7 @@ flowchart TD
     D -- 是 --> G[创建 WebGPURenderer]
     G --> H[await renderer.init]
     H -- 失败 --> I[释放 renderer 并报告错误]
-    H -- 成功 --> J[创建 scene/camera/controls/lights/floor]
+    H -- 成功 --> J[创建 scene/camera/controls/lighting rig/floor]
     J --> K[挂载 canvas 与 ResizeObserver]
     K --> L[按需 requestAnimationFrame: controls.update + render]
     L --> M[GLTFLoader.loadAsync(asset.loadUrl())]
@@ -109,10 +111,11 @@ Three.js 的 `WebGPURenderer.init()` 必须在首次渲染前完成。当前视�
 
 ```text
 THREE.Scene
-├── Texture (RoomEnvironment PMREM)            # PBR 环境反射
+├── Texture (RoomEnvironment/HDRI PMREM)       # PBR 环境反射
 ├── HemisphereLight                         # 环境填充
 ├── DirectionalLight (keyLight)              # 主光源，可调 X/Y/Z，投射阴影
-├── DirectionalLight (fillLight)             # 固定的冷色补光
+├── DirectionalLight (fillLight)             # 冷色补光，可调强度
+├── DirectionalLight (rimLight)              # 后方轮廓光，可调强度
 ├── Mesh (displayFloor, optional visible)    # 展示平面，默认隐藏
 └── Group (aircraftAttitudePivot)            # 姿态旋转枢轴
     └── Object3D (normalizedModel)           # 当前唯一模型，几何中心归一化到原点
@@ -123,7 +126,9 @@ THREE.Scene
 
 - 主方向光位置为 `(7, 10, 8)`，强度为 `3.2`。
 - 补光位置为 `(-9, 4, -5)`，强度为 `1.2`。
+- 轮廓光位置为 `(7, 5, -10)`，默认强度为 `0`；选择“三点灯光”预设时为 `2.1`。
 - 半球光强度为 `2.1`。
+- 环境默认使用 `RoomEnvironment` PMREM，`environmentIntensity` 为 `0.45`。
 - 展示平面尺寸为 `24 x 10`，旋转到水平面，默认 `visible = false`。
 - 模型网格统一设置 `castShadow = true` 和 `receiveShadow = true`。
 
@@ -166,18 +171,23 @@ THREE.Scene
 | 设置 | 范围/选项 | 应用位置 |
 | --- | --- | --- |
 | 画质预设 | 性能优先、均衡、质量优先、自定义 | 同步像素倍率和阴影参数 |
-| 照明预设 | 中性检查、轮廓检查、顶部检查、自定义 | 同步主光源方向和强度 |
+| 照明预设 | 中性检查、轮廓检查、顶部检查、三点灯光、自定义 | 同步 key/fill/rim 三盏方向光参数 |
+| 环境来源 | 内置工作室、HDRI 环境 | 选择 PMREM 环境贴图来源 |
+| HDRI URL | `public` 路径或允许 CORS 的 HTTPS `.hdr` | 异步加载并转换为 PMREM，失败回退内置环境 |
+| 环境强度 | `0..2`，步长 `0.05` | `scene.environmentIntensity` |
 | 右侧 KEY LIGHT HUD | 拖拽方位/仰角 + 强度滑条 | 同步主方向光方向和强度 |
 | 色调映射 | ACES、AgX、Neutral、关闭 | `renderer.toneMapping` |
 | 曝光 | `0.5..2`，步长 `0.05` | `renderer.toneMappingExposure` |
 | 渲染倍率 | `0.5..3`，步长 `0.25`，默认不超过设备 `2x` | `renderer.setPixelRatio` |
 | 主光源 X/Y/Z | `-20..20`，步长 `0.5` | `keyLight.position` |
 | 主光强度 | `0..6`，步长 `0.1` | `keyLight.intensity` |
+| 补光强度 | `0..4`，步长 `0.1` | `fillLight.intensity` |
+| 轮廓光强度 | `0..4`，步长 `0.1` | `rimLight.intensity` |
 | 实时阴影 | 开/关，默认开启 | `renderer.shadowMap.enabled` |
 | 阴影算法 | PCF、VSM，默认 VSM | `renderer.shadowMap.type` |
 | 展示平面 | 开/关，默认关闭 | `displayFloor.visible` |
 
-设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向和强度；任一高级参数手动修改后标记为自定义。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源和展示平面则直接修改现有对象。
+设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向、key/fill/rim 强度；任一高级参数手动修改后标记为自定义。环境 URL 输入使用约 `240ms` 去抖，避免逐字符触发网络请求；每次请求带递增 token，旧请求完成后会被丢弃并释放 PMREM。HDRI 先由 `HDRLoader` 解析为 equirectangular 纹理，再经 `PMREMGenerator.fromEquirectangular()` 转为 PBR 可用环境；原始 HDR 纹理在转换后立即释放，当前 HDRI PMREM 只保留一份。加载失败或 URL 为空时恢复 RoomEnvironment，并在控件内给出回退提示。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源、环境强度和展示平面则直接修改现有对象。
 
 ## 飞行姿态控制
 
@@ -258,10 +268,12 @@ aircraftAttitudePivot.rotation.set(
 - 渲染倍率有 `3x` 上限，默认不超过设备 `2x`；质量预设可快速在性能、均衡和质量之间切换。
 - `ResizeObserver` 只在容器尺寸变化时更新投影和缓冲区，不依赖全局 window resize。
 - 渲染帧在模型加载、控制器变化、设置变化、尺寸变化和可见性恢复时按需请求，静止状态不持续占用帧循环。
-- 使用 `RoomEnvironment` 和 WebGPU `PMREMGenerator` 为 PBR 材质提供本地环境反射；深浅主题通过 CSS token 和 `MutationObserver` 同步地面与灯光颜色。
+- 使用 `RoomEnvironment` 和 WebGPU `PMREMGenerator` 为 PBR 材质提供本地环境反射；HDRI 通过 `lighting.ts` 的异步 loader 追加，不改变模型加载链路。深浅主题通过 CSS token 和 `MutationObserver` 同步地面与三点灯光颜色。
 - 若 GLB 提供动画，使用 `AnimationMixer` 驱动单段动画的播放、暂停和时间轴，动画播放期间由按需帧调度持续请求绘制。
 - 后续可增加模型加载缓存，但必须以资源 URL 为 key，并在缓存淘汰时复用同一套 dispose 逻辑。
 - 若未来支持 WebGL 回退，应把 renderer 创建抽成后端适配层，并在进度状态中明确当前后端，不能静默改变画质路径。
+- 若需要内置 HDRI，应将经过压缩和许可确认的 `.hdr` 放到 `public/hdri/`，控制面板 URL 填写 `/hdri/<name>.hdr`；不要把大尺寸 HDR 文件直接内嵌到 TS bundle。
+- 若需要 EXR 或 HDRI 列表，可在 `lighting.ts` 增加 loader/preset 适配，不应让 `AircraftModelViewport` 直接依赖具体文件格式。
 - PNG 与设置 JSON 导出均从当前 canvas/状态生成，下载完成后释放 Blob URL；无动画模型不渲染动画控件。
 
 ## 常见问题排查

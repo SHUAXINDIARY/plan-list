@@ -1,4 +1,8 @@
 import { useId, type ChangeEvent, type ReactElement } from "react";
+import type {
+    AircraftEnvironmentPreset,
+    AircraftLightingSettings,
+} from "../lighting";
 
 /** 可供模型视窗即时切换的色调映射预设。 */
 export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
@@ -13,18 +17,20 @@ export type AircraftRenderQuality =
     | "quality"
     | "custom";
 
-/** 模型视窗可选的工作室照明档位，手动移动主光源后进入 custom。 */
+/** 模型视窗可选的工作室照明档位，手动调整任一灯光参数后进入 custom。 */
 export type AircraftLightingPreset =
     | "neutral"
     | "silhouette"
     | "top"
+    | "three-point"
     | "custom";
 
 /** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
-export interface AircraftRenderSettings {
+export interface AircraftRenderSettings
+    extends AircraftLightingSettings {
     /** 当前画质预设；任何高级参数手动修改后标记为 custom。 */
     qualityPreset: AircraftRenderQuality;
-    /** 当前照明预设；任何主光源轴向手动修改后标记为 custom。 */
+    /** 当前照明预设；任何 key/fill/rim 灯光参数手动修改后标记为 custom。 */
     lightingPreset: AircraftLightingPreset;
     /** 输出画面使用的色调映射预设。 */
     toneMapping: AircraftToneMapping;
@@ -38,14 +44,12 @@ export interface AircraftRenderSettings {
     shadowMode: AircraftShadowMode;
     /** 是否渲染飞机底部的展示平面。 */
     displayFloor: boolean;
-    /** 主方向光在场景 X 轴上的位置。 */
-    lightPositionX: number;
-    /** 主方向光在场景 Y 轴上的位置。 */
-    lightPositionY: number;
-    /** 主方向光在场景 Z 轴上的位置。 */
-    lightPositionZ: number;
-    /** 主方向光强度，控制模型高光和阴影对比。 */
-    keyLightIntensity: number;
+    /** 当前使用内置工作室环境还是 HDRI 环境。 */
+    environmentPreset: AircraftEnvironmentPreset;
+    /** HDRI 运行时 URL，输入后会在画布中异步替换环境反射。 */
+    hdriUrl: string;
+    /** 场景环境反射与漫反射的整体强度。 */
+    environmentIntensity: number;
 }
 
 /** 渲染控制面板的输入状态和交互回调。 */
@@ -62,6 +66,18 @@ interface RenderControlsProps {
     onQualityPresetChange: (event: ChangeEvent<HTMLSelectElement>) => void;
     /** 处理照明预设 select 的变更。 */
     onLightingPresetChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+    /** 处理环境来源 select 的变更。 */
+    onEnvironmentPresetChange: (
+        event: ChangeEvent<HTMLSelectElement>,
+    ) => void;
+    /** 处理 HDRI URL 输入的变更。 */
+    onHdriUrlChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    /** 当前 HDRI 加载失败或配置不完整时的回退提示。 */
+    environmentError: string | null;
+    /** 处理环境强度滑块的变更。 */
+    onEnvironmentIntensityChange: (
+        event: ChangeEvent<HTMLInputElement>,
+    ) => void;
     /** 处理曝光滑块的变更。 */
     onExposureChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理渲染倍率滑块的变更。 */
@@ -74,6 +90,14 @@ interface RenderControlsProps {
     onLightPositionZChange: (event: ChangeEvent<HTMLInputElement>) => void;
     /** 处理主光源强度滑块的变更。 */
     onKeyLightIntensityChange: (
+        event: ChangeEvent<HTMLInputElement>,
+    ) => void;
+    /** 处理补光强度滑块的变更。 */
+    onFillLightIntensityChange: (
+        event: ChangeEvent<HTMLInputElement>,
+    ) => void;
+    /** 处理轮廓光强度滑块的变更。 */
+    onRimLightIntensityChange: (
         event: ChangeEvent<HTMLInputElement>,
     ) => void;
     /** 处理实时阴影开关的变更。 */
@@ -110,6 +134,18 @@ const MINIMUM_KEY_LIGHT_INTENSITY = 0;
 const MAXIMUM_KEY_LIGHT_INTENSITY = 6;
 /** 主光源强度滑块的离散精度。 */
 const KEY_LIGHT_INTENSITY_STEP = 0.1;
+/** 环境强度滑块允许的最低值。 */
+const MINIMUM_ENVIRONMENT_INTENSITY = 0;
+/** 环境强度滑块允许的最高值。 */
+const MAXIMUM_ENVIRONMENT_INTENSITY = 2;
+/** 环境强度滑块的离散精度。 */
+const ENVIRONMENT_INTENSITY_STEP = 0.05;
+/** 补光与轮廓光强度的最低值。 */
+const MINIMUM_SECONDARY_LIGHT_INTENSITY = 0;
+/** 补光与轮廓光强度的最高值。 */
+const MAXIMUM_SECONDARY_LIGHT_INTENSITY = 4;
+/** 补光与轮廓光强度的离散精度。 */
+const SECONDARY_LIGHT_INTENSITY_STEP = 0.1;
 
 /** 渲染控制面板，集中承载 WebGPU 输出和主光源配置。 */
 export const RenderControls = ({
@@ -119,12 +155,18 @@ export const RenderControls = ({
     onToneMappingChange,
     onQualityPresetChange,
     onLightingPresetChange,
+    onEnvironmentPresetChange,
+    onHdriUrlChange,
+    environmentError,
+    onEnvironmentIntensityChange,
     onExposureChange,
     onPixelRatioChange,
     onLightPositionXChange,
     onLightPositionYChange,
     onLightPositionZChange,
     onKeyLightIntensityChange,
+    onFillLightIntensityChange,
+    onRimLightIntensityChange,
     onShadowsEnabledChange,
     onDisplayFloorChange,
     onShadowModeChange,
@@ -139,6 +181,10 @@ export const RenderControls = ({
     const lightPositionYControlId = `${controlIdPrefix}-light-position-y`;
     const lightPositionZControlId = `${controlIdPrefix}-light-position-z`;
     const keyLightIntensityControlId = `${controlIdPrefix}-key-light-intensity`;
+    const fillLightIntensityControlId = `${controlIdPrefix}-fill-light-intensity`;
+    const rimLightIntensityControlId = `${controlIdPrefix}-rim-light-intensity`;
+    const environmentIntensityControlId = `${controlIdPrefix}-environment-intensity`;
+    const hdriUrlControlId = `${controlIdPrefix}-hdri-url`;
     const renderControlsId = `${controlIdPrefix}-panel`;
 
     return (
@@ -184,8 +230,53 @@ export const RenderControls = ({
                             <option value="neutral">中性检查</option>
                             <option value="silhouette">轮廓检查</option>
                             <option value="top">顶部检查</option>
+                            <option value="three-point">三点灯光</option>
                             <option value="custom">自定义</option>
                         </select>
+                    </label>
+                    <label className="plane-render__render-field">
+                        <span>环境来源</span>
+                        <select
+                            value={settings.environmentPreset}
+                            onChange={onEnvironmentPresetChange}
+                        >
+                            <option value="room">内置工作室</option>
+                            <option value="hdri">HDRI 环境</option>
+                        </select>
+                    </label>
+                    <label className="plane-render__render-field">
+                        <span>HDRI URL</span>
+                        <input
+                            id={hdriUrlControlId}
+                            type="url"
+                            inputMode="url"
+                            placeholder="/hdri/studio.hdr 或 https://..."
+                            value={settings.hdriUrl}
+                            disabled={settings.environmentPreset !== "hdri"}
+                            onChange={onHdriUrlChange}
+                        />
+                        {environmentError !== null ? (
+                            <small className="plane-render__render-field-note" role="status">
+                                {environmentError}
+                            </small>
+                        ) : null}
+                    </label>
+                    <label className="plane-render__render-field plane-render__render-field--range">
+                        <span>
+                            环境强度
+                            <output htmlFor={environmentIntensityControlId}>
+                                {settings.environmentIntensity.toFixed(2)}
+                            </output>
+                        </span>
+                        <input
+                            id={environmentIntensityControlId}
+                            type="range"
+                            min={MINIMUM_ENVIRONMENT_INTENSITY}
+                            max={MAXIMUM_ENVIRONMENT_INTENSITY}
+                            step={ENVIRONMENT_INTENSITY_STEP}
+                            value={settings.environmentIntensity}
+                            onChange={onEnvironmentIntensityChange}
+                        />
                     </label>
                     <label className="plane-render__render-field">
                         <span>色调映射</span>
@@ -214,6 +305,40 @@ export const RenderControls = ({
                             step={TONE_MAPPING_EXPOSURE_STEP}
                             value={settings.exposure}
                             onChange={onExposureChange}
+                        />
+                    </label>
+                    <label className="plane-render__render-field plane-render__render-field--range">
+                        <span>
+                            补光强度
+                            <output htmlFor={fillLightIntensityControlId}>
+                                {settings.fillLightIntensity.toFixed(1)}
+                            </output>
+                        </span>
+                        <input
+                            id={fillLightIntensityControlId}
+                            type="range"
+                            min={MINIMUM_SECONDARY_LIGHT_INTENSITY}
+                            max={MAXIMUM_SECONDARY_LIGHT_INTENSITY}
+                            step={SECONDARY_LIGHT_INTENSITY_STEP}
+                            value={settings.fillLightIntensity}
+                            onChange={onFillLightIntensityChange}
+                        />
+                    </label>
+                    <label className="plane-render__render-field plane-render__render-field--range">
+                        <span>
+                            轮廓光强度
+                            <output htmlFor={rimLightIntensityControlId}>
+                                {settings.rimLightIntensity.toFixed(1)}
+                            </output>
+                        </span>
+                        <input
+                            id={rimLightIntensityControlId}
+                            type="range"
+                            min={MINIMUM_SECONDARY_LIGHT_INTENSITY}
+                            max={MAXIMUM_SECONDARY_LIGHT_INTENSITY}
+                            step={SECONDARY_LIGHT_INTENSITY_STEP}
+                            value={settings.rimLightIntensity}
+                            onChange={onRimLightIntensityChange}
                         />
                     </label>
                     <label className="plane-render__render-field plane-render__render-field--range">
