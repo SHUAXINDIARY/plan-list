@@ -9,8 +9,7 @@
             "model": "717-200",
             "icaoType": "B712",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1998-09-02",
             "engines": [
               "Rolls-Royce BR715"
             ],
@@ -22,7 +21,8 @@
             "lengthM": 37.81,
             "wingspanM": 28.44,
             "heightM": 8.92,
-            "mtowKg": 54885
+            "mtowKg": 54885,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_717"
           }
         }
       }
@@ -37,7 +37,6 @@
             "icaoType": "B731",
             "status": "retired",
             "firstFlight": "1967-04-09",
-            "production": "1967-1969",
             "engines": [
               "Pratt & Whitney JT8D-7"
             ],
@@ -49,14 +48,14 @@
             "lengthM": 28.65,
             "wingspanM": 28.35,
             "heightM": 11.28,
-            "mtowKg": 44000
+            "mtowKg": 44000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-200": {
             "model": "737-200",
             "icaoType": "B732",
             "status": "retired",
             "firstFlight": "1967-08-08",
-            "production": "1967-1988",
             "engines": [
               "Pratt & Whitney JT8D-9",
               "Pratt & Whitney JT8D-15",
@@ -70,7 +69,8 @@
             "lengthM": 30.53,
             "wingspanM": 28.35,
             "heightM": 11.28,
-            "mtowKg": 52390
+            "mtowKg": 52390,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           }
         },
         "Classic": {
@@ -79,7 +79,6 @@
             "icaoType": "B733",
             "status": "retired",
             "firstFlight": "1984-02-24",
-            "production": "1984-1999",
             "engines": [
               "CFM International CFM56-3B1",
               "CFM International CFM56-3B2",
@@ -93,14 +92,14 @@
             "lengthM": 33.4,
             "wingspanM": 28.88,
             "heightM": 11.13,
-            "mtowKg": 62820
+            "mtowKg": 62820,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-400": {
             "model": "737-400",
             "icaoType": "B734",
             "status": "retired",
             "firstFlight": "1988-02-19",
-            "production": "1988-2000",
             "engines": [
               "CFM International CFM56-3B2",
               "CFM International CFM56-3C1"
@@ -113,14 +112,14 @@
             "lengthM": 36.45,
             "wingspanM": 28.88,
             "heightM": 11.13,
-            "mtowKg": 68050
+            "mtowKg": 68050,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-500": {
             "model": "737-500",
             "icaoType": "B735",
             "status": "retired",
             "firstFlight": "1989-06-30",
-            "production": "1989-1999",
             "engines": [
               "CFM International CFM56-3B1",
               "CFM International CFM56-3B2"
@@ -133,7 +132,8 @@
             "lengthM": 31.01,
             "wingspanM": 28.88,
             "heightM": 11.13,
-            "mtowKg": 60550
+            "mtowKg": 60550,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           }
         },
         "NG": {
@@ -142,7 +142,6 @@
             "icaoType": "B736",
             "status": "retired",
             "firstFlight": "1998-01-22",
-            "production": "1998-2006",
             "engines": [
               "CFM International CFM56-7B18",
               "CFM International CFM56-7B20"
@@ -155,14 +154,14 @@
             "lengthM": 31.24,
             "wingspanM": 34.32,
             "heightM": 12.5,
-            "mtowKg": 65090
+            "mtowKg": 65090,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-700": {
             "model": "737-700",
             "icaoType": "B737",
             "status": "in_service",
             "firstFlight": "1997-02-09",
-            "production": "1997-2019",
             "engines": [
               "CFM International CFM56-7B20",
               "CFM International CFM56-7B22",
@@ -176,14 +175,14 @@
             "lengthM": 33.63,
             "wingspanM": 35.79,
             "heightM": 12.5,
-            "mtowKg": 70080
+            "mtowKg": 70080,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-800": {
             "model": "737-800",
             "icaoType": "B738",
             "status": "in_service",
             "firstFlight": "1997-07-31",
-            "production": "1997-2020",
             "engines": [
               "CFM International CFM56-7B24",
               "CFM International CFM56-7B26",
@@ -197,14 +196,14 @@
             "lengthM": 39.47,
             "wingspanM": 35.79,
             "heightM": 12.5,
-            "mtowKg": 79010
+            "mtowKg": 79010,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-900": {
             "model": "737-900",
             "icaoType": "B739",
             "status": "in_service",
             "firstFlight": "2000-09-01",
-            "production": "2001-2011",
             "engines": [
               "CFM International CFM56-7B26",
               "CFM International CFM56-7B27"
@@ -217,14 +216,14 @@
             "lengthM": 42.11,
             "wingspanM": 35.79,
             "heightM": 12.5,
-            "mtowKg": 79010
+            "mtowKg": 79010,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-900ER": {
             "model": "737-900ER",
             "icaoType": "B739",
             "status": "in_service",
             "firstFlight": "2006-09-01",
-            "production": "2006-2019",
             "engines": [
               "CFM International CFM56-7B26",
               "CFM International CFM56-7B27"
@@ -237,7 +236,8 @@
             "lengthM": 42.11,
             "wingspanM": 35.79,
             "heightM": 12.5,
-            "mtowKg": 85000
+            "mtowKg": 85000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           }
         },
         "MAX": {
@@ -246,7 +246,6 @@
             "icaoType": "B37M",
             "status": "in_production",
             "firstFlight": "2018-02-16",
-            "production": null,
             "engines": [
               "CFM International LEAP-1B"
             ],
@@ -258,14 +257,14 @@
             "lengthM": 35.56,
             "wingspanM": 35.92,
             "heightM": 12.3,
-            "mtowKg": 80400
+            "mtowKg": 80400,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-8": {
             "model": "737-8",
             "icaoType": "B38M",
             "status": "in_production",
             "firstFlight": "2016-01-29",
-            "production": null,
             "engines": [
               "CFM International LEAP-1B"
             ],
@@ -277,14 +276,14 @@
             "lengthM": 39.52,
             "wingspanM": 35.92,
             "heightM": 12.3,
-            "mtowKg": 82190
+            "mtowKg": 82190,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-8-200": {
             "model": "737-8-200",
             "icaoType": "B38M",
             "status": "in_production",
             "firstFlight": "2020-01-09",
-            "production": null,
             "engines": [
               "CFM International LEAP-1B"
             ],
@@ -296,14 +295,14 @@
             "lengthM": 39.52,
             "wingspanM": 35.92,
             "heightM": 12.3,
-            "mtowKg": 82190
+            "mtowKg": 82190,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-9": {
             "model": "737-9",
             "icaoType": "B39M",
             "status": "in_production",
             "firstFlight": "2017-03-13",
-            "production": null,
             "engines": [
               "CFM International LEAP-1B"
             ],
@@ -315,14 +314,14 @@
             "lengthM": 42.16,
             "wingspanM": 35.92,
             "heightM": 12.3,
-            "mtowKg": 88200
+            "mtowKg": 88200,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           },
           "737-10": {
             "model": "737-10",
             "icaoType": "B3XM",
             "status": "in_production",
             "firstFlight": "2021-06-18",
-            "production": null,
             "engines": [
               "CFM International LEAP-1B"
             ],
@@ -334,7 +333,8 @@
             "lengthM": 43.79,
             "wingspanM": 35.92,
             "heightM": 12.3,
-            "mtowKg": 89400
+            "mtowKg": 89400,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_737"
           }
         }
       }
@@ -348,8 +348,7 @@
             "model": "747-100",
             "icaoType": "B741",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1969-02-09",
             "engines": [
               "Pratt & Whitney JT9D",
               "General Electric CF6",
@@ -363,14 +362,14 @@
             "lengthM": 70.66,
             "wingspanM": 59.64,
             "heightM": 19.33,
-            "mtowKg": 333400
+            "mtowKg": 333400,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
           "747-200": {
             "model": "747-200",
             "icaoType": "B742",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1970-10-11",
             "engines": [
               "Pratt & Whitney JT9D",
               "General Electric CF6",
@@ -384,14 +383,14 @@
             "lengthM": 70.66,
             "wingspanM": 59.64,
             "heightM": 19.33,
-            "mtowKg": 377842
+            "mtowKg": 377842,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
           "747-300": {
             "model": "747-300",
             "icaoType": "B743",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1982-10-05",
             "engines": [
               "Pratt & Whitney JT9D",
               "General Electric CF6",
@@ -405,14 +404,14 @@
             "lengthM": 70.66,
             "wingspanM": 59.64,
             "heightM": 19.33,
-            "mtowKg": 377842
+            "mtowKg": 377842,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
           "747-400": {
             "model": "747-400",
             "icaoType": "B744",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1988-04-29",
             "engines": [
               "General Electric CF6-80C2",
               "Pratt & Whitney PW4000",
@@ -426,14 +425,14 @@
             "lengthM": 70.66,
             "wingspanM": 64.44,
             "heightM": 19.41,
-            "mtowKg": 396900
+            "mtowKg": 396900,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
           "747-8": {
             "model": "747-8",
             "icaoType": "B748",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2011-03-20",
             "engines": [
               "General Electric GEnx-2B67"
             ],
@@ -445,7 +444,8 @@
             "lengthM": 76.25,
             "wingspanM": 68.45,
             "heightM": 19.35,
-            "mtowKg": 447700
+            "mtowKg": 447700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           }
         }
       }
@@ -459,8 +459,7 @@
             "model": "757-200",
             "icaoType": "B752",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1982-02-19",
             "engines": [
               "Rolls-Royce RB211-535",
               "Pratt & Whitney PW2000"
@@ -473,14 +472,14 @@
             "lengthM": 47.32,
             "wingspanM": 38.05,
             "heightM": 13.56,
-            "mtowKg": 115680
+            "mtowKg": 115680,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_757"
           },
           "757-300": {
             "model": "757-300",
             "icaoType": "B753",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1998-08-02",
             "engines": [
               "Rolls-Royce RB211-535",
               "Pratt & Whitney PW2000"
@@ -493,7 +492,8 @@
             "lengthM": 54.43,
             "wingspanM": 38.05,
             "heightM": 13.56,
-            "mtowKg": 123830
+            "mtowKg": 123830,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_757"
           }
         }
       }
@@ -507,8 +507,7 @@
             "model": "767-200",
             "icaoType": "B762",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1981-09-26",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney JT9D"
@@ -521,14 +520,14 @@
             "lengthM": 48.51,
             "wingspanM": 47.57,
             "heightM": 15.85,
-            "mtowKg": 136080
+            "mtowKg": 136080,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
           },
           "767-300": {
             "model": "767-300",
             "icaoType": "B763",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1986-01-30",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney PW4000",
@@ -542,14 +541,14 @@
             "lengthM": 54.94,
             "wingspanM": 47.57,
             "heightM": 15.85,
-            "mtowKg": 159210
+            "mtowKg": 159210,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
           },
           "767-400ER": {
             "model": "767-400ER",
             "icaoType": "B764",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1999-10-09",
             "engines": [
               "General Electric CF6-80C2B8F"
             ],
@@ -561,7 +560,8 @@
             "lengthM": 61.37,
             "wingspanM": 51.92,
             "heightM": 16.87,
-            "mtowKg": 204120
+            "mtowKg": 204120,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
           }
         }
       }
@@ -575,8 +575,7 @@
             "model": "777-200",
             "icaoType": "B772",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1994-06-12",
             "engines": [
               "General Electric GE90",
               "Pratt & Whitney PW4000",
@@ -590,14 +589,14 @@
             "lengthM": 63.73,
             "wingspanM": 60.93,
             "heightM": 18.52,
-            "mtowKg": 247200
+            "mtowKg": 247200,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-200ER": {
             "model": "777-200ER",
             "icaoType": "B772",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1996-10-07",
             "engines": [
               "General Electric GE90",
               "Pratt & Whitney PW4000",
@@ -611,14 +610,14 @@
             "lengthM": 63.73,
             "wingspanM": 60.93,
             "heightM": 18.52,
-            "mtowKg": 297550
+            "mtowKg": 297550,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-200LR": {
             "model": "777-200LR",
             "icaoType": "B77L",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2005-03-08",
             "engines": [
               "General Electric GE90-110B1"
             ],
@@ -630,14 +629,14 @@
             "lengthM": 63.73,
             "wingspanM": 64.8,
             "heightM": 18.52,
-            "mtowKg": 347450
+            "mtowKg": 347450,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-300": {
             "model": "777-300",
             "icaoType": "B773",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1997-10-16",
             "engines": [
               "General Electric GE90",
               "Pratt & Whitney PW4000",
@@ -651,14 +650,14 @@
             "lengthM": 73.86,
             "wingspanM": 60.93,
             "heightM": 18.52,
-            "mtowKg": 299370
+            "mtowKg": 299370,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-300ER": {
             "model": "777-300ER",
             "icaoType": "B77W",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2003-02-24",
             "engines": [
               "General Electric GE90-115B"
             ],
@@ -670,14 +669,14 @@
             "lengthM": 73.86,
             "wingspanM": 64.8,
             "heightM": 18.52,
-            "mtowKg": 351530
+            "mtowKg": 351530,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-8": {
             "model": "777-8",
             "icaoType": "B778",
             "status": "in_production",
             "firstFlight": null,
-            "production": null,
             "engines": [
               "General Electric GE9X"
             ],
@@ -689,14 +688,14 @@
             "lengthM": 69.8,
             "wingspanM": 71.75,
             "heightM": 19.48,
-            "mtowKg": 351500
+            "mtowKg": 351500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
           "777-9": {
             "model": "777-9",
             "icaoType": "B779",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2020-01-25",
             "engines": [
               "General Electric GE9X"
             ],
@@ -708,7 +707,8 @@
             "lengthM": 76.73,
             "wingspanM": 71.75,
             "heightM": 19.48,
-            "mtowKg": 351500
+            "mtowKg": 351500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           }
         }
       }
@@ -722,8 +722,7 @@
             "model": "787-8",
             "icaoType": "B788",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2009-12-15",
             "engines": [
               "General Electric GEnx-1B",
               "Rolls-Royce Trent 1000"
@@ -736,14 +735,14 @@
             "lengthM": 56.72,
             "wingspanM": 60.12,
             "heightM": 17,
-            "mtowKg": 227930
+            "mtowKg": 227930,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           },
           "787-9": {
             "model": "787-9",
             "icaoType": "B789",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2013-09-17",
             "engines": [
               "General Electric GEnx-1B",
               "Rolls-Royce Trent 1000"
@@ -756,14 +755,14 @@
             "lengthM": 62.81,
             "wingspanM": 60.12,
             "heightM": 17,
-            "mtowKg": 254010
+            "mtowKg": 254010,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           },
           "787-10": {
             "model": "787-10",
             "icaoType": "B78X",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2017-03-31",
             "engines": [
               "General Electric GEnx-1B"
             ],
@@ -775,7 +774,8 @@
             "lengthM": 68.28,
             "wingspanM": 60.12,
             "heightM": 17,
-            "mtowKg": 254010
+            "mtowKg": 254010,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           }
         }
       }
@@ -792,7 +792,6 @@
             "icaoType": "BCS1",
             "status": "in_production",
             "firstFlight": "2013-09-16",
-            "production": null,
             "engines": [
               "Pratt & Whitney PW1500G"
             ],
@@ -804,14 +803,14 @@
             "lengthM": 35,
             "wingspanM": 35.1,
             "heightM": 11.5,
-            "mtowKg": 63867
+            "mtowKg": 63867,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A220"
           },
           "A220-300": {
             "model": "A220-300",
             "icaoType": "BCS3",
             "status": "in_production",
             "firstFlight": "2015-02-27",
-            "production": null,
             "engines": [
               "Pratt & Whitney PW1500G"
             ],
@@ -823,7 +822,8 @@
             "lengthM": 38.7,
             "wingspanM": 35.1,
             "heightM": 11.5,
-            "mtowKg": 67858
+            "mtowKg": 67858,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A220"
           }
         }
       }
@@ -837,8 +837,7 @@
             "model": "A318-100",
             "icaoType": "A318",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2002-01-15",
             "engines": [
               "CFM56-5B",
               "V2500-A5",
@@ -852,14 +851,14 @@
             "lengthM": 31.44,
             "wingspanM": 34.1,
             "heightM": 12.51,
-            "mtowKg": 68000
+            "mtowKg": 68000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A319": {
             "model": "A319",
             "icaoType": "A319",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1995-08-25",
             "engines": [
               "CFM56-5A",
               "CFM56-5B",
@@ -873,14 +872,14 @@
             "lengthM": 33.84,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 75500
+            "mtowKg": 75500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A320": {
             "model": "A320",
             "icaoType": "A320",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1987-02-22",
             "engines": [
               "CFM56-5A",
               "CFM56-5B",
@@ -894,14 +893,14 @@
             "lengthM": 37.57,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 78000
+            "mtowKg": 78000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A321": {
             "model": "A321",
             "icaoType": "A321",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1993-03-11",
             "engines": [
               "CFM56-5B",
               "V2500-A5"
@@ -914,7 +913,8 @@
             "lengthM": 44.51,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 93500
+            "mtowKg": 93500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           }
         },
         "neo": {
@@ -922,8 +922,7 @@
             "model": "A319neo",
             "icaoType": "A319",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2017-03-31",
             "engines": [
               "CFM LEAP-1A",
               "Pratt & Whitney PW1100G"
@@ -936,14 +935,14 @@
             "lengthM": 33.84,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 75500
+            "mtowKg": 75500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A320neo": {
             "model": "A320neo",
             "icaoType": "A20N",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2014-09-25",
             "engines": [
               "CFM LEAP-1A",
               "Pratt & Whitney PW1100G"
@@ -956,14 +955,14 @@
             "lengthM": 37.57,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 79000
+            "mtowKg": 79000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A321neo": {
             "model": "A321neo",
             "icaoType": "A21N",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2016-02-09",
             "engines": [
               "CFM LEAP-1A",
               "Pratt & Whitney PW1100G"
@@ -976,14 +975,14 @@
             "lengthM": 44.51,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 97000
+            "mtowKg": 97000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A321LR": {
             "model": "A321LR",
             "icaoType": "A21N",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2018-01-31",
             "engines": [
               "CFM LEAP-1A",
               "Pratt & Whitney PW1100G"
@@ -996,14 +995,14 @@
             "lengthM": 44.51,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 97000
+            "mtowKg": 97000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           },
           "A321XLR": {
             "model": "A321XLR",
             "icaoType": "A21N",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2022-06-15",
             "engines": [
               "CFM LEAP-1A",
               "Pratt & Whitney PW1100G"
@@ -1016,7 +1015,8 @@
             "lengthM": 44.51,
             "wingspanM": 35.8,
             "heightM": 11.76,
-            "mtowKg": 101500
+            "mtowKg": 101500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A320_family"
           }
         }
       }
@@ -1030,8 +1030,7 @@
             "model": "A300B2",
             "icaoType": "A30B",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1973-06-28",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney JT9D"
@@ -1044,14 +1043,14 @@
             "lengthM": 54.08,
             "wingspanM": 44.84,
             "heightM": 16.54,
-            "mtowKg": 137000
+            "mtowKg": 137000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A300"
           },
           "A300B4": {
             "model": "A300B4",
             "icaoType": "A30B",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1974-12-26",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney JT9D"
@@ -1064,14 +1063,14 @@
             "lengthM": 54.08,
             "wingspanM": 44.84,
             "heightM": 16.54,
-            "mtowKg": 165000
+            "mtowKg": 165000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A300"
           },
           "A300-600": {
             "model": "A300-600",
             "icaoType": "A306",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1983-07-08",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney PW4000"
@@ -1084,7 +1083,8 @@
             "lengthM": 54.08,
             "wingspanM": 44.84,
             "heightM": 16.54,
-            "mtowKg": 170500
+            "mtowKg": 170500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A300"
           }
         }
       }
@@ -1098,8 +1098,7 @@
             "model": "A310-200",
             "icaoType": "A310",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1982-04-03",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney JT9D"
@@ -1112,14 +1111,14 @@
             "lengthM": 46.66,
             "wingspanM": 43.9,
             "heightM": 15.8,
-            "mtowKg": 141970
+            "mtowKg": 141970,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A310"
           },
           "A310-300": {
             "model": "A310-300",
             "icaoType": "A310",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1985-07-08",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney PW4000"
@@ -1132,7 +1131,8 @@
             "lengthM": 46.66,
             "wingspanM": 43.9,
             "heightM": 15.8,
-            "mtowKg": 164000
+            "mtowKg": 164000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A310"
           }
         }
       }
@@ -1146,8 +1146,7 @@
             "model": "A330-200",
             "icaoType": "A332",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1997-08-13",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney PW4000",
@@ -1161,14 +1160,14 @@
             "lengthM": 58.82,
             "wingspanM": 60.3,
             "heightM": 17.39,
-            "mtowKg": 242000
+            "mtowKg": 242000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
           },
           "A330-300": {
             "model": "A330-300",
             "icaoType": "A333",
             "status": "in_service",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1992-11-02",
             "engines": [
               "General Electric CF6",
               "Pratt & Whitney PW4000",
@@ -1182,14 +1181,14 @@
             "lengthM": 63.66,
             "wingspanM": 60.3,
             "heightM": 16.79,
-            "mtowKg": 242000
+            "mtowKg": 242000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
           },
           "A330-800": {
             "model": "A330-800",
             "icaoType": "A338",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2018-11-06",
             "engines": [
               "Rolls-Royce Trent 7000"
             ],
@@ -1201,14 +1200,14 @@
             "lengthM": 58.82,
             "wingspanM": 64,
             "heightM": 18.86,
-            "mtowKg": 251000
+            "mtowKg": 251000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
           },
           "A330-900": {
             "model": "A330-900",
             "icaoType": "A339",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2017-10-19",
             "engines": [
               "Rolls-Royce Trent 7000"
             ],
@@ -1220,7 +1219,8 @@
             "lengthM": 63.66,
             "wingspanM": 64,
             "heightM": 13.4,
-            "mtowKg": 251000
+            "mtowKg": 251000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
           }
         }
       }
@@ -1234,8 +1234,7 @@
             "model": "A340-200",
             "icaoType": "A342",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1992-04-01",
             "engines": [
               "CFM56-5C"
             ],
@@ -1247,14 +1246,14 @@
             "lengthM": 59.39,
             "wingspanM": 60.3,
             "heightM": 16.7,
-            "mtowKg": 257000
+            "mtowKg": 257000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A340"
           },
           "A340-300": {
             "model": "A340-300",
             "icaoType": "A343",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "1991-10-25",
             "engines": [
               "CFM56-5C"
             ],
@@ -1266,14 +1265,14 @@
             "lengthM": 63.69,
             "wingspanM": 60.3,
             "heightM": 16.7,
-            "mtowKg": 276500
+            "mtowKg": 276500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A340"
           },
           "A340-500": {
             "model": "A340-500",
             "icaoType": "A345",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2002-02-11",
             "engines": [
               "Rolls-Royce Trent 553"
             ],
@@ -1285,14 +1284,14 @@
             "lengthM": 67.93,
             "wingspanM": 63.45,
             "heightM": 17.53,
-            "mtowKg": 380000
+            "mtowKg": 380000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A340"
           },
           "A340-600": {
             "model": "A340-600",
             "icaoType": "A346",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2001-04-23",
             "engines": [
               "Rolls-Royce Trent 556"
             ],
@@ -1304,7 +1303,8 @@
             "lengthM": 75.36,
             "wingspanM": 63.45,
             "heightM": 17.93,
-            "mtowKg": 380000
+            "mtowKg": 380000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A340"
           }
         }
       }
@@ -1318,8 +1318,7 @@
             "model": "A350-900",
             "icaoType": "A359",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2013-06-14",
             "engines": [
               "Rolls-Royce Trent XWB-84"
             ],
@@ -1331,14 +1330,14 @@
             "lengthM": 66.8,
             "wingspanM": 64.75,
             "heightM": 17.05,
-            "mtowKg": 283000
+            "mtowKg": 283000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
           },
           "A350-1000": {
             "model": "A350-1000",
             "icaoType": "A35K",
             "status": "in_production",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2016-11-24",
             "engines": [
               "Rolls-Royce Trent XWB-97"
             ],
@@ -1350,7 +1349,8 @@
             "lengthM": 73.79,
             "wingspanM": 64.75,
             "heightM": 17.08,
-            "mtowKg": 322000
+            "mtowKg": 322000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
           }
         }
       }
@@ -1364,8 +1364,7 @@
             "model": "A380-800",
             "icaoType": "A388",
             "status": "retired",
-            "firstFlight": null,
-            "production": null,
+            "firstFlight": "2005-04-27",
             "engines": [
               "Engine Alliance GP7200",
               "Rolls-Royce Trent 900"
@@ -1378,7 +1377,8 @@
             "lengthM": 72.72,
             "wingspanM": 79.75,
             "heightM": 24.09,
-            "mtowKg": 575000
+            "mtowKg": 575000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A380"
           }
         }
       }

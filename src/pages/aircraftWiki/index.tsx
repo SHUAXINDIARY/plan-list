@@ -28,14 +28,14 @@ interface AircraftSeats extends JsonRecord {
 interface AircraftDetail extends JsonRecord {
     /** 机型展示名称。 */
     model: string;
+    /** 对应的 Wikipedia 系列词条链接。 */
+    wikipedia?: string | null;
     /** ICAO 机型代码。 */
     icaoType?: string | null;
     /** 当前机型的生产或运营状态。 */
     status?: AircraftStatus | null;
     /** 首次飞行日期，使用 YYYY-MM-DD；部分目录记录未提供。 */
-    firstFlight?: string;
-    /** 生产年份或生产状态描述，部分目录记录未提供。 */
-    production?: string;
+    firstFlight?: string | null;
     /** 可用发动机型号列表。 */
     engines?: string[] | null;
     /** 典型和最大座位数。 */
@@ -78,7 +78,7 @@ const DEFAULT_GENERATION_KEY = "default";
 const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
     in_service: "服役中",
     in_production: "生产中",
-    retired: "已退役",
+    retired: "已停产",
 };
 
 // 判断 JSON 值是否为非数组对象，供递归目录遍历和字段读取使用。
@@ -310,7 +310,7 @@ const AircraftWikiPage = (): ReactElement => {
                     <p className="page-eyebrow">Aircraft Type Wiki</p>
                     <h1 id="aircraft-model-wiki-title">机型WIKI</h1>
                     <p>
-                        从 Boeing 与 Airbus 的完整机型目录中查看首飞、状态、座位数与性能规格。
+                        从 Boeing 与 Airbus 的完整机型目录中查看首飞日期、状态、座位数与性能规格。
                     </p>
                 </div>
                 <p className="aircraft-model-wiki__scope">
@@ -410,7 +410,7 @@ const AircraftWikiPage = (): ReactElement => {
                                                         <dd>{model.icaoType ?? "-"}</dd>
                                                     </div>
                                                     <div>
-                                                        <dt>首飞</dt>
+                                                        <dt>首飞日期</dt>
                                                         <dd>
                                                             {model.firstFlight ? (
                                                                 <time dateTime={model.firstFlight}>
@@ -454,10 +454,6 @@ const AircraftWikiPage = (): ReactElement => {
                                                         </dd>
                                                     </div>
                                                 </dl>
-                                                <p className="aircraft-model-card__production">
-                                                    <span>生产</span>
-                                                    <span>{model.production ?? "-"}</span>
-                                                </p>
                                                 <p className="aircraft-model-card__engines scroll-area-night">
                                                     <span>发动机</span>
                                                     <span className="aircraft-model-card__engine-list">
@@ -465,6 +461,19 @@ const AircraftWikiPage = (): ReactElement => {
                                                             ? model.engines.join(" · ")
                                                             : "-"}
                                                     </span>
+                                                </p>
+                                                <p className="aircraft-model-card__wikipedia">
+                                                    {model.wikipedia ? (
+                                                        <a
+                                                            href={model.wikipedia}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                        >
+                                                            Wikipedia
+                                                        </a>
+                                                    ) : (
+                                                        "-"
+                                                    )}
                                                 </p>
                                             </article>
                                         ),

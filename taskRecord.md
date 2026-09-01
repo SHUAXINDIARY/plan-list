@@ -7919,6 +7919,89 @@
 
 ## 任务目的
 
+为每个机型增加 Wikipedia 词条链接。
+
+## 完成过程
+
+1. 按制造商与系列建立稳定的 Wikipedia 系列词条 URL 映射，避免为细分变体拼接失效地址。
+2. 为 `aircraft.json` 中 63 条机型记录补充统一的 `wikipedia` 字段。
+3. 在机型卡片底部增加可键盘访问的新窗口外链，并保留缺失链接时的 `-` 占位。
+4. 完成字段完整性校验，63 条记录均有合法的 HTTPS Wikipedia 链接。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：为每条机型详情新增 `wikipedia` 链接字段。
+- `src/pages/aircraftWiki/index.tsx`：增加 Wikipedia 字段类型和卡片外链渲染。
+- `src/pages/aircraftWiki/index.css`：增加 Wikipedia 链接样式与焦点状态。
+- `taskRecord.md`：追加本次 Wikipedia 链接记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将机型生产日期信息统一更正为首飞日期。
+
+## 完成过程
+
+1. 删除 `aircraft.json` 中语义不一致的 `production` 字段，保留统一的 `firstFlight` 字段。
+2. 将卡片日期 label 从“首飞”改为“首飞日期”，移除重复的“生产”信息行。
+3. 缺失首飞日期的记录继续使用 `-` 占位。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：移除每条机型记录的 `production` 字段。
+- `src/pages/aircraftWiki/index.tsx`：统一使用 `firstFlight` 并更新日期 label。
+- `src/pages/aircraftWiki/index.css`：移除生产信息行对应样式。
+- `taskRecord.md`：追加首飞日期字段更正记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+补齐机型目录中缺失的首飞日期。
+
+## 完成过程
+
+1. 汇总 `firstFlight` 为空的 46 条机型记录，并依据对应 Wikipedia 系列/变体词条核对首飞日期。
+2. 回填 45 条可确认日期，覆盖 Boeing 717/747/757/767/777/787 与 Airbus A318/A319/A320/A321/A300/A310/A330/A340/A350/A380 变体。
+3. `Boeing 777-8` 尚无实际首飞记录，继续保留 `null`，避免写入预测日期。
+4. 完成数据回填后复核，当前仅 `777-8` 缺失首飞日期。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：补齐 45 条机型的 `firstFlight` 日期。
+- `taskRecord.md`：追加首飞日期回填记录及未回填原因。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+继续核对并回填机型目录中的缺失首飞数据。
+
+## 完成过程
+
+1. 依据 Boeing 717/747/757/767/777/787 与 Airbus A300/A310/A320/A330/A340/A350/A380 Wikipedia 词条及变体说明核对日期。
+2. 回填缺失的 45 条 `firstFlight`，保留原有已填日期不变。
+3. `Boeing 777-8` 尚未有实际首飞日期，继续保持 `null`，不写入预计时间。
+4. 数据复核结果为 63 条记录中 62 条有首飞日期，1 条因尚无首飞继续为空。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：回填 45 条机型的 `firstFlight` 日期。
+- `taskRecord.md`：追加本次外部资料核对记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
 校验并统一 `aircraft.json` 的 Boeing/Airbus 目录 schema。
 
 ## 完成过程
