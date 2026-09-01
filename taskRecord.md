@@ -7919,6 +7919,27 @@
 
 ## 任务目的
 
+校验并统一 `aircraft.json` 的 Boeing/Airbus 目录 schema。
+
+## 完成过程
+
+1. 对比各系列节点，发现直连机型、`generation`、`ceo/neo` 等目录层级不一致，且详情字段存在缺失。
+2. 将每个系列统一为 `manufacturer`、`family`、`generation` 三层结构；无代际系列使用内部 `default` 分组。
+3. 将每条机型详情统一为相同字段集合，缺失值使用 `null`，发动机保持数组、座位保持对象。
+4. 页面解析同步读取 generation 键，并隐藏无代际系列的 `default` 标签；完成纯数据 schema 校验，覆盖 2 个制造商、15 个系列、63 个型号且无结构错误。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：重整为统一的制造商/系列/代际/机型 schema，并补齐缺失字段。
+- `src/pages/aircraftWiki/index.tsx`：同步读取统一 generation 层级并展示代际标签。
+- `taskRecord.md`：追加本次 JSON schema 校验与整理记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
 让机型卡片中的发动机信息保持单行完整展示。
 
 ## 完成过程

@@ -57,6 +57,8 @@ interface AircraftCatalogEntry extends AircraftDetail {
     manufacturer: JetManufacturer;
     /** 目录所属系列，例如 737 或 A320。 */
     family: string;
+    /** `generation` 目录层级的键名，例如 Original、NG 或 MAX。 */
+    generation?: string;
 }
 
 interface ManufacturerCatalog {
@@ -68,6 +70,9 @@ interface ManufacturerCatalog {
 
 const AIRCRAFT_DATA_URL = "/data/aircraft.json";
 const JET_MANUFACTURERS: readonly JetManufacturer[] = ["Boeing", "Airbus"];
+
+/** 统一 schema 为无代际系列使用的占位分组，页面不把它展示为代际标签。 */
+const DEFAULT_GENERATION_KEY = "default";
 
 /** 将状态枚举转换为页面可读文案。 */
 const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
@@ -92,9 +97,10 @@ const collectAircraftModels = (
     manufacturer: JetManufacturer,
     family: string,
     models: AircraftCatalogEntry[],
+    generation?: string,
 ): void => {
     if (isAircraftDetail(node)) {
-        models.push({ ...node, manufacturer, family });
+        models.push({ ...node, manufacturer, family, generation });
         return;
     }
 
@@ -102,8 +108,35 @@ const collectAircraftModels = (
         return;
     }
 
-    Object.values(node).forEach((childNode): void => {
-        collectAircraftModels(childNode, manufacturer, family, models);
+    const generationNode = node.generation;
+    if (isJsonRecord(generationNode)) {
+        Object.entries(generationNode).forEach(
+            ([generationKey, generationValue]): void => {
+                collectAircraftModels(
+                    generationValue,
+                    manufacturer,
+                    family,
+                    models,
+                    generationKey === DEFAULT_GENERATION_KEY
+                        ? undefined
+                        : generationKey,
+                );
+            },
+        );
+    }
+
+    Object.entries(node).forEach(([key, childNode]): void => {
+        if (key === "generation") {
+            return;
+        }
+
+        collectAircraftModels(
+            childNode,
+            manufacturer,
+            family,
+            models,
+            generation,
+        );
     });
 };
 
@@ -137,6 +170,17 @@ const createAircraftCatalog = (value: JsonValue): ManufacturerCatalog[] => {
 
                 if (familyDifference !== 0) {
                     return familyDifference;
+                }
+
+                const generationDifference = (
+                    firstModel.generation ?? ""
+                ).localeCompare(secondModel.generation ?? "", "en", {
+                    numeric: true,
+                    sensitivity: "base",
+                });
+
+                if (generationDifference !== 0) {
+                    return generationDifference;
                 }
 
                 return firstModel.model.localeCompare(secondModel.model, "en", {
@@ -340,12 +384,15 @@ const AircraftWikiPage = (): ReactElement => {
                                         (model): ReactElement => (
                                             <article
                                                 className="aircraft-model-card"
-                                                key={`${model.manufacturer}-${model.family}-${model.model}`}
+                                                key={`${model.manufacturer}-${model.family}-${model.generation ?? ""}-${model.model}`}
                                             >
                                                 <header className="aircraft-model-card__header">
                                                     <div>
                                                         <span className="aircraft-model-card__family">
                                                             {model.family}
+                                                            {model.generation
+                                                                ? ` / ${model.generation}`
+                                                                : ""}
                                                         </span>
                                                         <h3>{model.model}</h3>
                                                     </div>
