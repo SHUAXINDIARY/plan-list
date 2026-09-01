@@ -207,19 +207,13 @@
     white-space: nowrap;
 }
 
-.aircraft-model-card__status--in_service {
-    color: var(--pl-stat-teal-text);
-    background-color: var(--pl-stat-teal-bg);
-    border-color: var(--pl-stat-teal-border);
-}
-
 .aircraft-model-card__status--in_production {
     color: var(--pl-stat-blue-text);
     background-color: var(--pl-stat-blue-bg);
     border-color: var(--pl-stat-blue-border);
 }
 
-.aircraft-model-card__status--retired {
+.aircraft-model-card__status--discontinued {
     color: var(--pl-text-meta);
     background-color: var(--pl-surface-chip);
 }

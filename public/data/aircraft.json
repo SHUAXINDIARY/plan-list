@@ -8,7 +8,7 @@
           "717-200": {
             "model": "717-200",
             "icaoType": "B712",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1998-09-02",
             "engines": [
               "Rolls-Royce BR715"
@@ -35,7 +35,7 @@
           "737-100": {
             "model": "737-100",
             "icaoType": "B731",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1967-04-09",
             "engines": [
               "Pratt & Whitney JT8D-7"
@@ -54,7 +54,7 @@
           "737-200": {
             "model": "737-200",
             "icaoType": "B732",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1967-08-08",
             "engines": [
               "Pratt & Whitney JT8D-9",
@@ -77,7 +77,7 @@
           "737-300": {
             "model": "737-300",
             "icaoType": "B733",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1984-02-24",
             "engines": [
               "CFM International CFM56-3B1",
@@ -98,7 +98,7 @@
           "737-400": {
             "model": "737-400",
             "icaoType": "B734",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1988-02-19",
             "engines": [
               "CFM International CFM56-3B2",
@@ -118,7 +118,7 @@
           "737-500": {
             "model": "737-500",
             "icaoType": "B735",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1989-06-30",
             "engines": [
               "CFM International CFM56-3B1",
@@ -140,7 +140,7 @@
           "737-600": {
             "model": "737-600",
             "icaoType": "B736",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1998-01-22",
             "engines": [
               "CFM International CFM56-7B18",
@@ -160,7 +160,7 @@
           "737-700": {
             "model": "737-700",
             "icaoType": "B737",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1997-02-09",
             "engines": [
               "CFM International CFM56-7B20",
@@ -181,7 +181,7 @@
           "737-800": {
             "model": "737-800",
             "icaoType": "B738",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1997-07-31",
             "engines": [
               "CFM International CFM56-7B24",
@@ -202,7 +202,7 @@
           "737-900": {
             "model": "737-900",
             "icaoType": "B739",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "2000-09-01",
             "engines": [
               "CFM International CFM56-7B26",
@@ -222,7 +222,7 @@
           "737-900ER": {
             "model": "737-900ER",
             "icaoType": "B739",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "2006-09-01",
             "engines": [
               "CFM International CFM56-7B26",
@@ -347,7 +347,7 @@
           "747-100": {
             "model": "747-100",
             "icaoType": "B741",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1969-02-09",
             "engines": [
               "Pratt & Whitney JT9D",
@@ -368,7 +368,7 @@
           "747-200": {
             "model": "747-200",
             "icaoType": "B742",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1970-10-11",
             "engines": [
               "Pratt & Whitney JT9D",
@@ -389,7 +389,7 @@
           "747-300": {
             "model": "747-300",
             "icaoType": "B743",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1982-10-05",
             "engines": [
               "Pratt & Whitney JT9D",
@@ -410,7 +410,7 @@
           "747-400": {
             "model": "747-400",
             "icaoType": "B744",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1988-04-29",
             "engines": [
               "General Electric CF6-80C2",
@@ -431,7 +431,7 @@
           "747-8": {
             "model": "747-8",
             "icaoType": "B748",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "2011-03-20",
             "engines": [
               "General Electric GEnx-2B67"
@@ -458,7 +458,7 @@
           "757-200": {
             "model": "757-200",
             "icaoType": "B752",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1982-02-19",
             "engines": [
               "Rolls-Royce RB211-535",
@@ -478,7 +478,7 @@
           "757-300": {
             "model": "757-300",
             "icaoType": "B753",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1998-08-02",
             "engines": [
               "Rolls-Royce RB211-535",
@@ -506,7 +506,7 @@
           "767-200": {
             "model": "767-200",
             "icaoType": "B762",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1981-09-26",
             "engines": [
               "General Electric CF6",
@@ -526,7 +526,7 @@
           "767-300": {
             "model": "767-300",
             "icaoType": "B763",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1986-01-30",
             "engines": [
               "General Electric CF6",
@@ -547,7 +547,7 @@
           "767-400ER": {
             "model": "767-400ER",
             "icaoType": "B764",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1999-10-09",
             "engines": [
               "General Electric CF6-80C2B8F"
@@ -574,7 +574,7 @@
           "777-200": {
             "model": "777-200",
             "icaoType": "B772",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1994-06-12",
             "engines": [
               "General Electric GE90",
@@ -595,7 +595,7 @@
           "777-200ER": {
             "model": "777-200ER",
             "icaoType": "B772",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1996-10-07",
             "engines": [
               "General Electric GE90",
@@ -616,7 +616,7 @@
           "777-200LR": {
             "model": "777-200LR",
             "icaoType": "B77L",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "2005-03-08",
             "engines": [
               "General Electric GE90-110B1"
@@ -635,7 +635,7 @@
           "777-300": {
             "model": "777-300",
             "icaoType": "B773",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1997-10-16",
             "engines": [
               "General Electric GE90",
@@ -656,7 +656,7 @@
           "777-300ER": {
             "model": "777-300ER",
             "icaoType": "B77W",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "2003-02-24",
             "engines": [
               "General Electric GE90-115B"
@@ -721,7 +721,7 @@
           "787-8": {
             "model": "787-8",
             "icaoType": "B788",
-            "status": "in_service",
+            "status": "in_production",
             "firstFlight": "2009-12-15",
             "engines": [
               "General Electric GEnx-1B",
@@ -741,7 +741,7 @@
           "787-9": {
             "model": "787-9",
             "icaoType": "B789",
-            "status": "in_service",
+            "status": "in_production",
             "firstFlight": "2013-09-17",
             "engines": [
               "General Electric GEnx-1B",
@@ -761,7 +761,7 @@
           "787-10": {
             "model": "787-10",
             "icaoType": "B78X",
-            "status": "in_service",
+            "status": "in_production",
             "firstFlight": "2017-03-31",
             "engines": [
               "General Electric GEnx-1B"
@@ -836,7 +836,7 @@
           "A318-100": {
             "model": "A318-100",
             "icaoType": "A318",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "2002-01-15",
             "engines": [
               "CFM56-5B",
@@ -857,7 +857,7 @@
           "A319": {
             "model": "A319",
             "icaoType": "A319",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1995-08-25",
             "engines": [
               "CFM56-5A",
@@ -878,7 +878,7 @@
           "A320": {
             "model": "A320",
             "icaoType": "A320",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1987-02-22",
             "engines": [
               "CFM56-5A",
@@ -899,7 +899,7 @@
           "A321": {
             "model": "A321",
             "icaoType": "A321",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1993-03-11",
             "engines": [
               "CFM56-5B",
@@ -1029,7 +1029,7 @@
           "A300B2": {
             "model": "A300B2",
             "icaoType": "A30B",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1973-06-28",
             "engines": [
               "General Electric CF6",
@@ -1049,7 +1049,7 @@
           "A300B4": {
             "model": "A300B4",
             "icaoType": "A30B",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1974-12-26",
             "engines": [
               "General Electric CF6",
@@ -1069,7 +1069,7 @@
           "A300-600": {
             "model": "A300-600",
             "icaoType": "A306",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1983-07-08",
             "engines": [
               "General Electric CF6",
@@ -1097,7 +1097,7 @@
           "A310-200": {
             "model": "A310-200",
             "icaoType": "A310",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1982-04-03",
             "engines": [
               "General Electric CF6",
@@ -1117,7 +1117,7 @@
           "A310-300": {
             "model": "A310-300",
             "icaoType": "A310",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1985-07-08",
             "engines": [
               "General Electric CF6",
@@ -1145,7 +1145,7 @@
           "A330-200": {
             "model": "A330-200",
             "icaoType": "A332",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1997-08-13",
             "engines": [
               "General Electric CF6",
@@ -1166,7 +1166,7 @@
           "A330-300": {
             "model": "A330-300",
             "icaoType": "A333",
-            "status": "in_service",
+            "status": "discontinued",
             "firstFlight": "1992-11-02",
             "engines": [
               "General Electric CF6",
@@ -1233,7 +1233,7 @@
           "A340-200": {
             "model": "A340-200",
             "icaoType": "A342",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1992-04-01",
             "engines": [
               "CFM56-5C"
@@ -1252,7 +1252,7 @@
           "A340-300": {
             "model": "A340-300",
             "icaoType": "A343",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "1991-10-25",
             "engines": [
               "CFM56-5C"
@@ -1271,7 +1271,7 @@
           "A340-500": {
             "model": "A340-500",
             "icaoType": "A345",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "2002-02-11",
             "engines": [
               "Rolls-Royce Trent 553"
@@ -1290,7 +1290,7 @@
           "A340-600": {
             "model": "A340-600",
             "icaoType": "A346",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "2001-04-23",
             "engines": [
               "Rolls-Royce Trent 556"
@@ -1363,7 +1363,7 @@
           "A380-800": {
             "model": "A380-800",
             "icaoType": "A388",
-            "status": "retired",
+            "status": "discontinued",
             "firstFlight": "2005-04-27",
             "engines": [
               "Engine Alliance GP7200",

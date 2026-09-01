@@ -15,8 +15,8 @@ interface JsonRecord {
     [key: string]: JsonValue;
 }
 
-/** 机型可用状态，对应 aircraft.json 中的状态枚举。 */
-type AircraftStatus = "in_service" | "in_production" | "retired";
+/** 机型生产状态，对应 aircraft.json 中的状态枚举。 */
+type AircraftStatus = "in_production" | "discontinued";
 
 interface AircraftSeats extends JsonRecord {
     /** 典型客舱布局的座位数。 */
@@ -32,7 +32,7 @@ interface AircraftDetail extends JsonRecord {
     wikipedia?: string | null;
     /** ICAO 机型代码。 */
     icaoType?: string | null;
-    /** 当前机型的生产或运营状态。 */
+    /** 当前机型的生产状态，不表示是否仍在服役。 */
     status?: AircraftStatus | null;
     /** 首次飞行日期，使用 YYYY-MM-DD；部分目录记录未提供。 */
     firstFlight?: string | null;
@@ -76,9 +76,8 @@ const DEFAULT_GENERATION_KEY = "default";
 
 /** 将状态枚举转换为页面可读文案。 */
 const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
-    in_service: "服役中",
     in_production: "生产中",
-    retired: "已停产",
+    discontinued: "停产",
 };
 
 // 判断 JSON 值是否为非数组对象，供递归目录遍历和字段读取使用。
@@ -342,7 +341,7 @@ const AircraftWikiPage = (): ReactElement => {
             </div>
 
             <p className="aircraft-model-wiki__source">
-                每张卡片对应 aircraft.json 中的一条机型记录，状态包含服役中、生产中与已退役。
+                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产状态：生产中或停产。
             </p>
 
             {errorMessage ? (

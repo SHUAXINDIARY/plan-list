@@ -8035,3 +8035,25 @@
 - `src/pages/aircraftWiki/index.tsx`：拆分发动机标签与内容节点，并挂载滚动区域样式。
 - `src/pages/aircraftWiki/index.css`：增加发动机单行布局和横向溢出适配。
 - `taskRecord.md`：追加发动机文本适配记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将机型状态统一为生产状态，不再区分是否仍在服役。
+
+## 完成过程
+
+1. 将 `in_service` 和 `retired` 两个旧枚举合并为 `discontinued`，页面文案统一为“停产”。
+2. 保留 `in_production` 并展示为“生产中”；将仍在生产的 787 系列从旧 `in_service` 更正为 `in_production`。
+3. 移除 UI 中“服役中/已退役”状态映射与样式，状态说明改为仅表示生产状态。
+4. 复核 63 条机型记录，当前 `in_production` 21 条、`discontinued` 42 条，无旧枚举残留。
+
+## 修改具体文件
+
+- `public/data/aircraft.json`：按生产状态重写全部机型 `status` 枚举。
+- `src/pages/aircraftWiki/index.tsx`：更新状态联合类型、label 和说明文案。
+- `src/pages/aircraftWiki/index.css`：替换停产状态样式，移除服役状态样式。
+- `taskRecord.md`：追加生产状态枚举调整记录。
