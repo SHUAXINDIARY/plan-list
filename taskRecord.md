@@ -8372,3 +8372,23 @@
 
 - `doc/aircraft-render-lighting-camera.md`：新增 HDRI 灯光与摄像机投影技术实现文档。
 - `taskRecord.md`：追加技术文档输出记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+修复 Three.js 弃用 `THREE.Clock` 导致的运行时 warn。
+
+## 完成过程
+
+1. 将 `AircraftModelViewport` 的动画时间采样替换为 `THREE.Timer.update()` 和 `getDelta()`。
+2. 使用 `Timer.reset()` 保持播放暂停、时间轴拖拽、页面隐藏和视窗不可见时的时间基准。
+3. 将 `EarthMap` 的自动旋转时钟同步替换为 `THREE.Timer`，并在清理时调用 `dispose()`，确保全局不再实例化 `THREE.Clock`。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：移除弃用 Clock，接入 Timer 生命周期。
+- `src/pages/personal/sections/EarthMap.tsx`：移除弃用 Clock，接入 Timer 帧更新和释放。
+- `taskRecord.md`：追加 Clock 弃用 warn 修复记录。

@@ -842,7 +842,8 @@ export const AircraftModelViewport = ({
     >(null);
     const animationMixerRef = useRef<THREE.AnimationMixer | null>(null);
     const animationActionRef = useRef<THREE.AnimationAction | null>(null);
-    const animationClockRef = useRef<THREE.Clock>(new THREE.Clock(false));
+    /** Three.js 动画计时器；暂停/恢复时 reset，避免累计不可见期间的时间差。 */
+    const animationTimerRef = useRef<THREE.Timer>(new THREE.Timer());
     const animationPlayingRef = useRef<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [isModelDirectoryOpen, setIsModelDirectoryOpen] =
@@ -1152,9 +1153,9 @@ export const AircraftModelViewport = ({
         action.paused = !isPlaying;
 
         if (isPlaying) {
-            animationClockRef.current.start();
+            animationTimerRef.current.reset();
         } else {
-            animationClockRef.current.stop();
+            animationTimerRef.current.reset();
         }
 
         setAnimationState(
@@ -1184,7 +1185,7 @@ export const AircraftModelViewport = ({
         animationMixerRef.current?.setTime(currentTime);
         action.paused = true;
         animationPlayingRef.current = false;
-        animationClockRef.current.stop();
+        animationTimerRef.current.reset();
         setAnimationState(
             (currentState: AircraftAnimationState): AircraftAnimationState => ({
                 ...currentState,
@@ -1775,7 +1776,7 @@ export const AircraftModelViewport = ({
         /** 初始化 WebGPU 场景，再加载当前选择的单个模型。 */
         const initializeViewport = async (): Promise<void> => {
             animationPlayingRef.current = false;
-            animationClockRef.current.stop();
+            animationTimerRef.current.reset();
             setAnimationState(EMPTY_ANIMATION_STATE);
             setCameraHudState(EMPTY_CAMERA_HUD_STATE);
             setIsSnapshotAvailable(false);
@@ -2080,7 +2081,8 @@ export const AircraftModelViewport = ({
                     animationPlayingRef.current &&
                     animationMixerRef.current !== null
                 ) {
-                    const animationDelta = animationClockRef.current.getDelta();
+                    animationTimerRef.current.update();
+                    const animationDelta = animationTimerRef.current.getDelta();
                     animationMixerRef.current.update(animationDelta);
                     animationUiAccumulator += animationDelta;
 
@@ -2135,11 +2137,11 @@ export const AircraftModelViewport = ({
 
                 if (isDocumentVisible) {
                     if (animationPlayingRef.current) {
-                        animationClockRef.current.start();
+                        animationTimerRef.current.reset();
                     }
                     requestRender();
                 } else {
-                    animationClockRef.current.stop();
+                    animationTimerRef.current.reset();
                     cancelScheduledFrame();
                 }
             };
@@ -2157,11 +2159,11 @@ export const AircraftModelViewport = ({
 
                           if (isViewportVisible) {
                               if (animationPlayingRef.current) {
-                                  animationClockRef.current.start();
+                                  animationTimerRef.current.reset();
                               }
                               requestRender();
                           } else {
-                              animationClockRef.current.stop();
+                              animationTimerRef.current.reset();
                               cancelScheduledFrame();
                           }
                       });
@@ -2291,7 +2293,7 @@ export const AircraftModelViewport = ({
                     projectionModeApplyRef.current = null;
                 }
                 animationPlayingRef.current = false;
-                animationClockRef.current.stop();
+                animationTimerRef.current.dispose();
                 animationMixerRef.current?.stopAllAction();
                 if (aircraftModelRef.current !== null) {
                     animationMixerRef.current?.uncacheRoot(

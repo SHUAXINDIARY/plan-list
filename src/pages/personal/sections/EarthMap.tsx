@@ -688,7 +688,9 @@ const EarthMap = ({
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
             const controls = new OrbitControls(camera, renderer.domElement);
-            const animationClock = new THREE.Clock();
+            /** Three.js 动画计时器，逐帧 update 后为 OrbitControls 提供 delta。 */
+            const animationTimer = new THREE.Timer();
+            animationTimer.connect(document);
             const globeGroup = new THREE.Group();
             const routeColor = readEarthThemeColor(
                 "--pl-earth-route-international",
@@ -897,7 +899,8 @@ const EarthMap = ({
             resizeRenderer();
 
             const renderFrame = (): void => {
-                controls.update(animationClock.getDelta());
+                animationTimer.update();
+                controls.update(animationTimer.getDelta());
                 updateMarkerScreenScales();
                 renderer.render(scene, camera);
             };
@@ -916,6 +919,7 @@ const EarthMap = ({
                     clearMarkerHover,
                 );
                 controls.dispose();
+                animationTimer.dispose();
                 disposeSceneResources(scene);
                 renderer.dispose();
                 renderer.domElement.remove();
