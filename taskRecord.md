@@ -8077,3 +8077,42 @@
 - `src/pages/aircraftWiki/index.tsx`：增加制造商官网 URL 映射和“官网”外链。
 - `src/pages/aircraftWiki/index.css`：增加官网入口的紧凑按钮样式和键盘焦点状态。
 - `taskRecord.md`：追加制造商官网入口记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将机型 Wikipedia 链接移动到机型名称同行显示。
+
+## 完成过程
+
+1. 在型号 `h3` 旁增加较小字号的 Wikipedia 外链。
+2. 删除卡片底部原有 Wikipedia 行，避免额外占用垂直空间。
+3. 保留新窗口打开、悬停和键盘焦点状态，并适配窄卡片换行。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：将 Wikipedia 链接移至机型名称标题行。
+- `src/pages/aircraftWiki/index.css`：增加标题同行布局和小字号链接样式。
+- `taskRecord.md`：追加 Wikipedia 链接位置调整记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+让机型卡片中的发动机数据逐项换行展示。
+
+## 完成过程
+
+1. 将发动机数组从单个拼接文本改为逐项渲染。
+2. 每个发动机使用独立行节点，保留长名称单行完整显示和横向溢出查看能力。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：逐项渲染发动机列表。
+- `src/pages/aircraftWiki/index.css`：增加发动机列表的逐行布局样式。
+- `taskRecord.md`：追加发动机逐行展示记录。

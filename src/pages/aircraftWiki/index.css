@@ -221,6 +221,14 @@
     text-transform: uppercase;
 }
 
+.aircraft-model-card__model-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
 .aircraft-model-card h3 {
     margin: 0.35rem 0 0;
     color: var(--pl-text-heading);
@@ -312,22 +320,31 @@
 }
 
 .aircraft-model-card__engines .aircraft-model-card__engine-list {
+    display: grid;
+    gap: 0.2rem;
     flex: 0 0 auto;
     color: var(--pl-text-english);
     font-weight: 400;
     white-space: nowrap;
 }
 
-.aircraft-model-card__wikipedia {
-    margin: 0.8rem 0 0;
-    padding-top: 0.7rem;
-    color: var(--pl-text-meta);
-    font-size: 0.72rem;
-    border-top: 1px solid var(--pl-border-divider);
+.aircraft-model-card__engines .aircraft-model-card__engine-list .aircraft-model-card__engine-item {
+    display: block;
+    color: var(--pl-text-english);
+    font-weight: 400;
 }
 
-.aircraft-model-card__wikipedia a {
+.aircraft-model-card__wikipedia {
+    display: inline-flex;
+    align-items: center;
     color: var(--pl-link);
+    font-size: 0.7rem;
+    font-weight: 650;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.aircraft-model-card__wikipedia {
     text-decoration: underline;
     text-decoration-color: var(--pl-link-decoration);
     text-underline-offset: 0.18em;
@@ -337,13 +354,13 @@
             var(--motion-ease-out-quart);
 }
 
-.aircraft-model-card__wikipedia a:hover,
-.aircraft-model-card__wikipedia a:focus-visible {
+.aircraft-model-card__wikipedia:hover,
+.aircraft-model-card__wikipedia:focus-visible {
     color: var(--pl-link-hover);
     text-decoration-color: var(--pl-link-hover-decoration);
 }
 
-.aircraft-model-card__wikipedia a:focus-visible {
+.aircraft-model-card__wikipedia:focus-visible {
     outline: 2px solid var(--pl-border-focus);
     outline-offset: 3px;
 }

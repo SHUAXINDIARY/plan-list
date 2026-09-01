@@ -347,7 +347,7 @@ const AircraftWikiPage = (): ReactElement => {
             </div>
 
             <p className="aircraft-model-wiki__source">
-                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产状态：生产中或停产。
+                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产状态：生产中或停产，数据来源互联网，仅供参考。
             </p>
 
             {errorMessage ? (
@@ -413,7 +413,19 @@ const AircraftWikiPage = (): ReactElement => {
                                                                 ? ` / ${model.generation}`
                                                                 : ""}
                                                         </span>
-                                                        <h3>{model.model}</h3>
+                                                        <div className="aircraft-model-card__model-title">
+                                                            <h3>{model.model}</h3>
+                                                            {model.wikipedia ? (
+                                                                <a
+                                                                    className="aircraft-model-card__wikipedia"
+                                                                    href={model.wikipedia}
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                >
+                                                                    Wikipedia
+                                                                </a>
+                                                            ) : null}
+                                                        </div>
                                                     </div>
                                                     <span
                                                         className={`aircraft-model-card__status${model.status ? ` aircraft-model-card__status--${model.status}` : ""}`}
@@ -477,22 +489,18 @@ const AircraftWikiPage = (): ReactElement => {
                                                     <span>发动机</span>
                                                     <span className="aircraft-model-card__engine-list">
                                                         {model.engines && model.engines.length > 0
-                                                            ? model.engines.join(" · ")
+                                                            ? model.engines.map(
+                                                                  (engine): ReactElement => (
+                                                                      <span
+                                                                          className="aircraft-model-card__engine-item"
+                                                                          key={engine}
+                                                                      >
+                                                                          {engine}
+                                                                      </span>
+                                                                  ),
+                                                              )
                                                             : "-"}
                                                     </span>
-                                                </p>
-                                                <p className="aircraft-model-card__wikipedia">
-                                                    {model.wikipedia ? (
-                                                        <a
-                                                            href={model.wikipedia}
-                                                            target="_blank"
-                                                            rel="noreferrer"
-                                                        >
-                                                            Wikipedia
-                                                        </a>
-                                                    ) : (
-                                                        "-"
-                                                    )}
                                                 </p>
                                             </article>
                                         ),
