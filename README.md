@@ -2,6 +2,10 @@
 
 **Night Flight Archive**，面向航空爱好者的航司机型资料库与个人乘坐记录工具。界面以夜航档案为基调，强调快速查阅、筛选、记录和回顾。
 
+项目仓库：[https://github.com/SHUAXINDIARY/plane-list](https://github.com/SHUAXINDIARY/plane-list)
+
+联系作者：[shuaxinjs@qq.com](mailto:shuaxinjs@qq.com)
+
 ## 功能概览
 
 - **机型资料库**：按航司浏览机队、制造商、机型与参考来源，并支持组合筛选。
@@ -24,11 +28,13 @@
 
 ## 模型资源
 
-模型页会在构建期扫描以下目录中的 `.glb` 文件，并在目录中保留来源标识：
+模型页会在构建期扫描以下目录中的 `.glb` 文件，并按模型直接所属目录分组展示：
 
-- `aircraft-models/models/`：AMV 模型仓库的 glTF 2.0 模型。
 - `fr24-3d-models-glbv2/models/`：由 FR24 legacy GLB v1 转换得到的 glTF 2.0 模型。
-- `sketchfab/`：项目本地维护的自定义模型。
+- `sketchfab/`：项目本地维护的 Sketchfab 模型，包含其下级目录。
+- `upload_oss_glb/`：超过 25 MiB 的 Sketchfab 模型转移后的目录，通过 OSS 公共地址加载。
+
+生产构建开始前，体积超过 25 MiB 的 `sketchfab/` 模型会移动到 `upload_oss_glb/`，同时生成模型资源清单。此类模型使用 `https://img.shuaxinjs.cn/glb/<文件名>` 作为加载地址。
 
 原始 FR24 模型位于 `fr24-3d-models/models/`，其 GLB v1 不能直接由当前 `GLTFLoader` 加载。转换脚本会将结果写入 `fr24-3d-models-glbv2/models/`，并复制源仓库许可证。各模型的许可证和署名要求以对应目录中的说明为准。
 
