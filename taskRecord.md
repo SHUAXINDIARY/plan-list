@@ -7852,3 +7852,82 @@
 - `src/pages/aircraftWiki/index.css`：新增页面布局、列表、主题和移动端响应式样式。
 - `src/pages/aircraftWiki/index,.tsx`：保留原文件名并转发到规范入口。
 - `taskRecord.md`：追加本次机型 WIKI 页面记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+将机型 WIKI 的数据源切换为 `aircraft.json`，并改为卡片风格展示。
+
+## 完成过程
+
+1. 核对 `public/data/aircraft.json` 的制造商、系列和机型详情嵌套结构。
+2. 将页面读取地址改为 `/data/aircraft.json`，递归汇总 Boeing 与 Airbus 的完整机型记录。
+3. 为每个机型增加状态、ICAO、首飞、座位、航程、尺寸、生产年份和发动机规格卡片，并保留搜索及异常状态。
+4. 按用户要求不运行构建或开发服务器验收。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：切换 `aircraft.json` 数据源并实现机型详情卡片渲染。
+- `src/pages/aircraftWiki/index.css`：将制造商下的型号列表改为响应式卡片网格。
+- `public/data/aircraft.json`：作为页面运行时读取的机型目录数据源（未修改内容）。
+- `taskRecord.md`：追加本次数据源与卡片样式调整记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+修复 Airbus 机型未展示的问题。
+
+## 完成过程
+
+1. 对照 `aircraft.json` 检查数据字段，确认 Airbus 多数记录缺少 `firstFlight` 和 `production`。
+2. 将这两个字段调整为可选值，避免详情校验误过滤完整机型记录。
+3. 卡片对缺失字段显示“暂无记录”，继续保留其他规格信息。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：放宽机型详情字段校验并增加缺失值展示回退。
+- `taskRecord.md`：追加 Airbus 数据展示问题修复记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+确保机型 WIKI 不因字段缺失过滤任何机型记录。
+
+## 完成过程
+
+1. 将机型识别条件收窄为仅检查 `model` 字段，保留 aircraft.json 中所有机型节点。
+2. 将规格字段改为可选类型，所有缺失值统一使用 `-` 占位。
+3. 保留搜索功能，但不再因字段不完整而过滤制造商或机型数据。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：移除详情字段过滤并统一缺失字段占位文案。
+- `taskRecord.md`：追加完整展示修复记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+让机型卡片中的发动机信息保持单行完整展示。
+
+## 完成过程
+
+1. 将发动机文本包裹为独立内容节点，避免与“发动机”标签发生换行耦合。
+2. 为发动机内容启用单行横向滚动，窄卡片可查看完整长文本。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：拆分发动机标签与内容节点，并挂载滚动区域样式。
+- `src/pages/aircraftWiki/index.css`：增加发动机单行布局和横向溢出适配。
+- `taskRecord.md`：追加发动机文本适配记录。

@@ -1,108 +1,157 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
-import type { AirplaneData } from "../home/type";
-import { AIRPLANE_DATA_URL } from "../home/constant";
 import "./index.css";
 
-/** 机型 WIKI 当前收录的两家喷气客机制造商。 */
+/** 机型 WIKI 当前展示的制造商。 */
 type JetManufacturer = "Airbus" | "Boeing";
 
-interface ModelCatalogEntry {
-    /** 展示用的完整机型代号，保留静态数据中的变体后缀。 */
-    modelName: string;
-    /** 当前静态机队数据中采用该机型的航司数量。 */
-    airlineCount: number;
+/** 静态 JSON 中允许出现的基础值类型，用于安全遍历嵌套目录。 */
+type JsonPrimitive = string | number | boolean | null;
+
+/** 静态 JSON 的递归值类型；undefined 表示读取缺失的可选字段。 */
+type JsonValue = JsonPrimitive | JsonValue[] | JsonRecord | undefined;
+
+interface JsonRecord {
+    /** JSON 对象的动态字段，字段名由 aircraft.json 的目录层级决定。 */
+    [key: string]: JsonValue;
+}
+
+/** 机型可用状态，对应 aircraft.json 中的状态枚举。 */
+type AircraftStatus = "in_service" | "in_production" | "retired";
+
+interface AircraftSeats extends JsonRecord {
+    /** 典型客舱布局的座位数。 */
+    typical?: number | null;
+    /** 认证或布局允许的最大座位数。 */
+    max?: number | null;
+}
+
+interface AircraftDetail extends JsonRecord {
+    /** 机型展示名称。 */
+    model: string;
+    /** ICAO 机型代码。 */
+    icaoType?: string | null;
+    /** 当前机型的生产或运营状态。 */
+    status?: AircraftStatus | null;
+    /** 首次飞行日期，使用 YYYY-MM-DD；部分目录记录未提供。 */
+    firstFlight?: string;
+    /** 生产年份或生产状态描述，部分目录记录未提供。 */
+    production?: string;
+    /** 可用发动机型号列表。 */
+    engines?: string[] | null;
+    /** 典型和最大座位数。 */
+    seats?: AircraftSeats | null;
+    /** 公开标称航程，单位为公里。 */
+    rangeKm?: number | null;
+    /** 机身长度，单位为米。 */
+    lengthM?: number | null;
+    /** 翼展，单位为米。 */
+    wingspanM?: number | null;
+    /** 机身高度，单位为米。 */
+    heightM?: number | null;
+    /** 最大起飞重量，单位为千克。 */
+    mtowKg?: number | null;
+}
+
+interface AircraftCatalogEntry extends AircraftDetail {
+    /** 目录所属制造商。 */
+    manufacturer: JetManufacturer;
+    /** 目录所属系列，例如 737 或 A320。 */
+    family: string;
 }
 
 interface ManufacturerCatalog {
     /** 制造商名称，用于分组标题和稳定 key。 */
     manufacturer: JetManufacturer;
-    /** 该制造商的客运喷气机型列表。 */
-    models: ModelCatalogEntry[];
+    /** 该制造商的完整机型卡片列表。 */
+    models: AircraftCatalogEntry[];
 }
 
-const JET_MANUFACTURERS: readonly JetManufacturer[] = ["Airbus", "Boeing"];
+const AIRCRAFT_DATA_URL = "/data/aircraft.json";
+const JET_MANUFACTURERS: readonly JetManufacturer[] = ["Boeing", "Airbus"];
 
-/** 货机或客机货运改型不属于本页的喷气客机目录。 */
-const CARGO_MODEL_SUFFIX_PATTERN = /(?:F|P2F|ERF)$/i;
-
-// 仅接受目录约定的制造商，忽略数据文件中其他支线或公务机制造商。
-const isJetManufacturer = (value: string): value is JetManufacturer => {
-    return value === "Airbus" || value === "Boeing";
+/** 将状态枚举转换为页面可读文案。 */
+const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
+    in_service: "服役中",
+    in_production: "生产中",
+    retired: "已退役",
 };
 
-// 过滤货机和 P2F 改型，保留 Airbus/Boeing 的客运喷气机型号变体。
-const isPassengerJetModel = (modelName: string): boolean => {
-    const normalizedModelName = modelName.trim();
-    return (
-        normalizedModelName.length > 0 &&
-        !CARGO_MODEL_SUFFIX_PATTERN.test(normalizedModelName)
-    );
+// 判断 JSON 值是否为非数组对象，供递归目录遍历和字段读取使用。
+const isJsonRecord = (value: JsonValue): value is JsonRecord => {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
 };
 
-// 以航司为去重单位，统计每个机型在当前资料库中的覆盖范围。
-const createModelCatalog = (airplaneData: AirplaneData): ManufacturerCatalog[] => {
-    const modelAirlines = new Map<
-        JetManufacturer,
-        Map<string, Set<string>>
-    >();
+// 只以型号名识别机型节点，其余字段允许缺失并在卡片中使用占位符。
+const isAircraftDetail = (value: JsonValue): value is AircraftDetail => {
+    return isJsonRecord(value) && typeof value.model === "string";
+};
 
-    JET_MANUFACTURERS.forEach((manufacturer: JetManufacturer): void => {
-        modelAirlines.set(manufacturer, new Map<string, Set<string>>());
+// 递归读取一个制造商系列下的所有机型详情，并保留其系列名称。
+const collectAircraftModels = (
+    node: JsonValue,
+    manufacturer: JetManufacturer,
+    family: string,
+    models: AircraftCatalogEntry[],
+): void => {
+    if (isAircraftDetail(node)) {
+        models.push({ ...node, manufacturer, family });
+        return;
+    }
+
+    if (!isJsonRecord(node)) {
+        return;
+    }
+
+    Object.values(node).forEach((childNode): void => {
+        collectAircraftModels(childNode, manufacturer, family, models);
     });
+};
 
-    airplaneData.forEach((airlineDataItem): void => {
-        Object.entries(airlineDataItem.models).forEach(
-            ([manufacturerName, modelMap]): void => {
-                if (!isJetManufacturer(manufacturerName)) {
-                    return;
-                }
-
-                const manufacturerModels = modelAirlines.get(manufacturerName);
-                if (!manufacturerModels) {
-                    return;
-                }
-
-                Object.keys(modelMap).forEach((modelName): void => {
-                    if (!isPassengerJetModel(modelName)) {
-                        return;
-                    }
-
-                    const airlines =
-                        manufacturerModels.get(modelName) ?? new Set<string>();
-                    airlines.add(airlineDataItem.airlineEnglishName);
-                    manufacturerModels.set(modelName, airlines);
-                });
-            },
+// 从 aircraft.json 的制造商/系列嵌套结构生成稳定、可渲染的目录数组。
+const createAircraftCatalog = (value: JsonValue): ManufacturerCatalog[] => {
+    if (!isJsonRecord(value)) {
+        return JET_MANUFACTURERS.map(
+            (manufacturer): ManufacturerCatalog => ({ manufacturer, models: [] }),
         );
-    });
+    }
 
     return JET_MANUFACTURERS.map(
         (manufacturer: JetManufacturer): ManufacturerCatalog => {
-            const manufacturerModels =
-                modelAirlines.get(manufacturer) ??
-                new Map<string, Set<string>>();
-            const models = Array.from(manufacturerModels.entries())
-                .map(
-                    ([modelName, airlines]): ModelCatalogEntry => ({
-                        modelName,
-                        airlineCount: airlines.size,
-                    }),
-                )
-                .sort((firstModel, secondModel): number =>
-                    firstModel.modelName.localeCompare(
-                        secondModel.modelName,
-                        "en",
-                        { numeric: true, sensitivity: "base" },
-                    ),
+            const manufacturerNode = value[manufacturer];
+            const models: AircraftCatalogEntry[] = [];
+
+            if (isJsonRecord(manufacturerNode)) {
+                Object.entries(manufacturerNode).forEach(
+                    ([family, familyNode]): void => {
+                        collectAircraftModels(familyNode, manufacturer, family, models);
+                    },
                 );
+            }
+
+            models.sort((firstModel, secondModel): number => {
+                const familyDifference = firstModel.family.localeCompare(
+                    secondModel.family,
+                    "en",
+                    { numeric: true, sensitivity: "base" },
+                );
+
+                if (familyDifference !== 0) {
+                    return familyDifference;
+                }
+
+                return firstModel.model.localeCompare(secondModel.model, "en", {
+                    numeric: true,
+                    sensitivity: "base",
+                });
+            });
 
             return { manufacturer, models };
         },
     );
 };
 
-// 按用户输入过滤型号，但不改变原始目录的制造商分组和覆盖数量。
-const filterModelCatalog = (
+// 按型号、系列或 ICAO 代码过滤卡片，保留制造商分组结构以便快速定位。
+const filterAircraftCatalog = (
     catalog: ManufacturerCatalog[],
     searchTerm: string,
 ): ManufacturerCatalog[] => {
@@ -113,25 +162,36 @@ const filterModelCatalog = (
     }
 
     return catalog.map(
-        (manufacturerCatalog: ManufacturerCatalog): ManufacturerCatalog => ({
+        (manufacturerCatalog): ManufacturerCatalog => ({
             ...manufacturerCatalog,
-            models: manufacturerCatalog.models.filter(
-                (model): boolean =>
-                    model.modelName
-                        .toLocaleLowerCase()
-                        .includes(normalizedSearchTerm),
-            ),
+            models: manufacturerCatalog.models.filter((model): boolean => {
+                return [model.model, model.family, model.icaoType].some((value): boolean =>
+                    value?.toLocaleLowerCase().includes(normalizedSearchTerm) ?? false,
+                );
+            }),
         }),
     );
 };
 
-// 格式化统计数字，保持与首页资料库的数字呈现一致。
-const formatCount = (value: number): string => {
-    return value.toLocaleString("en-US");
+// 格式化整数规格，保持卡片中的数字可快速扫描。
+const formatInteger = (value: number): string => {
+    return Math.round(value).toLocaleString("en-US");
+};
+
+// 格式化可选整数规格，缺失或为空值统一使用短横线占位。
+const formatOptionalInteger = (value: number | null | undefined): string => {
+    return value === null || value === undefined ? "-" : formatInteger(value);
+};
+
+// 格式化小数规格，避免尺寸数据在卡片中占用过多宽度。
+const formatMeasurement = (value: number): string => {
+    return value.toLocaleString("en-US", {
+        maximumFractionDigits: 1,
+    });
 };
 
 /**
- * 机型 WIKI 页面：从航司机队数据汇总 Airbus 与 Boeing 的客运喷气机型。
+ * 机型 WIKI 页面：读取 aircraft.json 并以制造商分组的规格卡片展示全部型号。
  */
 const AircraftWikiPage = (): ReactElement => {
     const [catalog, setCatalog] = useState<ManufacturerCatalog[]>([]);
@@ -142,25 +202,25 @@ const AircraftWikiPage = (): ReactElement => {
     useEffect((): (() => void) => {
         let isMounted = true;
 
-        // 读取与首页相同的公开机队数据，避免新页面维护另一份型号清单。
-        const loadModelCatalog = async (): Promise<void> => {
+        // 从 public/data 读取独立的完整机型目录，组件卸载后停止写入状态。
+        const loadAircraftCatalog = async (): Promise<void> => {
             try {
                 setIsLoading(true);
-                const response = await fetch(AIRPLANE_DATA_URL);
+                const response = await fetch(AIRCRAFT_DATA_URL);
 
                 if (!response.ok) {
-                    throw new Error("Aircraft model data request failed.");
+                    throw new Error("Aircraft catalog request failed.");
                 }
 
-                const airplaneData: AirplaneData = await response.json();
+                const aircraftData: JsonValue = await response.json();
 
                 if (isMounted) {
-                    setCatalog(createModelCatalog(airplaneData));
+                    setCatalog(createAircraftCatalog(aircraftData));
                     setErrorMessage("");
                 }
             } catch {
                 if (isMounted) {
-                    setErrorMessage("机型数据暂时无法加载，请稍后重试。");
+                    setErrorMessage("机型目录暂时无法加载，请稍后重试。");
                 }
             } finally {
                 if (isMounted) {
@@ -169,7 +229,7 @@ const AircraftWikiPage = (): ReactElement => {
             }
         };
 
-        void loadModelCatalog();
+        void loadAircraftCatalog();
 
         return (): void => {
             isMounted = false;
@@ -177,12 +237,12 @@ const AircraftWikiPage = (): ReactElement => {
     }, []);
 
     const visibleCatalog = useMemo((): ManufacturerCatalog[] => {
-        return filterModelCatalog(catalog, searchTerm);
+        return filterAircraftCatalog(catalog, searchTerm);
     }, [catalog, searchTerm]);
 
     const totalModelCount = useMemo((): number => {
         return catalog.reduce(
-            (total: number, manufacturerCatalog: ManufacturerCatalog): number =>
+            (total, manufacturerCatalog): number =>
                 total + manufacturerCatalog.models.length,
             0,
         );
@@ -190,7 +250,7 @@ const AircraftWikiPage = (): ReactElement => {
 
     const visibleModelCount = useMemo((): number => {
         return visibleCatalog.reduce(
-            (total: number, manufacturerCatalog: ManufacturerCatalog): number =>
+            (total, manufacturerCatalog): number =>
                 total + manufacturerCatalog.models.length,
             0,
         );
@@ -206,15 +266,15 @@ const AircraftWikiPage = (): ReactElement => {
                     <p className="page-eyebrow">Aircraft Type Wiki</p>
                     <h1 id="aircraft-model-wiki-title">机型WIKI</h1>
                     <p>
-                        汇总当前航司机队资料中的 Boeing 与 Airbus 喷气客机型号，按制造商快速浏览。
+                        从 Boeing 与 Airbus 的完整机型目录中查看首飞、状态、座位数与性能规格。
                     </p>
                 </div>
                 <p className="aircraft-model-wiki__scope">
                     <strong>
-                        {isLoading ? "..." : formatCount(totalModelCount)}
+                        {isLoading ? "..." : formatInteger(totalModelCount)}
                     </strong>
-                    <span>个客运型号</span>
-                    <small>不含货机与 P2F 改型</small>
+                    <span>个喷气客机型号</span>
+                    <small>数据源 aircraft.json</small>
                 </p>
             </header>
 
@@ -227,18 +287,18 @@ const AircraftWikiPage = (): ReactElement => {
                     onChange={(event): void => {
                         setSearchTerm(event.target.value);
                     }}
-                    placeholder="输入 A320、787..."
+                    placeholder="输入 A320、737 或 ICAO 代码..."
                     autoComplete="off"
                 />
                 <span aria-live="polite">
                     {isLoading
                         ? "正在整理目录..."
-                        : `显示 ${formatCount(visibleModelCount)} / ${formatCount(totalModelCount)} 个型号`}
+                        : `显示 ${formatInteger(visibleModelCount)} / ${formatInteger(totalModelCount)} 个型号`}
                 </span>
             </div>
 
             <p className="aircraft-model-wiki__source">
-                数据来源：当前航司机队资料 <code>/data/airplan.json</code>，同一型号按航司去重。
+                每张卡片对应 aircraft.json 中的一条机型记录，状态包含服役中、生产中与已退役。
             </p>
 
             {errorMessage ? (
@@ -256,7 +316,7 @@ const AircraftWikiPage = (): ReactElement => {
             {!isLoading && !errorMessage && visibleModelCount > 0 ? (
                 <div className="aircraft-model-wiki__catalog">
                     {visibleCatalog.map(
-                        (manufacturerCatalog: ManufacturerCatalog): ReactElement => (
+                        (manufacturerCatalog): ReactElement => (
                             <section
                                 className="aircraft-model-wiki__manufacturer"
                                 key={manufacturerCatalog.manufacturer}
@@ -272,23 +332,97 @@ const AircraftWikiPage = (): ReactElement => {
                                         </h2>
                                     </div>
                                     <span>
-                                        {formatCount(manufacturerCatalog.models.length)} 个型号
+                                        {formatInteger(manufacturerCatalog.models.length)} 个型号
                                     </span>
                                 </header>
-                                <ul>
+                                <div className="aircraft-model-wiki__cards">
                                     {manufacturerCatalog.models.map(
                                         (model): ReactElement => (
-                                            <li key={model.modelName}>
-                                                <span className="aircraft-model-wiki__model-name">
-                                                    {model.modelName}
-                                                </span>
-                                                <span className="aircraft-model-wiki__model-meta">
-                                                    覆盖 {formatCount(model.airlineCount)} 家航司
-                                                </span>
-                                            </li>
+                                            <article
+                                                className="aircraft-model-card"
+                                                key={`${model.manufacturer}-${model.family}-${model.model}`}
+                                            >
+                                                <header className="aircraft-model-card__header">
+                                                    <div>
+                                                        <span className="aircraft-model-card__family">
+                                                            {model.family}
+                                                        </span>
+                                                        <h3>{model.model}</h3>
+                                                    </div>
+                                                    <span
+                                                        className={`aircraft-model-card__status${model.status ? ` aircraft-model-card__status--${model.status}` : ""}`}
+                                                    >
+                                                        {model.status
+                                                            ? AIRCRAFT_STATUS_LABELS[model.status]
+                                                            : "-"}
+                                                    </span>
+                                                </header>
+                                                <dl className="aircraft-model-card__specs">
+                                                    <div>
+                                                        <dt>ICAO</dt>
+                                                        <dd>{model.icaoType ?? "-"}</dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>首飞</dt>
+                                                        <dd>
+                                                            {model.firstFlight ? (
+                                                                <time dateTime={model.firstFlight}>
+                                                                    {model.firstFlight}
+                                                                </time>
+                                                            ) : (
+                                                                "-"
+                                                            )}
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>座位</dt>
+                                                        <dd>
+                                                            {model.seats
+                                                                ? `${formatOptionalInteger(model.seats.typical)}-${formatOptionalInteger(model.seats.max)}`
+                                                                : "-"}
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>航程</dt>
+                                                        <dd>
+                                                            {model.rangeKm === null || model.rangeKm === undefined
+                                                                ? "-"
+                                                                : `${formatInteger(model.rangeKm)} km`}
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>机长</dt>
+                                                        <dd>
+                                                            {model.lengthM === null || model.lengthM === undefined
+                                                                ? "-"
+                                                                : `${formatMeasurement(model.lengthM)} m`}
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>翼展</dt>
+                                                        <dd>
+                                                            {model.wingspanM === null || model.wingspanM === undefined
+                                                                ? "-"
+                                                                : `${formatMeasurement(model.wingspanM)} m`}
+                                                        </dd>
+                                                    </div>
+                                                </dl>
+                                                <p className="aircraft-model-card__production">
+                                                    <span>生产</span>
+                                                    <span>{model.production ?? "-"}</span>
+                                                </p>
+                                                <p className="aircraft-model-card__engines scroll-area-night">
+                                                    <span>发动机</span>
+                                                    <span className="aircraft-model-card__engine-list">
+                                                        {model.engines && model.engines.length > 0
+                                                            ? model.engines.join(" · ")
+                                                            : "-"}
+                                                    </span>
+                                                </p>
+                                            </article>
                                         ),
                                     )}
-                                </ul>
+                                </div>
                             </section>
                         ),
                     )}

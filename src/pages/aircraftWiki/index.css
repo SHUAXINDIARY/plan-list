@@ -1,5 +1,5 @@
 .aircraft-model-wiki {
-    width: min(100%, 72rem);
+    width: min(100%, 96rem);
 }
 
 .aircraft-model-wiki__header {
@@ -16,12 +16,12 @@
 }
 
 .aircraft-model-wiki__header p:not(.page-eyebrow) {
-    max-width: 40rem;
+    max-width: 42rem;
 }
 
 .aircraft-model-wiki__scope {
     display: grid;
-    flex: 0 0 11rem;
+    flex: 0 0 12rem;
     gap: 0.2rem;
     padding: 0.8rem 0 0.8rem 1.25rem;
     color: var(--pl-text-secondary);
@@ -48,7 +48,7 @@
 
 .aircraft-model-wiki__toolbar {
     display: grid;
-    grid-template-columns: auto minmax(12rem, 24rem) 1fr;
+    grid-template-columns: auto minmax(14rem, 28rem) 1fr;
     align-items: center;
     gap: 0.75rem;
     margin-top: 1.5rem;
@@ -100,20 +100,13 @@
     font-size: 0.76rem;
 }
 
-.aircraft-model-wiki__source code {
-    color: var(--pl-text-english);
-    font-family: var(--pl-font-mono);
-    font-size: 0.74rem;
-}
-
 .aircraft-model-wiki__loading {
     margin-top: 1.35rem;
 }
 
 .aircraft-model-wiki__catalog {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.25rem;
+    gap: 2.5rem;
     margin-top: 1.8rem;
 }
 
@@ -149,48 +142,164 @@
     white-space: nowrap;
 }
 
-.aircraft-model-wiki__manufacturer ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+.aircraft-model-wiki__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 0.85rem;
+    margin-top: 1rem;
 }
 
-.aircraft-model-wiki__manufacturer li {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: 2.8rem;
-    padding: 0.72rem 0.15rem;
-    border-bottom: 1px solid var(--pl-border-divider);
+.aircraft-model-card {
+    min-width: 0;
+    padding: 1rem;
+    background-color: var(--pl-surface-entry);
+    border: 1px solid var(--pl-border-muted);
+    border-radius: 0.75rem;
+    box-shadow: var(--pl-shadow-card);
     transition:
         background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        padding var(--motion-duration-fast) var(--motion-ease-out-quart);
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
-.aircraft-model-wiki__manufacturer li:hover {
-    padding-right: 0.45rem;
-    padding-left: 0.45rem;
-    background-color: var(--pl-surface-reference-hover);
+.aircraft-model-card:hover {
+    background-color: var(--pl-surface-entry-hover);
+    border-color: var(--pl-border-entry-hover);
+    transform: translate3d(0, -2px, 0);
 }
 
-.aircraft-model-wiki__model-name {
-    min-width: 0;
-    color: var(--pl-text-data);
+.aircraft-model-card__header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0.8rem;
+    min-height: 3.4rem;
+}
+
+.aircraft-model-card__family {
+    display: block;
+    color: var(--pl-accent);
     font-family: var(--pl-font-mono);
-    font-size: 0.9rem;
-    font-weight: 720;
+    font-size: 0.68rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.aircraft-model-card h3 {
+    margin: 0.35rem 0 0;
+    color: var(--pl-text-heading);
+    font-family: var(--pl-font-mono);
+    font-size: 1.15rem;
+    line-height: 1.1;
     overflow-wrap: anywhere;
 }
 
-.aircraft-model-wiki__model-meta {
+.aircraft-model-card__status {
     flex: 0 0 auto;
-    color: var(--pl-text-meta);
-    font-size: 0.72rem;
+    padding: 0.24rem 0.45rem;
+    color: var(--pl-text-secondary);
+    font-size: 0.68rem;
+    font-weight: 750;
+    line-height: 1.2;
+    border: 1px solid var(--pl-border-default);
+    border-radius: 999px;
     white-space: nowrap;
 }
 
-@media (max-width: 760px) {
+.aircraft-model-card__status--in_service {
+    color: var(--pl-stat-teal-text);
+    background-color: var(--pl-stat-teal-bg);
+    border-color: var(--pl-stat-teal-border);
+}
+
+.aircraft-model-card__status--in_production {
+    color: var(--pl-stat-blue-text);
+    background-color: var(--pl-stat-blue-bg);
+    border-color: var(--pl-stat-blue-border);
+}
+
+.aircraft-model-card__status--retired {
+    color: var(--pl-text-meta);
+    background-color: var(--pl-surface-chip);
+}
+
+.aircraft-model-card__specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem 0.85rem;
+    padding: 0.85rem 0;
+    margin: 0.8rem 0 0;
+    border-top: 1px solid var(--pl-border-divider);
+    border-bottom: 1px solid var(--pl-border-divider);
+}
+
+.aircraft-model-card__specs div {
+    min-width: 0;
+}
+
+.aircraft-model-card__specs dt {
+    color: var(--pl-text-meta);
+    font-size: 0.66rem;
+    line-height: 1.2;
+}
+
+.aircraft-model-card__specs dd {
+    margin: 0.18rem 0 0;
+    color: var(--pl-text-data);
+    font-family: var(--pl-font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.aircraft-model-card__production,
+.aircraft-model-card__engines {
+    display: grid;
+    grid-template-columns: 2.8rem minmax(0, 1fr);
+    gap: 0.55rem;
+    margin: 0.7rem 0 0;
+    color: var(--pl-text-english);
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+.aircraft-model-card__engines {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    overscroll-behavior-inline: contain;
+}
+
+.aircraft-model-card__production span,
+.aircraft-model-card__engines span {
+    color: var(--pl-text-meta);
+    font-weight: 700;
+}
+
+.aircraft-model-card__production > span:first-child,
+.aircraft-model-card__engines > span:first-child {
+    flex: 0 0 2.8rem;
+}
+
+.aircraft-model-card__production > span:last-child {
+    min-width: 0;
+    color: var(--pl-text-english);
+    font-weight: 400;
+    overflow-wrap: anywhere;
+}
+
+.aircraft-model-card__engines .aircraft-model-card__engine-list {
+    flex: 0 0 auto;
+    color: var(--pl-text-english);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
     .aircraft-model-wiki__header {
         align-items: start;
         flex-direction: column;
@@ -213,22 +322,35 @@
         justify-self: start;
     }
 
-    .aircraft-model-wiki__catalog {
+    .aircraft-model-wiki__cards {
         grid-template-columns: 1fr;
-        gap: 2rem;
     }
 }
 
 @media (max-width: 420px) {
-    .aircraft-model-wiki__manufacturer li {
+    .aircraft-model-card__header {
         align-items: start;
         flex-direction: column;
-        gap: 0.25rem;
+    }
+
+    .aircraft-model-card__status {
+        align-self: flex-start;
     }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-    .aircraft-model-wiki__toolbar {
+    .aircraft-model-wiki__toolbar,
+    .aircraft-model-card {
         background-color: var(--pl-surface-panel);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aircraft-model-card {
+        transition: none;
+    }
+
+    .aircraft-model-card:hover {
+        transform: none;
     }
 }

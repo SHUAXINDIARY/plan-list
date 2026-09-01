@@ -1,0 +1,1204 @@
+{
+    "Boeing": {
+      "737": {
+        "manufacturer": "Boeing",
+        "family": "737",
+        "generation": {
+          "Original": {
+            "737-100": {
+              "model": "737-100",
+              "icaoType": "B731",
+              "status": "retired",
+              "firstFlight": "1967-04-09",
+              "production": "1967-1969",
+              "engines": [
+                "Pratt & Whitney JT8D-7"
+              ],
+              "seats": {
+                "typical": 85,
+                "max": 124
+              },
+              "rangeKm": 2850,
+              "lengthM": 28.65,
+              "wingspanM": 28.35,
+              "heightM": 11.28,
+              "mtowKg": 44000
+            },
+            "737-200": {
+              "model": "737-200",
+              "icaoType": "B732",
+              "status": "retired",
+              "firstFlight": "1967-08-08",
+              "production": "1967-1988",
+              "engines": [
+                "Pratt & Whitney JT8D-9",
+                "Pratt & Whitney JT8D-15",
+                "Pratt & Whitney JT8D-17"
+              ],
+              "seats": {
+                "typical": 97,
+                "max": 136
+              },
+              "rangeKm": 4200,
+              "lengthM": 30.53,
+              "wingspanM": 28.35,
+              "heightM": 11.28,
+              "mtowKg": 52390
+            }
+          },
+  
+          "Classic": {
+            "737-300": {
+              "model": "737-300",
+              "icaoType": "B733",
+              "status": "retired",
+              "firstFlight": "1984-02-24",
+              "production": "1984-1999",
+              "engines": [
+                "CFM International CFM56-3B1",
+                "CFM International CFM56-3B2",
+                "CFM International CFM56-3C1"
+              ],
+              "seats": {
+                "typical": 128,
+                "max": 149
+              },
+              "rangeKm": 4350,
+              "lengthM": 33.40,
+              "wingspanM": 28.88,
+              "heightM": 11.13,
+              "mtowKg": 62820
+            },
+            "737-400": {
+              "model": "737-400",
+              "icaoType": "B734",
+              "status": "retired",
+              "firstFlight": "1988-02-19",
+              "production": "1988-2000",
+              "engines": [
+                "CFM International CFM56-3B2",
+                "CFM International CFM56-3C1"
+              ],
+              "seats": {
+                "typical": 146,
+                "max": 188
+              },
+              "rangeKm": 3850,
+              "lengthM": 36.45,
+              "wingspanM": 28.88,
+              "heightM": 11.13,
+              "mtowKg": 68050
+            },
+            "737-500": {
+              "model": "737-500",
+              "icaoType": "B735",
+              "status": "retired",
+              "firstFlight": "1989-06-30",
+              "production": "1989-1999",
+              "engines": [
+                "CFM International CFM56-3B1",
+                "CFM International CFM56-3B2"
+              ],
+              "seats": {
+                "typical": 108,
+                "max": 140
+              },
+              "rangeKm": 4440,
+              "lengthM": 31.01,
+              "wingspanM": 28.88,
+              "heightM": 11.13,
+              "mtowKg": 60550
+            }
+          },
+  
+          "NG": {
+            "737-600": {
+              "model": "737-600",
+              "icaoType": "B736",
+              "status": "retired",
+              "firstFlight": "1998-01-22",
+              "production": "1998-2006",
+              "engines": [
+                "CFM International CFM56-7B18",
+                "CFM International CFM56-7B20"
+              ],
+              "seats": {
+                "typical": 110,
+                "max": 132
+              },
+              "rangeKm": 5648,
+              "lengthM": 31.24,
+              "wingspanM": 34.32,
+              "heightM": 12.50,
+              "mtowKg": 65090
+            },
+            "737-700": {
+              "model": "737-700",
+              "icaoType": "B737",
+              "status": "in_service",
+              "firstFlight": "1997-02-09",
+              "production": "1997-2019",
+              "engines": [
+                "CFM International CFM56-7B20",
+                "CFM International CFM56-7B22",
+                "CFM International CFM56-7B24"
+              ],
+              "seats": {
+                "typical": 126,
+                "max": 149
+              },
+              "rangeKm": 6230,
+              "lengthM": 33.63,
+              "wingspanM": 35.79,
+              "heightM": 12.50,
+              "mtowKg": 70080
+            },
+            "737-800": {
+              "model": "737-800",
+              "icaoType": "B738",
+              "status": "in_service",
+              "firstFlight": "1997-07-31",
+              "production": "1997-2020",
+              "engines": [
+                "CFM International CFM56-7B24",
+                "CFM International CFM56-7B26",
+                "CFM International CFM56-7B27"
+              ],
+              "seats": {
+                "typical": 162,
+                "max": 189
+              },
+              "rangeKm": 5765,
+              "lengthM": 39.47,
+              "wingspanM": 35.79,
+              "heightM": 12.50,
+              "mtowKg": 79010
+            },
+            "737-900": {
+              "model": "737-900",
+              "icaoType": "B739",
+              "status": "in_service",
+              "firstFlight": "2000-09-01",
+              "production": "2001-2011",
+              "engines": [
+                "CFM International CFM56-7B26",
+                "CFM International CFM56-7B27"
+              ],
+              "seats": {
+                "typical": 177,
+                "max": 189
+              },
+              "rangeKm": 5465,
+              "lengthM": 42.11,
+              "wingspanM": 35.79,
+              "heightM": 12.50,
+              "mtowKg": 79010
+            },
+            "737-900ER": {
+              "model": "737-900ER",
+              "icaoType": "B739",
+              "status": "in_service",
+              "firstFlight": "2006-09-01",
+              "production": "2006-2019",
+              "engines": [
+                "CFM International CFM56-7B26",
+                "CFM International CFM56-7B27"
+              ],
+              "seats": {
+                "typical": 178,
+                "max": 220
+              },
+              "rangeKm": 5925,
+              "lengthM": 42.11,
+              "wingspanM": 35.79,
+              "heightM": 12.50,
+              "mtowKg": 85000
+            }
+          },
+  
+          "MAX": {
+            "737-7": {
+              "model": "737-7",
+              "icaoType": "B37M",
+              "status": "in_production",
+              "firstFlight": "2018-02-16",
+              "engines": [
+                "CFM International LEAP-1B"
+              ],
+              "seats": {
+                "typical": 138,
+                "max": 172
+              },
+              "rangeKm": 7040,
+              "lengthM": 35.56,
+              "wingspanM": 35.92,
+              "heightM": 12.30,
+              "mtowKg": 80400
+            },
+            "737-8": {
+              "model": "737-8",
+              "icaoType": "B38M",
+              "status": "in_production",
+              "firstFlight": "2016-01-29",
+              "engines": [
+                "CFM International LEAP-1B"
+              ],
+              "seats": {
+                "typical": 162,
+                "max": 210
+              },
+              "rangeKm": 6570,
+              "lengthM": 39.52,
+              "wingspanM": 35.92,
+              "heightM": 12.30,
+              "mtowKg": 82190
+            },
+            "737-8-200": {
+              "model": "737-8-200",
+              "icaoType": "B38M",
+              "status": "in_production",
+              "firstFlight": "2020-01-09",
+              "engines": [
+                "CFM International LEAP-1B"
+              ],
+              "seats": {
+                "typical": 197,
+                "max": 210
+              },
+              "rangeKm": 5765,
+              "lengthM": 39.52,
+              "wingspanM": 35.92,
+              "heightM": 12.30,
+              "mtowKg": 82190
+            },
+            "737-9": {
+              "model": "737-9",
+              "icaoType": "B39M",
+              "status": "in_production",
+              "firstFlight": "2017-03-13",
+              "engines": [
+                "CFM International LEAP-1B"
+              ],
+              "seats": {
+                "typical": 178,
+                "max": 220
+              },
+              "rangeKm": 6570,
+              "lengthM": 42.16,
+              "wingspanM": 35.92,
+              "heightM": 12.30,
+              "mtowKg": 88200
+            },
+            "737-10": {
+              "model": "737-10",
+              "icaoType": "B3XM",
+              "status": "in_production",
+              "firstFlight": "2021-06-18",
+              "engines": [
+                "CFM International LEAP-1B"
+              ],
+              "seats": {
+                "typical": 188,
+                "max": 230
+              },
+              "rangeKm": 6110,
+              "lengthM": 43.79,
+              "wingspanM": 35.92,
+              "heightM": 12.30,
+              "mtowKg": 89400
+            }
+          }
+        }
+      },
+  
+      "717": {
+        "717-200": {
+          "model": "717-200",
+          "icaoType": "B712",
+          "status": "retired",
+          "engines": [
+            "Rolls-Royce BR715"
+          ],
+          "seats": {
+            "typical": 106,
+            "max": 134
+          },
+          "rangeKm": 3820,
+          "lengthM": 37.81,
+          "wingspanM": 28.44,
+          "heightM": 8.92,
+          "mtowKg": 54885
+        }
+      },
+  
+      "747": {
+        "747-100": {
+          "model": "747-100",
+          "icaoType": "B741",
+          "status": "retired",
+          "engines": [
+            "Pratt & Whitney JT9D",
+            "General Electric CF6",
+            "Rolls-Royce RB211"
+          ],
+          "seats": {
+            "typical": 366
+          },
+          "rangeKm": 9800,
+          "lengthM": 70.66,
+          "wingspanM": 59.64,
+          "heightM": 19.33,
+          "mtowKg": 333400
+        },
+        "747-200": {
+          "model": "747-200",
+          "icaoType": "B742",
+          "status": "retired",
+          "engines": [
+            "Pratt & Whitney JT9D",
+            "General Electric CF6",
+            "Rolls-Royce RB211"
+          ],
+          "seats": {
+            "typical": 366
+          },
+          "rangeKm": 12700,
+          "lengthM": 70.66,
+          "wingspanM": 59.64,
+          "heightM": 19.33,
+          "mtowKg": 377842
+        },
+        "747-300": {
+          "model": "747-300",
+          "icaoType": "B743",
+          "status": "retired",
+          "engines": [
+            "Pratt & Whitney JT9D",
+            "General Electric CF6",
+            "Rolls-Royce RB211"
+          ],
+          "seats": {
+            "typical": 400
+          },
+          "rangeKm": 12400,
+          "lengthM": 70.66,
+          "wingspanM": 59.64,
+          "heightM": 19.33,
+          "mtowKg": 377842
+        },
+        "747-400": {
+          "model": "747-400",
+          "icaoType": "B744",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6-80C2",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce RB211-524G/H"
+          ],
+          "seats": {
+            "typical": 416,
+            "max": 660
+          },
+          "rangeKm": 13450,
+          "lengthM": 70.66,
+          "wingspanM": 64.44,
+          "heightM": 19.41,
+          "mtowKg": 396900
+        },
+        "747-8": {
+          "model": "747-8",
+          "icaoType": "B748",
+          "status": "retired",
+          "engines": [
+            "General Electric GEnx-2B67"
+          ],
+          "seats": {
+            "typical": 410,
+            "max": 605
+          },
+          "rangeKm": 14815,
+          "lengthM": 76.25,
+          "wingspanM": 68.45,
+          "heightM": 19.35,
+          "mtowKg": 447700
+        }
+      },
+  
+      "757": {
+        "757-200": {
+          "model": "757-200",
+          "icaoType": "B752",
+          "status": "retired",
+          "engines": [
+            "Rolls-Royce RB211-535",
+            "Pratt & Whitney PW2000"
+          ],
+          "seats": {
+            "typical": 200,
+            "max": 239
+          },
+          "rangeKm": 7222,
+          "lengthM": 47.32,
+          "wingspanM": 38.05,
+          "heightM": 13.56,
+          "mtowKg": 115680
+        },
+        "757-300": {
+          "model": "757-300",
+          "icaoType": "B753",
+          "status": "retired",
+          "engines": [
+            "Rolls-Royce RB211-535",
+            "Pratt & Whitney PW2000"
+          ],
+          "seats": {
+            "typical": 243,
+            "max": 295
+          },
+          "rangeKm": 6287,
+          "lengthM": 54.43,
+          "wingspanM": 38.05,
+          "heightM": 13.56,
+          "mtowKg": 123830
+        }
+      },
+  
+      "767": {
+        "767-200": {
+          "model": "767-200",
+          "icaoType": "B762",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney JT9D"
+          ],
+          "seats": {
+            "typical": 216
+          },
+          "rangeKm": 7130,
+          "lengthM": 48.51,
+          "wingspanM": 47.57,
+          "heightM": 15.85,
+          "mtowKg": 136080
+        },
+        "767-300": {
+          "model": "767-300",
+          "icaoType": "B763",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce RB211"
+          ],
+          "seats": {
+            "typical": 269
+          },
+          "rangeKm": 9700,
+          "lengthM": 54.94,
+          "wingspanM": 47.57,
+          "heightM": 15.85,
+          "mtowKg": 159210
+        },
+        "767-400ER": {
+          "model": "767-400ER",
+          "icaoType": "B764",
+          "status": "in_service",
+          "engines": [
+            "General Electric CF6-80C2B8F"
+          ],
+          "seats": {
+            "typical": 245,
+            "max": 375
+          },
+          "rangeKm": 10418,
+          "lengthM": 61.37,
+          "wingspanM": 51.92,
+          "heightM": 16.87,
+          "mtowKg": 204120
+        }
+      },
+  
+      "777": {
+        "777-200": {
+          "model": "777-200",
+          "icaoType": "B772",
+          "status": "in_service",
+          "engines": [
+            "General Electric GE90",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce Trent 800"
+          ],
+          "seats": {
+            "typical": 313,
+            "max": 440
+          },
+          "rangeKm": 9700,
+          "lengthM": 63.73,
+          "wingspanM": 60.93,
+          "heightM": 18.52,
+          "mtowKg": 247200
+        },
+        "777-200ER": {
+          "model": "777-200ER",
+          "icaoType": "B772",
+          "status": "in_service",
+          "engines": [
+            "General Electric GE90",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce Trent 800"
+          ],
+          "seats": {
+            "typical": 313,
+            "max": 440
+          },
+          "rangeKm": 13680,
+          "lengthM": 63.73,
+          "wingspanM": 60.93,
+          "heightM": 18.52,
+          "mtowKg": 297550
+        },
+        "777-200LR": {
+          "model": "777-200LR",
+          "icaoType": "B77L",
+          "status": "in_service",
+          "engines": [
+            "General Electric GE90-110B1"
+          ],
+          "seats": {
+            "typical": 317,
+            "max": 440
+          },
+          "rangeKm": 15840,
+          "lengthM": 63.73,
+          "wingspanM": 64.80,
+          "heightM": 18.52,
+          "mtowKg": 347450
+        },
+        "777-300": {
+          "model": "777-300",
+          "icaoType": "B773",
+          "status": "in_service",
+          "engines": [
+            "General Electric GE90",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce Trent 800"
+          ],
+          "seats": {
+            "typical": 368,
+            "max": 550
+          },
+          "rangeKm": 11135,
+          "lengthM": 73.86,
+          "wingspanM": 60.93,
+          "heightM": 18.52,
+          "mtowKg": 299370
+        },
+        "777-300ER": {
+          "model": "777-300ER",
+          "icaoType": "B77W",
+          "status": "in_service",
+          "engines": [
+            "General Electric GE90-115B"
+          ],
+          "seats": {
+            "typical": 396,
+            "max": 550
+          },
+          "rangeKm": 13650,
+          "lengthM": 73.86,
+          "wingspanM": 64.80,
+          "heightM": 18.52,
+          "mtowKg": 351530
+        },
+        "777-8": {
+          "model": "777-8",
+          "icaoType": "B778",
+          "status": "in_production",
+          "engines": [
+            "General Electric GE9X"
+          ],
+          "seats": {
+            "typical": 395
+          },
+          "rangeKm": 16170,
+          "lengthM": 69.80,
+          "wingspanM": 71.75,
+          "heightM": 19.48,
+          "mtowKg": 351500
+        },
+        "777-9": {
+          "model": "777-9",
+          "icaoType": "B779",
+          "status": "in_production",
+          "engines": [
+            "General Electric GE9X"
+          ],
+          "seats": {
+            "typical": 426
+          },
+          "rangeKm": 13500,
+          "lengthM": 76.73,
+          "wingspanM": 71.75,
+          "heightM": 19.48,
+          "mtowKg": 351500
+        }
+      },
+  
+      "787": {
+        "787-8": {
+          "model": "787-8",
+          "icaoType": "B788",
+          "status": "in_service",
+          "engines": [
+            "General Electric GEnx-1B",
+            "Rolls-Royce Trent 1000"
+          ],
+          "seats": {
+            "typical": 248
+          },
+          "rangeKm": 13620,
+          "lengthM": 56.72,
+          "wingspanM": 60.12,
+          "heightM": 17.00,
+          "mtowKg": 227930
+        },
+        "787-9": {
+          "model": "787-9",
+          "icaoType": "B789",
+          "status": "in_service",
+          "engines": [
+            "General Electric GEnx-1B",
+            "Rolls-Royce Trent 1000"
+          ],
+          "seats": {
+            "typical": 296
+          },
+          "rangeKm": 14140,
+          "lengthM": 62.81,
+          "wingspanM": 60.12,
+          "heightM": 17.00,
+          "mtowKg": 254010
+        },
+        "787-10": {
+          "model": "787-10",
+          "icaoType": "B78X",
+          "status": "in_service",
+          "engines": [
+            "General Electric GEnx-1B"
+          ],
+          "seats": {
+            "typical": 336
+          },
+          "rangeKm": 11910,
+          "lengthM": 68.28,
+          "wingspanM": 60.12,
+          "heightM": 17.00,
+          "mtowKg": 254010
+        }
+      }
+    },
+  
+    "Airbus": {
+      "A220": {
+        "A220-100": {
+          "model": "A220-100",
+          "icaoType": "BCS1",
+          "status": "in_production",
+          "firstFlight": "2013-09-16",
+          "engines": [
+            "Pratt & Whitney PW1500G"
+          ],
+          "seats": {
+            "typical": 125,
+            "max": 135
+          },
+          "rangeKm": 6297,
+          "lengthM": 35.00,
+          "wingspanM": 35.10,
+          "heightM": 11.50,
+          "mtowKg": 63867
+        },
+        "A220-300": {
+          "model": "A220-300",
+          "icaoType": "BCS3",
+          "status": "in_production",
+          "firstFlight": "2015-02-27",
+          "engines": [
+            "Pratt & Whitney PW1500G"
+          ],
+          "seats": {
+            "typical": 145,
+            "max": 160
+          },
+          "rangeKm": 6297,
+          "lengthM": 38.70,
+          "wingspanM": 35.10,
+          "heightM": 11.50,
+          "mtowKg": 67858
+        }
+      },
+  
+      "A320": {
+        "ceo": {
+          "A318": {
+            "model": "A318-100",
+            "icaoType": "A318",
+            "status": "retired",
+            "engines": [
+              "CFM56-5B",
+              "V2500-A5",
+              "PW6000"
+            ],
+            "seats": {
+              "typical": 107,
+              "max": 132
+            },
+            "rangeKm": 5750,
+            "lengthM": 31.44,
+            "wingspanM": 34.10,
+            "heightM": 12.51,
+            "mtowKg": 68000
+          },
+          "A319": {
+            "model": "A319",
+            "icaoType": "A319",
+            "status": "in_service",
+            "engines": [
+              "CFM56-5A",
+              "CFM56-5B",
+              "V2500-A5"
+            ],
+            "seats": {
+              "typical": 128,
+              "max": 156
+            },
+            "rangeKm": 6850,
+            "lengthM": 33.84,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 75500
+          },
+          "A320": {
+            "model": "A320",
+            "icaoType": "A320",
+            "status": "in_service",
+            "engines": [
+              "CFM56-5A",
+              "CFM56-5B",
+              "V2500-A5"
+            ],
+            "seats": {
+              "typical": 150,
+              "max": 180
+            },
+            "rangeKm": 6150,
+            "lengthM": 37.57,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 78000
+          },
+          "A321": {
+            "model": "A321",
+            "icaoType": "A321",
+            "status": "in_service",
+            "engines": [
+              "CFM56-5B",
+              "V2500-A5"
+            ],
+            "seats": {
+              "typical": 185,
+              "max": 220
+            },
+            "rangeKm": 5950,
+            "lengthM": 44.51,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 93500
+          }
+        },
+  
+        "neo": {
+          "A319neo": {
+            "model": "A319neo",
+            "icaoType": "A319",
+            "status": "in_production",
+            "engines": [
+              "CFM LEAP-1A",
+              "Pratt & Whitney PW1100G"
+            ],
+            "seats": {
+              "typical": 140,
+              "max": 160
+            },
+            "rangeKm": 6950,
+            "lengthM": 33.84,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 75500
+          },
+          "A320neo": {
+            "model": "A320neo",
+            "icaoType": "A20N",
+            "status": "in_production",
+            "engines": [
+              "CFM LEAP-1A",
+              "Pratt & Whitney PW1100G"
+            ],
+            "seats": {
+              "typical": 165,
+              "max": 194
+            },
+            "rangeKm": 6300,
+            "lengthM": 37.57,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 79000
+          },
+          "A321neo": {
+            "model": "A321neo",
+            "icaoType": "A21N",
+            "status": "in_production",
+            "engines": [
+              "CFM LEAP-1A",
+              "Pratt & Whitney PW1100G"
+            ],
+            "seats": {
+              "typical": 190,
+              "max": 244
+            },
+            "rangeKm": 7400,
+            "lengthM": 44.51,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 97000
+          },
+          "A321LR": {
+            "model": "A321LR",
+            "icaoType": "A21N",
+            "status": "in_production",
+            "engines": [
+              "CFM LEAP-1A",
+              "Pratt & Whitney PW1100G"
+            ],
+            "seats": {
+              "typical": 180,
+              "max": 244
+            },
+            "rangeKm": 7400,
+            "lengthM": 44.51,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 97000
+          },
+          "A321XLR": {
+            "model": "A321XLR",
+            "icaoType": "A21N",
+            "status": "in_production",
+            "engines": [
+              "CFM LEAP-1A",
+              "Pratt & Whitney PW1100G"
+            ],
+            "seats": {
+              "typical": 206,
+              "max": 244
+            },
+            "rangeKm": 8700,
+            "lengthM": 44.51,
+            "wingspanM": 35.80,
+            "heightM": 11.76,
+            "mtowKg": 101500
+          }
+        }
+      },
+  
+      "A300": {
+        "A300B2": {
+          "model": "A300B2",
+          "icaoType": "A30B",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney JT9D"
+          ],
+          "seats": {
+            "typical": 250
+          },
+          "rangeKm": 3430,
+          "lengthM": 54.08,
+          "wingspanM": 44.84,
+          "heightM": 16.54,
+          "mtowKg": 137000
+        },
+        "A300B4": {
+          "model": "A300B4",
+          "icaoType": "A30B",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney JT9D"
+          ],
+          "seats": {
+            "typical": 260
+          },
+          "rangeKm": 6670,
+          "lengthM": 54.08,
+          "wingspanM": 44.84,
+          "heightM": 16.54,
+          "mtowKg": 165000
+        },
+        "A300-600": {
+          "model": "A300-600",
+          "icaoType": "A306",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney PW4000"
+          ],
+          "seats": {
+            "typical": 266
+          },
+          "rangeKm": 7500,
+          "lengthM": 54.08,
+          "wingspanM": 44.84,
+          "heightM": 16.54,
+          "mtowKg": 170500
+        }
+      },
+  
+      "A310": {
+        "A310-200": {
+          "model": "A310-200",
+          "icaoType": "A310",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney JT9D"
+          ],
+          "seats": {
+            "typical": 220
+          },
+          "rangeKm": 6800,
+          "lengthM": 46.66,
+          "wingspanM": 43.90,
+          "heightM": 15.80,
+          "mtowKg": 141970
+        },
+        "A310-300": {
+          "model": "A310-300",
+          "icaoType": "A310",
+          "status": "retired",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney PW4000"
+          ],
+          "seats": {
+            "typical": 240
+          },
+          "rangeKm": 9600,
+          "lengthM": 46.66,
+          "wingspanM": 43.90,
+          "heightM": 15.80,
+          "mtowKg": 164000
+        }
+      },
+  
+      "A330": {
+        "A330-200": {
+          "model": "A330-200",
+          "icaoType": "A332",
+          "status": "in_service",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce Trent 700"
+          ],
+          "seats": {
+            "typical": 247,
+            "max": 406
+          },
+          "rangeKm": 13450,
+          "lengthM": 58.82,
+          "wingspanM": 60.30,
+          "heightM": 17.39,
+          "mtowKg": 242000
+        },
+        "A330-300": {
+          "model": "A330-300",
+          "icaoType": "A333",
+          "status": "in_service",
+          "engines": [
+            "General Electric CF6",
+            "Pratt & Whitney PW4000",
+            "Rolls-Royce Trent 700"
+          ],
+          "seats": {
+            "typical": 277,
+            "max": 440
+          },
+          "rangeKm": 11750,
+          "lengthM": 63.66,
+          "wingspanM": 60.30,
+          "heightM": 16.79,
+          "mtowKg": 242000
+        },
+        "A330-800": {
+          "model": "A330-800",
+          "icaoType": "A338",
+          "status": "in_production",
+          "engines": [
+            "Rolls-Royce Trent 7000"
+          ],
+          "seats": {
+            "typical": 257
+          },
+          "rangeKm": 15100,
+          "lengthM": 58.82,
+          "wingspanM": 64.00,
+          "heightM": 18.86,
+          "mtowKg": 251000
+        },
+        "A330-900": {
+          "model": "A330-900",
+          "icaoType": "A339",
+          "status": "in_production",
+          "engines": [
+            "Rolls-Royce Trent 7000"
+          ],
+          "seats": {
+            "typical": 287,
+            "max": 460
+          },
+          "rangeKm": 13340,
+          "lengthM": 63.66,
+          "wingspanM": 64.00,
+          "heightM": 13.40,
+          "mtowKg": 251000
+        }
+      },
+  
+      "A340": {
+        "A340-200": {
+          "model": "A340-200",
+          "icaoType": "A342",
+          "status": "retired",
+          "engines": [
+            "CFM56-5C"
+          ],
+          "seats": {
+            "typical": 261
+          },
+          "rangeKm": 14800,
+          "lengthM": 59.39,
+          "wingspanM": 60.30,
+          "heightM": 16.70,
+          "mtowKg": 257000
+        },
+        "A340-300": {
+          "model": "A340-300",
+          "icaoType": "A343",
+          "status": "retired",
+          "engines": [
+            "CFM56-5C"
+          ],
+          "seats": {
+            "typical": 295
+          },
+          "rangeKm": 13700,
+          "lengthM": 63.69,
+          "wingspanM": 60.30,
+          "heightM": 16.70,
+          "mtowKg": 276500
+        },
+        "A340-500": {
+          "model": "A340-500",
+          "icaoType": "A345",
+          "status": "retired",
+          "engines": [
+            "Rolls-Royce Trent 553"
+          ],
+          "seats": {
+            "typical": 313
+          },
+          "rangeKm": 16670,
+          "lengthM": 67.93,
+          "wingspanM": 63.45,
+          "heightM": 17.53,
+          "mtowKg": 380000
+        },
+        "A340-600": {
+          "model": "A340-600",
+          "icaoType": "A346",
+          "status": "retired",
+          "engines": [
+            "Rolls-Royce Trent 556"
+          ],
+          "seats": {
+            "typical": 380
+          },
+          "rangeKm": 14600,
+          "lengthM": 75.36,
+          "wingspanM": 63.45,
+          "heightM": 17.93,
+          "mtowKg": 380000
+        }
+      },
+  
+      "A350": {
+        "A350-900": {
+          "model": "A350-900",
+          "icaoType": "A359",
+          "status": "in_production",
+          "engines": [
+            "Rolls-Royce Trent XWB-84"
+          ],
+          "seats": {
+            "typical": 325,
+            "max": 440
+          },
+          "rangeKm": 15000,
+          "lengthM": 66.80,
+          "wingspanM": 64.75,
+          "heightM": 17.05,
+          "mtowKg": 283000
+        },
+        "A350-1000": {
+          "model": "A350-1000",
+          "icaoType": "A35K",
+          "status": "in_production",
+          "engines": [
+            "Rolls-Royce Trent XWB-97"
+          ],
+          "seats": {
+            "typical": 369,
+            "max": 480
+          },
+          "rangeKm": 16100,
+          "lengthM": 73.79,
+          "wingspanM": 64.75,
+          "heightM": 17.08,
+          "mtowKg": 322000
+        }
+      },
+  
+      "A380": {
+        "A380-800": {
+          "model": "A380-800",
+          "icaoType": "A388",
+          "status": "retired",
+          "engines": [
+            "Engine Alliance GP7200",
+            "Rolls-Royce Trent 900"
+          ],
+          "seats": {
+            "typical": 555,
+            "max": 853
+          },
+          "rangeKm": 15200,
+          "lengthM": 72.72,
+          "wingspanM": 79.75,
+          "heightM": 24.09,
+          "mtowKg": 575000
+        }
+      }
+    }
+  }
