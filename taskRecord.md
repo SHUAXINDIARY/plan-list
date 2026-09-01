@@ -8057,3 +8057,23 @@
 - `src/pages/aircraftWiki/index.tsx`：更新状态联合类型、label 和说明文案。
 - `src/pages/aircraftWiki/index.css`：替换停产状态样式，移除服役状态样式。
 - `taskRecord.md`：追加生产状态枚举调整记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+在 Boeing 和 Airbus 分组标题旁增加制造商官网入口。
+
+## 完成过程
+
+1. 增加 Boeing 与 Airbus 官方网站地址映射。
+2. 在制造商名称后加入“官网”外链，使用新窗口打开并保留安全 rel 属性。
+3. 增加小型链接按钮的悬停、焦点和移动端适配。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：增加制造商官网 URL 映射和“官网”外链。
+- `src/pages/aircraftWiki/index.css`：增加官网入口的紧凑按钮样式和键盘焦点状态。
+- `taskRecord.md`：追加制造商官网入口记录。

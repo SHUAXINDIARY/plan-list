@@ -127,12 +127,47 @@
     margin-bottom: 0.28rem;
 }
 
+.aircraft-model-wiki__manufacturer-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.65rem;
+}
+
 .aircraft-model-wiki__manufacturer h2 {
     margin: 0;
     color: var(--pl-text-heading);
     font-family: var(--pl-font-display);
     font-size: 1.45rem;
     line-height: 1.1;
+}
+
+.aircraft-model-wiki__manufacturer-website {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.55rem;
+    padding: 0 0.55rem;
+    color: var(--pl-link);
+    font-size: 0.72rem;
+    font-weight: 700;
+    border: 1px solid var(--pl-border-pill);
+    border-radius: 0.5rem;
+    transition:
+        color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
+        border-color var(--motion-duration-fast) var(--motion-ease-out-quart);
+}
+
+.aircraft-model-wiki__manufacturer-website:hover,
+.aircraft-model-wiki__manufacturer-website:focus-visible {
+    color: var(--pl-link-hover);
+    background-color: var(--pl-surface-reference-hover);
+    border-color: var(--pl-border-chip-hover);
+}
+
+.aircraft-model-wiki__manufacturer-website:focus-visible {
+    outline: 2px solid var(--pl-border-focus);
+    outline-offset: 3px;
 }
 
 .aircraft-model-wiki__manufacturer > header > span {

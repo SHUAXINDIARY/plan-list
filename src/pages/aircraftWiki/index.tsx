@@ -71,6 +71,12 @@ interface ManufacturerCatalog {
 const AIRCRAFT_DATA_URL = "/data/aircraft.json";
 const JET_MANUFACTURERS: readonly JetManufacturer[] = ["Boeing", "Airbus"];
 
+/** 制造商官网地址，用于在分组标题旁提供权威资料入口。 */
+const MANUFACTURER_WEBSITE_URLS: Record<JetManufacturer, string> = {
+    Boeing: "https://www.boeing.com/",
+    Airbus: "https://www.airbus.com/en",
+};
+
 /** 统一 schema 为无代际系列使用的占位分组，页面不把它展示为代际标签。 */
 const DEFAULT_GENERATION_KEY = "default";
 
@@ -368,11 +374,25 @@ const AircraftWikiPage = (): ReactElement => {
                                 <header>
                                     <div>
                                         <p className="page-eyebrow">Manufacturer</p>
-                                        <h2
-                                            id={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
-                                        >
-                                            {manufacturerCatalog.manufacturer}
-                                        </h2>
+                                        <div className="aircraft-model-wiki__manufacturer-title">
+                                            <h2
+                                                id={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
+                                            >
+                                                {manufacturerCatalog.manufacturer}
+                                            </h2>
+                                            <a
+                                                className="aircraft-model-wiki__manufacturer-website"
+                                                href={
+                                                    MANUFACTURER_WEBSITE_URLS[
+                                                        manufacturerCatalog.manufacturer
+                                                    ]
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                官网
+                                            </a>
+                                        </div>
                                     </div>
                                     <span>
                                         {formatInteger(manufacturerCatalog.models.length)} 个型号
