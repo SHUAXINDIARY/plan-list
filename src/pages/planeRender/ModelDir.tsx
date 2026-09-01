@@ -32,7 +32,7 @@ export const ModelDir = ({
                         onClick={(): void => onModelSelection(asset.id)}
                     >
                         <span>{asset.label}</span>
-                        <small>{asset.sourcePath}</small>
+                        {/* <small>{asset.sourcePath}</small> */}
                     </button>
                 ),
             )}

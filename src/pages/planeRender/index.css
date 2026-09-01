@@ -1259,16 +1259,17 @@
 }
 
 .plane-render__model-button {
-    display: grid;
-    grid-template-rows: minmax(1.3rem, auto) minmax(1.15rem, auto);
-    align-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 0.17rem;
     width: 100%;
     min-width: 0;
     min-height: 2.75rem;
     padding: 0.58rem 0.66rem;
     color: var(--pl-text-secondary);
-    text-align: left;
+    text-align: center;
     background-color: transparent;
     border: 1px solid transparent;
     border-radius: 0.58rem;
@@ -1283,22 +1284,26 @@
 
 .plane-render__model-button span {
     display: block;
+    width: 100%;
     min-width: 0;
     min-height: 1.3rem;
     font-size: 0.84rem;
     font-weight: 750;
     line-height: 1.28;
+    text-align: center;
     overflow-wrap: anywhere;
     white-space: normal;
 }
 
 .plane-render__model-button small {
     display: block;
+    width: 100%;
     min-width: 0;
     min-height: 1.15rem;
     overflow: hidden;
     color: var(--pl-text-meta);
     line-height: 1.25;
+    text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

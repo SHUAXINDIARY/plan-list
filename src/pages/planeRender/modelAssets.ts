@@ -69,7 +69,8 @@ const getModelLabel = (sourcePath: string): string => {
         ? `${baseLabel} · 无标识`
         : baseLabel;
 
-    return `${variantLabel} · ${sourceLabel}`;
+    // return `${variantLabel} · ${sourceLabel}`;
+    return variantLabel
 };
 
 /** 将 Rspack 返回的构建期模块路径转换为相对于项目根目录的可读路径。 */

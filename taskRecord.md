@@ -8159,3 +8159,21 @@
 - `src/pages/aircraftWiki/index.tsx`：引入 `AircraftCard`，移除内联卡片结构和卡片专属逻辑。
 - `src/pages/aircraftWiki/index.css`：移除已转移至 `Card.css` 的卡片样式。
 - `taskRecord.md`：追加本次组件抽离记录。
+
+## 日期
+
+2026-09-01
+
+## 任务目的
+
+优化 3D 模型目录按钮样式，使模型名称在按钮内垂直、水平居中。
+
+## 完成过程
+
+1. 将模型按钮从双行 grid 改为纵向 flex 布局，避免来源路径隐藏后仍预留空行。
+2. 让模型名称和可选来源信息占满按钮宽度并居中，兼容单行、多行和全屏目录布局。
+
+## 修改具体文件
+
+- `src/pages/planeRender/index.css`：调整模型目录按钮的 flex 对齐、文本宽度和居中样式。
+- `taskRecord.md`：追加模型目录按钮样式优化记录。
