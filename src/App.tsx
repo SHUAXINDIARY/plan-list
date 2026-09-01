@@ -40,7 +40,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: "/personal", label: "飞行日志", end: false },
     { path: "/photos", label: "飞机照片", end: false },
     { path: "/references", label: "参考资料", end: false },
-    { path: "/plane-render", label: "模型渲染", end: false },
+    { path: "/plane-render", label: "机型模型", end: false },
 ];
 const AUTHOR_PROFILE_URL = "https://github.com/SHUAXINDIARY";
 
