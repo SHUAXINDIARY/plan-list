@@ -1,7 +1,5 @@
 export {
-    ATTITUDE_PRESET_VALUES,
     CURRENT_MODEL_FAILED_MESSAGE,
-    DEFAULT_ATTITUDE_SETTINGS,
     EMPTY_MODEL_DIRECTORY_MESSAGE,
     isAircraftEnvironmentPreset,
     isAircraftLightingPreset,

@@ -1,57 +1,14 @@
 import { useId, type ChangeEvent, type ReactElement } from "react";
-import type {
-    AircraftEnvironmentPreset,
-    AircraftLightingSettings,
-} from "../lighting";
 import type { AircraftHdriAsset } from "../hdriAssets";
+import type { AircraftRenderSettings } from "../viewport/types";
 
-/** 可供模型视窗即时切换的色调映射预设。 */
-export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
-
-/** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
-export type AircraftShadowMode = "pcf" | "vsm";
-
-/** 模型视窗可选的渲染质量档位，手动调整后进入 custom。 */
-export type AircraftRenderQuality =
-    | "performance"
-    | "balanced"
-    | "quality"
-    | "custom";
-
-/** 模型视窗可选的工作室照明档位，手动调整任一灯光参数后进入 custom。 */
-export type AircraftLightingPreset =
-    | "neutral"
-    | "silhouette"
-    | "top"
-    | "three-point"
-    | "custom";
-
-/** 模型视窗中可即时写入 WebGPU 渲染器的用户偏好。 */
-export interface AircraftRenderSettings
-    extends AircraftLightingSettings {
-    /** 当前画质预设；任何高级参数手动修改后标记为 custom。 */
-    qualityPreset: AircraftRenderQuality;
-    /** 当前照明预设；任何 key/fill/rim 灯光参数手动修改后标记为 custom。 */
-    lightingPreset: AircraftLightingPreset;
-    /** 输出画面使用的色调映射预设。 */
-    toneMapping: AircraftToneMapping;
-    /** 色调映射在输出前使用的曝光系数。 */
-    exposure: number;
-    /** 写入渲染器的物理像素倍率，影响清晰度与 GPU 负载。 */
-    pixelRatio: number;
-    /** 是否全局开启模型和展示平面的实时阴影。 */
-    shadowsEnabled: boolean;
-    /** 阴影贴图采用的 WebGPU 算法。 */
-    shadowMode: AircraftShadowMode;
-    /** 是否渲染飞机底部的展示平面。 */
-    displayFloor: boolean;
-    /** 当前使用内置工作室环境还是 HDRI 环境。 */
-    environmentPreset: AircraftEnvironmentPreset;
-    /** 当前从 hdri 目录选择的运行时资源 URL。 */
-    hdriUrl: string;
-    /** 场景环境反射与漫反射的整体强度。 */
-    environmentIntensity: number;
-}
+export type {
+    AircraftLightingPreset,
+    AircraftRenderQuality,
+    AircraftRenderSettings,
+    AircraftShadowMode,
+    AircraftToneMapping,
+} from "../viewport/types";
 
 /** 渲染控制面板的输入状态和交互回调。 */
 interface RenderControlsProps {

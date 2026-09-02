@@ -7,7 +7,9 @@ import type {
     AircraftCameraView,
     AircraftProjectionMode,
 } from "../types";
-import { DEGREES_TO_RADIANS } from "../aircraft/model";
+
+/** 将相机 HUD 的弧度计算转换为角度显示。 */
+const DEGREES_TO_RADIANS = Math.PI / 180;
 
 /** 允许近距离检查机身细节时的相机最小距离。 */
 export const MINIMUM_CAMERA_DISTANCE = 0.45;

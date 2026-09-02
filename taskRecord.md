@@ -8462,3 +8462,33 @@
 - `src/pages/planeRender/viewport/diagnostics/`：新增下载工具和用户可见错误消息。
 - `src/pages/planeRender/viewport/interaction/`：新增工具面板指针命中判断。
 - `taskRecord.md`：追加本次架构拆分记录。
+
+## 日期
+
+2026-09-02
+
+## 任务目的
+
+继续解耦 `AircraftModelViewport`，暂时移除未启用的姿态控制，并降低 React UI 与 Three.js 运行时之间的耦合。
+
+## 完成过程
+
+1. 移除注释掉的姿态控制 JSX、空的 `AttitudeControls.tsx` 及其无效状态、类型和模型姿态工具。
+2. 将渲染设置类型从 `RenderControls` 上移至 viewport 领域类型，避免 renderer/scene 反向依赖 UI 组件。
+3. 将渲染设置表单逻辑抽为 `useRenderSettings`，将 RAF、ResizeObserver、可见性观察和 HDRI 异步竞态分别抽为 runtime 模块。
+4. 将相机导航控件和视窗覆盖层抽为独立 React 组件，保持 `AircraftModelViewport` 对外 props 不变。
+5. 执行 `git diff --check` 和 `pnpm run build`；构建成功。`pnpm run type-check` 仍受既有 `modelAssets.ts` 未使用 `sourceLabel` 报错影响。
+
+## 修改具体文件
+
+- `src/pages/planeRender/AircraftModelViewport.tsx`：保留页面协调逻辑，接入设置 hook、渲染循环 runtime、环境控制器、导航控件和覆盖层。
+- `src/pages/planeRender/viewport/types.ts`：集中维护渲染与场景共享类型，并移除姿态控制类型。
+- `src/pages/planeRender/viewport/hooks/useRenderSettings.ts`：新增渲染设置状态和表单处理 hook。
+- `src/pages/planeRender/viewport/runtime/renderLoop.ts`：新增按需渲染、尺寸和可见性生命周期管理。
+- `src/pages/planeRender/viewport/runtime/environmentController.ts`：新增 HDRI/工作室环境切换及请求竞态保护。
+- `src/pages/planeRender/viewport/components/ViewportNavigationControls.tsx`：新增相机导航与导出控件。
+- `src/pages/planeRender/viewport/components/ViewportOverlays.tsx`：新增模型目录、HUD、动画和错误覆盖层。
+- `src/pages/planeRender/components/RenderControls.tsx`、`src/pages/planeRender/lighting.ts`：改为使用 viewport 领域类型。
+- `src/pages/planeRender/viewport/aircraft/`、`viewport/camera/`、`viewport/scene/`：移除暂不支持姿态控制的死代码并修正常量归属。
+- `src/pages/planeRender/components/AttitudeControls.tsx`：删除空文件。
+- `taskRecord.md`：追加本次解耦记录。

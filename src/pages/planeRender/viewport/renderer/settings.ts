@@ -5,7 +5,7 @@ import type {
     AircraftRenderSettings,
     AircraftShadowMode,
     AircraftToneMapping,
-} from "../../components/RenderControls";
+} from "../types";
 
 /** WebGPU 不可用时的用户可见提示。 */
 export const WEBGPU_UNAVAILABLE_MESSAGE = "当前浏览器或设备未提供 WebGPU 支持。";

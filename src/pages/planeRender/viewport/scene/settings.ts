@@ -1,7 +1,7 @@
 import type {
     AircraftLightingPreset,
     AircraftRenderSettings,
-} from "../../components/RenderControls";
+} from "../types";
 
 /** 模型目录为空时的用户可见提示。 */
 export const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文件。";
@@ -15,22 +15,6 @@ export const MODEL_KEY_LIGHT_COLOR_TOKEN = "--pl-model-key-light-color";
 export const MODEL_FILL_LIGHT_COLOR_TOKEN = "--pl-model-fill-light-color";
 /** 工作室轮廓光颜色 token，在深浅主题下由 App.css 提供值。 */
 export const MODEL_RIM_LIGHT_COLOR_TOKEN = "--pl-model-rim-light-color";
-
-/** 常用飞行阶段对应的姿态角度，便于快速预览空间状态。 */
-export const ATTITUDE_PRESET_VALUES = {
-    level: { pitch: 0, roll: 0, yaw: 0 },
-    takeoff: { pitch: 10, roll: 0, yaw: 0 },
-    descent: { pitch: -8, roll: 0, yaw: 0 },
-    landing: { pitch: 3, roll: 0, yaw: 0 },
-} as const;
-
-/** 模型视窗打开时采用的平飞姿态基线。 */
-export const DEFAULT_ATTITUDE_SETTINGS = {
-    preset: "level",
-    pitch: 0,
-    roll: 0,
-    yaw: 0,
-} as const;
 
 /** 工作室照明预设，调整主光方向和强度，保留用户对色调和曝光的选择。 */
 export const LIGHTING_PRESET_VALUES: Readonly<

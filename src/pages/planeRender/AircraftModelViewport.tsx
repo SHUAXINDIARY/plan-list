@@ -13,22 +13,17 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
     RenderControls,
-    type AircraftRenderSettings,
 } from "./components/RenderControls";
 import {
     applyAircraftLightingSettings,
     createAircraftLightingRig,
     createRoomEnvironmentResources,
     disposeEnvironmentResources,
-    disposeHdriEnvironment,
-    loadHdriEnvironment,
     type AircraftEnvironmentResources,
     type AircraftLightingRig,
 } from "./viewport/scene";
-import ModelDir from "./ModelDir";
 import { AIRCRAFT_HDRI_ASSETS } from "./hdriAssets";
 import type {
-    AircraftAttitudeSettings,
     AircraftAnimationState,
     AircraftCamera,
     AircraftCameraHudState,
@@ -36,9 +31,9 @@ import type {
     AircraftModelLoadingProgress,
     AircraftModelViewportProps,
     AircraftProjectionMode,
+    AircraftRenderSettings,
 } from "./viewport/types";
 import {
-    applyAircraftAttitude,
     applyModelSourceOrientation,
     normalizeAircraftModel,
     disposeSceneResources,
@@ -53,28 +48,18 @@ import {
     isCameraHudStateEqual,
     isAircraftProjectionMode,
     configureAircraftOrbitControls,
-    ORTHOGRAPHIC_FRUSTUM_HEIGHT,
 } from "./viewport/camera";
 import {
     applyRenderSettings,
-    createDefaultRenderSettings,
-    getQualityPresetSettings,
     hasAircraftWebGPUSupport,
     initializeAircraftWebGPURenderer,
-    isAircraftRenderQuality,
-    isAircraftShadowMode,
-    isAircraftToneMapping,
     WEBGPU_DEVICE_LOST_MESSAGE,
     WEBGPU_INITIALIZATION_ERROR_MESSAGE,
     WEBGPU_UNAVAILABLE_MESSAGE,
 } from "./viewport/renderer";
 import {
     CURRENT_MODEL_FAILED_MESSAGE,
-    DEFAULT_ATTITUDE_SETTINGS,
     EMPTY_MODEL_DIRECTORY_MESSAGE,
-    isAircraftEnvironmentPreset,
-    isAircraftLightingPreset,
-    LIGHTING_PRESET_VALUES,
     MODEL_FILL_LIGHT_COLOR_TOKEN,
     MODEL_FLOOR_COLOR_TOKEN,
     MODEL_KEY_LIGHT_COLOR_TOKEN,
@@ -85,7 +70,6 @@ import {
 import {
     EMPTY_ANIMATION_STATE,
     DEFAULT_MODEL_ANIMATION_NAME,
-    AnimationControls,
 } from "./viewport/animation";
 import {
     downloadBlob,
@@ -95,7 +79,14 @@ import {
     SNAPSHOT_UNAVAILABLE_MESSAGE,
 } from "./viewport/diagnostics";
 import { isViewportControlTarget } from "./viewport/interaction";
-import { CameraHud } from "./viewport/visualization";
+import { useRenderSettings } from "./viewport/hooks/useRenderSettings";
+import { ViewportOverlays } from "./viewport/components/ViewportOverlays";
+import { ViewportNavigationControls } from "./viewport/components/ViewportNavigationControls";
+import {
+    createAircraftRenderLoop,
+    type AircraftRenderLoopHandle,
+} from "./viewport/runtime/renderLoop";
+import { createAircraftEnvironmentController } from "./viewport/runtime/environmentController";
 
 /** 保持页面级导入路径兼容，加载进度类型由 viewport 领域模块统一维护。 */
 export type { AircraftModelLoadingProgress } from "./viewport/types";
@@ -113,8 +104,8 @@ export const AircraftModelViewport = ({
     fullscreenTargetRef,
     retryToken,
 }: AircraftModelViewportProps): ReactElement => {
-    const attitudeControlsId = useId();
-    const modelDirectoryId = `${attitudeControlsId}-model-dir`;
+    const modelDirectoryBaseId = useId();
+    const modelDirectoryId = `${modelDirectoryBaseId}-model-dir`;
     const containerRef = useRef<HTMLDivElement | null>(null);
     const rendererRef = useRef<WebGPURenderer | null>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -159,22 +150,35 @@ export const AircraftModelViewport = ({
         useState<boolean>(false);
     const [isSnapshotAvailable, setIsSnapshotAvailable] =
         useState<boolean>(false);
-    const [renderSettings, setRenderSettings] =
-        useState<AircraftRenderSettings>(createDefaultRenderSettings);
-    const [attitudeSettings] = useState<AircraftAttitudeSettings>(
-        DEFAULT_ATTITUDE_SETTINGS,
-    );
+    const {
+        settings: renderSettings,
+        onToneMappingChange: handleToneMappingChange,
+        onQualityPresetChange: handleQualityPresetChange,
+        onLightingPresetChange: handleLightingPresetChange,
+        onEnvironmentPresetChange: handleEnvironmentPresetChange,
+        onHdriChange: handleHdriChange,
+        onEnvironmentIntensityChange: handleEnvironmentIntensityChange,
+        onExposureChange: handleExposureChange,
+        onPixelRatioChange: handlePixelRatioChange,
+        onLightPositionXChange: handleLightPositionXChange,
+        onLightPositionYChange: handleLightPositionYChange,
+        onLightPositionZChange: handleLightPositionZChange,
+        onKeyLightIntensityChange: handleKeyLightIntensityChange,
+        onFillLightIntensityChange: handleFillLightIntensityChange,
+        onRimLightIntensityChange: handleRimLightIntensityChange,
+        onShadowsEnabledChange: handleShadowsEnabledChange,
+        onDisplayFloorChange: handleDisplayFloorChange,
+        onShadowModeChange: handleShadowModeChange,
+        onReset: handleRenderSettingsReset,
+    } = useRenderSettings();
     const renderSettingsRef = useRef<AircraftRenderSettings>(renderSettings);
     const projectionModeRef = useRef<AircraftProjectionMode>(projectionMode);
-    const attitudeSettingsRef =
-        useRef<AircraftAttitudeSettings>(attitudeSettings);
     const fullscreenToggleRef = useRef<HTMLButtonElement | null>(null);
     const wasFullscreenRef = useRef<boolean>(false);
     const isApplyingCameraViewRef = useRef<boolean>(false);
 
     renderSettingsRef.current = renderSettings;
     projectionModeRef.current = projectionMode;
-    attitudeSettingsRef.current = attitudeSettings;
 
     /** 获取包含画布、工具和状态信息的页面级全屏目标。 */
     const getFullscreenTarget = (): HTMLElement | null =>
@@ -386,7 +390,6 @@ export const AircraftModelViewport = ({
                 target: controls.target.toArray(),
                 up: camera.up.toArray(),
             },
-            attitude: attitudeSettings,
             render: renderSettings,
             animation: animationState.available
                 ? {
@@ -478,330 +481,6 @@ export const AircraftModelViewport = ({
         };
     }, []);
 
-    /** 仅接受已声明的色调映射值，避免 select 意外值破坏渲染器状态。 */
-    const handleToneMappingChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const toneMapping = event.currentTarget.value;
-
-        if (!isAircraftToneMapping(toneMapping)) {
-            return;
-        }
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                toneMapping,
-            }),
-        );
-    };
-
-    /** 应用一档质量预设，仅覆盖像素倍率和阴影参数。 */
-    const handleQualityPresetChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const qualityPreset = event.currentTarget.value;
-
-        if (
-            !isAircraftRenderQuality(qualityPreset) ||
-            qualityPreset === "custom"
-        ) {
-            return;
-        }
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                ...getQualityPresetSettings(qualityPreset),
-                qualityPreset,
-            }),
-        );
-    };
-
-    /** 应用一档工作室照明预设，覆盖主光源方向和强度。 */
-    const handleLightingPresetChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const lightingPreset = event.currentTarget.value;
-
-        if (
-            !isAircraftLightingPreset(lightingPreset) ||
-            lightingPreset === "custom"
-        ) {
-            return;
-        }
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                ...LIGHTING_PRESET_VALUES[lightingPreset],
-                lightingPreset,
-            }),
-        );
-    };
-
-    /** 切换内置工作室与 HDRI 环境，环境贴图由场景生命周期异步替换。 */
-    const handleEnvironmentPresetChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const environmentPreset = event.currentTarget.value;
-
-        if (!isAircraftEnvironmentPreset(environmentPreset)) {
-            return;
-        }
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => {
-                const firstHdriUrl = AIRCRAFT_HDRI_ASSETS[0]?.url ?? "";
-
-                return {
-                    ...currentSettings,
-                    environmentPreset,
-                    hdriUrl:
-                        environmentPreset === "hdri" &&
-                        currentSettings.hdriUrl.length === 0
-                            ? firstHdriUrl
-                            : currentSettings.hdriUrl,
-                };
-            },
-        );
-    };
-
-    /** 切换目录中的 HDRI 资源，异步加载 effect 会对选择结果做短暂去抖。 */
-    const handleHdriChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const hdriUrl = event.currentTarget.value;
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                hdriUrl,
-            }),
-        );
-    };
-
-    /** 更新环境反射强度，不触发 renderer 或模型重建。 */
-    const handleEnvironmentIntensityChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const environmentIntensity = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                environmentIntensity,
-            }),
-        );
-    };
-
-    /** 更新色调映射曝光，并由滑块范围约束有效数值。 */
-    const handleExposureChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const exposure = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                exposure,
-            }),
-        );
-    };
-
-    /** 更新 WebGPU 画布的物理像素倍率，平衡模型边缘清晰度与 GPU 负载。 */
-    const handlePixelRatioChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const pixelRatio = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                pixelRatio,
-                qualityPreset: "custom",
-            }),
-        );
-    };
-
-    /** 切换场景级阴影，便于直接对比模型底部与地面接触效果。 */
-    const handleShadowsEnabledChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const shadowsEnabled = event.currentTarget.checked;
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                shadowsEnabled,
-                qualityPreset: "custom",
-            }),
-        );
-    };
-
-    /** 切换飞机底部展示平面的可见性，默认保持纯模型画面。 */
-    const handleDisplayFloorChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const displayFloor = event.currentTarget.checked;
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                displayFloor,
-            }),
-        );
-    };
-
-    /** 更新主方向光的 X 轴位置，实时改变模型的侧向受光。 */
-    const handleLightPositionXChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const lightPositionX = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                lightPositionX,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 更新主方向光的 Y 轴位置，实时改变模型顶部与底部的明暗关系。 */
-    const handleLightPositionYChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const lightPositionY = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                lightPositionY,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 更新主方向光的 Z 轴位置，实时改变模型的前后受光关系。 */
-    const handleLightPositionZChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const lightPositionZ = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                lightPositionZ,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 更新主方向光强度，并将照明预设标记为自定义。 */
-    const handleKeyLightIntensityChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const keyLightIntensity = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                keyLightIntensity,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 更新三点灯光补光强度，并将照明预设标记为自定义。 */
-    const handleFillLightIntensityChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const fillLightIntensity = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                fillLightIntensity,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 更新三点灯光轮廓光强度，并将照明预设标记为自定义。 */
-    const handleRimLightIntensityChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
-        const rimLightIntensity = Number(event.currentTarget.value);
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                rimLightIntensity,
-                lightingPreset: "custom",
-            }),
-        );
-    };
-
-    /** 仅接受已声明的阴影算法，避免向 WebGPU 渲染器写入无效配置。 */
-    const handleShadowModeChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
-        const shadowMode = event.currentTarget.value;
-
-        if (!isAircraftShadowMode(shadowMode)) {
-            return;
-        }
-
-        setRenderSettings(
-            (
-                currentSettings: AircraftRenderSettings,
-            ): AircraftRenderSettings => ({
-                ...currentSettings,
-                shadowMode,
-                qualityPreset: "custom",
-            }),
-        );
-    };
-
-    /** 将当前视窗恢复为项目既有的 ACES、PCF 阴影和设备像素比基线。 */
-    const handleRenderSettingsReset = (): void => {
-        setRenderSettings(createDefaultRenderSettings());
-    };
-
-    /** 应用一组飞行阶段预设，并将手动角度同步至三维模型。 */
     useEffect((): void => {
         const renderer = rendererRef.current;
 
@@ -871,17 +550,6 @@ export const AircraftModelViewport = ({
         return (): void => undefined;
     }, [renderSettings.environmentPreset, renderSettings.hdriUrl]);
 
-    useEffect((): void => {
-        const model = aircraftAttitudePivotRef.current;
-
-        if (model === null) {
-            return;
-        }
-
-        applyAircraftAttitude(model, attitudeSettings);
-        requestRenderRef.current?.();
-    }, [attitudeSettings]);
-
     useEffect((): (() => void) | undefined => {
         const container = containerRef.current;
 
@@ -892,22 +560,9 @@ export const AircraftModelViewport = ({
         let isDisposed = false;
         let cleanupRenderer: (() => void) | undefined;
         let isRendererUnavailable = false;
-        let animationFrameId: number | null = null;
-        let isDocumentVisible = document.visibilityState === "visible";
-        let isViewportVisible = true;
         let environmentResources: AircraftEnvironmentResources | null = null;
-        let environmentRequestToken = 0;
         let themeObserver: MutationObserver | null = null;
-
-        /** 取消尚未执行的按需绘制帧，避免卸载后继续访问 renderer。 */
-        const cancelScheduledFrame = (): void => {
-            if (animationFrameId === null) {
-                return;
-            }
-
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        };
+        let renderLoopHandle: AircraftRenderLoopHandle | undefined;
 
         /** 在组件未卸载时将模型加载进度回传给页面。 */
         const publishProgress = (
@@ -984,7 +639,7 @@ export const AircraftModelViewport = ({
             renderer.onDeviceLost = (info): void => {
                 defaultOnDeviceLost(info);
                 isRendererUnavailable = true;
-                cancelScheduledFrame();
+                renderLoopHandle?.cleanup();
                 publishProgress({
                     phase: "error",
                     loadedModelCount: aircraftModelRef.current === null ? 0 : 1,
@@ -1017,6 +672,20 @@ export const AircraftModelViewport = ({
             const createdEnvironmentResources =
                 createRoomEnvironmentResources(environmentGenerator);
             environmentResources = createdEnvironmentResources;
+            const environmentController =
+                createAircraftEnvironmentController({
+                    environmentGenerator,
+                    resources: createdEnvironmentResources,
+                    scene,
+                    getCurrentSettings: (): AircraftRenderSettings =>
+                        renderSettingsRef.current,
+                    isDisposed: (): boolean => isDisposed,
+                    onLoadingChange: setEnvironmentLoading,
+                    onErrorChange: setEnvironmentError,
+                    requestRender: (): void => {
+                        requestRenderRef.current?.();
+                    },
+                });
             scene.environment =
                 createdEnvironmentResources.roomRenderTarget.texture;
             scene.environmentIntensity =
@@ -1070,82 +739,6 @@ export const AircraftModelViewport = ({
                 requestRenderRef.current?.();
             };
 
-            /** 根据当前环境设置异步加载 HDRI，失败时回退到内置工作室。 */
-            const applyEnvironment = async (
-                settings: AircraftRenderSettings,
-            ): Promise<void> => {
-                const resources = environmentResources;
-
-                if (resources === null || isDisposed) {
-                    return;
-                }
-
-                const requestToken = ++environmentRequestToken;
-                scene.environmentIntensity = settings.environmentIntensity;
-                const isCurrentEnvironmentSelection = (): boolean =>
-                    renderSettingsRef.current.environmentPreset ===
-                        settings.environmentPreset &&
-                    renderSettingsRef.current.hdriUrl === settings.hdriUrl;
-
-                if (
-                    settings.environmentPreset === "room" ||
-                    settings.hdriUrl.trim().length === 0
-                ) {
-                    disposeHdriEnvironment(resources);
-                    scene.environment = resources.roomRenderTarget.texture;
-                    setEnvironmentLoading(false);
-                    setEnvironmentError(
-                        settings.environmentPreset === "hdri"
-                            ? "请选择 HDRI 环境，当前已回退内置工作室。"
-                            : null,
-                    );
-                    requestRenderRef.current?.();
-                    return;
-                }
-
-                setEnvironmentError(null);
-                setEnvironmentLoading(true);
-
-                try {
-                    const hdriRenderTarget = await loadHdriEnvironment(
-                        environmentGenerator,
-                        settings.hdriUrl,
-                    );
-
-                    if (
-                        isDisposed ||
-                        requestToken !== environmentRequestToken ||
-                        !isCurrentEnvironmentSelection()
-                    ) {
-                        hdriRenderTarget.dispose();
-                        return;
-                    }
-
-                    disposeHdriEnvironment(resources);
-                    resources.hdriRenderTarget = hdriRenderTarget;
-                    scene.environment = hdriRenderTarget.texture;
-                    setEnvironmentLoading(false);
-                    setEnvironmentError(null);
-                    requestRenderRef.current?.();
-                } catch {
-                    if (
-                        isDisposed ||
-                        requestToken !== environmentRequestToken ||
-                        !isCurrentEnvironmentSelection()
-                    ) {
-                        return;
-                    }
-
-                    disposeHdriEnvironment(resources);
-                    scene.environment = resources.roomRenderTarget.texture;
-                    setEnvironmentLoading(false);
-                    setEnvironmentError(
-                        "HDRI 加载失败，当前已回退内置工作室。",
-                    );
-                    requestRenderRef.current?.();
-                }
-            };
-
             applyThemePalette();
             themeObserver = new MutationObserver(applyThemePalette);
             themeObserver.observe(document.documentElement, {
@@ -1153,152 +746,41 @@ export const AircraftModelViewport = ({
                 attributeFilter: ["data-theme"],
             });
 
-            /** 根据容器实际尺寸更新相机投影和 WebGPU 画布分辨率。 */
-            const resizeRenderer = (): void => {
-                const { width, height } = container.getBoundingClientRect();
-                const resolvedWidth = Math.max(width, 1);
-                const resolvedHeight = Math.max(height, 1);
-
-                const aspect = resolvedWidth / resolvedHeight;
-
-                if (camera instanceof THREE.OrthographicCamera) {
-                    const halfHeight = ORTHOGRAPHIC_FRUSTUM_HEIGHT / 2;
-                    const halfWidth = halfHeight * aspect;
-
-                    camera.left = -halfWidth;
-                    camera.right = halfWidth;
-                    camera.top = halfHeight;
-                    camera.bottom = -halfHeight;
-                } else {
-                    camera.aspect = aspect;
-                }
-
-                camera.updateProjectionMatrix();
-                renderer.setPixelRatio(renderSettingsRef.current.pixelRatio);
-                renderer.setSize(resolvedWidth, resolvedHeight, false);
-                requestRenderRef.current?.();
-            };
-
             rendererRef.current = renderer;
             sceneRef.current = scene;
             cameraRef.current = camera;
             orbitControlsRef.current = controls;
-            resizeRendererRef.current = resizeRenderer;
-            environmentApplyRef.current = applyEnvironment;
+            environmentApplyRef.current = environmentController.apply;
+            renderLoopHandle = createAircraftRenderLoop({
+                container,
+                renderer,
+                scene,
+                getCamera: (): AircraftCamera => camera,
+                getControls: (): OrbitControls<AircraftCamera> => controls,
+                getAnimationMixer: (): THREE.AnimationMixer | null =>
+                    animationMixerRef.current,
+                getAnimationAction: (): THREE.AnimationAction | null =>
+                    animationActionRef.current,
+                animationTimer: animationTimerRef.current,
+                isAnimationPlaying: (): boolean =>
+                    animationPlayingRef.current,
+                onAnimationTimeChange: (currentTime: number): void => {
+                    setAnimationState(
+                        (
+                            currentState: AircraftAnimationState,
+                        ): AircraftAnimationState => ({
+                            ...currentState,
+                            currentTime,
+                        }),
+                    );
+                },
+                getPixelRatio: (): number => renderSettingsRef.current.pixelRatio,
+                isRendererUnavailable: (): boolean => isRendererUnavailable,
+            });
+            requestRenderRef.current = renderLoopHandle.requestRender;
+            resizeRendererRef.current = renderLoopHandle.resizeRenderer;
             applyRenderSettings(renderer, renderSettingsRef.current);
-            void applyEnvironment(renderSettingsRef.current);
-
-            const resizeObserver = new ResizeObserver(resizeRenderer);
-            resizeObserver.observe(container);
-
-            /** 更新相机阻尼并绘制一帧；没有变化时不继续占用帧循环。 */
-            let animationUiAccumulator = 0;
-            const renderFrame = (): void => {
-                animationFrameId = null;
-
-                if (
-                    isDisposed ||
-                    isRendererUnavailable ||
-                    !isDocumentVisible ||
-                    !isViewportVisible
-                ) {
-                    return;
-                }
-
-                const controlsChanged = controls.update();
-
-                if (
-                    animationPlayingRef.current &&
-                    animationMixerRef.current !== null
-                ) {
-                    animationTimerRef.current.update();
-                    const animationDelta = animationTimerRef.current.getDelta();
-                    animationMixerRef.current.update(animationDelta);
-                    animationUiAccumulator += animationDelta;
-
-                    if (animationUiAccumulator >= 0.1) {
-                        animationUiAccumulator = 0;
-                        setAnimationState(
-                            (
-                                currentState: AircraftAnimationState,
-                            ): AircraftAnimationState => ({
-                                ...currentState,
-                                currentTime:
-                                    animationActionRef.current?.time ??
-                                    currentState.currentTime,
-                            }),
-                        );
-                    }
-                }
-
-                renderer.render(scene, camera);
-
-                if (controlsChanged) {
-                    requestRenderRef.current?.();
-                }
-
-                if (animationPlayingRef.current) {
-                    requestRenderRef.current?.();
-                }
-            };
-
-            /** 在当前页面和视窗可见时请求下一帧，阻尼结束后自动停止。 */
-            const requestRender = (): void => {
-                if (
-                    isDisposed ||
-                    isRendererUnavailable ||
-                    !isDocumentVisible ||
-                    !isViewportVisible ||
-                    animationFrameId !== null
-                ) {
-                    return;
-                }
-
-                animationFrameId = requestAnimationFrame(renderFrame);
-            };
-
-            requestRenderRef.current = requestRender;
-            resizeRenderer();
-            requestRender();
-
-            /** 页面重新可见时补一帧，隐藏时取消待执行帧。 */
-            const handleVisibilityChange = (): void => {
-                isDocumentVisible = document.visibilityState === "visible";
-
-                if (isDocumentVisible) {
-                    if (animationPlayingRef.current) {
-                        animationTimerRef.current.reset();
-                    }
-                    requestRender();
-                } else {
-                    animationTimerRef.current.reset();
-                    cancelScheduledFrame();
-                }
-            };
-
-            document.addEventListener(
-                "visibilitychange",
-                handleVisibilityChange,
-            );
-
-            const intersectionObserver =
-                typeof IntersectionObserver === "undefined"
-                    ? null
-                    : new IntersectionObserver(([entry]): void => {
-                          isViewportVisible = entry?.isIntersecting ?? true;
-
-                          if (isViewportVisible) {
-                              if (animationPlayingRef.current) {
-                                  animationTimerRef.current.reset();
-                              }
-                              requestRender();
-                          } else {
-                              animationTimerRef.current.reset();
-                              cancelScheduledFrame();
-                          }
-                      });
-
-            intersectionObserver?.observe(container);
+            void environmentController.apply(renderSettingsRef.current);
 
             const handleControlsChange = (): void => {
                 if (!isApplyingCameraViewRef.current) {
@@ -1306,7 +788,7 @@ export const AircraftModelViewport = ({
                 }
 
                 updateCameraHud();
-                requestRender();
+                requestRenderRef.current?.();
             };
 
             /** 创建与当前相机行为一致的新 OrbitControls，供投影切换复用。 */
@@ -1389,7 +871,7 @@ export const AircraftModelViewport = ({
                 orbitControlsRef.current = nextControls;
                 nextControls.update();
                 updateCameraHud();
-                requestRender();
+                requestRenderRef.current?.();
             };
 
             controls.addEventListener("change", handleControlsChange);
@@ -1397,15 +879,14 @@ export const AircraftModelViewport = ({
             applyProjectionMode(projectionModeRef.current);
 
             cleanupRenderer = (): void => {
-                resizeObserver.disconnect();
-                intersectionObserver?.disconnect();
+                const activeRenderLoop = renderLoopHandle;
+                activeRenderLoop?.cleanup();
+                renderLoopHandle = undefined;
                 themeObserver?.disconnect();
-                document.removeEventListener(
-                    "visibilitychange",
-                    handleVisibilityChange,
-                );
-                cancelScheduledFrame();
-                if (requestRenderRef.current === requestRender) {
+                if (
+                    requestRenderRef.current ===
+                    activeRenderLoop?.requestRender
+                ) {
                     requestRenderRef.current = null;
                 }
                 controls.removeEventListener("change", handleControlsChange);
@@ -1423,13 +904,15 @@ export const AircraftModelViewport = ({
                 }
                 animationMixerRef.current = null;
                 animationActionRef.current = null;
-                environmentRequestToken += 1;
+                environmentController.invalidate();
                 if (environmentResources !== null) {
                     disposeEnvironmentResources(environmentResources);
                     environmentResources = null;
                 }
                 environmentGenerator.dispose();
-                if (environmentApplyRef.current === applyEnvironment) {
+                if (
+                    environmentApplyRef.current === environmentController.apply
+                ) {
                     environmentApplyRef.current = null;
                 }
                 disposeSceneResources(scene);
@@ -1529,10 +1012,6 @@ export const AircraftModelViewport = ({
 
                 const aircraftAttitudePivot = new THREE.Group();
                 aircraftAttitudePivot.add(model);
-                applyAircraftAttitude(
-                    aircraftAttitudePivot,
-                    attitudeSettingsRef.current,
-                );
                 scene.add(aircraftAttitudePivot);
                 aircraftModelRef.current = model;
                 aircraftAttitudePivotRef.current = aircraftAttitudePivot;
@@ -1602,52 +1081,15 @@ export const AircraftModelViewport = ({
             onPointerDown={handleViewportPointerDown}
         >
             <div className="plane-render__viewport-tools">
-                <label className="plane-render__camera-view-control">
-                    <span className="plane-render__visually-hidden">
-                        相机视角
-                    </span>
-                    <select
-                        aria-label="相机视角"
-                        value={cameraView}
-                        onChange={handleCameraViewChange}
-                    >
-                        <option value="custom">自定义视角</option>
-                        <option value="fit">适配视图</option>
-                        <option value="front">正面</option>
-                        <option value="side">侧面</option>
-                        <option value="top">顶部</option>
-                        <option value="bottom">底部</option>
-                    </select>
-                </label>
-                <label className="plane-render__camera-projection-control">
-                    <span className="plane-render__visually-hidden">
-                        摄像机投影模式
-                    </span>
-                    <select
-                        aria-label="摄像机投影模式"
-                        value={projectionMode}
-                        onChange={handleProjectionModeChange}
-                    >
-                        <option value="perspective">Perspective 透视</option>
-                        <option value="orthographic">Orthographic 正交</option>
-                    </select>
-                </label>
-                <button
-                    className="plane-render__viewport-action"
-                    type="button"
-                    disabled={!isSnapshotAvailable}
-                    onClick={handleSnapshotExport}
-                >
-                    导出 PNG
-                </button>
-                <button
-                    className="plane-render__viewport-action"
-                    type="button"
-                    disabled={!isSnapshotAvailable}
-                    onClick={handleSettingsExport}
-                >
-                    导出设置
-                </button>
+                <ViewportNavigationControls
+                    cameraView={cameraView}
+                    onCameraViewChange={handleCameraViewChange}
+                    projectionMode={projectionMode}
+                    onProjectionModeChange={handleProjectionModeChange}
+                    isSnapshotAvailable={isSnapshotAvailable}
+                    onSnapshotExport={handleSnapshotExport}
+                    onSettingsExport={handleSettingsExport}
+                />
                 <RenderControls
                     isOpen={isRenderControlsOpen}
                     settings={renderSettings}
@@ -1676,322 +1118,6 @@ export const AircraftModelViewport = ({
                     onShadowModeChange={handleShadowModeChange}
                     onReset={handleRenderSettingsReset}
                 />
-                {/* <div className="plane-render__attitude-controls">
-                    <button
-                        className="plane-render__attitude-controls-toggle"
-                        type="button"
-                        aria-controls={attitudeControlsId}
-                        aria-expanded={isAttitudeControlsOpen}
-                        onClick={handleAttitudeControlsToggle}
-                    >
-                        {isAttitudeControlsOpen ? "收起姿态" : "飞行姿态"}
-                    </button>
-                    {isAttitudeControlsOpen ? (
-                        <aside
-                            id={attitudeControlsId}
-                            className="plane-render__render-controls-panel plane-render__attitude-controls-panel"
-                            aria-label="飞机飞行姿态控制"
-                        >
-                            <div className="plane-render__render-controls-heading">
-                                <p>Flight Profile</p>
-                                <h2>飞行姿态</h2>
-                            </div>
-                            <div className="plane-render__render-fields">
-                                <div
-                                    className="plane-render__attitude-presets"
-                                    role="group"
-                                    aria-label="飞行阶段预设"
-                                >
-                                    <button
-                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "level" ? " plane-render__attitude-preset--active" : ""}`}
-                                        type="button"
-                                        aria-pressed={
-                                            attitudeSettings.preset === "level"
-                                        }
-                                        onClick={(): void =>
-                                            handleAttitudePresetChange("level")
-                                        }
-                                    >
-                                        平飞
-                                    </button>
-                                    <button
-                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "takeoff" ? " plane-render__attitude-preset--active" : ""}`}
-                                        type="button"
-                                        aria-pressed={
-                                            attitudeSettings.preset ===
-                                            "takeoff"
-                                        }
-                                        onClick={(): void =>
-                                            handleAttitudePresetChange(
-                                                "takeoff",
-                                            )
-                                        }
-                                    >
-                                        下降
-                                    </button>
-                                    <button
-                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "descent" ? " plane-render__attitude-preset--active" : ""}`}
-                                        type="button"
-                                        aria-pressed={
-                                            attitudeSettings.preset ===
-                                            "descent"
-                                        }
-                                        onClick={(): void =>
-                                            handleAttitudePresetChange(
-                                                "descent",
-                                            )
-                                        }
-                                    >
-                                        起飞
-                                    </button>
-                                    <button
-                                        className={`plane-render__attitude-preset${attitudeSettings.preset === "landing" ? " plane-render__attitude-preset--active" : ""}`}
-                                        type="button"
-                                        aria-pressed={
-                                            attitudeSettings.preset ===
-                                            "landing"
-                                        }
-                                        onClick={(): void =>
-                                            handleAttitudePresetChange(
-                                                "landing",
-                                            )
-                                        }
-                                    >
-                                        落地
-                                    </button>
-                                </div>
-                                <div className="plane-render__attitude-gizmo">
-                                    <div
-                                        className={`plane-render__attitude-gizmo-orbit${isAttitudeDragging && attitudeDragRef.current?.mode === "orbit" ? " plane-render__attitude-gizmo--dragging" : ""}`}
-                                        role="group"
-                                        aria-label="俯仰与偏航控制"
-                                        onPointerDown={(
-                                            event: PointerEvent<HTMLDivElement>,
-                                        ): void =>
-                                            handleAttitudePointerDown(
-                                                "orbit",
-                                                event,
-                                            )
-                                        }
-                                        onPointerMove={
-                                            handleAttitudePointerMove
-                                        }
-                                        onPointerUp={handleAttitudePointerUp}
-                                        onPointerCancel={
-                                            handleAttitudePointerUp
-                                        }
-                                    >
-                                        <div className="plane-render__attitude-gizmo-grid" />
-                                        <span
-                                            className="plane-render__attitude-gizmo-center"
-                                            aria-hidden="true"
-                                        />
-                                        <div
-                                            className="plane-render__attitude-gizmo-aircraft"
-                                            style={{
-                                                transform: `rotateX(${attitudeSettings.pitch}deg) rotateY(${attitudeSettings.yaw}deg) rotateZ(${attitudeSettings.roll}deg)`,
-                                            }}
-                                        >
-                                            <svg
-                                                className="plane-render__attitude-gizmo-svg"
-                                                viewBox="0 0 120 190"
-                                                aria-hidden="true"
-                                            >
-                                                <path
-                                                    className="plane-render__attitude-gizmo-svg-wing"
-                                                    d="M49 62 9 98v14l40-18v34l-22 19v9l22-11v15l-10 23 21 5 21-5-10-23v-15l22 11v-9L71 128V94l40 18V98L71 62Z"
-                                                />
-                                                <path
-                                                    className="plane-render__attitude-gizmo-svg-fuselage"
-                                                    d="M60 6C51 18 48 39 49 62v69l-10 36 21 17 21-17-10-36V62C72 39 69 18 60 6Z"
-                                                />
-                                                <path
-                                                    className="plane-render__attitude-gizmo-svg-cockpit"
-                                                    d="M60 20c-6 9-8 18-8 29h16c0-11-2-20-8-29Z"
-                                                />
-                                                <path
-                                                    className="plane-render__attitude-gizmo-svg-highlight"
-                                                    d="M57 40v85"
-                                                />
-                                                <path
-                                                    className="plane-render__attitude-gizmo-svg-tail"
-                                                    d="m52 132-14 13v8l22-11v-15Zm16 0 14 13v8l-22-11v-15Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <div
-                                            className="plane-render__attitude-gizmo-axis"
-                                            aria-hidden="true"
-                                        >
-                                            <span>俯仰</span>
-                                            <span>偏航</span>
-                                        </div>
-                                    </div>
-                                    <div
-                                        className={`plane-render__attitude-gizmo-roll${isAttitudeDragging && attitudeDragRef.current?.mode === "roll" ? " plane-render__attitude-gizmo--dragging" : ""}`}
-                                        role="presentation"
-                                        onPointerDown={(
-                                            event: PointerEvent<HTMLDivElement>,
-                                        ): void =>
-                                            handleAttitudePointerDown(
-                                                "roll",
-                                                event,
-                                            )
-                                        }
-                                        onPointerMove={
-                                            handleAttitudePointerMove
-                                        }
-                                        onPointerUp={handleAttitudePointerUp}
-                                        onPointerCancel={
-                                            handleAttitudePointerUp
-                                        }
-                                    >
-                                        <span
-                                            className="plane-render__attitude-gizmo-roll-indicator"
-                                            style={{
-                                                left: `${50 + (attitudeSettings.roll / MAXIMUM_ROLL_ANGLE) * 42}%`,
-                                            }}
-                                            aria-hidden="true"
-                                        />
-                                        <span className="plane-render__attitude-gizmo-roll-label">
-                                            ROLL
-                                        </span>
-                                    </div>
-                                </div>
-                                <div
-                                    className="plane-render__attitude-native-controls"
-                                    role="group"
-                                    aria-label="精确姿态角度"
-                                >
-                                    <label className="plane-render__render-field plane-render__render-field--range">
-                                        <span>
-                                            俯仰
-                                            <output>
-                                                {formatAttitudeAngle(
-                                                    attitudeSettings.pitch,
-                                                )}
-                                            </output>
-                                        </span>
-                                        <input
-                                            aria-label="俯仰角度"
-                                            type="range"
-                                            min={MINIMUM_PITCH_ANGLE}
-                                            max={MAXIMUM_PITCH_ANGLE}
-                                            step={ATTITUDE_ANGLE_STEP}
-                                            value={attitudeSettings.pitch}
-                                            onChange={(
-                                                event: ChangeEvent<HTMLInputElement>,
-                                            ): void =>
-                                                handleAttitudeAxisChange(
-                                                    "pitch",
-                                                    Number(
-                                                        event.currentTarget
-                                                            .value,
-                                                    ),
-                                                )
-                                            }
-                                        />
-                                    </label>
-                                    <label className="plane-render__render-field plane-render__render-field--range">
-                                        <span>
-                                            滚转
-                                            <output>
-                                                {formatAttitudeAngle(
-                                                    attitudeSettings.roll,
-                                                )}
-                                            </output>
-                                        </span>
-                                        <input
-                                            aria-label="滚转角度"
-                                            type="range"
-                                            min={MINIMUM_ROLL_ANGLE}
-                                            max={MAXIMUM_ROLL_ANGLE}
-                                            step={ATTITUDE_ANGLE_STEP}
-                                            value={attitudeSettings.roll}
-                                            onChange={(
-                                                event: ChangeEvent<HTMLInputElement>,
-                                            ): void =>
-                                                handleAttitudeAxisChange(
-                                                    "roll",
-                                                    Number(
-                                                        event.currentTarget
-                                                            .value,
-                                                    ),
-                                                )
-                                            }
-                                        />
-                                    </label>
-                                    <label className="plane-render__render-field plane-render__render-field--range">
-                                        <span>
-                                            偏航
-                                            <output>
-                                                {formatAttitudeAngle(
-                                                    attitudeSettings.yaw,
-                                                )}
-                                            </output>
-                                        </span>
-                                        <input
-                                            aria-label="偏航角度"
-                                            type="range"
-                                            min={MINIMUM_YAW_ANGLE}
-                                            max={MAXIMUM_YAW_ANGLE}
-                                            step={ATTITUDE_ANGLE_STEP}
-                                            value={attitudeSettings.yaw}
-                                            onChange={(
-                                                event: ChangeEvent<HTMLInputElement>,
-                                            ): void =>
-                                                handleAttitudeAxisChange(
-                                                    "yaw",
-                                                    Number(
-                                                        event.currentTarget
-                                                            .value,
-                                                    ),
-                                                )
-                                            }
-                                        />
-                                    </label>
-                                </div>
-                                <dl
-                                    className="plane-render__attitude-readout"
-                                    aria-live="polite"
-                                    aria-atomic="true"
-                                >
-                                    <div>
-                                        <dt>俯仰</dt>
-                                        <dd>
-                                            {formatAttitudeAngle(
-                                                attitudeSettings.pitch,
-                                            )}
-                                        </dd>
-                                    </div>
-                                    <div>
-                                        <dt>滚转</dt>
-                                        <dd>
-                                            {formatAttitudeAngle(
-                                                attitudeSettings.roll,
-                                            )}
-                                        </dd>
-                                    </div>
-                                    <div>
-                                        <dt>偏航</dt>
-                                        <dd>
-                                            {formatAttitudeAngle(
-                                                attitudeSettings.yaw,
-                                            )}
-                                        </dd>
-                                    </div>
-                                </dl>
-                                <button
-                                    className="plane-render__render-reset"
-                                    type="button"
-                                    onClick={handleAttitudeReset}
-                                >
-                                    恢复平飞
-                                </button>
-                            </div>
-                        </aside>
-                    ) : null}
-                </div> */}
                 {isFullscreen ? (
                     <button
                         className="plane-render__model-directory-toggle"
@@ -2013,38 +1139,19 @@ export const AircraftModelViewport = ({
                     {isFullscreen ? "退出全屏" : "全屏查看"}
                 </button>
             </div>
-            {isFullscreen && isModelDirectoryOpen ? (
-                <div
-                    id={modelDirectoryId}
-                    className="plane-render__fullscreen-model-dir"
-                >
-                    <ModelDir
-                        selectedModelId={selectedModelId}
-                        onModelSelection={handleFullscreenModelSelection}
-                    />
-                </div>
-            ) : null}
-            {cameraHudState !== null ? <CameraHud state={cameraHudState} /> : null}
-            {animationState.available ? (
-                <AnimationControls
-                    state={animationState}
-                    onToggle={handleAnimationToggle}
-                    onScrub={handleAnimationScrub}
-                />
-            ) : null}
-            {fullscreenError !== null ? (
-                <p className="plane-render__fullscreen-error" role="alert">
-                    {fullscreenError}
-                </p>
-            ) : null}
-            {snapshotError !== null ? (
-                <p className="plane-render__snapshot-error" role="alert">
-                    {snapshotError}
-                </p>
-            ) : null}
-            <div className="plane-render__loading-overlay" aria-hidden="true">
-                <span className="plane-render__loading-spinner" />
-            </div>
+            <ViewportOverlays
+                isFullscreen={isFullscreen}
+                isModelDirectoryOpen={isModelDirectoryOpen}
+                modelDirectoryId={modelDirectoryId}
+                selectedModelId={selectedModelId}
+                onModelSelection={handleFullscreenModelSelection}
+                cameraHudState={cameraHudState}
+                animationState={animationState}
+                onAnimationToggle={handleAnimationToggle}
+                onAnimationScrub={handleAnimationScrub}
+                fullscreenError={fullscreenError}
+                snapshotError={snapshotError}
+            />
         </div>
     );
 };

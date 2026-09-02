@@ -2,6 +2,82 @@ import type { RefObject } from "react";
 import * as THREE from "three";
 import type { AircraftModelAsset } from "../modelAssets";
 
+/** 模型视窗可选的工作室环境来源。 */
+export type AircraftEnvironmentPreset = "room" | "hdri";
+
+/** 可即时写入三点灯光 rig 的位置与强度参数。 */
+export interface AircraftLightingSettings {
+    /** 主方向光在场景 X 轴上的位置。 */
+    lightPositionX: number;
+    /** 主方向光在场景 Y 轴上的位置。 */
+    lightPositionY: number;
+    /** 主方向光在场景 Z 轴上的位置。 */
+    lightPositionZ: number;
+    /** 主方向光强度，控制模型高光和阴影对比。 */
+    keyLightIntensity: number;
+    /** 三点灯光中的补光强度，控制暗部可读性。 */
+    fillLightIntensity: number;
+    /** 三点灯光中的轮廓光强度，控制机身边缘分离度。 */
+    rimLightIntensity: number;
+}
+
+/** 可即时切换的场景环境参数。 */
+export interface AircraftEnvironmentSettings {
+    /** 当前使用内置工作室环境还是 HDRI 环境。 */
+    environmentPreset: AircraftEnvironmentPreset;
+    /** 当前目录 HDRI 资源生成的运行时 URL。 */
+    hdriUrl: string;
+    /** 场景环境反射与漫反射的整体强度。 */
+    environmentIntensity: number;
+}
+
+/** 可供模型视窗即时切换的色调映射预设。 */
+export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
+
+/** 可供模型视窗即时切换的 WebGPU 阴影算法。 */
+export type AircraftShadowMode = "pcf" | "vsm";
+
+/** 模型视窗可选的渲染质量档位。 */
+export type AircraftRenderQuality =
+    | "performance"
+    | "balanced"
+    | "quality"
+    | "custom";
+
+/** 模型视窗可选的工作室照明档位。 */
+export type AircraftLightingPreset =
+    | "neutral"
+    | "silhouette"
+    | "top"
+    | "three-point"
+    | "custom";
+
+/** 模型视窗中可即时写入 WebGPU 场景的用户偏好。 */
+export interface AircraftRenderSettings extends AircraftLightingSettings {
+    /** 当前画质预设；手动修改高级参数后标记为 custom。 */
+    qualityPreset: AircraftRenderQuality;
+    /** 当前照明预设；手动修改灯光参数后标记为 custom。 */
+    lightingPreset: AircraftLightingPreset;
+    /** 输出画面使用的色调映射预设。 */
+    toneMapping: AircraftToneMapping;
+    /** 色调映射在输出前使用的曝光系数。 */
+    exposure: number;
+    /** 写入渲染器的物理像素倍率。 */
+    pixelRatio: number;
+    /** 是否全局开启模型和展示平面的实时阴影。 */
+    shadowsEnabled: boolean;
+    /** 阴影贴图采用的 WebGPU 算法。 */
+    shadowMode: AircraftShadowMode;
+    /** 是否渲染飞机底部的展示平面。 */
+    displayFloor: boolean;
+    /** 当前使用内置工作室环境还是 HDRI 环境。 */
+    environmentPreset: AircraftEnvironmentPreset;
+    /** 当前从 HDRI 目录选择的运行时资源 URL。 */
+    hdriUrl: string;
+    /** 场景环境反射与漫反射的整体强度。 */
+    environmentIntensity: number;
+}
+
 /** 模型视窗当前所处的初始化或加载阶段。 */
 export type AircraftModelLoadingPhase =
     | "initializing"
@@ -51,50 +127,6 @@ export interface AircraftModelViewportProps {
     fullscreenTargetRef: RefObject<HTMLElement | null>;
     /** 当前模型重试序号，变化时强制重新初始化渲染器和资源请求。 */
     retryToken: number;
-}
-
-/** 飞行姿态面板可切换的预设状态。 */
-export type AircraftAttitudePreset =
-    | "level"
-    | "takeoff"
-    | "descent"
-    | "landing"
-    | "custom";
-
-/** 飞行姿态面板中可单独调节的旋转轴。 */
-export type AircraftAttitudeAxis = "pitch" | "roll" | "yaw";
-
-/** 3D 姿态操控器当前被拖拽的旋转维度。 */
-export type AircraftAttitudeDragMode = "orbit" | "roll";
-
-/** 一次姿态拖拽开始时记录的指针和角度快照。 */
-export interface AircraftAttitudeDragState {
-    /** 本次拖拽使用的指针标识。 */
-    pointerId: number;
-    /** 拖拽起点的水平屏幕坐标。 */
-    startX: number;
-    /** 拖拽起点的垂直屏幕坐标。 */
-    startY: number;
-    /** 拖拽开始时的俯仰角。 */
-    startPitch: number;
-    /** 拖拽开始时的滚转角。 */
-    startRoll: number;
-    /** 拖拽开始时的偏航角。 */
-    startYaw: number;
-    /** 当前拖拽区域控制的旋转维度。 */
-    mode: AircraftAttitudeDragMode;
-}
-
-/** 一组以角度表示的飞机旋转参数。 */
-export interface AircraftAttitudeSettings {
-    /** 当前姿态预设，手动调节后变为 custom。 */
-    preset: AircraftAttitudePreset;
-    /** 机头上下摆动角度，正值表示抬头。 */
-    pitch: number;
-    /** 机翼左右倾斜角度，正值表示右侧下倾。 */
-    roll: number;
-    /** 机身水平转向角度，正值表示向右偏航。 */
-    yaw: number;
 }
 
 /** 当前 GLB 是否包含可播放动画，以及播放位置和时长。 */

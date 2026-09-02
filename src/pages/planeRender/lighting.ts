@@ -2,35 +2,13 @@ import * as THREE from "three";
 import { PMREMGenerator } from "three/webgpu";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+export type {
+    AircraftEnvironmentPreset,
+    AircraftEnvironmentSettings,
+    AircraftLightingSettings,
+} from "./viewport/types";
 
-/** 可供模型视窗选择的环境光源来源。 */
-export type AircraftEnvironmentPreset = "room" | "hdri";
-
-/** 可即时写入三点灯光 rig 的位置与强度参数。 */
-export interface AircraftLightingSettings {
-    /** 主方向光在场景 X 轴上的位置。 */
-    lightPositionX: number;
-    /** 主方向光在场景 Y 轴上的位置。 */
-    lightPositionY: number;
-    /** 主方向光在场景 Z 轴上的位置。 */
-    lightPositionZ: number;
-    /** 主方向光强度，控制模型高光和阴影对比。 */
-    keyLightIntensity: number;
-    /** 三点灯光中的补光强度，控制暗部可读性。 */
-    fillLightIntensity: number;
-    /** 三点灯光中的轮廓光强度，控制机身边缘分离度。 */
-    rimLightIntensity: number;
-}
-
-/** 可即时切换的场景环境参数。 */
-export interface AircraftEnvironmentSettings {
-    /** 当前使用内置工作室环境还是 HDRI 环境。 */
-    environmentPreset: AircraftEnvironmentPreset;
-    /** 当前目录 HDRI 资源生成的运行时 URL。 */
-    hdriUrl: string;
-    /** 场景环境反射与漫反射的整体强度。 */
-    environmentIntensity: number;
-}
+import type { AircraftLightingSettings } from "./viewport/types";
 
 /** 模型视窗使用的三点灯光对象集合。 */
 export interface AircraftLightingRig {
