@@ -21,6 +21,7 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.modelaircraftdatabase.com",
             "https://www.collectorwingsmodel.com",
             "https://inflight200-models.com/",
+            "https://www.geminijets.com/database"
         ],
     },
     {
