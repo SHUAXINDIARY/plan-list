@@ -60,19 +60,11 @@ const getModelLabel = (sourcePath: string): string => {
     const baseLabel = isLogoFreeVariant
         ? fileStem.slice(0, -"_nologo".length)
         : fileStem;
-    const sourceLabel = sourcePath.startsWith("fr24-3d-models")
-        ? "FR24"
-        : sourcePath.startsWith("787Family_glb")
-          ? "787 Family"
-          : sourcePath.startsWith("sketchfab")
-            ? "sketchfab"
-            : "AMV";
     const variantLabel = isLogoFreeVariant
         ? `${baseLabel} · 无标识`
         : baseLabel;
 
-    // return `${variantLabel} · ${sourceLabel}`;
-    return variantLabel
+    return variantLabel;
 };
 
 /** 从模型相对路径中提取文件所在目录，用于目录分类标题。 */

@@ -8477,7 +8477,7 @@
 2. 将渲染设置类型从 `RenderControls` 上移至 viewport 领域类型，避免 renderer/scene 反向依赖 UI 组件。
 3. 将渲染设置表单逻辑抽为 `useRenderSettings`，将 RAF、ResizeObserver、可见性观察和 HDRI 异步竞态分别抽为 runtime 模块。
 4. 将相机导航控件和视窗覆盖层抽为独立 React 组件，保持 `AircraftModelViewport` 对外 props 不变。
-5. 执行 `git diff --check` 和 `pnpm run build`；构建成功。`pnpm run type-check` 仍受既有 `modelAssets.ts` 未使用 `sourceLabel` 报错影响。
+5. 清理 `modelAssets.ts` 中已注释逻辑遗留的未使用 `sourceLabel`，执行 `git diff --check`、`pnpm run type-check` 和 `pnpm run build`，均通过；构建中的 photo-preview 超时按既有策略回退原图。
 
 ## 修改具体文件
 
@@ -8491,4 +8491,5 @@
 - `src/pages/planeRender/components/RenderControls.tsx`、`src/pages/planeRender/lighting.ts`：改为使用 viewport 领域类型。
 - `src/pages/planeRender/viewport/aircraft/`、`viewport/camera/`、`viewport/scene/`：移除暂不支持姿态控制的死代码并修正常量归属。
 - `src/pages/planeRender/components/AttitudeControls.tsx`：删除空文件。
+- `src/pages/planeRender/modelAssets.ts`：移除已注释来源标签逻辑留下的未使用局部变量。
 - `taskRecord.md`：追加本次解耦记录。
