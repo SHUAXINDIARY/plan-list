@@ -11,14 +11,14 @@
     "updateGitDep": "bash updateModule.sh"
   },
   "dependencies": {
-    "@xyflow/react": "^12.11.5",
+    "@xyflow/react": "^12.11.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^7.18.3",
     "three": "^0.185.1"
   },
   "devDependencies": {
-    "@rsbuild/core": "^2.2.1",
+    "@rsbuild/core": "^2.2.2",
     "@rsbuild/plugin-react": "^2.1.0",
     "@rsbuild/plugin-svgr": "^2.0.5",
     "@types/node": "^25.9.5",
