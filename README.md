@@ -12,7 +12,7 @@
 - **个人记录**：查看乘机过的机型、航班记录、机场足迹、航线和地图可视化。
 - **飞机照片**：浏览个人飞机照片目录，支持筛选和全屏预览。
 - **参考资料**：集中索引航司官网、机场、数据库、百科和其他航空来源。
-- **模型渲染**：使用 Three.js WebGPU 单架加载 GLB 模型，支持全屏、缩放、姿态、光源、色调映射和阴影控制。
+- **模型渲染**：使用 Three.js WebGPU 单架加载 GLB 模型，支持全屏、缩放、相机投影、动画、光源、色调映射和阴影控制。
 
 首页机队数据来自 `public/data/airplan.json`，静态数据由前端按需读取。
 
@@ -20,7 +20,8 @@
 
 | 路径 | 页面 |
 | --- | --- |
-| `/` | 机型资料库 |
+| `/` | 航司 WIKI（航司机型资料库） |
+| `/aircraft-wiki` | 机型 WIKI |
 | `/personal` | 飞行日志 |
 | `/photos` | 飞机照片 |
 | `/references` | 参考资料 |
@@ -28,13 +29,13 @@
 
 ## 模型资源
 
-模型页会在构建期扫描以下目录中的 `.glb` 文件，并按模型直接所属目录分组展示：
+模型页会在构建期收集以下来源中的 `.glb` 文件，并按模型直接所属目录分组展示：
 
 - `fr24-3d-models-glbv2/models/`：由 FR24 legacy GLB v1 转换得到的 glTF 2.0 模型。
 - `sketchfab/`：项目本地维护的 Sketchfab 模型，包含其下级目录。
-- `upload_oss_glb/`：超过 25 MiB 的 Sketchfab 模型转移后的目录，通过 OSS 公共地址加载。
+- `upload_oss_glb/`：超过 25 MiB 的 Sketchfab 模型转移后的目录；由构建插件生成清单，并通过 OSS 公共地址加载。
 
-生产构建开始前，体积超过 25 MiB 的 `sketchfab/` 模型会移动到 `upload_oss_glb/`，同时生成模型资源清单。此类模型使用 `https://img.shuaxinjs.cn/glb/<文件名>` 作为加载地址。
+生产构建开始前，体积超过 25 MiB 的 `sketchfab/` 文件会移动到 `upload_oss_glb/`，同时生成 `uploadOssGlbAssets.generated.ts` 模型资源清单。此类模型使用 `https://img.shuaxinjs.cn/glb/<文件名>` 作为加载地址；未超过限制的本地模型则由 `modelAssets.ts` 的构建期 glob 直接生成 URL。
 
 原始 FR24 模型位于 `fr24-3d-models/models/`，其 GLB v1 不能直接由当前 `GLTFLoader` 加载。转换脚本会将结果写入 `fr24-3d-models-glbv2/models/`，并复制源仓库许可证。各模型的许可证和署名要求以对应目录中的说明为准。
 
@@ -102,3 +103,4 @@ pnpm run updateGitDep
 - [Three.js 文档](https://threejs.org/docs)
 - [FR24 模型转换技术方案](./docs/fr24-model-conversion.md)
 - [飞机模型 WebGPU 视窗技术方案](./docs/aircraft-model-viewport.md)
+- [模型视窗灯光与摄像机投影实现](./docs/aircraft-render-lighting-camera.md)

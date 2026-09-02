@@ -2,7 +2,7 @@
 
 ## 背景
 
-`/plane-render` 页面需要在同一个画布中检查项目模型目录里的飞机模型。模型由 `modelAssets.ts` 提供资源描述，页面只将当前选中的一项传给 `AircraftModelViewport`，视窗负责 WebGPU 初始化、GLB 加载、相机交互、显示参数调整和资源释放。
+`/plane-render` 页面需要在同一个画布中检查项目模型目录里的飞机模型。模型由 `modelAssets.ts` 提供资源描述，页面只将当前选中的一项传给 `AircraftModelViewport`。视窗组件负责页面协调和生命周期，具体的渲染器、场景、模型、相机、动画、诊断和运行时控制分别位于 `viewport/` 领域目录。
 
 当前实现基于 Three.js `WebGPURenderer`，不提供 WebGL 自动回退。浏览器不支持 WebGPU、渲染器初始化失败或模型加载失败时，组件通过进度回调把可读错误交给页面展示。
 
@@ -12,8 +12,9 @@
 
 - 每次只在场景中加载一架当前选中的 GLB 模型。
 - 使用 WebGPU 渲染并保持模型在不同尺寸下具有可比较的视图尺度。
-- 提供轨道旋转、滚轮/双指缩放、全屏查看和飞行姿态调整。
+- 提供轨道旋转、滚轮/双指缩放、全屏查看和标准相机视角。
 - 提供 Perspective（透视）与 Orthographic（正交）两种摄像机投影模式。
+- 对包含动画的 GLB 提供第一段动画的播放、暂停和时间轴拖动。
 - 允许在不重新加载模型的情况下调整输出画质、阴影、展示平面和主光源位置。
 - 支持内置 RoomEnvironment 与运行时 HDRI 切换，并提供可调的三点灯光强度。
 - 在切换模型或卸载组件时释放 Three.js 对象和 GPU 资源。
@@ -30,18 +31,31 @@
 
 | 文件 | 职责 |
 | --- | --- |
-| `src/pages/planeRender/AircraftModelViewport.tsx` | WebGPU 渲染器、Three.js 场景、模型加载、相机/姿态交互、全屏和清理逻辑 |
-| `src/pages/planeRender/lighting.ts` | 环境/HDRI 类型、PMREM 生成与释放、三点灯光 rig 工厂和参数同步 |
+| `src/pages/planeRender/AircraftModelViewport.tsx` | 页面级协调器：初始化和清理视窗、加载单架模型、连接设置/环境/相机/动画状态、处理全屏和导出命令 |
+| `src/pages/planeRender/viewport/types.ts` | 模型视窗 props、加载进度、渲染设置、相机、动画和 HUD 的共享类型 |
+| `src/pages/planeRender/viewport/renderer/` | WebGPU 能力检查、renderer 初始化、色调映射、质量预设和阴影设置 |
+| `src/pages/planeRender/viewport/scene/` | RoomEnvironment/HDRI、三点灯光、展示平面、主题 token 和场景错误消息 |
+| `src/pages/planeRender/viewport/aircraft/` | FR24 导入方向校正、模型尺寸归一化和 GLB 几何/材质/贴图释放 |
+| `src/pages/planeRender/viewport/camera/` | 相机创建、Perspective/Orthographic fit、标准视角、OrbitControls 和相机 HUD 数据 |
+| `src/pages/planeRender/viewport/runtime/` | 按需渲染循环、尺寸/可见性生命周期和 HDRI 异步竞态控制 |
+| `src/pages/planeRender/viewport/hooks/useRenderSettings.ts` | 渲染设置状态、预设应用、表单值校验和 reset 行为 |
+| `src/pages/planeRender/viewport/components/` | 相机导航/导出控件、目录/HUD/动画/错误覆盖层 |
+| `src/pages/planeRender/viewport/animation/` | 第一段 GLB 动画的状态、AnimationMixer 驱动和时间轴控件 |
+| `src/pages/planeRender/viewport/diagnostics/` | PNG/JSON 下载和用户可见错误消息 |
+| `src/pages/planeRender/viewport/interaction/` | 工具层指针命中判断，避免画布操作误收起面板 |
+| `src/pages/planeRender/viewport/visualization/` | 相机 HUD 等非 canvas 可视化组件 |
+| `src/pages/planeRender/lighting.ts` | 三点灯光 rig、RoomEnvironment/HDRI PMREM 创建、替换和释放；由 `viewport/scene/lighting.ts` 重新导出 |
 | `src/pages/planeRender/components/RenderControls.tsx` | 渲染控制面板的表单结构与控件范围，不直接操作 Three.js 对象 |
-| `src/pages/planeRender/ModelDir.tsx` | GLB 模型目录标题、滚动列表、选中样式和模型选择回调 |
-| `src/pages/planeRender/modelAssets.ts` | 通过构建期 glob 生成模型资源清单及 `loadUrl()` 加载函数 |
+| `src/pages/planeRender/ModelDir.tsx` | GLB 模型目录标题、分组滚动列表、选中样式和模型选择回调 |
+| `src/pages/planeRender/modelAssets.ts` | 合并本地 GLB 构建期 glob 与 `uploadOssGlbAssets.generated.ts` 清单，并提供 `loadUrl()` 加载函数 |
+| `src/pages/planeRender/hdriAssets.ts` | 通过构建期 glob 生成 `hdri/*.hdr` 资源清单 |
 | `src/pages/planeRender/index.tsx` | 选择单个模型、消费加载进度并展示目录和页面级状态 |
 | `src/pages/planeRender/index.css` | 画布、工具面板、全屏、加载遮罩、响应式布局和减少动态效果样式 |
 | `scripts/convert-fr24-models.mjs` | 将 FR24 legacy GLB v1 转换为可供本视窗加载的 GLB v2 |
 
 ## 组件接口
 
-组件对外接收两个属性：
+组件对外接收六个属性：
 
 ```ts
 interface AircraftModelViewportProps {
@@ -92,7 +106,7 @@ flowchart TD
     K --> L[按需 requestAnimationFrame: controls.update + render]
     L --> M[GLTFLoader.loadAsync(asset.loadUrl())]
     M -- 失败 --> N[报告当前模型加载失败]
-    M -- 成功 --> O[归一化尺寸、应用姿态、聚焦相机]
+    M -- 成功 --> O[归一化尺寸、校正来源方向、聚焦相机]
     O --> P[报告 ready]
     P --> Q[asset 变化或组件卸载]
     Q --> R[取消 RAF、断开可见性观察器、dispose 场景和 renderer]
@@ -118,7 +132,7 @@ THREE.Scene
 ├── DirectionalLight (fillLight)             # 冷色补光，可调强度
 ├── DirectionalLight (rimLight)              # 后方轮廓光，可调强度
 ├── Mesh (displayFloor, optional visible)    # 展示平面，默认隐藏
-└── Group (aircraftAttitudePivot)            # 姿态旋转枢轴
+└── Group (aircraftAttitudePivot)            # 当前模型根容器（保留历史命名）
     └── Object3D (normalizedModel)           # 当前唯一模型，几何中心归一化到原点
         └── Mesh / material / texture         # GLB 内部资源
 ```
@@ -141,9 +155,9 @@ THREE.Scene
 
 1. 使用 `Box3.setFromObject` 获取源包围盒。
 2. 取 X/Y/Z 最大尺寸，将模型缩放到最大维度 `1.35`。
-3. 重新计算包围盒，将模型三轴几何中心移到原点，作为姿态枢轴的稳定旋转中心。
-4. 将模型放入 `aircraftAttitudePivot`，只对 pivot 应用当前姿态设置，避免模型资源根节点同时承担归一化和姿态变换。
-5. 按归一化模型底部定位展示平面；非平飞姿态下展示平面仅作为空间参考。
+3. 重新计算包围盒，将模型三轴几何中心移到原点，作为相机 fit 和轨道观察的稳定中心。
+4. 将模型放入 `aircraftAttitudePivot` 根容器，避免模型资源根节点同时承担归一化和视窗生命周期管理；当前版本不提供飞行姿态控制。
+5. 按归一化模型底部定位展示平面。
 6. 将模型加入场景，并按包围球与当前视口 FOV 计算适配距离。
 
 默认相机使用 `PerspectiveCamera(36, 1, 0.1, 100)`。透视模式的适配距离按包围球和水平/垂直 FOV 计算并保留边距；正交模式使用固定基础视锥。窗口变化时由 `ResizeObserver` 更新 aspect、视锥和绘制缓冲区。
@@ -178,7 +192,7 @@ THREE.Scene
 
 ## 渲染控制面板
 
-`RenderControls` 只负责表单和事件回调，父组件维护 `AircraftRenderSettings`，再通过 effect 将设置同步到已初始化的 Three.js 对象。
+`RenderControls` 只负责表单和事件回调，`useRenderSettings` 维护 `AircraftRenderSettings`，再由父组件通过 effect 将设置同步到已初始化的 Three.js 对象。
 
 | 设置 | 范围/选项 | 应用位置 |
 | --- | --- | --- |
@@ -201,31 +215,11 @@ THREE.Scene
 
 设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向、key/fill/rim 强度；任一高级参数手动修改后标记为自定义。`hdriAssets.ts` 在构建期扫描 `hdri/*.hdr` 并导出资源 URL，控制面板只允许从该清单选择，避免任意 URL 请求；select 变更会直接触发异步加载，旧请求完成后会被丢弃并释放 PMREM。HDRI 先由 `HDRLoader` 解析为 equirectangular 纹理，再经 `PMREMGenerator.fromEquirectangular()` 转为 PBR 可用环境；原始 HDR 纹理在转换后立即释放，当前 HDRI PMREM 只保留一份。加载失败或未选择资源时恢复 RoomEnvironment，并在控件内给出回退提示。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源、环境强度和展示平面则直接修改现有对象。
 
-## 飞行姿态控制
+## GLB 动画控制
 
-姿态状态以角度保存，写入 `aircraftAttitudePivot` 时统一转换为弧度，并使用 `YXZ` 顺序表达偏航、俯仰、滚转：
+模型加载完成后只读取 `gltf.animations[0]`。当第一段动画存在且时长大于 0 时，创建 `AnimationMixer` 和对应 `AnimationAction`，初始为暂停状态，并在视窗覆盖层显示播放/暂停按钮和时间轴；没有动画的模型不渲染动画控件。
 
-```ts
-aircraftAttitudePivot.rotation.set(
-    pitch * Math.PI / 180,
-    yaw * Math.PI / 180,
-    roll * Math.PI / 180,
-    "YXZ",
-);
-```
-
-支持四个预设：
-
-| 预设 | 俯仰 | 滚转 | 偏航 |
-| --- | ---: | ---: | ---: |
-| 平飞 | 0° | 0° | 0° |
-| 起飞 | +10° | 0° | 0° |
-| 下降 | -8° | 0° | 0° |
-| 落地 | +3° | 0° | 0° |
-
-自定义控制范围为俯仰 `-60..60°`、滚转 `-180..180°`、偏航 `-180..180°`。中心区域拖拽调整俯仰/偏航，外圈横向拖拽调整滚转；方向键可逐度调整，按住 Shift 时步长为 5°。每次手动调整都会把预设标记为 `custom`。
-
-姿态 gizmo 保留指针直接操控；俯仰、滚转、偏航另提供三个独立的原生 range，分别拥有单值范围和可读名称，避免一个 slider 同时表达两个角度。模型真实姿态和面板中的 SVG 示意图使用同一组状态，避免控制反馈与渲染结果脱节。
+播放期间由 `viewport/runtime/renderLoop.ts` 更新 `THREE.Timer`、`AnimationMixer` 和渲染帧。时间轴拖动会同时更新 action 与 mixer 时间；页面隐藏、视窗离开可视区域或暂停播放时重置计时器，避免不可见期间累计时间差。
 
 ## 全屏查看
 
@@ -272,14 +266,14 @@ aircraftAttitudePivot.rotation.set(
 - canvas 是否仍覆盖容器且没有因父级高度塌陷变成 0。
 - 工具面板、状态提示和全屏按钮是否互相遮挡。
 - 目录滚动区是否保留独立滚动，不把页面整体撑出横向滚动。
-- 640px 以下设备上的姿态面板和控制面板是否能在可视区域内操作。
+- 640px 以下设备上的动画时间轴、控制面板和目录是否能在可视区域内操作。
 
 ## 性能与扩展点
 
 - 单模型加载避免了目录级并发请求和多场景 GPU 占用。
 - 渲染倍率有 `3x` 上限，默认不超过设备 `2x`；质量预设可快速在性能、均衡和质量之间切换。
 - `ResizeObserver` 只在容器尺寸变化时更新投影和缓冲区，不依赖全局 window resize。
-- 渲染帧在模型加载、控制器变化、设置变化、尺寸变化和可见性恢复时按需请求，静止状态不持续占用帧循环。
+- 渲染帧在模型加载、控制器变化、设置变化、尺寸变化、动画播放和可见性恢复时按需请求，静止状态不持续占用帧循环。
 - 使用 `RoomEnvironment` 和 WebGPU `PMREMGenerator` 为 PBR 材质提供本地环境反射；HDRI 通过 `lighting.ts` 的异步 loader 追加，不改变模型加载链路。深浅主题通过 CSS token 和 `MutationObserver` 同步地面与三点灯光颜色。
 - 若 GLB 提供动画，使用 `AnimationMixer` 驱动单段动画的播放、暂停和时间轴，动画播放期间由按需帧调度持续请求绘制。
 - 后续可增加模型加载缓存，但必须以资源 URL 为 key，并在缓存淘汰时复用同一套 dispose 逻辑。
@@ -298,7 +292,7 @@ aircraftAttitudePivot.rotation.set(
 | 画布全屏后尺寸不正确 | 容器尺寸变化未触发 ResizeObserver | 检查全屏 CSS 和 `resizeRenderer` 是否重新设置 aspect/size |
 | 模型过亮、过暗或两侧明暗差异大 | 色调映射、曝光、主光源位置或模型法线/材质本身 | 先恢复默认渲染设置，再分别调整曝光和 X/Y/Z 光源 |
 | 高倍率下卡顿 | 像素倍率过高、模型纹理过大或设备 GPU 能力有限 | 临时降至 `1x`，再逐项打开阴影和展示平面 |
-| 姿态面板读数变化但模型不动 | 模型尚未加载，或 `aircraftModelRef` 已被清理 | 检查姿态 effect 执行时机和当前模型引用 |
+| 动画播放或时间轴无响应 | 模型没有第一段有效动画，或 mixer/action 已在清理阶段释放 | 检查 `gltf.animations[0]`、`animationMixerRef` 和动画时间更新 |
 
 ## 验收方案
 
@@ -308,7 +302,7 @@ aircraftAttitudePivot.rotation.set(
 2. 切换目录项，确认旧 canvas/模型被清理，新模型完成归一化和自动聚焦。
 3. 验证拖拽旋转、滚轮/双指缩放、全屏进入/退出和 Esc 退出。
 4. 调整色调映射、曝光、渲染倍率、阴影、展示平面及三轴光源，确认无需重新加载模型即可生效。
-5. 打开姿态面板，验证预设、指针拖拽、方向键、Shift 加速和读数同步。
+5. 对包含动画的 GLB 验证播放、暂停和时间轴拖动；对无动画模型确认不显示动画控件。
 6. 在不支持 WebGPU、空目录、转换产物缺失和单文件损坏场景下确认页面显示可读错误。
 7. 在桌面、窄屏和全屏尺寸下检查画布高度、目录滚动和工具面板遮挡情况。
 
@@ -318,4 +312,5 @@ aircraftAttitudePivot.rotation.set(
 - [Three.js GLTFLoader](https://threejs.org/docs/#examples/en/loaders/GLTFLoader)
 - [Three.js OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls)
 - [FR24 模型转换技术方案](./fr24-model-conversion.md)
+- [模型视窗灯光与摄像机投影实现](./aircraft-render-lighting-camera.md)
 - [模型渲染页面源码](../src/pages/planeRender/index.tsx)

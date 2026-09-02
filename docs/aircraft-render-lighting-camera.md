@@ -19,8 +19,16 @@
 
 ```text
 src/pages/planeRender/
-├── AircraftModelViewport.tsx       # 场景生命周期、相机切换、模型加载和按需渲染
-├── lighting.ts                     # HDRI/PMREM 与三点灯光的无 UI 运行时模块
+├── AircraftModelViewport.tsx       # 页面协调、场景生命周期、相机切换和模型加载
+├── viewport/
+│   ├── types.ts                    # 共享设置、进度、相机、动画和 HUD 类型
+│   ├── renderer/                   # WebGPU 初始化、色调映射、质量和阴影设置
+│   ├── scene/                      # 场景设置、主题、展示平面和 lighting.ts 的领域出口
+│   ├── camera/                     # 相机创建、fit、标准视角和 OrbitControls
+│   ├── runtime/                    # 按需渲染循环与 HDRI 异步环境控制器
+│   ├── hooks/useRenderSettings.ts  # 设置状态、预设和表单值校验
+│   └── components/                 # 导航/导出和目录/HUD/动画覆盖层
+├── lighting.ts                     # HDRI/PMREM 与三点灯光的无 UI 运行时实现
 ├── hdriAssets.ts                   # hdri/*.hdr 构建期资源目录
 ├── components/RenderControls.tsx   # 环境、灯光、输出参数表单
 ├── index.css                       # 工具栏、控制面板和响应式样式
@@ -33,9 +41,11 @@ hdri/
 | 模块 | 主要职责 | 不应承担的职责 |
 | --- | --- | --- |
 | `hdriAssets.ts` | 扫描 HDR 文件、生成稳定 ID、导出构建后 URL | 创建 Three.js 纹理、管理场景状态 |
-| `lighting.ts` | 创建/同步三点灯光，生成/加载/释放 PMREM | React state、DOM 事件、控件文案 |
-| `AircraftModelViewport.tsx` | 创建 renderer、scene、camera、controls，连接模型和资源生命周期 | 维护 HDR 文件列表的扫描规则 |
-| `RenderControls.tsx` | 渲染 `<select>`、range、switch 和回调接口 | 直接访问 Three.js 对象 |
+| `lighting.ts` / `viewport/scene/lighting.ts` | 创建/同步三点灯光，生成/加载/释放 PMREM；scene 目录提供领域出口 | React state、DOM 事件、控件文案 |
+| `viewport/runtime/environmentController.ts` | 应用 Room/HDRI 选择、处理加载状态、竞态和失败回退 | 扫描资源目录、渲染表单 |
+| `viewport/hooks/useRenderSettings.ts` | 维护 `AircraftRenderSettings`、解析表单值并应用预设 | 直接访问 Three.js 对象 |
+| `AircraftModelViewport.tsx` | 连接 renderer、scene、camera、controls、模型和运行时资源生命周期 | 维护 HDR 文件列表的扫描规则 |
+| `RenderControls.tsx` | 渲染 `<select>`、range、switch 和回调接口 | 直接访问 Three.js 对象、维护设置 state |
 | `rsbuild.config.ts` | 将 `.hdr` 声明为源资源 | 运行时选择或加载 HDRI |
 
 ## 3. 核心数据契约
@@ -65,7 +75,7 @@ interface AircraftHdriAsset {
 }
 ```
 
-`.DS_Store` 和其他非 `.hdr` 文件不会匹配 glob，因此不会出现在控件中。当前仓库中的 `hdri/brown_photostudio_02_4k.hdr` 会自动成为一个选择项。
+`.DS_Store` 和其他非 `.hdr` 文件不会匹配 glob，因此不会出现在控件中。当前仓库中的 `hdri/church_meeting_room_2k.hdr`、`hdri/ferndale_studio_02_4k.hdr`、`hdri/ferndale_studio_06_4k.hdr`、`hdri/ferndale_studio_12_4k.hdr` 和 `hdri/qwantani_night_puresky_4k.hdr` 会自动成为选择项。
 
 `rsbuild.config.ts` 必须包含：
 
@@ -79,7 +89,7 @@ source: {
 
 ### 3.2 渲染设置
 
-`AircraftRenderSettings` 仍由 `RenderControls.tsx` 定义，新增字段与现有输出参数一起由父组件维护：
+`AircraftRenderSettings` 定义在 `viewport/types.ts`，由 `viewport/hooks/useRenderSettings.ts` 维护，再由 `AircraftModelViewport.tsx` 的 effect 同步到 Three.js 对象：
 
 | 字段 | 类型/范围 | 用途 |
 | --- | --- | --- |
@@ -113,7 +123,7 @@ RoomEnvironment 是稳定回退源，默认使用它可以避免页面初次进�
 
 ### 4.2 HDRLoader 与 PMREM
 
-选择 HDRI 后，`AircraftModelViewport` 调用 `loadHdriEnvironment()`：
+选择 HDRI 后，`viewport/runtime/environmentController.ts` 调用 `loadHdriEnvironment()`：
 
 1. 使用 `HDRLoader.loadAsync(url)` 解析 RGBE HDR 文件。
 2. 将纹理设置为 `THREE.EquirectangularReflectionMapping`。
@@ -138,15 +148,15 @@ try {
 
 ### 4.3 选择生效与竞态保护
 
-控制面板中的 HDRI `<select>` 只使用 `AIRCRAFT_HDRI_ASSETS` 的 URL，不接受自由文本 URL：
+控制面板中的 HDRI `<select>` 只使用 `AIRCRAFT_HDRI_ASSETS` 的 URL，不接受自由文本 URL。`useRenderSettings` 负责选择值，`viewport/runtime/environmentController.ts` 负责异步应用：
 
 - `environmentPreset` 选择 `hdri` 时，如果尚未选择资源，自动选中第一项。
 - select 变化后直接启动异步加载。
-- 每次加载递增 `environmentRequestToken`。
+- 每次加载递增控制器内部的 `requestToken`。
 - 异步结果返回时比较 token、组件销毁状态以及当前 `environmentPreset/hdriUrl`。
 - 过期结果只释放自己的 PMREM，不替换当前环境。
 
-选择空项或加载失败时恢复 RoomEnvironment，并在控制面板显示回退提示。当前 HDRI PMREM 在替换前调用 `disposeHdriEnvironment()`，保证场景中最多保留一份活动 HDRI PMREM。
+选择空项或加载失败时恢复 RoomEnvironment，并在控制面板显示回退提示。当前 HDRI PMREM 在替换前调用 `disposeHdriEnvironment()`，保证场景中最多保留一份活动 HDRI PMREM。select 变化后立即启动请求，不再经过文本输入去抖。
 
 ## 5. 三点灯光实现
 
@@ -236,7 +246,7 @@ zoom = clamp(fitZoom, 0.25, 8)
 
 ### 6.3 投影切换流程
 
-`applyProjectionMode()` 不销毁 renderer，也不重新加载 GLB，步骤如下：
+`AircraftModelViewport.tsx` 内的 `applyProjectionMode()` 不销毁 renderer，也不重新加载 GLB，步骤如下：
 
 1. 读取当前 camera、controls position、up 和 target。
 2. 根据新模式创建 camera，并使用容器当前 aspect 初始化视锥。
@@ -280,14 +290,14 @@ let controls: OrbitControls<AircraftCamera> =
 - 模型加载完成并完成相机 fit
 - ResizeObserver 尺寸变化
 
-每帧执行 `controls.update()`、动画 mixer 更新和 `renderer.render(scene, camera)`。当没有阻尼、动画或用户操作时，不继续排队下一帧。
+每帧执行 `controls.update()`、动画 mixer 更新和 `renderer.render(scene, camera)`。动画时间由 `THREE.Timer` 提供，并在暂停、隐藏或离开视窗时 reset。当没有阻尼、动画或用户操作时，不继续排队下一帧。
 
 清理顺序：
 
-1. 断开 ResizeObserver、IntersectionObserver、MutationObserver 和 visibility 监听。
+1. 让环境控制器的请求 token 失效，断开 ResizeObserver、IntersectionObserver、MutationObserver 和 visibility 监听。
 2. 取消待执行的 requestAnimationFrame。
 3. 移除 controls change 监听并销毁当前 controls。
-4. 停止 AnimationMixer，释放模型几何、材质和贴图。
+4. 停止 AnimationMixer，释放模型几何、材质和贴图，并销毁 `THREE.Timer`。
 5. 释放活动 HDRI PMREM、RoomEnvironment PMREM 和 PMREMGenerator。
 6. 调用 `renderer.dispose()` 并移除 canvas。
 7. 清空 camera、scene、controls、灯光 rig 和环境 apply refs。
@@ -320,7 +330,7 @@ let controls: OrbitControls<AircraftCamera> =
 在支持 WebGPU 的浏览器中打开 `/plane-render` 后检查：
 
 1. 渲染控制中的环境来源切换为 HDRI，select 能列出 `hdri/*.hdr` 文件。
-2. 选择 `brown_photostudio_02_4k` 后，模型反射和整体受光发生变化。
+2. 选择 `ferndale_studio_02_4k` 后，模型反射和整体受光发生变化。
 3. 快速切换 HDRI 或切回内置工作室，最终画面不被过期请求覆盖。
 4. 选择“三点灯光”，确认轮廓光出现；调节补光/轮廓光强度无需重新加载模型。
 5. 在 Perspective 与 Orthographic 间切换，观察目标和轨道方向保持连续。

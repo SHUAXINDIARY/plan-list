@@ -8493,3 +8493,45 @@
 - `src/pages/planeRender/components/AttitudeControls.tsx`：删除空文件。
 - `src/pages/planeRender/modelAssets.ts`：移除已注释来源标签逻辑留下的未使用局部变量。
 - `taskRecord.md`：追加本次解耦记录。
+
+## 日期
+
+2026-09-02
+
+## 任务目的
+
+同步 README、飞机模型视窗技术方案和灯光/摄像机技术文档，使内容与当前 viewport 模块拆分、动画控制、HDRI 资源目录和 OSS GLB 清单实现保持一致。
+
+## 完成过程
+
+1. 对照当前 `src/pages/planeRender/` 目录、模型资源清单、HDRI 清单和运行时模块，核对三份文档中的职责、资源来源和交互描述。
+2. 移除文档中已下线的飞行姿态控制说明，补充 GLB 第一段动画播放、暂停和时间轴行为。
+3. 更新 `viewport/` 领域模块职责、渲染设置 hook、按需渲染循环、HDRI 环境控制器和资源清理说明。
+4. 修正 README 的模型资源加载说明、OSS 生成清单说明和技术文档索引；将 HDRI 验收示例改为当前仓库实际存在的文件。
+5. 执行 `git diff --check`；本次仅修改文档和任务记录，未运行构建、类型检查、开发服务器或浏览器验收。
+
+## 修改具体文件
+
+- `README.md`：更新模型渲染能力、GLB/OSS 资源收集说明和延伸阅读链接。
+- `docs/aircraft-model-viewport.md`：同步 viewport 模块职责、六项 props、动画控制、清理流程和验收项目。
+- `docs/aircraft-render-lighting-camera.md`：同步模块拆分、渲染设置归属、HDRI 控制器和当前 HDRI 文件清单。
+- `taskRecord.md`：追加本次文档更新记录。
+
+## 日期
+
+2026-09-02
+
+## 任务目的
+
+修正 README 页面路由表，使其与 `src/App.tsx` 中的实际路由和导航名称一致。
+
+## 完成过程
+
+1. 对照 `src/App.tsx` 的 `NAVIGATION_ITEMS` 和 `<Routes>` 配置确认六个页面入口。
+2. 在 README 路由表中补充 `/aircraft-wiki`，并将根路径改为航司 WIKI（航司机型资料库）。
+3. 执行 `git diff --check`，未运行构建或开发服务器。
+
+## 修改具体文件
+
+- `README.md`：补充机型 WIKI 路由并修正根路径页面名称。
+- `taskRecord.md`：追加本次路由文档修正记录。
