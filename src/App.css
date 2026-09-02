@@ -652,17 +652,17 @@ a {
 }
 
 .app-footer {
-    position: relative;
-    z-index: 1;
+    position: fixed;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    left: calc(1.25rem + env(safe-area-inset-left, 0px));
+    z-index: 20;
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
     gap: 0.25rem 1.25rem;
-    width: min(100% - 2rem, 72rem);
+    max-width: calc(100% - 7.5rem);
     box-sizing: border-box;
-    margin: 0 auto;
-    padding: 0 1.5rem max(1rem, env(safe-area-inset-bottom, 0px));
+    padding: 0;
     color: var(--pl-text-meta);
     font-size: 0.78rem;
     line-height: 1.5;
@@ -836,10 +836,10 @@ a {
     }
 
     .app-footer {
-        justify-content: flex-start;
-        width: min(100% - 1.5rem, 72rem);
-        padding-right: 0;
-        padding-left: 0;
+        right: 4.4rem;
+        bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+        left: calc(0.9rem + env(safe-area-inset-left, 0px));
+        max-width: none;
     }
 
     .page-panel {
