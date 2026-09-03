@@ -8,6 +8,8 @@
     "dev": "rsbuild",
     "preview": "rsbuild preview",
     "type-check": "tsc --noEmit",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "updateGitDep": "bash updateModule.sh"
   },
   "dependencies": {

@@ -1,0 +1,28 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "printWidth": 100,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": false,
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "experimentalOperatorPosition": "end",
+    "endOfLine": "lf",
+    "insertFinalNewline": true,
+    "quoteProps": "as-needed",
+    "objectWrap": "preserve",
+    "proseWrap": "preserve",
+    "jsdoc": false,
+    "sortImports": false,
+    "sortPackageJson": false,
+    "ignorePatterns": [
+        "node_modules/**",
+        "dist/**",
+        "src/pages/personal/photoPreviews.generated.ts",
+        "src/pages/planeRender/uploadOssGlbAssets.generated.ts"
+    ]
+}
