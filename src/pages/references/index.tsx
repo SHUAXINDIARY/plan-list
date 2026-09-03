@@ -10,16 +10,15 @@ import {
 import { Select } from "../../components/Select";
 import type { SelectOption } from "../../components/Select";
 import type { AirlineReferenceSource } from "../home/type";
-import { AIRLINE_REFERENCE_SOURCES } from "./constant";
+import {
+    AIRLINE_REFERENCE_SOURCES,
+    CATE_MAP,
+    cate_enum,
+} from "./constant";
 import "./index.css";
 
 /** 参考资料类型筛选值。 */
-type ReferenceCategory =
-    | "official"
-    | "database"
-    | "media"
-    | "community"
-    | "other";
+type ReferenceCategory = cate_enum;
 
 /** 类型筛选下拉值，all 表示不过滤。 */
 type ReferenceCategoryFilter = "all" | ReferenceCategory;
@@ -96,18 +95,39 @@ interface ReferenceFilterOption {
     label: string;
 }
 
+/** 参考资料分类选项，提交值与来源数据中的分类枚举一致。 */
+interface ReferenceCategoryOption {
+    /** 来源数据使用的分类枚举。 */
+    value: ReferenceCategory;
+    /** 从 CATE_MAP 读取的分类展示文案。 */
+    label: string;
+}
+
 const LAST_UPDATED_DATE = "2026-07-05";
 const RECENT_SOURCE_COUNT = 6;
 const COPY_FEEDBACK_TRANSITION_DURATION_MS = 160;
 const COPY_FEEDBACK_VISIBLE_DURATION_MS = 800;
 
-const CATEGORY_OPTIONS: ReferenceFilterOption[] = [
+const CATEGORY_ORDER: ReferenceCategory[] = [
+    cate_enum.brand,
+    cate_enum.dealer,
+    cate_enum.community,
+    cate_enum.other,
+    cate_enum.wiki,
+    cate_enum.offical,
+];
+
+const FILTERED_CATEGORY_OPTIONS: ReferenceCategoryOption[] =
+    CATEGORY_ORDER.map(
+        (category: ReferenceCategory): ReferenceCategoryOption => ({
+            value: category,
+            label: CATE_MAP[category],
+        }),
+    );
+
+const CATEGORY_OPTIONS: SelectOption[] = [
     { value: "all", label: "全部类型" },
-    { value: "official", label: "官方" },
-    { value: "database", label: "数据库" },
-    { value: "media", label: "媒体" },
-    { value: "community", label: "社区" },
-    { value: "other", label: "其他" },
+    ...FILTERED_CATEGORY_OPTIONS,
 ];
 
 const REGION_OPTIONS: ReferenceFilterOption[] = [
@@ -129,19 +149,12 @@ const SORT_OPTIONS: SelectOption[] = [
 ];
 
 const CATEGORY_DESCRIPTIONS: Record<ReferenceCategory, string> = {
-    official: "政府、航司、机场、年报与公司披露来源，适合确认官方口径。",
-    database: "机队数据库与追踪站，适合交叉校验规模。",
-    media: "影像、开放媒体与航空新闻来源，适合核对外观与事件。",
-    community: "百科、虚拟联盟与社区资料，适合作为辅助线索。",
-    other: "模型、商店与其他补充来源，保留用于扩展核对。",
-};
-
-const CATEGORY_LABELS: Record<ReferenceCategory, string> = {
-    official: "官方",
-    database: "数据库",
-    media: "媒体",
-    community: "社区",
-    other: "其他",
+    [cate_enum.brand]: "航空模型品牌官网，适合查阅官方模型产品。",
+    [cate_enum.dealer]: "模型店家资料，适合核对在售与收藏信息。",
+    [cate_enum.community]: "航迷社区、虚拟联盟与公开资料站，适合作为辅助线索。",
+    [cate_enum.other]: "其他补充来源，保留用于扩展核对。",
+    [cate_enum.wiki]: "维基百科资料，适合快速交叉核对航司基础信息。",
+    [cate_enum.offical]: "航司官网、年报与投资者页面，适合确认官方口径。",
 };
 
 const REGION_LABELS: Record<ReferenceRegion, string> = {
@@ -153,19 +166,6 @@ const REGION_LABELS: Record<ReferenceRegion, string> = {
     "north-america": "北美",
     other: "其他地区",
 };
-
-const CATEGORY_ORDER: ReferenceCategory[] = [
-    "official",
-    "database",
-    "media",
-    "community",
-    "other",
-];
-
-const FILTERED_CATEGORY_OPTIONS: ReferenceFilterOption[] =
-    CATEGORY_OPTIONS.filter(
-        (option: ReferenceFilterOption): boolean => option.value !== "all",
-    );
 
 // 统计全部来源链接数量，供页面概览与 aria 文案复用。
 const getReferenceUrlCount = (
@@ -207,64 +207,6 @@ const getReferenceUrlPathLabel = (referenceUrl: string): string => {
     } catch {
         return "外部链接";
     }
-};
-
-// 以名称和域名推断来源类型，避免为 UI 筛选重塑原始数据结构。
-const inferReferenceCategory = (
-    referenceSource: AirlineReferenceSource,
-): ReferenceCategory => {
-    const combinedText =
-        `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
-    const hosts = referenceSource.urls
-        .map(getReferenceUrlHost)
-        .join(" ")
-        .toLocaleLowerCase();
-
-    if (combinedText.includes("机场") || combinedText.includes("airport")) {
-        return "official";
-    }
-    if (
-        combinedText.includes("全局机队统计") ||
-        hosts.includes("caac.gov") ||
-        hosts.includes("sec.gov") ||
-        combinedText.includes("annual") ||
-        combinedText.includes("investor")
-    ) {
-        return "official";
-    }
-    if (
-        combinedText.includes("模型") ||
-        hosts.includes("geminijets") ||
-        hosts.includes("herpa") ||
-        hosts.includes("jcwings") ||
-        hosts.includes("sqwings") ||
-        hosts.includes("aviationmegastore")
-    ) {
-        return "other";
-    }
-    if (
-        hosts.includes("jetphotos") ||
-        hosts.includes("commons.wikimedia") ||
-        combinedText.includes("影像") ||
-        combinedText.includes("media")
-    ) {
-        return "media";
-    }
-    if (
-        hosts.includes("flightradar24") ||
-        hosts.includes("planespotters") ||
-        hosts.includes("modelaircraftdatabase")
-    ) {
-        return "database";
-    }
-    if (
-        hosts.includes("wikipedia") ||
-        combinedText.includes("virtual") ||
-        combinedText.includes("社区")
-    ) {
-        return referenceSource.urls.length > 1 ? "official" : "community";
-    }
-    return "official";
 };
 
 // 从中文名称与域名推断地区，用于 prompt 中要求的地区筛选。
@@ -320,24 +262,25 @@ const inferReferenceRegion = (
     return "other";
 };
 
-// 根据来源类型给使用频率排序增加轻量权重，官方与数据库略优先。
+// 根据数据分类给使用频率排序增加轻量权重，官网与全局统计略优先。
 const getReferenceUsageScore = (
     category: ReferenceCategory,
     urlCount: number,
     domainCount: number,
 ): number => {
     const categoryWeight: Record<ReferenceCategory, number> = {
-        official: 4,
-        database: 3,
-        media: 2,
-        community: 1,
-        other: 0,
+        [cate_enum.brand]: 1,
+        [cate_enum.dealer]: 1,
+        [cate_enum.community]: 1,
+        [cate_enum.other]: 0,
+        [cate_enum.wiki]: 2,
+        [cate_enum.offical]: 4,
     };
 
     return urlCount * 3 + domainCount + categoryWeight[category];
 };
 
-// 生成可渲染的目录卡片模型，保留原始链接并追加分类、地区与统计信息。
+// 生成可渲染的目录卡片模型，直接保留来源数据定义的分类、地区与统计信息。
 const createReferenceDirectoryItems = (
     referenceSources: AirlineReferenceSource[],
 ): ReferenceDirectoryItem[] => {
@@ -349,7 +292,7 @@ const createReferenceDirectoryItems = (
             const domains = Array.from(
                 new Set(referenceSource.urls.map(getReferenceUrlHost)),
             );
-            const category = inferReferenceCategory(referenceSource);
+            const category = referenceSource.category;
             const urlCount = referenceSource.urls.length;
 
             return {
@@ -411,7 +354,7 @@ const filterReferenceItems = (
                 referenceItem.primaryDomain,
                 referenceItem.domains.join(" "),
                 referenceItem.urls.join(" "),
-                CATEGORY_LABELS[referenceItem.category],
+                CATE_MAP[referenceItem.category],
                 REGION_LABELS[referenceItem.region],
             ]
                 .join(" ")
@@ -464,7 +407,7 @@ const createReferenceSections = (
 
             return {
                 id: category,
-                title: CATEGORY_LABELS[category],
+                title: CATE_MAP[category],
                 description: CATEGORY_DESCRIPTIONS[category],
                 items,
                 linkCount: items.reduce(
@@ -626,7 +569,7 @@ const ReferenceCard = ({
             </header>
 
             <div className="reference-card__tags" aria-label="资料标签">
-                <span>{CATEGORY_LABELS[item.category]}</span>
+                <span>{CATE_MAP[item.category]}</span>
                 <span>{REGION_LABELS[item.region]}</span>
                 <span>{item.urls.length} links</span>
             </div>
@@ -724,7 +667,7 @@ const ReferencesPage = (): ReactElement => {
         useState<ReferenceSortOrder>("recent");
     const [expandedSectionIds, setExpandedSectionIds] = useState<
         ReferenceCategory[]
-    >(CATEGORY_ORDER.slice(0, 3));
+    >([]);
     const [toastMessage, setToastMessage] = useState<string>("");
     const [copyFeedbackSourceIndex, setCopyFeedbackSourceIndex] = useState<
         number | null
@@ -782,7 +725,9 @@ const ReferencesPage = (): ReactElement => {
             selectedRegion !== "all";
 
         setExpandedSectionIds(
-            hasActiveFilter ? visibleSectionIds : visibleSectionIds.slice(0, 3),
+            hasActiveFilter
+                ? visibleSectionIds
+                : [],
         );
     }, [
         filterKey,
@@ -1020,7 +965,7 @@ const ReferencesPage = (): ReactElement => {
                         全部
                     </button>
                     {FILTERED_CATEGORY_OPTIONS.map(
-                        (option: ReferenceFilterOption): ReactElement => (
+                        (option: ReferenceCategoryOption): ReactElement => (
                             <button
                                 type="button"
                                 key={option.value}
@@ -1030,9 +975,7 @@ const ReferencesPage = (): ReactElement => {
                                         : "reference-chip"
                                 }
                                 onClick={(): void =>
-                                    handleCategoryChipClick(
-                                        option.value as ReferenceCategory,
-                                    )
+                                    handleCategoryChipClick(option.value)
                                 }
                             >
                                 {option.label}

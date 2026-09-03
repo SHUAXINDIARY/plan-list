@@ -1,3 +1,5 @@
+import type { cate_enum } from "../references/constant";
+
 /** 单个机型在列表中的展示项：名称为机型代号，referenceUrl 来自静态数据的映射值。 */
 export interface AircraftModelEntry {
   name: string;
@@ -10,7 +12,7 @@ export interface ManufacturerFleet {
 }
 
 /** 当前机队数据支持的全球航空联盟名称。 */
-export type AirlineAlliance = 'Star Alliance' | 'SkyTeam' | 'oneworld';
+export type AirlineAlliance = "Star Alliance" | "SkyTeam" | "oneworld";
 
 export interface AirlineFleet {
   airlineName: string;
@@ -45,14 +47,20 @@ export interface AirplaneDataItem {
   models: Record<string, Record<string, string>>;
 }
 
+
+
 export interface AirlineReferenceSource {
+  // label
   airlineName: string;
+  // 参考站点url
   urls: string[];
+  // 分类枚举
+  category: cate_enum;
 }
 
 export type AirplaneData = AirplaneDataItem[];
 
-export type PassengerAircraftSortOrder = 'passenger-desc' | 'passenger-asc';
+export type PassengerAircraftSortOrder = "passenger-desc" | "passenger-asc";
 
 /** 联盟筛选值：可选择具体联盟、全部联盟或未加入联盟的航司。 */
-export type AirlineAllianceFilter = AirlineAlliance | 'all' | 'none';
+export type AirlineAllianceFilter = AirlineAlliance | "all" | "none";
