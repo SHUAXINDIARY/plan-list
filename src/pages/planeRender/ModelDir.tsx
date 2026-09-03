@@ -1,8 +1,5 @@
 import type { ReactElement } from "react";
-import {
-    AIRCRAFT_MODEL_ASSETS,
-    type AircraftModelAsset,
-} from "./modelAssets";
+import { AIRCRAFT_MODEL_ASSETS, type AircraftModelAsset } from "./modelAssets";
 
 /** 模型目录组件的当前选择和回传回调。 */
 interface ModelDirProps {
@@ -21,9 +18,7 @@ interface ModelDirectoryGroup {
 }
 
 /** 将资源清单按所属目录分组，同时保留首次出现的目录顺序。 */
-const groupAssetsByDirectory = (
-    assets: readonly AircraftModelAsset[],
-): ModelDirectoryGroup[] => {
+const groupAssetsByDirectory = (assets: readonly AircraftModelAsset[]): ModelDirectoryGroup[] => {
     const groups = new Map<string, AircraftModelAsset[]>();
 
     assets.forEach((asset: AircraftModelAsset): void => {
@@ -37,22 +32,16 @@ const groupAssetsByDirectory = (
         directoryAssets.push(asset);
     });
 
-    return Array.from(
-        groups,
-        ([directory, groupedAssets]): ModelDirectoryGroup => ({
-            directory,
-            assets: groupedAssets,
-        }),
-    );
+    return Array.from(groups, ([directory, groupedAssets]): ModelDirectoryGroup => ({
+        directory,
+        assets: groupedAssets,
+    }));
 };
 
 const MODEL_DIRECTORY_GROUPS = groupAssetsByDirectory(AIRCRAFT_MODEL_ASSETS);
 
 /** 独立维护 GLB 模型目录的展示和选择交互。 */
-export const ModelDir = ({
-    selectedModelId,
-    onModelSelection,
-}: ModelDirProps): ReactElement => (
+export const ModelDir = ({ selectedModelId, onModelSelection }: ModelDirProps): ReactElement => (
     <aside className="plane-render__catalog" aria-label="模型目录">
         <div className="plane-render__catalog-heading">
             <div>
@@ -61,40 +50,34 @@ export const ModelDir = ({
             </div>
         </div>
         <div className="plane-render__catalog-list scroll-area-night">
-            {MODEL_DIRECTORY_GROUPS.map(
-                (group): ReactElement => (
-                    <section
-                        key={group.directory}
-                        className="plane-render__model-group"
-                        aria-labelledby={`plane-render-directory-${group.directory}`}
+            {MODEL_DIRECTORY_GROUPS.map((group): ReactElement => (
+                <section
+                    key={group.directory}
+                    className="plane-render__model-group"
+                    aria-labelledby={`plane-render-directory-${group.directory}`}
+                >
+                    <h3
+                        id={`plane-render-directory-${group.directory}`}
+                        className="plane-render__model-group-heading"
                     >
-                        <h3
-                            id={`plane-render-directory-${group.directory}`}
-                            className="plane-render__model-group-heading"
-                        >
-                            {group.directory}
-                        </h3>
-                        <div className="plane-render__model-group-list">
-                            {group.assets.map(
-                                (asset): ReactElement => (
-                                    <button
-                                        key={asset.id}
-                                        className={`plane-render__model-button${selectedModelId === asset.id ? " plane-render__model-button--active" : ""}`}
-                                        type="button"
-                                        aria-pressed={selectedModelId === asset.id}
-                                        onClick={(): void =>
-                                            onModelSelection(asset.id)
-                                        }
-                                    >
-                                        <span>{asset.label}</span>
-                                        {/* <small>{asset.sourcePath}</small> */}
-                                    </button>
-                                ),
-                            )}
-                        </div>
-                    </section>
-                ),
-            )}
+                        {group.directory}
+                    </h3>
+                    <div className="plane-render__model-group-list">
+                        {group.assets.map((asset): ReactElement => (
+                            <button
+                                key={asset.id}
+                                className={`plane-render__model-button${selectedModelId === asset.id ? " plane-render__model-button--active" : ""}`}
+                                type="button"
+                                aria-pressed={selectedModelId === asset.id}
+                                onClick={(): void => onModelSelection(asset.id)}
+                            >
+                                <span>{asset.label}</span>
+                                {/* <small>{asset.sourcePath}</small> */}
+                            </button>
+                        ))}
+                    </div>
+                </section>
+            ))}
         </div>
     </aside>
 );

@@ -10,11 +10,7 @@ interface CameraHudProps {
 
 /** 展示当前相机方位和世界轴投影，避免 HUD JSX 污染视窗协调器。 */
 export const CameraHud = ({ state }: CameraHudProps): ReactElement => (
-    <div
-        className="plane-render__camera-hud"
-        role="group"
-        aria-label="观察相机状态"
-    >
+    <div className="plane-render__camera-hud" role="group" aria-label="观察相机状态">
         <div className="plane-render__camera-hud-axis" aria-hidden="true">
             <span
                 className="plane-render__camera-hud-axis-line plane-render__camera-hud-axis-line--x"

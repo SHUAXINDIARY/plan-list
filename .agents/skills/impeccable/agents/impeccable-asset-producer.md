@@ -8,9 +8,9 @@ effort: medium
 max-turns: 12
 providers: codex
 nickname-candidates:
-  - Asset Plate
-  - Clean Plate
-  - Crop Cutter
+    - Asset Plate
+    - Clean Plate
+    - Crop Cutter
 ---
 
 # Impeccable Asset Producer
@@ -51,9 +51,9 @@ Ask blockers once, globally. Missing source path/crops or output directory block
 
 1. Inventory the full approved mock or every assigned crop.
 2. Put each visual role in exactly one bucket:
-   - `produce`: needs generation, image editing, cleanup, cutout work, or a clean plate before it can ship.
-   - `direct`: can ship as a crop, format conversion, compression pass, or sourced replacement with no generative cleanup.
-   - `semantic`: build in HTML/CSS/SVG/canvas, no raster output.
+    - `produce`: needs generation, image editing, cleanup, cutout work, or a clean plate before it can ship.
+    - `direct`: can ship as a crop, format conversion, compression pass, or sourced replacement with no generative cleanup.
+    - `semantic`: build in HTML/CSS/SVG/canvas, no raster output.
 3. Treat full-page mock crops as references, not production-resolution source assets. Put a role in `direct` only when the provided source is already a clean, sufficiently large source asset with no semantic text or presentation chrome.
 4. Give the parent an execution order for the `produce` bucket.
 5. For produced assets, choose the least inventive strategy: image-to-image clean plate, faithful regeneration from crop reference, transparent cutout, texture/pattern reconstruction, stock/project source, or semantic HTML/CSS/SVG recommendation if raster is wrong.

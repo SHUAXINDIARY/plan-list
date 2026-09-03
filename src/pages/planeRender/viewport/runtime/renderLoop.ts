@@ -103,12 +103,7 @@ export const createAircraftRenderLoop = ({
     const renderFrame = (): void => {
         animationFrameId = null;
 
-        if (
-            isDisposed ||
-            isRendererUnavailable() ||
-            !isDocumentVisible ||
-            !isViewportVisible
-        ) {
+        if (isDisposed || isRendererUnavailable() || !isDocumentVisible || !isViewportVisible) {
             return;
         }
 

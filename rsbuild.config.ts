@@ -3,8 +3,7 @@ import { pluginReact } from "@rsbuild/plugin-react";
 import { pluginSvgr } from "@rsbuild/plugin-svgr";
 import { pluginAircraftPhotoPreviews } from "./rsbuild_plugins/pluginAircraftPhotoPreviews";
 import { pluginSketchfabFileSizeGuard } from "./rsbuild_plugins/pluginSketchfabFileSizeGuard";
-import { codeInspectorPlugin } from 'code-inspector-plugin';
-
+import { codeInspectorPlugin } from "code-inspector-plugin";
 
 // Docs: https://rsbuild.rs/config/
 export default defineConfig({
@@ -20,8 +19,7 @@ export default defineConfig({
                 "Aircraft Log 是面向航空爱好者的航司机型资料库、飞机照片与个人乘坐记录工具。",
             keywords: "航司机型,飞机型号,航空资料库,飞机照片,乘坐记录,Aircraft Log,Plane List",
             "theme-color": "#07111d",
-            viewport:
-                "width=device-width, initial-scale=1.0, viewport-fit=cover",
+            viewport: "width=device-width, initial-scale=1.0, viewport-fit=cover",
         },
         tags: [
             {
@@ -36,10 +34,10 @@ export default defineConfig({
         rspack: {
             plugins: [
                 codeInspectorPlugin({
-                    bundler: 'rspack',
-                })
-            ]
-        }
+                    bundler: "rspack",
+                }),
+            ],
+        },
     },
     plugins: [
         pluginReact(),

@@ -1,10 +1,4 @@
-import {
-    mkdir,
-    readdir,
-    readFile,
-    stat,
-    writeFile,
-} from "node:fs/promises";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -31,9 +25,9 @@ const DEFAULT_SOURCE_DIRECTORY = ["787-family", "Models"];
 const DEFAULT_OUTPUT_DIRECTORY = "787Family_glb";
 /** 三个 787 机型的 Boeing House 机身图集。 */
 const AIRCRAFT_LIVERY_TEXTURES = Object.freeze({
-    "8": "BOE-8.png",
-    "9": "BOE-9.png",
-    "10": "BOE-10.png",
+    8: "BOE-8.png",
+    9: "BOE-9.png",
+    10: "BOE-10.png",
 });
 /** 默认对 787-10 应用的静态配色方案。 */
 const DEFAULT_AIRCRAFT_PALETTE = "korean-air";
@@ -71,7 +65,12 @@ const parseArguments = (argumentsList) => {
             continue;
         }
 
-        if (argument === "--source" || argument === "--output" || argument === "--only" || argument === "--palette") {
+        if (
+            argument === "--source" ||
+            argument === "--output" ||
+            argument === "--only" ||
+            argument === "--palette"
+        ) {
             const value = argumentsList[index + 1];
 
             if (!value || value.startsWith("--")) {
@@ -83,7 +82,8 @@ const parseArguments = (argumentsList) => {
             } else if (argument === "--output") {
                 options.outputDirectory = value;
             } else if (argument === "--palette") {
-                options.paletteName = value.toLowerCase() === "none" ? undefined : value.toLowerCase();
+                options.paletteName =
+                    value.toLowerCase() === "none" ? undefined : value.toLowerCase();
             } else {
                 options.only = value;
             }
@@ -120,7 +120,10 @@ const parseNumberList = (line, expectedLength, context) => {
         .split(/\s+/u)
         .map((value) => Number(value));
 
-    if (values.length < expectedLength || values.slice(0, expectedLength).some((value) => !Number.isFinite(value))) {
+    if (
+        values.length < expectedLength ||
+        values.slice(0, expectedLength).some((value) => !Number.isFinite(value))
+    ) {
         throw new Error(`${context} 包含无效数字：${line}`);
     }
 
@@ -131,11 +134,11 @@ const parseNumberList = (line, expectedLength, context) => {
 const parseMaterial = (line) => {
     const nameMatch = line.match(/^MATERIAL\s+"((?:\\.|[^"\\])*)"/u);
     const readTriple = (key, fallback) => {
-        const match = line.match(new RegExp(`\\b${key}\\s+([-+0-9.eE]+)\\s+([-+0-9.eE]+)\\s+([-+0-9.eE]+)`, "u"));
+        const match = line.match(
+            new RegExp(`\\b${key}\\s+([-+0-9.eE]+)\\s+([-+0-9.eE]+)\\s+([-+0-9.eE]+)`, "u"),
+        );
 
-        return match
-            ? match.slice(1, 4).map((value) => Number(value))
-            : fallback;
+        return match ? match.slice(1, 4).map((value) => Number(value)) : fallback;
     };
     const readSingle = (key, fallback) => {
         const match = line.match(new RegExp(`\\b${key}\\s+([-+0-9.eE]+)`, "u"));
@@ -217,13 +220,21 @@ const parseObject = (lines, cursor, materials) => {
         }
 
         if (line.startsWith("texrep ")) {
-            object.textureRepeat = parseNumberList(line.slice(7), 2, `对象 ${object.name} 的 texrep`);
+            object.textureRepeat = parseNumberList(
+                line.slice(7),
+                2,
+                `对象 ${object.name} 的 texrep`,
+            );
             cursor.index += 1;
             continue;
         }
 
         if (line.startsWith("texoff ")) {
-            object.textureOffset = parseNumberList(line.slice(7), 2, `对象 ${object.name} 的 texoff`);
+            object.textureOffset = parseNumberList(
+                line.slice(7),
+                2,
+                `对象 ${object.name} 的 texoff`,
+            );
             cursor.index += 1;
             continue;
         }
@@ -468,14 +479,26 @@ const recolorKoreanAirTexture = async (filePath) => {
 
     /** 判断原图邻域是否包含深蓝像素，用于保留图集中的高对比品牌标识。 */
     const hasNearbyBluePixel = (x, y) => {
-        for (let neighborY = Math.max(0, y - 2); neighborY <= Math.min(info.height - 1, y + 2); neighborY += 1) {
-            for (let neighborX = Math.max(0, x - 2); neighborX <= Math.min(info.width - 1, x + 2); neighborX += 1) {
+        for (
+            let neighborY = Math.max(0, y - 2);
+            neighborY <= Math.min(info.height - 1, y + 2);
+            neighborY += 1
+        ) {
+            for (
+                let neighborX = Math.max(0, x - 2);
+                neighborX <= Math.min(info.width - 1, x + 2);
+                neighborX += 1
+            ) {
                 const neighborOffset = (neighborY * info.width + neighborX) * 4;
                 const neighborRed = sourcePixels[neighborOffset];
                 const neighborGreen = sourcePixels[neighborOffset + 1];
                 const neighborBlue = sourcePixels[neighborOffset + 2];
 
-                if (neighborBlue > neighborRed * 1.1 && neighborBlue > neighborGreen * 0.9 && neighborBlue > 55) {
+                if (
+                    neighborBlue > neighborRed * 1.1 &&
+                    neighborBlue > neighborGreen * 0.9 &&
+                    neighborBlue > 55
+                ) {
                     return true;
                 }
             }
@@ -510,8 +533,12 @@ const recolorKoreanAirTexture = async (filePath) => {
 
             const lightness = isLightBodyPixel
                 ? clamp(0.48 + luminance * 0.26, 0.46, 0.76)
-                : clamp(0.30 + luminance * 0.25, 0.34, 0.60);
-            const [nextRed, nextGreen, nextBlue] = hslToRgb(0.53, isLightBodyPixel ? 0.68 : 0.76, lightness);
+                : clamp(0.3 + luminance * 0.25, 0.34, 0.6);
+            const [nextRed, nextGreen, nextBlue] = hslToRgb(
+                0.53,
+                isLightBodyPixel ? 0.68 : 0.76,
+                lightness,
+            );
 
             pixels[offset] = nextRed;
             pixels[offset + 1] = nextGreen;
@@ -542,10 +569,22 @@ const getNodeMatrix = (object) => {
     const matrix = rotation ?? [1, 0, 0, 0, 1, 0, 0, 0, 1];
 
     return [
-        matrix[0], matrix[3], matrix[6], 0,
-        matrix[1], matrix[4], matrix[7], 0,
-        matrix[2], matrix[5], matrix[8], 0,
-        location[0], location[1], location[2], 1,
+        matrix[0],
+        matrix[3],
+        matrix[6],
+        0,
+        matrix[1],
+        matrix[4],
+        matrix[7],
+        0,
+        matrix[2],
+        matrix[5],
+        matrix[8],
+        0,
+        location[0],
+        location[1],
+        location[2],
+        1,
     ];
 };
 
@@ -670,12 +709,16 @@ const createGlbBuilder = () => {
         const jsonPadding = (4 - (json.length % 4)) % 4;
         const paddedJson = Buffer.concat([json, Buffer.alloc(jsonPadding, 0x20)]);
         const binaryPadding = (4 - (binary.length % 4)) % 4;
-        const paddedBinary = binaryPadding > 0
-            ? Buffer.concat([binary, Buffer.alloc(binaryPadding)])
-            : binary;
+        const paddedBinary =
+            binaryPadding > 0 ? Buffer.concat([binary, Buffer.alloc(binaryPadding)]) : binary;
         const jsonChunkHeader = Buffer.alloc(8);
         const binaryChunkHeader = Buffer.alloc(8);
-        const totalLength = 12 + jsonChunkHeader.length + paddedJson.length + binaryChunkHeader.length + paddedBinary.length;
+        const totalLength =
+            12 +
+            jsonChunkHeader.length +
+            paddedJson.length +
+            binaryChunkHeader.length +
+            paddedBinary.length;
         const header = Buffer.alloc(12);
 
         header.writeUInt32LE(GLB_MAGIC, 0);
@@ -702,7 +745,8 @@ const createGlbBuilder = () => {
 const buildObjectPrimitives = async (object, builder, options) => {
     const objectDirectory = options.objectDirectory;
     const imageCache = options.imageCache;
-    const shouldUseAircraftTexture = options.aircraftTextureData !== undefined &&
+    const shouldUseAircraftTexture =
+        options.aircraftTextureData !== undefined &&
         AIRCRAFT_BASE_TEXTURE_PATTERN.test(object.texture ?? "");
     const texturePath = options.includeTextures
         ? shouldUseAircraftTexture
@@ -715,7 +759,9 @@ const buildObjectPrimitives = async (object, builder, options) => {
 
         if (!options.warningCache.has(warningKey)) {
             options.warningCache.add(warningKey);
-            console.warn(`[贴图] ${relative(getProjectRoot(), options.sourcePath)} 缺少 ${object.texture}，将使用材质颜色。`);
+            console.warn(
+                `[贴图] ${relative(getProjectRoot(), options.sourcePath)} 缺少 ${object.texture}，将使用材质颜色。`,
+            );
         }
     }
 
@@ -724,28 +770,32 @@ const buildObjectPrimitives = async (object, builder, options) => {
 
         if (!options.warningCache.has(warningKey)) {
             options.warningCache.add(warningKey);
-            console.warn(`[贴图] ${relative(getProjectRoot(), options.sourcePath)} 不支持 ${object.texture} 的格式，将使用材质颜色。`);
+            console.warn(
+                `[贴图] ${relative(getProjectRoot(), options.sourcePath)} 不支持 ${object.texture} 的格式，将使用材质颜色。`,
+            );
         }
     }
 
-    const textureIndex = options.includeTextures && shouldUseAircraftTexture
-        ? builder.addImageData(
-            options.aircraftTextureKey,
-            options.aircraftTextureName,
-            options.aircraftTextureData,
-            imageCache,
-        )
-        : texturePath
-            ? await builder.addImage(texturePath, imageCache)
-            : undefined;
+    const textureIndex =
+        options.includeTextures && shouldUseAircraftTexture
+            ? builder.addImageData(
+                  options.aircraftTextureKey,
+                  options.aircraftTextureName,
+                  options.aircraftTextureData,
+                  imageCache,
+              )
+            : texturePath
+              ? await builder.addImage(texturePath, imageCache)
+              : undefined;
     const groups = new Map();
 
     for (const surface of object.surfaces) {
-        const mode = surface.refs.length >= 3
-            ? PRIMITIVE_MODE.TRIANGLES
-            : surface.refs.length === 2
-                ? PRIMITIVE_MODE.LINES
-                : PRIMITIVE_MODE.POINTS;
+        const mode =
+            surface.refs.length >= 3
+                ? PRIMITIVE_MODE.TRIANGLES
+                : surface.refs.length === 2
+                  ? PRIMITIVE_MODE.LINES
+                  : PRIMITIVE_MODE.POINTS;
         const twoSided = (surface.flags & 0x2) !== 0 || (surface.flags & 0x20) !== 0;
         const key = `${surface.materialIndex}|${mode}|${twoSided}`;
         const group = groups.get(key) ?? {
@@ -943,8 +993,22 @@ const buildObjectPrimitives = async (object, builder, options) => {
             : Buffer.from(new Uint16Array(indices).buffer);
         const indexComponentType = indices.some((index) => index > 65535) ? 5125 : 5123;
         const attributes = {
-            NORMAL: builder.addAccessor(normalData, 5126, "VEC3", normals.length / 3, ARRAY_BUFFER_TARGET),
-            POSITION: builder.addAccessor(positionData, 5126, "VEC3", positions.length / 3, ARRAY_BUFFER_TARGET, positionMin, positionMax),
+            NORMAL: builder.addAccessor(
+                normalData,
+                5126,
+                "VEC3",
+                normals.length / 3,
+                ARRAY_BUFFER_TARGET,
+            ),
+            POSITION: builder.addAccessor(
+                positionData,
+                5126,
+                "VEC3",
+                positions.length / 3,
+                ARRAY_BUFFER_TARGET,
+                positionMin,
+                positionMax,
+            ),
         };
 
         if (textureIndex !== undefined) {
@@ -959,7 +1023,13 @@ const buildObjectPrimitives = async (object, builder, options) => {
 
         primitives.push({
             attributes,
-            indices: builder.addAccessor(indexData, indexComponentType, "SCALAR", indices.length, ELEMENT_ARRAY_BUFFER_TARGET),
+            indices: builder.addAccessor(
+                indexData,
+                indexComponentType,
+                "SCALAR",
+                indices.length,
+                ELEMENT_ARRAY_BUFFER_TARGET,
+            ),
             material: materialIndex,
             mode: group.mode,
         });
@@ -1123,11 +1193,15 @@ const convertModels = async (options) => {
         const displayPath = relative(projectRoot, sourcePath);
 
         try {
-            const sourceHeader = (await readFile(sourcePath, "utf8")).split(/\r?\n/u).find((line) => line.trim());
+            const sourceHeader = (await readFile(sourcePath, "utf8"))
+                .split(/\r?\n/u)
+                .find((line) => line.trim());
 
             if (sourceHeader?.trim() !== "AC3Db") {
                 skippedCount += 1;
-                console.warn(`[${index + 1}/${sourceFiles.length}] 跳过非 AC3D 文件 ${displayPath}`);
+                console.warn(
+                    `[${index + 1}/${sourceFiles.length}] 跳过非 AC3D 文件 ${displayPath}`,
+                );
                 continue;
             }
 
@@ -1151,7 +1225,7 @@ const convertModels = async (options) => {
             convertedCount += 1;
             console.log(
                 `[${index + 1}/${sourceFiles.length}] 已转换 ${displayPath} -> ${relative(projectRoot, outputPath)} ` +
-                `(${result.meshCount} meshes, ${result.textureCount} textures)`,
+                    `(${result.meshCount} meshes, ${result.textureCount} textures)`,
             );
         } catch (error) {
             const reason = error instanceof Error ? error.message : String(error);
@@ -1163,7 +1237,9 @@ const convertModels = async (options) => {
 
     console.log(
         `${options.dryRun ? "扫描" : "转换"}完成：${convertedCount} 个，跳过 ${skippedCount} 个，失败 ${failures.length} 个。` +
-        (options.dryRun ? " 使用不带 --dry-run 的命令写入 GLB。" : ` 输出目录：${outputDirectory}`),
+            (options.dryRun
+                ? " 使用不带 --dry-run 的命令写入 GLB。"
+                : ` 输出目录：${outputDirectory}`),
     );
 
     if (failures.length > 0) {

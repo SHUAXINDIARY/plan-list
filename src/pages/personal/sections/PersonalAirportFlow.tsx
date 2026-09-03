@@ -109,8 +109,7 @@ const getAirportNodeId = (airportName: string): string =>
 const countAirportRoutes = (airportName: string): number =>
     MAP_ROUTES.filter(
         (route: MapRoute): boolean =>
-            route.sourceAirportName === airportName ||
-            route.targetAirportName === airportName,
+            route.sourceAirportName === airportName || route.targetAirportName === airportName,
     ).length;
 
 /** 将同一国家或地区内的机场依次排入固定网格。 */
@@ -126,9 +125,7 @@ const getAirportNodePosition = (
 
     return {
         x: origin.x + (countryIndex % origin.columns) * NODE_COLUMN_GAP,
-        y:
-            origin.y +
-            Math.floor(countryIndex / origin.columns) * NODE_ROW_GAP,
+        y: origin.y + Math.floor(countryIndex / origin.columns) * NODE_ROW_GAP,
     };
 };
 
@@ -153,15 +150,13 @@ const createAirportFlowNodes = (): AirportFlowNode[] => {
         return {
             id: getAirportNodeId(airport.name),
             type: "airport",
-            position:
-                hubPosition ??
-                getAirportNodePosition(countryName, countryIndex),
+            position: hubPosition ?? getAirportNodePosition(countryName, countryIndex),
             className:
                 hubPosition !== undefined
                     ? "airport-flow-node airport-flow-node--hub"
                     : countryName === "中国"
-                    ? "airport-flow-node airport-flow-node--domestic"
-                    : "airport-flow-node airport-flow-node--international",
+                      ? "airport-flow-node airport-flow-node--domestic"
+                      : "airport-flow-node airport-flow-node--international",
             data: {
                 label: airport.name,
                 countryName,
@@ -174,27 +169,25 @@ const createAirportFlowNodes = (): AirportFlowNode[] => {
 
 /** 从共享航迹常量生成保留方向和国内外语义的 React Flow 边。 */
 const createAirportFlowEdges = (): Edge[] =>
-    MAP_ROUTES.map(
-        (route: MapRoute, routeIndex: number): Edge => {
-            const routeColor = `var(--pl-map-route-${route.scope})`;
+    MAP_ROUTES.map((route: MapRoute, routeIndex: number): Edge => {
+        const routeColor = `var(--pl-map-route-${route.scope})`;
 
-            return {
-                id: `route-${routeIndex}-${getAirportNodeId(route.sourceAirportName)}-${getAirportNodeId(route.targetAirportName)}`,
-                source: getAirportNodeId(route.sourceAirportName),
-                target: getAirportNodeId(route.targetAirportName),
-                type: "smoothstep",
-                className: `airport-flow-edge airport-flow-edge--${route.scope}`,
-                style: {
-                    stroke: routeColor,
-                },
-                markerEnd: {
-                    type: MarkerType.ArrowClosed,
-                    color: routeColor,
-                },
-                ariaLabel: route.name,
-            };
-        },
-    );
+        return {
+            id: `route-${routeIndex}-${getAirportNodeId(route.sourceAirportName)}-${getAirportNodeId(route.targetAirportName)}`,
+            source: getAirportNodeId(route.sourceAirportName),
+            target: getAirportNodeId(route.targetAirportName),
+            type: "smoothstep",
+            className: `airport-flow-edge airport-flow-edge--${route.scope}`,
+            style: {
+                stroke: routeColor,
+            },
+            markerEnd: {
+                type: MarkerType.ArrowClosed,
+                color: routeColor,
+            },
+            ariaLabel: route.name,
+        };
+    });
 
 /** 以可缩放、可平移的只读航线网络展示个人机场足迹。 */
 const PersonalAirportFlow = (): ReactElement => {
@@ -246,10 +239,7 @@ const PersonalAirportFlow = (): ReactElement => {
     );
 
     /** 点击节点时聚焦其直接航线，再次点击同一节点恢复全览。 */
-    const handleNodeClick: NodeMouseHandler<AirportFlowNode> = (
-        _event,
-        node,
-    ): void => {
+    const handleNodeClick: NodeMouseHandler<AirportFlowNode> = (_event, node): void => {
         setFocusedAirportId((currentId: string | undefined): string | undefined =>
             currentId === node.id ? undefined : node.id,
         );

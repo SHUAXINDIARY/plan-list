@@ -67,10 +67,7 @@ export const createAircraftEnvironmentController = ({
         const currentRequestToken = ++requestToken;
         scene.environmentIntensity = settings.environmentIntensity;
 
-        if (
-            settings.environmentPreset === "room" ||
-            settings.hdriUrl.trim().length === 0
-        ) {
+        if (settings.environmentPreset === "room" || settings.hdriUrl.trim().length === 0) {
             disposeHdriEnvironment(resources);
             scene.environment = resources.roomRenderTarget.texture;
             onLoadingChange(false);

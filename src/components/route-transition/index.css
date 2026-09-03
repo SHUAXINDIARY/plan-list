@@ -3,8 +3,7 @@
     display: flex;
     width: 100%;
     justify-content: center;
-    animation: route-page-enter var(--motion-duration-standard)
-        var(--motion-ease-out-quint) both;
+    animation: route-page-enter var(--motion-duration-standard) var(--motion-ease-out-quint) both;
 }
 
 .route-transition[data-direction="forward"] {

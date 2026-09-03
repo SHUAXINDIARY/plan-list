@@ -57,19 +57,15 @@ const collectAircraftModels = (
 
     const generationNode = node.generation;
     if (isJsonRecord(generationNode)) {
-        Object.entries(generationNode).forEach(
-            ([generationKey, generationValue]): void => {
-                collectAircraftModels(
-                    generationValue,
-                    manufacturer,
-                    family,
-                    models,
-                    generationKey === DEFAULT_GENERATION_KEY
-                        ? undefined
-                        : generationKey,
-                );
-            },
-        );
+        Object.entries(generationNode).forEach(([generationKey, generationValue]): void => {
+            collectAircraftModels(
+                generationValue,
+                manufacturer,
+                family,
+                models,
+                generationKey === DEFAULT_GENERATION_KEY ? undefined : generationKey,
+            );
+        });
     }
 
     Object.entries(node).forEach(([key, childNode]): void => {
@@ -77,68 +73,60 @@ const collectAircraftModels = (
             return;
         }
 
-        collectAircraftModels(
-            childNode,
-            manufacturer,
-            family,
-            models,
-            generation,
-        );
+        collectAircraftModels(childNode, manufacturer, family, models, generation);
     });
 };
 
 // 从 aircraft.json 的制造商/系列嵌套结构生成稳定、可渲染的目录数组。
 const createAircraftCatalog = (value: JsonValue): ManufacturerCatalog[] => {
     if (!isJsonRecord(value)) {
-        return JET_MANUFACTURERS.map(
-            (manufacturer): ManufacturerCatalog => ({ manufacturer, models: [] }),
-        );
+        return JET_MANUFACTURERS.map((manufacturer): ManufacturerCatalog => ({
+            manufacturer,
+            models: [],
+        }));
     }
 
-    return JET_MANUFACTURERS.map(
-        (manufacturer: JetManufacturer): ManufacturerCatalog => {
-            const manufacturerNode = value[manufacturer];
-            const models: AircraftCatalogEntry[] = [];
+    return JET_MANUFACTURERS.map((manufacturer: JetManufacturer): ManufacturerCatalog => {
+        const manufacturerNode = value[manufacturer];
+        const models: AircraftCatalogEntry[] = [];
 
-            if (isJsonRecord(manufacturerNode)) {
-                Object.entries(manufacturerNode).forEach(
-                    ([family, familyNode]): void => {
-                        collectAircraftModels(familyNode, manufacturer, family, models);
-                    },
-                );
-            }
+        if (isJsonRecord(manufacturerNode)) {
+            Object.entries(manufacturerNode).forEach(([family, familyNode]): void => {
+                collectAircraftModels(familyNode, manufacturer, family, models);
+            });
+        }
 
-            models.sort((firstModel, secondModel): number => {
-                const familyDifference = firstModel.family.localeCompare(
-                    secondModel.family,
-                    "en",
-                    { numeric: true, sensitivity: "base" },
-                );
-
-                if (familyDifference !== 0) {
-                    return familyDifference;
-                }
-
-                const generationDifference = (
-                    firstModel.generation ?? ""
-                ).localeCompare(secondModel.generation ?? "", "en", {
-                    numeric: true,
-                    sensitivity: "base",
-                });
-
-                if (generationDifference !== 0) {
-                    return generationDifference;
-                }
-
-                return firstModel.model.localeCompare(secondModel.model, "en", {
-                    numeric: true,
-                    sensitivity: "base",
-                });
+        models.sort((firstModel, secondModel): number => {
+            const familyDifference = firstModel.family.localeCompare(secondModel.family, "en", {
+                numeric: true,
+                sensitivity: "base",
             });
 
-            return { manufacturer, models };
-        },
-    );
+            if (familyDifference !== 0) {
+                return familyDifference;
+            }
+
+            const generationDifference = (firstModel.generation ?? "").localeCompare(
+                secondModel.generation ?? "",
+                "en",
+                {
+                    numeric: true,
+                    sensitivity: "base",
+                },
+            );
+
+            if (generationDifference !== 0) {
+                return generationDifference;
+            }
+
+            return firstModel.model.localeCompare(secondModel.model, "en", {
+                numeric: true,
+                sensitivity: "base",
+            });
+        });
+
+        return { manufacturer, models };
+    });
 };
 
 // 按型号、系列或 ICAO 代码过滤卡片，保留制造商分组结构以便快速定位。
@@ -152,16 +140,15 @@ const filterAircraftCatalog = (
         return catalog;
     }
 
-    return catalog.map(
-        (manufacturerCatalog): ManufacturerCatalog => ({
-            ...manufacturerCatalog,
-            models: manufacturerCatalog.models.filter((model): boolean => {
-                return [model.model, model.family, model.icaoType].some((value): boolean =>
+    return catalog.map((manufacturerCatalog): ManufacturerCatalog => ({
+        ...manufacturerCatalog,
+        models: manufacturerCatalog.models.filter((model): boolean => {
+            return [model.model, model.family, model.icaoType].some(
+                (value): boolean =>
                     value?.toLocaleLowerCase().includes(normalizedSearchTerm) ?? false,
-                );
-            }),
+            );
         }),
-    );
+    }));
 };
 
 /**
@@ -216,16 +203,14 @@ const AircraftWikiPage = (): ReactElement => {
 
     const totalModelCount = useMemo((): number => {
         return catalog.reduce(
-            (total, manufacturerCatalog): number =>
-                total + manufacturerCatalog.models.length,
+            (total, manufacturerCatalog): number => total + manufacturerCatalog.models.length,
             0,
         );
     }, [catalog]);
 
     const visibleModelCount = useMemo((): number => {
         return visibleCatalog.reduce(
-            (total, manufacturerCatalog): number =>
-                total + manufacturerCatalog.models.length,
+            (total, manufacturerCatalog): number => total + manufacturerCatalog.models.length,
             0,
         );
     }, [visibleCatalog]);
@@ -244,9 +229,7 @@ const AircraftWikiPage = (): ReactElement => {
                     </p>
                 </div>
                 <p className="aircraft-model-wiki__scope">
-                    <strong>
-                        {isLoading ? "..." : formatInteger(totalModelCount)}
-                    </strong>
+                    <strong>{isLoading ? "..." : formatInteger(totalModelCount)}</strong>
                     <span>个喷气客机型号</span>
                     <small>数据源 aircraft.json</small>
                 </p>
@@ -272,12 +255,11 @@ const AircraftWikiPage = (): ReactElement => {
             </div>
 
             <p className="aircraft-model-wiki__source">
-                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产状态：生产中或停产，数据来源互联网，仅供参考。
+                每张卡片对应 aircraft.json
+                中的一条机型记录，状态只表示生产状态：生产中或停产，数据来源互联网，仅供参考。
             </p>
 
-            {errorMessage ? (
-                <p className="data-state data-state--error">{errorMessage}</p>
-            ) : null}
+            {errorMessage ? <p className="data-state data-state--error">{errorMessage}</p> : null}
 
             {isLoading && !errorMessage ? (
                 <p className="data-state aircraft-model-wiki__loading">正在载入机型目录...</p>
@@ -289,53 +271,49 @@ const AircraftWikiPage = (): ReactElement => {
 
             {!isLoading && !errorMessage && visibleModelCount > 0 ? (
                 <div className="aircraft-model-wiki__catalog">
-                    {visibleCatalog.map(
-                        (manufacturerCatalog): ReactElement => (
-                            <section
-                                className="aircraft-model-wiki__manufacturer"
-                                key={manufacturerCatalog.manufacturer}
-                                aria-labelledby={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
-                            >
-                                <header>
-                                    <div>
-                                        <p className="page-eyebrow">Manufacturer</p>
-                                        <div className="aircraft-model-wiki__manufacturer-title">
-                                            <h2
-                                                id={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
-                                            >
-                                                {manufacturerCatalog.manufacturer}
-                                            </h2>
-                                            <a
-                                                className="aircraft-model-wiki__manufacturer-website"
-                                                href={
-                                                    MANUFACTURER_WEBSITE_URLS[
-                                                        manufacturerCatalog.manufacturer
-                                                    ]
-                                                }
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                官网
-                                            </a>
-                                        </div>
+                    {visibleCatalog.map((manufacturerCatalog): ReactElement => (
+                        <section
+                            className="aircraft-model-wiki__manufacturer"
+                            key={manufacturerCatalog.manufacturer}
+                            aria-labelledby={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
+                        >
+                            <header>
+                                <div>
+                                    <p className="page-eyebrow">Manufacturer</p>
+                                    <div className="aircraft-model-wiki__manufacturer-title">
+                                        <h2
+                                            id={`manufacturer-${manufacturerCatalog.manufacturer.toLocaleLowerCase()}`}
+                                        >
+                                            {manufacturerCatalog.manufacturer}
+                                        </h2>
+                                        <a
+                                            className="aircraft-model-wiki__manufacturer-website"
+                                            href={
+                                                MANUFACTURER_WEBSITE_URLS[
+                                                    manufacturerCatalog.manufacturer
+                                                ]
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            官网
+                                        </a>
                                     </div>
-                                    <span>
-                                        {formatInteger(manufacturerCatalog.models.length)} 个型号
-                                    </span>
-                                </header>
-                                <div className="aircraft-model-wiki__cards">
-                                    {manufacturerCatalog.models.map(
-                                        (model): ReactElement => (
-                                            <AircraftCard
-                                                key={`${model.manufacturer}-${model.family}-${model.generation ?? ""}-${model.model}`}
-                                                model={model}
-                                            />
-                                        ),
-                                    )}
                                 </div>
-                            </section>
-                        ),
-                    )}
+                                <span>
+                                    {formatInteger(manufacturerCatalog.models.length)} 个型号
+                                </span>
+                            </header>
+                            <div className="aircraft-model-wiki__cards">
+                                {manufacturerCatalog.models.map((model): ReactElement => (
+                                    <AircraftCard
+                                        key={`${model.manufacturer}-${model.family}-${model.generation ?? ""}-${model.model}`}
+                                        model={model}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    ))}
                 </div>
             ) : null}
         </section>

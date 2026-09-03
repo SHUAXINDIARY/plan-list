@@ -1,4 +1,4 @@
-import type { AirlineReferenceSource } from '../home/type.d.ts'
+import type { AirlineReferenceSource } from "../home/type.d.ts";
 
 export enum cate_enum {
     brand = "brand",
@@ -7,16 +7,16 @@ export enum cate_enum {
     community = "community",
     wiki = "wiki",
     offical = "offical",
-  }
+}
 
 export const CATE_MAP = {
-    [cate_enum.brand]: '模型品牌',
-    [cate_enum.dealer]: '模型店家',
-    [cate_enum.community]: '社区',
-    [cate_enum.other]: '其他',
-    [cate_enum.wiki]: '维基百科',
-    [cate_enum.offical]: '官网',
-}
+    [cate_enum.brand]: "模型品牌",
+    [cate_enum.dealer]: "模型店家",
+    [cate_enum.community]: "社区",
+    [cate_enum.other]: "其他",
+    [cate_enum.wiki]: "维基百科",
+    [cate_enum.offical]: "官网",
+};
 
 // 部分航司数据的补充参考来源，用于在页面底部集中展示外部出处。
 export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
@@ -44,7 +44,7 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
             "https://www.jcwings.com/",
             "https://www.sqwings.com/",
             "https://www.herpa.de/en/buy-products/wings",
-        ]
+        ],
     },
     {
         airlineName: "模型店家自营官网",
@@ -68,9 +68,7 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
     {
         airlineName: "全局机队统计",
         category: cate_enum.offical,
-        urls: [
-            "https://www.caac.gov.cn/XXGK/XXGK/TJSJ/202604/P020260417665629030648.pdf",
-        ],
+        urls: ["https://www.caac.gov.cn/XXGK/XXGK/TJSJ/202604/P020260417665629030648.pdf"],
     },
     {
         airlineName: "sky team virtual",

@@ -14,13 +14,10 @@ export interface AircraftHdriAsset {
 const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 
 /** 仅收集 hdri 目录下的 RGBE HDR 文件，避免把 .DS_Store 等文件展示到控件。 */
-const hdriModules: Record<string, string> = import.meta.glob<string>(
-    "../../../hdri/*.hdr",
-    {
-        eager: true,
-        import: "default",
-    },
-);
+const hdriModules: Record<string, string> = import.meta.glob<string>("../../../hdri/*.hdr", {
+    eager: true,
+    import: "default",
+});
 
 /** 将 Rspack 模块路径转换为相对于项目根目录的可读路径。 */
 const getHdriSourcePath = (modulePath: string): string =>
@@ -34,23 +31,19 @@ const getHdriLabel = (sourcePath: string): string => {
 };
 
 /** 将构建期 HDRI 模块清单转换为稳定、只读的环境资源目录。 */
-export const AIRCRAFT_HDRI_ASSETS: readonly AircraftHdriAsset[] = Object.entries(
-    hdriModules,
-)
-    .map(
-        ([modulePath, url]: [string, string]): AircraftHdriAsset => {
-            const sourcePath = getHdriSourcePath(modulePath);
+export const AIRCRAFT_HDRI_ASSETS: readonly AircraftHdriAsset[] = Object.entries(hdriModules)
+    .map(([modulePath, url]: [string, string]): AircraftHdriAsset => {
+        const sourcePath = getHdriSourcePath(modulePath);
 
-            return {
-                id: sourcePath
-                    .replace(/\.hdr$/i, "")
-                    .replace(/[^a-zA-Z0-9]+/g, "-")
-                    .replace(/^-+|-+$/g, "")
-                    .toLocaleLowerCase(),
-                label: getHdriLabel(sourcePath),
-                sourcePath,
-                url,
-            };
-        },
-    )
+        return {
+            id: sourcePath
+                .replace(/\.hdr$/i, "")
+                .replace(/[^a-zA-Z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "")
+                .toLocaleLowerCase(),
+            label: getHdriLabel(sourcePath),
+            sourcePath,
+            url,
+        };
+    })
     .sort((left, right): number => left.label.localeCompare(right.label));

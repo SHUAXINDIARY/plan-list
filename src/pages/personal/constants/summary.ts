@@ -13,9 +13,7 @@ const getAirportCountryName = (airport: CheckedAirport): string => {
 };
 
 // 按国家或地区聚合机场，并让打卡数更多的分组优先展示。
-const groupAirportsByCountry = (
-    airports: CheckedAirport[],
-): AirportCountryGroup[] => {
+const groupAirportsByCountry = (airports: CheckedAirport[]): AirportCountryGroup[] => {
     const airportGroups = new Map<string, CheckedAirport[]>();
 
     airports.forEach((airport: CheckedAirport): void => {
@@ -25,38 +23,23 @@ const groupAirportsByCountry = (
     });
 
     return Array.from(airportGroups.entries())
-        .map(
-            ([countryName, groupedAirports]: [
-                string,
-                CheckedAirport[],
-            ]): AirportCountryGroup => ({
-                countryName,
-                airports: groupedAirports,
-            }),
-        )
-        .sort(
-            (
-                firstGroup: AirportCountryGroup,
-                secondGroup: AirportCountryGroup,
-            ): number => {
-                const airportCountDifference =
-                    secondGroup.airports.length - firstGroup.airports.length;
+        .map(([countryName, groupedAirports]: [string, CheckedAirport[]]): AirportCountryGroup => ({
+            countryName,
+            airports: groupedAirports,
+        }))
+        .sort((firstGroup: AirportCountryGroup, secondGroup: AirportCountryGroup): number => {
+            const airportCountDifference = secondGroup.airports.length - firstGroup.airports.length;
 
-                if (airportCountDifference !== 0) {
-                    return airportCountDifference;
-                }
+            if (airportCountDifference !== 0) {
+                return airportCountDifference;
+            }
 
-                return firstGroup.countryName.localeCompare(
-                    secondGroup.countryName,
-                    "zh-Hans-CN",
-                );
-            },
-        );
+            return firstGroup.countryName.localeCompare(secondGroup.countryName, "zh-Hans-CN");
+        });
 };
 
 /** 个人页按国家或地区分组后的机场打卡列表，供列表区与统计展示复用。 */
-export const airportCountryGroups: AirportCountryGroup[] =
-    groupAirportsByCountry(CHECKED_AIRPORTS);
+export const airportCountryGroups: AirportCountryGroup[] = groupAirportsByCountry(CHECKED_AIRPORTS);
 
 /** 机场打卡涉及的国家或地区数量，与 `airportCountryGroups` 长度一致。 */
 export const checkedCountryCount: number = airportCountryGroups.length;

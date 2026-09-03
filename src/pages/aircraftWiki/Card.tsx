@@ -176,16 +176,11 @@ const AircraftCard = ({ model }: AircraftCardProps): ReactElement => {
                 <span>发动机</span>
                 <span className="aircraft-model-card__engine-list">
                     {model.engines && model.engines.length > 0
-                        ? model.engines.map(
-                              (engine): ReactElement => (
-                                  <span
-                                      className="aircraft-model-card__engine-item"
-                                      key={engine}
-                                  >
-                                      {engine}
-                                  </span>
-                              ),
-                          )
+                        ? model.engines.map((engine): ReactElement => (
+                              <span className="aircraft-model-card__engine-item" key={engine}>
+                                  {engine}
+                              </span>
+                          ))
                         : "-"}
                 </span>
             </p>

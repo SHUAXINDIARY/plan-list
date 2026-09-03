@@ -28,12 +28,15 @@ export const MODEL_VIEWER_ZOOM_SPEED = 1.15;
 
 /** 校验相机视角菜单的字符串值是否为已支持的标准视角。 */
 export const isAircraftCameraView = (value: string): value is AircraftCameraView =>
-    value === "custom" || value === "fit" || value === "front" || value === "side" || value === "top" || value === "bottom";
+    value === "custom" ||
+    value === "fit" ||
+    value === "front" ||
+    value === "side" ||
+    value === "top" ||
+    value === "bottom";
 
 /** 校验投影模式 select 的字符串值是否为已支持的相机类型。 */
-export const isAircraftProjectionMode = (
-    value: string,
-): value is AircraftProjectionMode =>
+export const isAircraftProjectionMode = (value: string): value is AircraftProjectionMode =>
     value === "perspective" || value === "orthographic";
 /** 初始相机 fit 为模型包围球保留的可视边距。 */
 const CAMERA_FIT_MARGIN = 1.18;
@@ -76,8 +79,7 @@ export const getCameraHudAxis = (
     inverseCameraQuaternion: THREE.Quaternion,
 ): AircraftCameraHudAxis => {
     const cameraAxis = axis.clone().applyQuaternion(inverseCameraQuaternion);
-    const screenAngle =
-        Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS || 0;
+    const screenAngle = Math.atan2(-cameraAxis.y, cameraAxis.x) / DEGREES_TO_RADIANS || 0;
 
     return {
         angle: screenAngle,
@@ -96,21 +98,11 @@ export const getCameraHudState = (
 
     return {
         azimuth: Math.atan2(offset.x, offset.z) / DEGREES_TO_RADIANS,
-        elevation:
-            Math.atan2(offset.y, horizontalDistance) / DEGREES_TO_RADIANS,
+        elevation: Math.atan2(offset.y, horizontalDistance) / DEGREES_TO_RADIANS,
         distance: offset.length(),
-        axisX: getCameraHudAxis(
-            new THREE.Vector3(1, 0, 0),
-            inverseCameraQuaternion,
-        ),
-        axisY: getCameraHudAxis(
-            new THREE.Vector3(0, 1, 0),
-            inverseCameraQuaternion,
-        ),
-        axisZ: getCameraHudAxis(
-            new THREE.Vector3(0, 0, 1),
-            inverseCameraQuaternion,
-        ),
+        axisX: getCameraHudAxis(new THREE.Vector3(1, 0, 0), inverseCameraQuaternion),
+        axisY: getCameraHudAxis(new THREE.Vector3(0, 1, 0), inverseCameraQuaternion),
+        axisZ: getCameraHudAxis(new THREE.Vector3(0, 0, 1), inverseCameraQuaternion),
     };
 };
 
@@ -173,9 +165,7 @@ export const getCameraFitDistance = (
     }
 
     const verticalFov = camera.fov * DEGREES_TO_RADIANS;
-    const horizontalFov =
-        2 *
-        Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
+    const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01));
     const limitingFov = Math.min(verticalFov, horizontalFov);
     const cameraDistance = Math.max(
         (modelSphere.radius / Math.sin(limitingFov / 2)) * CAMERA_FIT_MARGIN,
@@ -193,9 +183,7 @@ export const applyCameraView = (
     view: Exclude<AircraftCameraView, "custom">,
 ): void => {
     const { center, distance } = getCameraFitDistance(camera, model);
-    const viewDirection = new THREE.Vector3(
-        ...CAMERA_VIEW_DIRECTIONS[view],
-    ).normalize();
+    const viewDirection = new THREE.Vector3(...CAMERA_VIEW_DIRECTIONS[view]).normalize();
 
     if (view === "top") {
         camera.up.set(0, 0, -1);

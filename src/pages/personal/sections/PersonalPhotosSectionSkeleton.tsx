@@ -25,9 +25,7 @@ export const PersonalPhotosSectionSkeleton = ({
         >
             <div className="personal-section__header">
                 <p className="personal-section__eyebrow">Aircraft Photos</p>
-                <HeadingTag id="aircraft-photos-title">
-                    飞机照片相册
-                </HeadingTag>
+                <HeadingTag id="aircraft-photos-title">飞机照片相册</HeadingTag>
             </div>
 
             <div className="personal-section-skeleton__toolbar" aria-hidden="true">

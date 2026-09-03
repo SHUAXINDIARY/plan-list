@@ -23,8 +23,7 @@
         transform var(--motion-duration-standard) var(--motion-ease-out-quart),
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
         border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        background-color var(--motion-duration-fast)
-            var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
         box-shadow var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 

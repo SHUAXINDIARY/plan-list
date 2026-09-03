@@ -38,15 +38,15 @@ hdri/
 └── *.hdr                           # 项目维护的 RGBE HDR 环境文件
 ```
 
-| 模块 | 主要职责 | 不应承担的职责 |
-| --- | --- | --- |
-| `hdriAssets.ts` | 扫描 HDR 文件、生成稳定 ID、导出构建后 URL | 创建 Three.js 纹理、管理场景状态 |
-| `lighting.ts` / `viewport/scene/lighting.ts` | 创建/同步三点灯光，生成/加载/释放 PMREM；scene 目录提供领域出口 | React state、DOM 事件、控件文案 |
-| `viewport/runtime/environmentController.ts` | 应用 Room/HDRI 选择、处理加载状态、竞态和失败回退 | 扫描资源目录、渲染表单 |
-| `viewport/hooks/useRenderSettings.ts` | 维护 `AircraftRenderSettings`、解析表单值并应用预设 | 直接访问 Three.js 对象 |
-| `AircraftModelViewport.tsx` | 连接 renderer、scene、camera、controls、模型和运行时资源生命周期 | 维护 HDR 文件列表的扫描规则 |
-| `RenderControls.tsx` | 渲染 `<select>`、range、switch 和回调接口 | 直接访问 Three.js 对象、维护设置 state |
-| `rsbuild.config.ts` | 将 `.hdr` 声明为源资源 | 运行时选择或加载 HDRI |
+| 模块                                         | 主要职责                                                         | 不应承担的职责                         |
+| -------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------- |
+| `hdriAssets.ts`                              | 扫描 HDR 文件、生成稳定 ID、导出构建后 URL                       | 创建 Three.js 纹理、管理场景状态       |
+| `lighting.ts` / `viewport/scene/lighting.ts` | 创建/同步三点灯光，生成/加载/释放 PMREM；scene 目录提供领域出口  | React state、DOM 事件、控件文案        |
+| `viewport/runtime/environmentController.ts`  | 应用 Room/HDRI 选择、处理加载状态、竞态和失败回退                | 扫描资源目录、渲染表单                 |
+| `viewport/hooks/useRenderSettings.ts`        | 维护 `AircraftRenderSettings`、解析表单值并应用预设              | 直接访问 Three.js 对象                 |
+| `AircraftModelViewport.tsx`                  | 连接 renderer、scene、camera、controls、模型和运行时资源生命周期 | 维护 HDR 文件列表的扫描规则            |
+| `RenderControls.tsx`                         | 渲染 `<select>`、range、switch 和回调接口                        | 直接访问 Three.js 对象、维护设置 state |
+| `rsbuild.config.ts`                          | 将 `.hdr` 声明为源资源                                           | 运行时选择或加载 HDRI                  |
 
 ## 3. 核心数据契约
 
@@ -55,13 +55,10 @@ hdri/
 `hdriAssets.ts` 使用字面量 glob 扫描 `../../../hdri/*.hdr`，并设置 `eager: true` 与 `import: "default"`，得到构建后的 URL：
 
 ```ts
-const hdriModules: Record<string, string> = import.meta.glob<string>(
-    "../../../hdri/*.hdr",
-    {
-        eager: true,
-        import: "default",
-    },
-);
+const hdriModules: Record<string, string> = import.meta.glob<string>("../../../hdri/*.hdr", {
+    eager: true,
+    import: "default",
+});
 ```
 
 每个资源导出为：
@@ -91,15 +88,15 @@ source: {
 
 `AircraftRenderSettings` 定义在 `viewport/types.ts`，由 `viewport/hooks/useRenderSettings.ts` 维护，再由 `AircraftModelViewport.tsx` 的 effect 同步到 Three.js 对象：
 
-| 字段 | 类型/范围 | 用途 |
-| --- | --- | --- |
-| `environmentPreset` | `room \| hdri` | 内置 RoomEnvironment 或 HDRI PMREM |
-| `hdriUrl` | `string` | 当前 select 选中的构建后 URL |
-| `environmentIntensity` | `0..2` | 写入 `scene.environmentIntensity` |
-| `keyLightIntensity` | `0..6` | 主方向光强度 |
-| `fillLightIntensity` | `0..4` | 补光强度 |
-| `rimLightIntensity` | `0..4` | 轮廓光强度 |
-| `lightPositionX/Y/Z` | `-20..20` | 主方向光位置 |
+| 字段                   | 类型/范围      | 用途                               |
+| ---------------------- | -------------- | ---------------------------------- |
+| `environmentPreset`    | `room \| hdri` | 内置 RoomEnvironment 或 HDRI PMREM |
+| `hdriUrl`              | `string`       | 当前 select 选中的构建后 URL       |
+| `environmentIntensity` | `0..2`         | 写入 `scene.environmentIntensity`  |
+| `keyLightIntensity`    | `0..6`         | 主方向光强度                       |
+| `fillLightIntensity`   | `0..4`         | 补光强度                           |
+| `rimLightIntensity`    | `0..4`         | 轮廓光强度                         |
+| `lightPositionX/Y/Z`   | `-20..20`      | 主方向光位置                       |
 
 环境设置和灯光设置都通过 React state 到 Three.js 对象的单向同步 effect 写入，不会触发模型 effect 重新执行。
 
@@ -111,9 +108,7 @@ source: {
 
 ```ts
 const environmentGenerator = new PMREMGenerator(renderer);
-const environmentResources = createRoomEnvironmentResources(
-    environmentGenerator,
-);
+const environmentResources = createRoomEnvironmentResources(environmentGenerator);
 
 scene.environment = environmentResources.roomRenderTarget.texture;
 scene.environmentIntensity = renderSettings.environmentIntensity;
@@ -164,12 +159,12 @@ try {
 
 `createAircraftLightingRig()` 返回四个对象：
 
-| 对象 | 类型 | 默认位置 | 默认强度 | 阴影 |
-| --- | --- | --- | ---: | --- |
-| `hemisphereLight` | `HemisphereLight` | Three.js 默认 | `2.1` | 否 |
-| `keyLight` | `DirectionalLight` | `(7, 10, 8)` | `3.2` | 是 |
-| `fillLight` | `DirectionalLight` | `(-9, 4, -5)` | `1.2` | 否 |
-| `rimLight` | `DirectionalLight` | `(7, 5, -10)` | `0` | 否 |
+| 对象              | 类型               | 默认位置      | 默认强度 | 阴影 |
+| ----------------- | ------------------ | ------------- | -------: | ---- |
+| `hemisphereLight` | `HemisphereLight`  | Three.js 默认 |    `2.1` | 否   |
+| `keyLight`        | `DirectionalLight` | `(7, 10, 8)`  |    `3.2` | 是   |
+| `fillLight`       | `DirectionalLight` | `(-9, 4, -5)` |    `1.2` | 否   |
+| `rimLight`        | `DirectionalLight` | `(7, 5, -10)` |      `0` | 否   |
 
 只有 key light 投射实时阴影，避免 fill/rim 产生不必要的阴影贴图开销和多重阴影污染。三盏方向光的 target 保持在场景原点，模型归一化后无需重新计算 target。
 
@@ -177,12 +172,12 @@ try {
 
 `LIGHTING_PRESET_VALUES` 保留原有 `neutral`、`silhouette`、`top`，并新增 `three-point`：
 
-| 预设 | key | fill | rim | 适用场景 |
-| --- | ---: | ---: | ---: | --- |
-| neutral | 3.2 | 1.2 | 0 | 保持原有中性检查画面 |
-| silhouette | 3.8 | 0.65 | 1.8 | 强化轮廓和背光分离 |
-| top | 3.0 | 1.0 | 0.9 | 检查机身顶部结构 |
-| three-point | 3.2 | 1.25 | 2.1 | 标准摄影棚三点灯光 |
+| 预设        | key | fill | rim | 适用场景             |
+| ----------- | --: | ---: | --: | -------------------- |
+| neutral     | 3.2 |  1.2 |   0 | 保持原有中性检查画面 |
+| silhouette  | 3.8 | 0.65 | 1.8 | 强化轮廓和背光分离   |
+| top         | 3.0 |  1.0 | 0.9 | 检查机身顶部结构     |
+| three-point | 3.2 | 1.25 | 2.1 | 标准摄影棚三点灯光   |
 
 主光位置和三盏灯强度变化只修改已有对象：
 
@@ -209,9 +204,7 @@ rig.rimLight.intensity = rimLightIntensity;
 
 ```ts
 type AircraftProjectionMode = "perspective" | "orthographic";
-type AircraftCamera =
-    | THREE.PerspectiveCamera
-    | THREE.OrthographicCamera;
+type AircraftCamera = THREE.PerspectiveCamera | THREE.OrthographicCamera;
 ```
 
 工具栏 select 显示：
@@ -260,8 +253,10 @@ zoom = clamp(fitZoom, 0.25, 8)
 Controls 泛型必须显式统一：
 
 ```ts
-let controls: OrbitControls<AircraftCamera> =
-    new OrbitControls<AircraftCamera>(camera, renderer.domElement);
+let controls: OrbitControls<AircraftCamera> = new OrbitControls<AircraftCamera>(
+    camera,
+    renderer.domElement,
+);
 ```
 
 这可以避免 `OrbitControls<Camera>` 与 `OrbitControls<AircraftCamera>` 重新赋值时的 TypeScript 不兼容错误。
@@ -306,14 +301,14 @@ let controls: OrbitControls<AircraftCamera> =
 
 ## 8. 错误和回退策略
 
-| 场景 | 行为 |
-| --- | --- |
-| `hdri/` 没有 `.hdr` | select 显示目录为空并禁用，环境保持 RoomEnvironment |
-| HDRI 未选择资源 | 选择 HDRI 模式时回退内置环境并提示选择资源 |
-| HDRLoader 失败 | 释放旧 HDRI，恢复 RoomEnvironment，保留当前模型 |
-| HDRI 请求过期 | 丢弃并释放过期 PMREM，不改变当前环境 |
-| WebGPU 不可用 | 沿用现有 WebGPU 错误状态，不静默回退 WebGL |
-| 正交相机 fit 异常 | 使用 `zoom` 最小/最大边界，避免模型完全不可见或无限放大 |
+| 场景                | 行为                                                    |
+| ------------------- | ------------------------------------------------------- |
+| `hdri/` 没有 `.hdr` | select 显示目录为空并禁用，环境保持 RoomEnvironment     |
+| HDRI 未选择资源     | 选择 HDRI 模式时回退内置环境并提示选择资源              |
+| HDRLoader 失败      | 释放旧 HDRI，恢复 RoomEnvironment，保留当前模型         |
+| HDRI 请求过期       | 丢弃并释放过期 PMREM，不改变当前环境                    |
+| WebGPU 不可用       | 沿用现有 WebGPU 错误状态，不静默回退 WebGL              |
+| 正交相机 fit 异常   | 使用 `zoom` 最小/最大边界，避免模型完全不可见或无限放大 |
 
 ## 9. 性能约束
 

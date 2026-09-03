@@ -1,10 +1,4 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-    type ReactElement,
-    type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { PersonalAirportSectionSkeleton } from "./PersonalAirportSectionSkeleton";
 import { PersonalFlightRecordsSectionSkeleton } from "./PersonalFlightRecordsSectionSkeleton";
 import { PersonalSectionFallback } from "./PersonalSectionFallback";
@@ -13,10 +7,7 @@ import { PersonalSectionFallback } from "./PersonalSectionFallback";
 const DEFAULT_SECTION_VIEWPORT_ROOT_MARGIN = "160px 0px";
 
 /** 视口门控区块的视觉与占位变体。 */
-export type PersonalViewportSectionVariant =
-    | "default"
-    | "airport"
-    | "flight-records";
+export type PersonalViewportSectionVariant = "default" | "airport" | "flight-records";
 
 interface PersonalViewportSectionProps {
     /** 占位与 Suspense 提示中的区块名称。 */
@@ -48,13 +39,7 @@ const resolveViewportPlaceholder = (
         return <PersonalFlightRecordsSectionSkeleton />;
     }
 
-    return (
-        <PersonalSectionFallback
-            eyebrow={eyebrow}
-            label={label}
-            title={title}
-        />
-    );
+    return <PersonalSectionFallback eyebrow={eyebrow} label={label} title={title} />;
 };
 
 /**
@@ -89,8 +74,7 @@ export const PersonalViewportSection = ({
         const intersectionObserver = new IntersectionObserver(
             (entries: IntersectionObserverEntry[]): void => {
                 const isSectionNearViewport = entries.some(
-                    (entry: IntersectionObserverEntry): boolean =>
-                        entry.isIntersecting,
+                    (entry: IntersectionObserverEntry): boolean => entry.isIntersecting,
                 );
 
                 if (!isSectionNearViewport) {
@@ -110,12 +94,7 @@ export const PersonalViewportSection = ({
         };
     }, [shouldMountSection]);
 
-    const viewportPlaceholder = resolveViewportPlaceholder(
-        variant,
-        label,
-        eyebrow,
-        title,
-    );
+    const viewportPlaceholder = resolveViewportPlaceholder(variant, label, eyebrow, title);
 
     return (
         <div className="personal-viewport-section" ref={sectionRef}>

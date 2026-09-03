@@ -39,10 +39,7 @@ export const PersonalFlightRecordsSectionSkeleton = (): ReactElement => {
                             <ul className="flight-ledger-table">
                                 {Array.from(
                                     { length: FLIGHT_LEDGER_SKELETON_ROW_COUNT },
-                                    (
-                                        _value: undefined,
-                                        rowIndex: number,
-                                    ): ReactElement => (
+                                    (_value: undefined, rowIndex: number): ReactElement => (
                                         <li
                                             className="flight-ledger-row flight-ledger-row--skeleton"
                                             key={`flight-ledger-skeleton-row-${rowIndex}`}

@@ -2,8 +2,7 @@
 :root {
     color-scheme: light;
 
-    --pl-font-display:
-        "Space Grotesk", Inter, Avenir, Helvetica, Arial, sans-serif;
+    --pl-font-display: "Space Grotesk", Inter, Avenir, Helvetica, Arial, sans-serif;
     --pl-font-sans: Inter, Avenir, Helvetica, Arial, sans-serif;
     --pl-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
@@ -74,15 +73,11 @@
     --pl-surface-nav-item: rgba(232, 241, 240, 0.86);
     --pl-shadow-shell: 0 0.2rem 0.9rem rgba(53, 69, 77, 0.08);
     --pl-shadow-brand:
-        0 0.28rem 0.85rem rgba(53, 69, 77, 0.12),
-        0 1px 3px rgba(53, 69, 77, 0.1),
+        0 0.28rem 0.85rem rgba(53, 69, 77, 0.12), 0 1px 3px rgba(53, 69, 77, 0.1),
         inset 0 1px 0 rgba(253, 254, 253, 0.78);
     --pl-shadow-panel: 0 1.25rem 2.25rem rgba(53, 69, 77, 0.11);
-    --pl-shadow-control:
-        0 0.6rem 1.15rem rgba(53, 69, 77, 0.1), 0 2px 5px rgba(53, 69, 77, 0.08);
-    --pl-shadow-card:
-        0 1px 2px rgba(53, 69, 77, 0.06),
-        inset 0 1px 0 rgba(253, 254, 253, 0.72);
+    --pl-shadow-control: 0 0.6rem 1.15rem rgba(53, 69, 77, 0.1), 0 2px 5px rgba(53, 69, 77, 0.08);
+    --pl-shadow-card: 0 1px 2px rgba(53, 69, 77, 0.06), inset 0 1px 0 rgba(253, 254, 253, 0.72);
     --pl-shadow-card-hover:
         0 0.3rem 0.8rem rgba(53, 69, 77, 0.08), 0 1px 2px rgba(53, 69, 77, 0.08);
     --pl-shadow-chip: 0 1px 2px rgba(53, 69, 77, 0.1);
@@ -126,12 +121,7 @@
             transparent 82%,
             rgba(35, 58, 62, 0.05)
         ),
-        linear-gradient(
-            to bottom,
-            rgba(35, 58, 62, 0.05),
-            transparent 28%,
-            rgba(35, 58, 62, 0.07)
-        );
+        linear-gradient(to bottom, rgba(35, 58, 62, 0.05), transparent 28%, rgba(35, 58, 62, 0.07));
 
     --pl-map-tooltip-bg: rgba(250, 252, 251, 0.96);
     --pl-map-tooltip-border: rgba(46, 104, 114, 0.3);
@@ -167,11 +157,7 @@
     --pl-earth-atmosphere: #6fa8b3;
 
     --pl-preview-backdrop:
-        radial-gradient(
-            circle at 50% 20%,
-            oklch(0.32 0.045 225 / 0.34),
-            transparent 22rem
-        ),
+        radial-gradient(circle at 50% 20%, oklch(0.32 0.045 225 / 0.34), transparent 22rem),
         oklch(0.1 0.018 245 / 0.94);
 
     --pl-summary-chevron: #2f7194;
@@ -241,24 +227,12 @@ html[data-theme="dark"] {
     --pl-surface-preview-img: rgba(7, 17, 29, 0.72);
     --pl-body-gradient: linear-gradient(to bottom, #020917, #101725);
     --pl-shell-bg:
-        radial-gradient(
-            circle at 86% 16%,
-            rgba(235, 203, 139, 0.1),
-            transparent 30rem
-        ),
-        radial-gradient(
-            circle at 8% 82%,
-            rgba(124, 200, 235, 0.14),
-            transparent 28rem
-        ),
+        radial-gradient(circle at 86% 16%, rgba(235, 203, 139, 0.1), transparent 30rem),
+        radial-gradient(circle at 8% 82%, rgba(124, 200, 235, 0.14), transparent 28rem),
         linear-gradient(135deg, #07111d 0%, #0b1421 48%, #111827 100%);
     --pl-shell-overlay:
         linear-gradient(135deg, rgba(244, 248, 251, 0.035), transparent 35%),
-        radial-gradient(
-            circle at 68% 5%,
-            rgba(124, 200, 235, 0.055),
-            transparent 20rem
-        );
+        radial-gradient(circle at 68% 5%, rgba(124, 200, 235, 0.055), transparent 20rem);
     --pl-surface-header: rgba(7, 17, 29, 0.64);
     --pl-surface-nav: rgba(10, 21, 33, 0.66);
     --pl-surface-nav-item: rgba(15, 31, 48, 0.44);
@@ -267,12 +241,9 @@ html[data-theme="dark"] {
         0 0.55rem 1.35rem rgba(2, 8, 18, 0.34), 0 1px 3px rgba(2, 8, 18, 0.28),
         inset 0 1px 0 rgba(164, 188, 201, 0.08);
     --pl-shadow-panel: 0 1.5rem 4rem rgba(2, 8, 18, 0.24);
-    --pl-shadow-control:
-        0 0.65rem 1.35rem rgba(2, 8, 18, 0.32), 0 2px 5px rgba(2, 8, 18, 0.24);
-    --pl-shadow-card:
-        0 1px 2px rgba(2, 8, 18, 0.24), inset 0 1px 0 rgba(164, 188, 201, 0.05);
-    --pl-shadow-card-hover:
-        0 0.35rem 0.95rem rgba(2, 8, 18, 0.28), 0 1px 2px rgba(2, 8, 18, 0.24);
+    --pl-shadow-control: 0 0.65rem 1.35rem rgba(2, 8, 18, 0.32), 0 2px 5px rgba(2, 8, 18, 0.24);
+    --pl-shadow-card: 0 1px 2px rgba(2, 8, 18, 0.24), inset 0 1px 0 rgba(164, 188, 201, 0.05);
+    --pl-shadow-card-hover: 0 0.35rem 0.95rem rgba(2, 8, 18, 0.28), 0 1px 2px rgba(2, 8, 18, 0.24);
     --pl-shadow-chip: 0 1px 2px rgba(2, 8, 18, 0.28);
     --pl-stat-blue-bg: rgba(37, 99, 235, 0.16);
     --pl-stat-blue-border: rgba(96, 165, 250, 0.34);
@@ -285,21 +256,9 @@ html[data-theme="dark"] {
     --pl-stat-orange-text: #fbbf24;
     --pl-error-text: #ffd3d3;
     --pl-map-bg:
-        radial-gradient(
-            circle at 72% 28%,
-            oklch(0.32 0.065 222 / 0.18),
-            transparent 12rem
-        ),
-        radial-gradient(
-            circle at 18% 18%,
-            oklch(0.27 0.052 232 / 0.18),
-            transparent 10rem
-        ),
-        linear-gradient(
-            135deg,
-            oklch(0.14 0.024 248 / 0.98),
-            oklch(0.2 0.03 232 / 0.92)
-        );
+        radial-gradient(circle at 72% 28%, oklch(0.32 0.065 222 / 0.18), transparent 12rem),
+        radial-gradient(circle at 18% 18%, oklch(0.27 0.052 232 / 0.18), transparent 10rem),
+        linear-gradient(135deg, oklch(0.14 0.024 248 / 0.98), oklch(0.2 0.03 232 / 0.92));
     --pl-model-floor-color: #163343;
     --pl-model-key-light-color: #ffffff;
     --pl-model-fill-light-color: #8acbe7;
@@ -315,12 +274,7 @@ html[data-theme="dark"] {
             transparent 82%,
             rgba(2, 8, 18, 0.42)
         ),
-        linear-gradient(
-            to bottom,
-            rgba(2, 8, 18, 0.36),
-            transparent 28%,
-            rgba(2, 8, 18, 0.34)
-        );
+        linear-gradient(to bottom, rgba(2, 8, 18, 0.36), transparent 28%, rgba(2, 8, 18, 0.34));
     --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
     --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
     --pl-map-legend-bg: rgba(7, 17, 29, 0.76);
@@ -519,8 +473,7 @@ a {
     transition:
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
         border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        background-color var(--motion-duration-fast)
-            var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
         transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
@@ -549,8 +502,7 @@ a {
 .theme-toggle__icon {
     display: inline-flex;
     line-height: 0;
-    animation: theme-icon-enter var(--motion-duration-fast)
-        var(--motion-ease-out-quart) both;
+    animation: theme-icon-enter var(--motion-duration-fast) var(--motion-ease-out-quart) both;
 }
 
 @keyframes theme-icon-enter {
@@ -609,8 +561,7 @@ a {
     transition:
         color var(--motion-duration-fast) var(--motion-ease-out-quart),
         border-color var(--motion-duration-fast) var(--motion-ease-out-quart),
-        background-color var(--motion-duration-fast)
-            var(--motion-ease-out-quart),
+        background-color var(--motion-duration-fast) var(--motion-ease-out-quart),
         transform var(--motion-duration-fast) var(--motion-ease-out-quart);
 }
 
@@ -705,8 +656,7 @@ a {
     border: 1px solid var(--pl-border-default);
     border-radius: 1.5rem;
     box-shadow: var(--pl-shadow-panel);
-    animation: archive-reveal var(--motion-duration-enter)
-        var(--motion-ease-out-quint) both;
+    animation: archive-reveal var(--motion-duration-enter) var(--motion-ease-out-quint) both;
     transition:
         background-color 240ms var(--motion-ease-out-quart),
         border-color 240ms var(--motion-ease-out-quart);
@@ -718,11 +668,7 @@ a {
     z-index: -1;
     background:
         linear-gradient(180deg, rgba(244, 248, 251, 0.055), transparent 18rem),
-        radial-gradient(
-            circle at 94% 0,
-            rgba(235, 203, 139, 0.075),
-            transparent 18rem
-        );
+        radial-gradient(circle at 94% 0, rgba(235, 203, 139, 0.075), transparent 18rem);
     content: "";
     pointer-events: none;
 }
@@ -762,8 +708,7 @@ a {
     border: 1px solid var(--pl-border-input);
     border-radius: 0.9rem;
     animation:
-        archive-reveal var(--motion-duration-standard)
-            var(--motion-ease-out-quint) both,
+        archive-reveal var(--motion-duration-standard) var(--motion-ease-out-quint) both,
         route-loading-pulse 1.4s var(--motion-ease-out-quart) 0.12s infinite;
 }
 

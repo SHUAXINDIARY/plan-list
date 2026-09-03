@@ -1,10 +1,4 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-    type CSSProperties,
-    type ReactElement,
-} from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from "react";
 import * as THREE from "three";
 import { WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -181,15 +175,11 @@ const resolveMarkerWorldRadius = (
     isActive: boolean,
 ): number => {
     const visibleWorldHeight =
-        2 *
-        cameraSpaceDepth *
-        Math.tan(THREE.MathUtils.degToRad(cameraVerticalFov / 2));
+        2 * cameraSpaceDepth * Math.tan(THREE.MathUtils.degToRad(cameraVerticalFov / 2));
     const worldUnitsPerCssPixel = visibleWorldHeight / Math.max(viewportHeight, 1);
     const markerRadius = MARKER_RADIUS * worldUnitsPerCssPixel;
 
-    return isActive
-        ? markerRadius * ACTIVE_MARKER_SIZE_MULTIPLIER
-        : markerRadius;
+    return isActive ? markerRadius * ACTIVE_MARKER_SIZE_MULTIPLIER : markerRadius;
 };
 
 /** 解析构建期内联的 GeoJSON 文本，为大陆边界绘制提供结构化数据。 */
@@ -234,9 +224,7 @@ const createRoutePoints = (route: WorldMapRoute): THREE.Vector3[] => {
 };
 
 /** 提取 Polygon 与 MultiPolygon 中的所有闭合边界轮廓。 */
-const getLandmassRings = (
-    geometry: EarthGeoJsonGeometry,
-): GeoJsonPosition[][] => {
+const getLandmassRings = (geometry: EarthGeoJsonGeometry): GeoJsonPosition[][] => {
     if (geometry.type === "Polygon") {
         return geometry.coordinates;
     }
@@ -245,9 +233,7 @@ const getLandmassRings = (
 };
 
 /** 按多边形保留外环与内洞，供大陆填充三角化使用。 */
-const getLandmassPolygons = (
-    geometry: EarthGeoJsonGeometry,
-): GeoJsonPosition[][][] => {
+const getLandmassPolygons = (geometry: EarthGeoJsonGeometry): GeoJsonPosition[][][] => {
     if (geometry.type === "Polygon") {
         return [geometry.coordinates];
     }
@@ -278,9 +264,7 @@ const getLandmassGroup = (continent: string | undefined): EarthLandmassGroup => 
 };
 
 /** 去除 GeoJSON 闭合环的重复末点，避免三角化生成退化面。 */
-const removeRingClosingPosition = (
-    ring: GeoJsonPosition[],
-): GeoJsonPosition[] => {
+const removeRingClosingPosition = (ring: GeoJsonPosition[]): GeoJsonPosition[] => {
     const firstPosition = ring[0];
     const lastPosition = ring[ring.length - 1];
 
@@ -297,9 +281,7 @@ const removeRingClosingPosition = (
 };
 
 /** 连续化跨日期变更线的经度，保证平面三角化不会穿过地球另一侧。 */
-const createTriangulationRing = (
-    ring: GeoJsonPosition[],
-): THREE.Vector2[] => {
+const createTriangulationRing = (ring: GeoJsonPosition[]): THREE.Vector2[] => {
     const openRing = removeRingClosingPosition(ring);
     let previousLongitude: number | undefined;
 
@@ -327,18 +309,9 @@ const getSphericalTriangleSegmentCount = (
     secondPoint: THREE.Vector2,
     thirdPoint: THREE.Vector2,
 ): number => {
-    const firstSurfacePoint = coordinateToVector3(
-        { lat: firstPoint.y, lng: firstPoint.x },
-        1,
-    );
-    const secondSurfacePoint = coordinateToVector3(
-        { lat: secondPoint.y, lng: secondPoint.x },
-        1,
-    );
-    const thirdSurfacePoint = coordinateToVector3(
-        { lat: thirdPoint.y, lng: thirdPoint.x },
-        1,
-    );
+    const firstSurfacePoint = coordinateToVector3({ lat: firstPoint.y, lng: firstPoint.x }, 1);
+    const secondSurfacePoint = coordinateToVector3({ lat: secondPoint.y, lng: secondPoint.x }, 1);
+    const thirdSurfacePoint = coordinateToVector3({ lat: thirdPoint.y, lng: thirdPoint.x }, 1);
 
     return Math.max(
         1,
@@ -365,24 +338,12 @@ const appendSphericalTriangle = (
     thirdPoint: THREE.Vector2,
     segmentCount: number,
 ): void => {
-    const firstSurfacePoint = coordinateToVector3(
-        { lat: firstPoint.y, lng: firstPoint.x },
-        1,
-    );
-    const secondSurfacePoint = coordinateToVector3(
-        { lat: secondPoint.y, lng: secondPoint.x },
-        1,
-    );
-    const thirdSurfacePoint = coordinateToVector3(
-        { lat: thirdPoint.y, lng: thirdPoint.x },
-        1,
-    );
+    const firstSurfacePoint = coordinateToVector3({ lat: firstPoint.y, lng: firstPoint.x }, 1);
+    const secondSurfacePoint = coordinateToVector3({ lat: secondPoint.y, lng: secondPoint.x }, 1);
+    const thirdSurfacePoint = coordinateToVector3({ lat: thirdPoint.y, lng: thirdPoint.x }, 1);
 
     /** 用重心坐标插值后归一化到球面，保持细分面始终贴合地球曲率。 */
-    const createSurfacePoint = (
-        secondWeight: number,
-        thirdWeight: number,
-    ): THREE.Vector3 => {
+    const createSurfacePoint = (secondWeight: number, thirdWeight: number): THREE.Vector3 => {
         const firstWeight = 1 - secondWeight - thirdWeight;
         const surfacePoint = new THREE.Vector3()
             .addScaledVector(firstSurfacePoint, firstWeight)
@@ -411,11 +372,7 @@ const appendSphericalTriangle = (
         );
     };
 
-    for (
-        let firstSegmentIndex = 0;
-        firstSegmentIndex < segmentCount;
-        firstSegmentIndex += 1
-    ) {
+    for (let firstSegmentIndex = 0; firstSegmentIndex < segmentCount; firstSegmentIndex += 1) {
         for (
             let secondSegmentIndex = 0;
             secondSegmentIndex < segmentCount - firstSegmentIndex;
@@ -460,65 +417,29 @@ const addLandmassFills = (globeGroup: THREE.Group): void => {
     };
 
     WORLD_MAP_GEOJSON.features.forEach((feature: EarthGeoJsonFeature): void => {
-        const positions = positionsByGroup[
-            getLandmassGroup(feature.properties.CONTINENT)
-        ];
+        const positions = positionsByGroup[getLandmassGroup(feature.properties.CONTINENT)];
 
-        getLandmassPolygons(feature.geometry).forEach(
-            (polygon: GeoJsonPosition[][]): void => {
-                const outerRing = polygon[0];
+        getLandmassPolygons(feature.geometry).forEach((polygon: GeoJsonPosition[][]): void => {
+            const outerRing = polygon[0];
 
-                if (outerRing === undefined) {
-                    return;
-                }
+            if (outerRing === undefined) {
+                return;
+            }
 
-                const contour = createTriangulationRing(outerRing);
-                const holes = polygon
-                    .slice(1)
-                    .map(createTriangulationRing)
-                    .filter(
-                        (hole: THREE.Vector2[]): boolean => hole.length >= 3,
-                    );
+            const contour = createTriangulationRing(outerRing);
+            const holes = polygon
+                .slice(1)
+                .map(createTriangulationRing)
+                .filter((hole: THREE.Vector2[]): boolean => hole.length >= 3);
 
-                if (contour.length < 3) {
-                    return;
-                }
+            if (contour.length < 3) {
+                return;
+            }
 
-                const polygonPoints = [contour, ...holes].flat();
-                const triangles = THREE.ShapeUtils.triangulateShape(
-                    contour,
-                    holes,
-                );
-                const segmentCount = triangles.reduce(
-                    (
-                        currentSegmentCount: number,
-                        triangle: number[],
-                    ): number => {
-                        const firstPoint = polygonPoints[triangle[0]];
-                        const secondPoint = polygonPoints[triangle[1]];
-                        const thirdPoint = polygonPoints[triangle[2]];
-
-                        if (
-                            firstPoint === undefined ||
-                            secondPoint === undefined ||
-                            thirdPoint === undefined
-                        ) {
-                            return currentSegmentCount;
-                        }
-
-                        return Math.max(
-                            currentSegmentCount,
-                            getSphericalTriangleSegmentCount(
-                                firstPoint,
-                                secondPoint,
-                                thirdPoint,
-                            ),
-                        );
-                    },
-                    1,
-                );
-
-                triangles.forEach((triangle: number[]): void => {
+            const polygonPoints = [contour, ...holes].flat();
+            const triangles = THREE.ShapeUtils.triangulateShape(contour, holes);
+            const segmentCount = triangles.reduce(
+                (currentSegmentCount: number, triangle: number[]): number => {
                     const firstPoint = polygonPoints[triangle[0]];
                     const secondPoint = polygonPoints[triangle[1]];
                     const thirdPoint = polygonPoints[triangle[2]];
@@ -528,19 +449,39 @@ const addLandmassFills = (globeGroup: THREE.Group): void => {
                         secondPoint === undefined ||
                         thirdPoint === undefined
                     ) {
-                        return;
+                        return currentSegmentCount;
                     }
 
-                    appendSphericalTriangle(
-                        positions,
-                        firstPoint,
-                        secondPoint,
-                        thirdPoint,
-                        segmentCount,
+                    return Math.max(
+                        currentSegmentCount,
+                        getSphericalTriangleSegmentCount(firstPoint, secondPoint, thirdPoint),
                     );
-                });
-            },
-        );
+                },
+                1,
+            );
+
+            triangles.forEach((triangle: number[]): void => {
+                const firstPoint = polygonPoints[triangle[0]];
+                const secondPoint = polygonPoints[triangle[1]];
+                const thirdPoint = polygonPoints[triangle[2]];
+
+                if (
+                    firstPoint === undefined ||
+                    secondPoint === undefined ||
+                    thirdPoint === undefined
+                ) {
+                    return;
+                }
+
+                appendSphericalTriangle(
+                    positions,
+                    firstPoint,
+                    secondPoint,
+                    thirdPoint,
+                    segmentCount,
+                );
+            });
+        });
     });
 
     EARTH_LANDMASS_GROUPS.forEach((group: EarthLandmassGroup): void => {
@@ -551,10 +492,7 @@ const addLandmassFills = (globeGroup: THREE.Group): void => {
         }
 
         const landmassGeometry = new THREE.BufferGeometry();
-        landmassGeometry.setAttribute(
-            "position",
-            new THREE.Float32BufferAttribute(positions, 3),
-        );
+        landmassGeometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
         landmassGeometry.computeBoundingSphere();
 
         const landmassMaterial = new THREE.MeshBasicMaterial({
@@ -566,44 +504,33 @@ const addLandmassFills = (globeGroup: THREE.Group): void => {
 };
 
 /** 将 GeoJSON 大陆与国家边界绘制为贴合球面的三维轮廓线。 */
-const addLandmassContours = (
-    globeGroup: THREE.Group,
-    isDarkTheme: boolean,
-): void => {
+const addLandmassContours = (globeGroup: THREE.Group, isDarkTheme: boolean): void => {
     WORLD_MAP_GEOJSON.features.forEach((feature: EarthGeoJsonFeature): void => {
-        getLandmassRings(feature.geometry).forEach(
-            (ring: GeoJsonPosition[]): void => {
-                if (ring.length < 3) {
-                    return;
-                }
+        getLandmassRings(feature.geometry).forEach((ring: GeoJsonPosition[]): void => {
+            if (ring.length < 3) {
+                return;
+            }
 
-                const contourPoints = ring.map(
-                    (position: GeoJsonPosition): THREE.Vector3 =>
-                        coordinateToVector3(
-                            { lat: position[1], lng: position[0] },
-                            LANDMASS_RADIUS,
-                        ),
-                );
-                const firstContourPoint = contourPoints[0];
-                const lastContourPoint = contourPoints[contourPoints.length - 1];
+            const contourPoints = ring.map((position: GeoJsonPosition): THREE.Vector3 =>
+                coordinateToVector3({ lat: position[1], lng: position[0] }, LANDMASS_RADIUS),
+            );
+            const firstContourPoint = contourPoints[0];
+            const lastContourPoint = contourPoints[contourPoints.length - 1];
 
-                // WebGPU 不支持 LineLoop；补齐首尾顶点后使用 Line 保持相同的闭合轮廓。
-                if (!firstContourPoint.equals(lastContourPoint)) {
-                    contourPoints.push(firstContourPoint.clone());
-                }
+            // WebGPU 不支持 LineLoop；补齐首尾顶点后使用 Line 保持相同的闭合轮廓。
+            if (!firstContourPoint.equals(lastContourPoint)) {
+                contourPoints.push(firstContourPoint.clone());
+            }
 
-                const contourGeometry = new THREE.BufferGeometry().setFromPoints(
-                    contourPoints,
-                );
-                const contourMaterial = new THREE.LineBasicMaterial({
-                    color: readEarthThemeColor("--pl-earth-contour"),
-                    transparent: true,
-                    opacity: isDarkTheme ? 0.58 : 0.5,
-                });
+            const contourGeometry = new THREE.BufferGeometry().setFromPoints(contourPoints);
+            const contourMaterial = new THREE.LineBasicMaterial({
+                color: readEarthThemeColor("--pl-earth-contour"),
+                transparent: true,
+                opacity: isDarkTheme ? 0.58 : 0.5,
+            });
 
-                globeGroup.add(new THREE.Line(contourGeometry, contourMaterial));
-            },
-        );
+            globeGroup.add(new THREE.Line(contourGeometry, contourMaterial));
+        });
     });
 };
 
@@ -617,9 +544,7 @@ const disposeSceneResources = (scene: THREE.Scene): void => {
         }
 
         mesh.geometry.dispose();
-        const materials = Array.isArray(mesh.material)
-            ? mesh.material
-            : [mesh.material];
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         materials.forEach((material: THREE.Material | undefined): void => {
             if (material !== undefined) {
                 material.dispose();
@@ -640,9 +565,7 @@ const EarthMap = ({
 }: EarthMapProps): ReactElement => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const hoveredMarkerIdRef = useRef<string | null>(null);
-    const [hoveredMarker, setHoveredMarker] = useState<EarthMarkerTooltip | null>(
-        null,
-    );
+    const [hoveredMarker, setHoveredMarker] = useState<EarthMarkerTooltip | null>(null);
     const [isDarkTheme, setIsDarkTheme] = useState<boolean>(
         (): boolean => document.documentElement.dataset.theme !== "light",
     );
@@ -692,12 +615,8 @@ const EarthMap = ({
             const animationTimer = new THREE.Timer();
             animationTimer.connect(document);
             const globeGroup = new THREE.Group();
-            const routeColor = readEarthThemeColor(
-                "--pl-earth-route-international",
-            );
-            const domesticRouteColor = readEarthThemeColor(
-                "--pl-earth-route-domestic",
-            );
+            const routeColor = readEarthThemeColor("--pl-earth-route-international");
+            const domesticRouteColor = readEarthThemeColor("--pl-earth-route-domestic");
             const markerColor = readEarthThemeColor("--pl-earth-marker");
 
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -763,10 +682,7 @@ const EarthMap = ({
                     createRoutePoints(route),
                 );
                 const routeMaterial = new THREE.LineBasicMaterial({
-                    color:
-                        route.scope === "domestic"
-                            ? domesticRouteColor
-                            : routeColor,
+                    color: route.scope === "domestic" ? domesticRouteColor : routeColor,
                     transparent: true,
                     opacity: route.scope === "domestic" ? 0.62 : 0.88,
                 });
@@ -783,10 +699,7 @@ const EarthMap = ({
                     new THREE.MeshBasicMaterial({ color: markerColor }),
                 );
                 markerMesh.position.copy(
-                    coordinateToVector3(
-                        marker.coordinate,
-                        GLOBE_RADIUS + 0.028,
-                    ),
+                    coordinateToVector3(marker.coordinate, GLOBE_RADIUS + 0.028),
                 );
                 markerMesh.name = marker.id;
                 markerMeshes.push(markerMesh);
@@ -822,10 +735,7 @@ const EarthMap = ({
                         .copy(markerWorldPosition)
                         .applyMatrix4(camera.matrixWorldInverse);
 
-                    const cameraSpaceDepth = Math.max(
-                        -markerViewPosition.z,
-                        camera.near,
-                    );
+                    const cameraSpaceDepth = Math.max(-markerViewPosition.z, camera.near);
                     const markerRadius = resolveMarkerWorldRadius(
                         cameraSpaceDepth,
                         camera.fov,
@@ -840,17 +750,12 @@ const EarthMap = ({
             /** 根据指针位置命中机场球体，并将可见提示定位到容器内。 */
             const handleMarkerHover = (event: PointerEvent): void => {
                 const bounds = container.getBoundingClientRect();
-                pointer.x =
-                    ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
-                pointer.y =
-                    -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+                pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+                pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
                 globeGroup.updateWorldMatrix(true, true);
                 raycaster.setFromCamera(pointer, camera);
 
-                const intersectedMarker = raycaster.intersectObjects(
-                    markerMeshes,
-                    false,
-                )[0];
+                const intersectedMarker = raycaster.intersectObjects(markerMeshes, false)[0];
                 const marker = intersectedMarker
                     ? markerById.get(intersectedMarker.object.name)
                     : undefined;
@@ -873,14 +778,8 @@ const EarthMap = ({
                 setHoveredMarker(null);
             };
 
-            renderer.domElement.addEventListener(
-                "pointermove",
-                handleMarkerHover,
-            );
-            renderer.domElement.addEventListener(
-                "pointerleave",
-                clearMarkerHover,
-            );
+            renderer.domElement.addEventListener("pointermove", handleMarkerHover);
+            renderer.domElement.addEventListener("pointerleave", clearMarkerHover);
 
             const resizeRenderer = (): void => {
                 const { width, height } = container.getBoundingClientRect();
@@ -910,14 +809,8 @@ const EarthMap = ({
             cleanupRenderer = (): void => {
                 resizeObserver.disconnect();
                 renderer.setAnimationLoop(null);
-                renderer.domElement.removeEventListener(
-                    "pointermove",
-                    handleMarkerHover,
-                );
-                renderer.domElement.removeEventListener(
-                    "pointerleave",
-                    clearMarkerHover,
-                );
+                renderer.domElement.removeEventListener("pointermove", handleMarkerHover);
+                renderer.domElement.removeEventListener("pointerleave", clearMarkerHover);
                 controls.dispose();
                 animationTimer.dispose();
                 disposeSceneResources(scene);
@@ -947,12 +840,7 @@ const EarthMap = ({
               };
 
     return (
-        <div
-            ref={containerRef}
-            className="earth-map"
-            role="img"
-            aria-label={ariaLabel}
-        >
+        <div ref={containerRef} className="earth-map" role="img" aria-label={ariaLabel}>
             <p className="earth-map__instruction">
                 拖拽旋转地球，滚动可缩放。航线按个人飞行记录绘制。
             </p>

@@ -14,10 +14,7 @@ interface ThemeToggleProps {
 /**
  * 顶栏用浅色/深色切换：图标区分昼夜，配套无障碍说明。
  */
-export const ThemeToggle = ({
-    preference,
-    onToggle,
-}: ThemeToggleProps): ReactElement => {
+export const ThemeToggle = ({ preference, onToggle }: ThemeToggleProps): ReactElement => {
     const isDark = preference === "dark";
     const nextLabel = isDark ? "切换到亮色主题" : "切换到深色主题";
 
@@ -30,11 +27,7 @@ export const ThemeToggle = ({
             aria-label={nextLabel}
             title={nextLabel}
         >
-            <span
-                className="theme-toggle__icon"
-                key={preference}
-                aria-hidden
-            >
+            <span className="theme-toggle__icon" key={preference} aria-hidden>
                 {isDark ? <IconSun /> : <IconMoon />}
             </span>
         </button>
@@ -53,13 +46,7 @@ const IconSun = (): ReactElement => (
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
-        <circle
-            cx="12"
-            cy="12"
-            r="4"
-            stroke="currentColor"
-            strokeWidth="1.75"
-        />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.75" />
         <path
             stroke="currentColor"
             strokeWidth="1.75"

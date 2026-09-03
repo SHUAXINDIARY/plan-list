@@ -29,29 +29,29 @@
 
 ## 文件职责
 
-| 文件 | 职责 |
-| --- | --- |
-| `src/pages/planeRender/AircraftModelViewport.tsx` | 页面级协调器：初始化和清理视窗、加载单架模型、连接设置/环境/相机/动画状态、处理全屏和导出命令 |
-| `src/pages/planeRender/viewport/types.ts` | 模型视窗 props、加载进度、渲染设置、相机、动画和 HUD 的共享类型 |
-| `src/pages/planeRender/viewport/renderer/` | WebGPU 能力检查、renderer 初始化、色调映射、质量预设和阴影设置 |
-| `src/pages/planeRender/viewport/scene/` | RoomEnvironment/HDRI、三点灯光、展示平面、主题 token 和场景错误消息 |
-| `src/pages/planeRender/viewport/aircraft/` | FR24 导入方向校正、模型尺寸归一化和 GLB 几何/材质/贴图释放 |
-| `src/pages/planeRender/viewport/camera/` | 相机创建、Perspective/Orthographic fit、标准视角、OrbitControls 和相机 HUD 数据 |
-| `src/pages/planeRender/viewport/runtime/` | 按需渲染循环、尺寸/可见性生命周期和 HDRI 异步竞态控制 |
-| `src/pages/planeRender/viewport/hooks/useRenderSettings.ts` | 渲染设置状态、预设应用、表单值校验和 reset 行为 |
-| `src/pages/planeRender/viewport/components/` | 相机导航/导出控件、目录/HUD/动画/错误覆盖层 |
-| `src/pages/planeRender/viewport/animation/` | 第一段 GLB 动画的状态、AnimationMixer 驱动和时间轴控件 |
-| `src/pages/planeRender/viewport/diagnostics/` | PNG/JSON 下载和用户可见错误消息 |
-| `src/pages/planeRender/viewport/interaction/` | 工具层指针命中判断，避免画布操作误收起面板 |
-| `src/pages/planeRender/viewport/visualization/` | 相机 HUD 等非 canvas 可视化组件 |
-| `src/pages/planeRender/lighting.ts` | 三点灯光 rig、RoomEnvironment/HDRI PMREM 创建、替换和释放；由 `viewport/scene/lighting.ts` 重新导出 |
-| `src/pages/planeRender/components/RenderControls.tsx` | 渲染控制面板的表单结构与控件范围，不直接操作 Three.js 对象 |
-| `src/pages/planeRender/ModelDir.tsx` | GLB 模型目录标题、分组滚动列表、选中样式和模型选择回调 |
-| `src/pages/planeRender/modelAssets.ts` | 合并本地 GLB 构建期 glob 与 `uploadOssGlbAssets.generated.ts` 清单，并提供 `loadUrl()` 加载函数 |
-| `src/pages/planeRender/hdriAssets.ts` | 通过构建期 glob 生成 `hdri/*.hdr` 资源清单 |
-| `src/pages/planeRender/index.tsx` | 选择单个模型、消费加载进度并展示目录和页面级状态 |
-| `src/pages/planeRender/index.css` | 画布、工具面板、全屏、加载遮罩、响应式布局和减少动态效果样式 |
-| `scripts/convert-fr24-models.mjs` | 将 FR24 legacy GLB v1 转换为可供本视窗加载的 GLB v2 |
+| 文件                                                        | 职责                                                                                                |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/pages/planeRender/AircraftModelViewport.tsx`           | 页面级协调器：初始化和清理视窗、加载单架模型、连接设置/环境/相机/动画状态、处理全屏和导出命令       |
+| `src/pages/planeRender/viewport/types.ts`                   | 模型视窗 props、加载进度、渲染设置、相机、动画和 HUD 的共享类型                                     |
+| `src/pages/planeRender/viewport/renderer/`                  | WebGPU 能力检查、renderer 初始化、色调映射、质量预设和阴影设置                                      |
+| `src/pages/planeRender/viewport/scene/`                     | RoomEnvironment/HDRI、三点灯光、展示平面、主题 token 和场景错误消息                                 |
+| `src/pages/planeRender/viewport/aircraft/`                  | FR24 导入方向校正、模型尺寸归一化和 GLB 几何/材质/贴图释放                                          |
+| `src/pages/planeRender/viewport/camera/`                    | 相机创建、Perspective/Orthographic fit、标准视角、OrbitControls 和相机 HUD 数据                     |
+| `src/pages/planeRender/viewport/runtime/`                   | 按需渲染循环、尺寸/可见性生命周期和 HDRI 异步竞态控制                                               |
+| `src/pages/planeRender/viewport/hooks/useRenderSettings.ts` | 渲染设置状态、预设应用、表单值校验和 reset 行为                                                     |
+| `src/pages/planeRender/viewport/components/`                | 相机导航/导出控件、目录/HUD/动画/错误覆盖层                                                         |
+| `src/pages/planeRender/viewport/animation/`                 | 第一段 GLB 动画的状态、AnimationMixer 驱动和时间轴控件                                              |
+| `src/pages/planeRender/viewport/diagnostics/`               | PNG/JSON 下载和用户可见错误消息                                                                     |
+| `src/pages/planeRender/viewport/interaction/`               | 工具层指针命中判断，避免画布操作误收起面板                                                          |
+| `src/pages/planeRender/viewport/visualization/`             | 相机 HUD 等非 canvas 可视化组件                                                                     |
+| `src/pages/planeRender/lighting.ts`                         | 三点灯光 rig、RoomEnvironment/HDRI PMREM 创建、替换和释放；由 `viewport/scene/lighting.ts` 重新导出 |
+| `src/pages/planeRender/components/RenderControls.tsx`       | 渲染控制面板的表单结构与控件范围，不直接操作 Three.js 对象                                          |
+| `src/pages/planeRender/ModelDir.tsx`                        | GLB 模型目录标题、分组滚动列表、选中样式和模型选择回调                                              |
+| `src/pages/planeRender/modelAssets.ts`                      | 合并本地 GLB 构建期 glob 与 `uploadOssGlbAssets.generated.ts` 清单，并提供 `loadUrl()` 加载函数     |
+| `src/pages/planeRender/hdriAssets.ts`                       | 通过构建期 glob 生成 `hdri/*.hdr` 资源清单                                                          |
+| `src/pages/planeRender/index.tsx`                           | 选择单个模型、消费加载进度并展示目录和页面级状态                                                    |
+| `src/pages/planeRender/index.css`                           | 画布、工具面板、全屏、加载遮罩、响应式布局和减少动态效果样式                                        |
+| `scripts/convert-fr24-models.mjs`                           | 将 FR24 legacy GLB v1 转换为可供本视窗加载的 GLB v2                                                 |
 
 ## 组件接口
 
@@ -64,9 +64,7 @@ interface AircraftModelViewportProps {
     /** 当前页面选中的模型 ID，用于同步全屏目录的 active 状态。 */
     selectedModelId: string;
     /** 向页面报告 WebGPU 初始化和模型加载进度。 */
-    onLoadingProgressChange: (
-        progress: AircraftModelLoadingProgress,
-    ) => void;
+    onLoadingProgressChange: (progress: AircraftModelLoadingProgress) => void;
     /** 从全屏目录选择模型后通知页面重新加载对应资源。 */
     onModelSelection: (modelId: string) => void;
     /** 页面级完整视窗元素，全屏时应包含画布、状态和元信息。 */
@@ -78,12 +76,12 @@ interface AircraftModelViewportProps {
 
 加载阶段及其含义：
 
-| `phase` | 含义 | `loadedModelCount` | `failedModelCount` |
-| --- | --- | ---: | ---: |
-| `initializing` | 页面已开始准备 WebGPU 视窗 | 0 | 0 |
-| `loading` | 渲染器已就绪，正在加载当前 GLB | 0 | 0 |
-| `ready` | 当前模型已加入场景并完成相机聚焦 | 1 | 0 |
-| `error` | 没有资源、WebGPU 初始化失败或模型解析失败 | 0 | 0 或 1 |
+| `phase`        | 含义                                      | `loadedModelCount` | `failedModelCount` |
+| -------------- | ----------------------------------------- | -----------------: | -----------------: |
+| `initializing` | 页面已开始准备 WebGPU 视窗                |                  0 |                  0 |
+| `loading`      | 渲染器已就绪，正在加载当前 GLB            |                  0 |                  0 |
+| `ready`        | 当前模型已加入场景并完成相机聚焦          |                  1 |                  0 |
+| `error`        | 没有资源、WebGPU 初始化失败或模型解析失败 |                  0 |             0 或 1 |
 
 `message` 只在错误或需要补充原因时提供。组件通过 `publishProgress` 忽略卸载后的异步回调，避免页面已销毁后继续写入状态。
 
@@ -166,10 +164,10 @@ THREE.Scene
 
 工具栏中的“摄像机投影模式”提供两个选项：
 
-| 模式 | Three.js 相机 | 视觉语义 | 适配方式 |
-| --- | --- | --- | --- |
-| Perspective（透视） | `PerspectiveCamera` | 近大远小，保留空间纵深 | 由 FOV、aspect 和模型包围球计算相机距离 |
-| Orthographic（正交） | `OrthographicCamera` | 无视距离，物体尺寸保持一致 | 固定基础视锥高度，按包围球设置 `zoom` |
+| 模式                 | Three.js 相机        | 视觉语义                   | 适配方式                                |
+| -------------------- | -------------------- | -------------------------- | --------------------------------------- |
+| Perspective（透视）  | `PerspectiveCamera`  | 近大远小，保留空间纵深     | 由 FOV、aspect 和模型包围球计算相机距离 |
+| Orthographic（正交） | `OrthographicCamera` | 无视距离，物体尺寸保持一致 | 固定基础视锥高度，按包围球设置 `zoom`   |
 
 两种模式切换时不重新加载模型。组件创建新的 camera 与 `OrbitControls`，复制旧相机的位置、up 向量和 controls target，再按当前容器 aspect 更新投影矩阵；切换到正交模式时会重新计算模型 fit zoom，切换回透视模式时保留当前轨道距离。`OrbitControls` 的最小/最大距离继续约束透视 dolly，正交模式则使用 `minZoom = 0.25`、`maxZoom = 8` 约束缩放。设置导出 JSON 的 `schemaVersion` 已提升为 `2`，并在 `camera.projectionMode` 写入当前模式。
 
@@ -177,16 +175,16 @@ THREE.Scene
 
 `OrbitControls` 绑定到 renderer canvas：
 
-| 配置 | 当前值 | 目的 |
-| --- | ---: | --- |
-| `enableDamping` | `true` | 让旋转停止更自然 |
-| `dampingFactor` | `0.065` | 控制阻尼衰减速度 |
-| `minDistance` | `0.45` | 允许近距离检查纹理和机身细节 |
-| `maxDistance` | `80` | 防止缩放到不可见范围 |
-| `minPolarAngle` | `0.08` | 避免相机贴近极点时翻转 |
+| 配置            |     当前值 | 目的                                   |
+| --------------- | ---------: | -------------------------------------- |
+| `enableDamping` |     `true` | 让旋转停止更自然                       |
+| `dampingFactor` |    `0.065` | 控制阻尼衰减速度                       |
+| `minDistance`   |     `0.45` | 允许近距离检查纹理和机身细节           |
+| `maxDistance`   |       `80` | 防止缩放到不可见范围                   |
+| `minPolarAngle` |     `0.08` | 避免相机贴近极点时翻转                 |
 | `maxPolarAngle` | `π - 0.08` | 允许检查模型底部，同时保留极点安全边距 |
-| `zoomSpeed` | `1.15` | 提高滚轮和双指缩放响应 |
-| `zoomToCursor` | `true` | 以光标位置为缩放关注点 |
+| `zoomSpeed`     |     `1.15` | 提高滚轮和双指缩放响应                 |
+| `zoomToCursor`  |     `true` | 以光标位置为缩放关注点                 |
 
 画布通过 CSS `touch-action: none` 将触摸手势交给 Three.js；工具面板和页面 viewport 保留默认触摸行为。工具层提供投影模式、`自定义视角`、`适配视图`、`正面`、`侧面`、`顶部` 和 `底部` 菜单，手动轨道操作后视角状态标记为自定义。画布左下角观察 HUD 显示世界 X/Y/Z 轴投影及相对 `controls.target` 的方位角、俯仰角和距离；它是只读状态层，不拦截 canvas 指针事件。
 
@@ -194,24 +192,24 @@ THREE.Scene
 
 `RenderControls` 只负责表单和事件回调，`useRenderSettings` 维护 `AircraftRenderSettings`，再由父组件通过 effect 将设置同步到已初始化的 Three.js 对象。
 
-| 设置 | 范围/选项 | 应用位置 |
-| --- | --- | --- |
-| 画质预设 | 性能优先、均衡、质量优先、自定义 | 同步像素倍率和阴影参数 |
-| 照明预设 | 中性检查、轮廓检查、顶部检查、三点灯光、自定义 | 同步 key/fill/rim 三盏方向光参数 |
-| 环境来源 | 内置工作室、HDRI 环境 | 选择 PMREM 环境贴图来源 |
-| HDRI 环境 | `hdri/*.hdr` 构建期清单 | 通过 select 选择并异步转换为 PMREM，失败回退内置环境 |
-| 环境强度 | `0..2`，步长 `0.05` | `scene.environmentIntensity` |
-| 右侧 KEY LIGHT HUD | 拖拽方位/仰角 + 强度滑条 | 同步主方向光方向和强度 |
-| 色调映射 | ACES、AgX、Neutral、关闭 | `renderer.toneMapping` |
-| 曝光 | `0.5..2`，步长 `0.05` | `renderer.toneMappingExposure` |
-| 渲染倍率 | `0.5..3`，步长 `0.25`，默认不超过设备 `2x` | `renderer.setPixelRatio` |
-| 主光源 X/Y/Z | `-20..20`，步长 `0.5` | `keyLight.position` |
-| 主光强度 | `0..6`，步长 `0.1` | `keyLight.intensity` |
-| 补光强度 | `0..4`，步长 `0.1` | `fillLight.intensity` |
-| 轮廓光强度 | `0..4`，步长 `0.1` | `rimLight.intensity` |
-| 实时阴影 | 开/关，默认开启 | `renderer.shadowMap.enabled` |
-| 阴影算法 | PCF、VSM，默认 VSM | `renderer.shadowMap.type` |
-| 展示平面 | 开/关，默认关闭 | `displayFloor.visible` |
+| 设置               | 范围/选项                                      | 应用位置                                             |
+| ------------------ | ---------------------------------------------- | ---------------------------------------------------- |
+| 画质预设           | 性能优先、均衡、质量优先、自定义               | 同步像素倍率和阴影参数                               |
+| 照明预设           | 中性检查、轮廓检查、顶部检查、三点灯光、自定义 | 同步 key/fill/rim 三盏方向光参数                     |
+| 环境来源           | 内置工作室、HDRI 环境                          | 选择 PMREM 环境贴图来源                              |
+| HDRI 环境          | `hdri/*.hdr` 构建期清单                        | 通过 select 选择并异步转换为 PMREM，失败回退内置环境 |
+| 环境强度           | `0..2`，步长 `0.05`                            | `scene.environmentIntensity`                         |
+| 右侧 KEY LIGHT HUD | 拖拽方位/仰角 + 强度滑条                       | 同步主方向光方向和强度                               |
+| 色调映射           | ACES、AgX、Neutral、关闭                       | `renderer.toneMapping`                               |
+| 曝光               | `0.5..2`，步长 `0.05`                          | `renderer.toneMappingExposure`                       |
+| 渲染倍率           | `0.5..3`，步长 `0.25`，默认不超过设备 `2x`     | `renderer.setPixelRatio`                             |
+| 主光源 X/Y/Z       | `-20..20`，步长 `0.5`                          | `keyLight.position`                                  |
+| 主光强度           | `0..6`，步长 `0.1`                             | `keyLight.intensity`                                 |
+| 补光强度           | `0..4`，步长 `0.1`                             | `fillLight.intensity`                                |
+| 轮廓光强度         | `0..4`，步长 `0.1`                             | `rimLight.intensity`                                 |
+| 实时阴影           | 开/关，默认开启                                | `renderer.shadowMap.enabled`                         |
+| 阴影算法           | PCF、VSM，默认 VSM                             | `renderer.shadowMap.type`                            |
+| 展示平面           | 开/关，默认关闭                                | `displayFloor.visible`                               |
 
 设置变化不会重新创建 renderer 或重新加载 GLB。质量预设覆盖像素倍率和阴影参数；照明预设覆盖主光方向、key/fill/rim 强度；任一高级参数手动修改后标记为自定义。`hdriAssets.ts` 在构建期扫描 `hdri/*.hdr` 并导出资源 URL，控制面板只允许从该清单选择，避免任意 URL 请求；select 变更会直接触发异步加载，旧请求完成后会被丢弃并释放 PMREM。HDRI 先由 `HDRLoader` 解析为 equirectangular 纹理，再经 `PMREMGenerator.fromEquirectangular()` 转为 PBR 可用环境；原始 HDR 纹理在转换后立即释放，当前 HDRI PMREM 只保留一份。加载失败或未选择资源时恢复 RoomEnvironment，并在控件内给出回退提示。右侧 KEY LIGHT HUD 用球面坐标映射主方向光，横向拖拽调整方位、纵向拖拽调整仰角，同时显示 X/Y/Z 坐标并提供 Z 轴独立滑条；半球中心到光点的方向线用于强化当前受光方向。像素倍率变更会结合当前容器尺寸重新分配绘制缓冲区；光源、环境强度和展示平面则直接修改现有对象。
 
@@ -284,15 +282,15 @@ THREE.Scene
 
 ## 常见问题排查
 
-| 现象 | 可能原因 | 检查方式 |
-| --- | --- | --- |
-| 视窗显示“WebGPU 不可用” | 浏览器/设备未暴露 `navigator.gpu` | 检查浏览器版本、GPU 开关和安全上下文 |
-| 目录有文件但模型加载失败 | 仍指向 legacy GLB v1，或资源 URL 不存在 | 检查 `modelAssets.ts` 的 glob、网络请求和转换产物 |
-| 切换模型后旧模型仍占显存 | effect 清理未执行或新增资源未纳入 dispose | 检查 cleanup、`disposeSceneResources` 和引用 ref |
-| 画布全屏后尺寸不正确 | 容器尺寸变化未触发 ResizeObserver | 检查全屏 CSS 和 `resizeRenderer` 是否重新设置 aspect/size |
-| 模型过亮、过暗或两侧明暗差异大 | 色调映射、曝光、主光源位置或模型法线/材质本身 | 先恢复默认渲染设置，再分别调整曝光和 X/Y/Z 光源 |
-| 高倍率下卡顿 | 像素倍率过高、模型纹理过大或设备 GPU 能力有限 | 临时降至 `1x`，再逐项打开阴影和展示平面 |
-| 动画播放或时间轴无响应 | 模型没有第一段有效动画，或 mixer/action 已在清理阶段释放 | 检查 `gltf.animations[0]`、`animationMixerRef` 和动画时间更新 |
+| 现象                           | 可能原因                                                 | 检查方式                                                      |
+| ------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------- |
+| 视窗显示“WebGPU 不可用”        | 浏览器/设备未暴露 `navigator.gpu`                        | 检查浏览器版本、GPU 开关和安全上下文                          |
+| 目录有文件但模型加载失败       | 仍指向 legacy GLB v1，或资源 URL 不存在                  | 检查 `modelAssets.ts` 的 glob、网络请求和转换产物             |
+| 切换模型后旧模型仍占显存       | effect 清理未执行或新增资源未纳入 dispose                | 检查 cleanup、`disposeSceneResources` 和引用 ref              |
+| 画布全屏后尺寸不正确           | 容器尺寸变化未触发 ResizeObserver                        | 检查全屏 CSS 和 `resizeRenderer` 是否重新设置 aspect/size     |
+| 模型过亮、过暗或两侧明暗差异大 | 色调映射、曝光、主光源位置或模型法线/材质本身            | 先恢复默认渲染设置，再分别调整曝光和 X/Y/Z 光源               |
+| 高倍率下卡顿                   | 像素倍率过高、模型纹理过大或设备 GPU 能力有限            | 临时降至 `1x`，再逐项打开阴影和展示平面                       |
+| 动画播放或时间轴无响应         | 模型没有第一段有效动画，或 mixer/action 已在清理阶段释放 | 检查 `gltf.animations[0]`、`animationMixerRef` 和动画时间更新 |
 
 ## 验收方案
 

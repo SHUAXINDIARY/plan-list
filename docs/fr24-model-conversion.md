@@ -141,13 +141,13 @@ FR24 仓库的 `LICENSE` 说明，大多数模型以 GPLv2 授权，个别模型
 
 ## 故障排查
 
-| 现象 | 可能原因 | 检查方式 |
-| --- | --- | --- |
-| 页面目录显示 0 个 FR24 模型 | 转换目录不存在或 glob 未命中 | 检查 `fr24-3d-models-glbv2/models/` 和构建资源扫描路径 |
-| `Legacy binary file detected` | 页面仍加载原始 GLB v1 | 检查 `modelAssets.ts` 是否指向 `fr24-3d-models-glbv2` |
-| 脚本提示缺少 `gltf-pipeline` | 依赖未安装或 pnpm 链接未完成 | 执行 `pnpm install`，再检查 `pnpm list gltf-pipeline` |
-| 个别转换失败 | 源文件损坏、格式异常或转换器不兼容 | 查看脚本逐文件错误，单独保留输入复现 |
-| 输出存在但模型仍不显示 | 浏览器 WebGPU 或 GLTFLoader 运行时问题 | 先检查模型 v2 头，再检查浏览器控制台与 WebGPU 支持 |
+| 现象                          | 可能原因                               | 检查方式                                               |
+| ----------------------------- | -------------------------------------- | ------------------------------------------------------ |
+| 页面目录显示 0 个 FR24 模型   | 转换目录不存在或 glob 未命中           | 检查 `fr24-3d-models-glbv2/models/` 和构建资源扫描路径 |
+| `Legacy binary file detected` | 页面仍加载原始 GLB v1                  | 检查 `modelAssets.ts` 是否指向 `fr24-3d-models-glbv2`  |
+| 脚本提示缺少 `gltf-pipeline`  | 依赖未安装或 pnpm 链接未完成           | 执行 `pnpm install`，再检查 `pnpm list gltf-pipeline`  |
+| 个别转换失败                  | 源文件损坏、格式异常或转换器不兼容     | 查看脚本逐文件错误，单独保留输入复现                   |
+| 输出存在但模型仍不显示        | 浏览器 WebGPU 或 GLTFLoader 运行时问题 | 先检查模型 v2 头，再检查浏览器控制台与 WebGPU 支持     |
 
 ## 后续演进
 

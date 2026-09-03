@@ -1,8 +1,5 @@
 import { lazy, Suspense, type ReactElement } from "react";
-import {
-    FLIGHT_RECORD_COUNT,
-    flightRecordsByYear,
-} from "./constants/flightRecordsSummary";
+import { FLIGHT_RECORD_COUNT, flightRecordsByYear } from "./constants/flightRecordsSummary";
 import { CHECKED_AIRPORTS, checkedCountryCount } from "./constants/summary";
 import { PersonalAirportSectionSkeleton } from "./sections/PersonalAirportSectionSkeleton";
 import { PersonalFlightRecordsSectionSkeleton } from "./sections/PersonalFlightRecordsSectionSkeleton";
@@ -59,15 +56,10 @@ const formatPersonalTimelineDateTime = (departureDate: string): string => {
  */
 const PersonalPage = (): ReactElement => {
     return (
-        <section
-            className="page-panel personal-archive"
-            aria-labelledby="personal-page-title"
-        >
+        <section className="page-panel personal-archive" aria-labelledby="personal-page-title">
             <p className="page-eyebrow">飞行日志</p>
             <h1 id="personal-page-title">站长飞行日志</h1>
-            <p>
-                汇总打卡过的机场与乘坐过的航班，把旅途记录整理成可回看的航空足迹。
-            </p>
+            <p>汇总打卡过的机场与乘坐过的航班，把旅途记录整理成可回看的航空足迹。</p>
 
             <div className="personal-summary" aria-label="站长飞行日志概览">
                 <span>
@@ -84,20 +76,14 @@ const PersonalPage = (): ReactElement => {
                 </span>
             </div>
 
-            <section
-                className="personal-timeline"
-                aria-labelledby="personal-timeline-title"
-            >
+            <section className="personal-timeline" aria-labelledby="personal-timeline-title">
                 <header className="personal-timeline__header">
                     <p className="personal-section__eyebrow">最近航程</p>
                     <h2 id="personal-timeline-title">航程时间线</h2>
                 </header>
                 <ol className="personal-timeline__list">
                     {PERSONAL_TIMELINE_RECORDS.map(
-                        (
-                            flightRecord: FlightRecord,
-                            flightRecordIndex: number,
-                        ): ReactElement => (
+                        (flightRecord: FlightRecord, flightRecordIndex: number): ReactElement => (
                             <li
                                 key={`${flightRecord.airline}-${flightRecord.aircraft}-${flightRecord.departureDate}-${flightRecordIndex}`}
                             >
@@ -112,9 +98,7 @@ const PersonalPage = (): ReactElement => {
                                     <strong>{flightRecord.airline}</strong>
                                     <span>{flightRecord.aircraft}</span>
                                 </div>
-                                <p>
-                                    {formatPersonalTimelineRoute(flightRecord)}
-                                </p>
+                                <p>{formatPersonalTimelineRoute(flightRecord)}</p>
                             </li>
                         ),
                     )}

@@ -24,16 +24,20 @@ const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 //     });
 
 // FR24 的 glTF 1.0 文件不在 GLTFLoade r 2.0 支持范围内，因此只收集兼容的 GLB 模型。
-const fr24ModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../fr24-3d-models-glbv2/models/**/*.glb", {
+const fr24ModelModules: Record<string, () => Promise<string>> = import.meta.glob<string>(
+    "../../../fr24-3d-models-glbv2/models/**/*.glb",
+    {
         import: "default",
-    });
+    },
+);
 
 // 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的  GLB 文件。
-const customModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../sketchfab/**/*.glb", {
+const customModelModules: Record<string, () => Promise<string>> = import.meta.glob<string>(
+    "../../../sketchfab/**/*.glb",
+    {
         import: "default",
-    });
+    },
+);
 
 /** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
@@ -57,12 +61,8 @@ const getModelLabel = (sourcePath: string): string => {
     const fileName = pathSegments[pathSegments.length - 1] ?? sourcePath;
     const fileStem = fileName.replace(/\.glb$/i, "");
     const isLogoFreeVariant = fileStem.endsWith("_nologo");
-    const baseLabel = isLogoFreeVariant
-        ? fileStem.slice(0, -"_nologo".length)
-        : fileStem;
-    const variantLabel = isLogoFreeVariant
-        ? `${baseLabel} · 无标识`
-        : baseLabel;
+    const baseLabel = isLogoFreeVariant ? fileStem.slice(0, -"_nologo".length) : fileStem;
+    const variantLabel = isLogoFreeVariant ? `${baseLabel} · 无标识` : baseLabel;
 
     return variantLabel;
 };

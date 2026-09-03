@@ -1,8 +1,4 @@
-import type {
-    AirlineAlliance,
-    AirlineAllianceFilter,
-    PassengerAircraftSortOrder,
-} from "./type";
+import type { AirlineAlliance, AirlineAllianceFilter, PassengerAircraftSortOrder } from "./type";
 
 // 公开静态数据路径，由 public/data/airplan.json 提供航司与机型映射。
 export const AIRPLANE_DATA_URL = "/data/airplan.json";
@@ -23,15 +19,10 @@ export const ALL_AIRLINE_ALLIANCES_VALUE: AirlineAllianceFilter = "all";
 export const NO_AIRLINE_ALLIANCE_VALUE: AirlineAllianceFilter = "none";
 
 // 联盟筛选采用固定顺序，避免受数据条目顺序影响。
-export const AIRLINE_ALLIANCE_OPTIONS: AirlineAlliance[] = [
-    "Star Alliance",
-    "SkyTeam",
-    "oneworld",
-];
+export const AIRLINE_ALLIANCE_OPTIONS: AirlineAlliance[] = ["Star Alliance", "SkyTeam", "oneworld"];
 
 // 默认按照公开数据中的客机数量从多到少排序，优先展示规模更大的航司。
-export const DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER: PassengerAircraftSortOrder =
-    "passenger-desc";
+export const DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER: PassengerAircraftSortOrder = "passenger-desc";
 
 // 航司 logo 主色，按英文名绑定，避免列表排序或筛选后顶部色条错位。
 export const AIRLINE_BRAND_COLORS: Record<string, string> = {
@@ -102,7 +93,7 @@ export const AIRLINE_BRAND_COLORS: Record<string, string> = {
     Ryanair: "#073590",
     "Royal Air Maroc": "#c8102e",
     "Ruili Airlines": "#007a3d",
-    "Scoot": "#f5c400",
+    Scoot: "#f5c400",
     "Shandong Airlines": "#005eb8",
     "Shanghai Airlines": "#d71920",
     "Shenzhen Airlines": "#b5121b",
@@ -125,7 +116,7 @@ export const AIRLINE_BRAND_COLORS: Record<string, string> = {
     "United Airlines": "#2563eb",
     "Urumqi Air": "#009688",
     "West Air": "#d71920",
-    "XiamenAir": "#00a3e0",
+    XiamenAir: "#00a3e0",
     "ZIPAIR Tokyo": "#111827",
     flynas: "#6f2da8",
 };

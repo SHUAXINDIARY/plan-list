@@ -12,13 +12,8 @@ const PersonalAircraftPhotosSection = lazy(
  */
 const PhotosPage = (): ReactElement => {
     return (
-        <section
-            className="page-panel personal-archive photos-archive"
-            aria-label="飞机照片"
-        >
-            <Suspense
-                fallback={<PersonalPhotosSectionSkeleton headingLevel="h1" />}
-            >
+        <section className="page-panel personal-archive photos-archive" aria-label="飞机照片">
+            <Suspense fallback={<PersonalPhotosSectionSkeleton headingLevel="h1" />}>
                 <PersonalAircraftPhotosSection headingLevel="h1" />
             </Suspense>
         </section>

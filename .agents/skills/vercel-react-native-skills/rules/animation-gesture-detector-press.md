@@ -15,75 +15,69 @@ JS thread round-trip for press animations.
 **Incorrect (Pressable with JS thread callbacks):**
 
 ```tsx
-import { Pressable } from 'react-native'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated'
+import { Pressable } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 function AnimatedButton({ onPress }: { onPress: () => void }) {
-  const scale = useSharedValue(1)
+    const scale = useSharedValue(1);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }))
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }],
+    }));
 
-  return (
-    <Pressable
-      onPress={onPress}
-      onPressIn={() => (scale.value = withTiming(0.95))}
-      onPressOut={() => (scale.value = withTiming(1))}
-    >
-      <Animated.View style={animatedStyle}>
-        <Text>Press me</Text>
-      </Animated.View>
-    </Pressable>
-  )
+    return (
+        <Pressable
+            onPress={onPress}
+            onPressIn={() => (scale.value = withTiming(0.95))}
+            onPressOut={() => (scale.value = withTiming(1))}
+        >
+            <Animated.View style={animatedStyle}>
+                <Text>Press me</Text>
+            </Animated.View>
+        </Pressable>
+    );
 }
 ```
 
 **Correct (GestureDetector with UI thread worklets):**
 
 ```tsx
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  interpolate,
-  runOnJS,
-} from 'react-native-reanimated'
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    interpolate,
+    runOnJS,
+} from "react-native-reanimated";
 
 function AnimatedButton({ onPress }: { onPress: () => void }) {
-  // Store the press STATE (0 = not pressed, 1 = pressed)
-  const pressed = useSharedValue(0)
+    // Store the press STATE (0 = not pressed, 1 = pressed)
+    const pressed = useSharedValue(0);
 
-  const tap = Gesture.Tap()
-    .onBegin(() => {
-      pressed.set(withTiming(1))
-    })
-    .onFinalize(() => {
-      pressed.set(withTiming(0))
-    })
-    .onEnd(() => {
-      runOnJS(onPress)()
-    })
+    const tap = Gesture.Tap()
+        .onBegin(() => {
+            pressed.set(withTiming(1));
+        })
+        .onFinalize(() => {
+            pressed.set(withTiming(0));
+        })
+        .onEnd(() => {
+            runOnJS(onPress)();
+        });
 
-  // Derive visual values from the state
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) },
-    ],
-  }))
+    // Derive visual values from the state
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) }],
+    }));
 
-  return (
-    <GestureDetector gesture={tap}>
-      <Animated.View style={animatedStyle}>
-        <Text>Press me</Text>
-      </Animated.View>
-    </GestureDetector>
-  )
+    return (
+        <GestureDetector gesture={tap}>
+            <Animated.View style={animatedStyle}>
+                <Text>Press me</Text>
+            </Animated.View>
+        </GestureDetector>
+    );
 }
 ```
 

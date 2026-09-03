@@ -82,9 +82,7 @@ export const getQualityPresetSettings = (
 };
 
 /** 将用户可读的预设名称映射至模型视窗可用的色调映射值。 */
-export const getToneMappingValue = (
-    toneMapping: AircraftToneMapping,
-): THREE.ToneMapping => {
+export const getToneMappingValue = (toneMapping: AircraftToneMapping): THREE.ToneMapping => {
     if (toneMapping === "agx") {
         return THREE.AgXToneMapping;
     }
@@ -101,9 +99,7 @@ export const getToneMappingValue = (
 };
 
 /** 将界面中的阴影模式映射至 WebGPU 渲染器的阴影贴图类型。 */
-export const getShadowMapType = (
-    shadowMode: AircraftShadowMode,
-): THREE.ShadowMapType =>
+export const getShadowMapType = (shadowMode: AircraftShadowMode): THREE.ShadowMapType =>
     shadowMode === "vsm" ? THREE.VSMShadowMap : THREE.PCFShadowMap;
 
 /** 建立渲染控制面板的默认设置，高 DPI 设备最多使用 2x。 */

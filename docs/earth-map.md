@@ -8,15 +8,15 @@
 
 ## 文件与职责
 
-| 文件 | 职责 |
-| --- | --- |
-| `src/pages/personal/sections/EarthMap.tsx` | Three.js 场景、球面几何、交互、渲染器初始化及清理 |
+| 文件                                                     | 职责                                                             |
+| -------------------------------------------------------- | ---------------------------------------------------------------- |
+| `src/pages/personal/sections/EarthMap.tsx`               | Three.js 场景、球面几何、交互、渲染器初始化及清理                |
 | `src/pages/personal/sections/PersonalAirportSection.tsx` | 地图/地球/航线图模式切换、全屏展示、渲染器选择和实际后端状态展示 |
-| `src/pages/personal/constants/airportsMap.ts` | 共享的 `airportMapMarkers` 与 `MAP_ROUTES` 数据 |
-| `src/components/map/map.geojson` | Natural Earth 国家边界和 `CONTINENT` 属性，供大洲填充与轮廓使用 |
-| `src/pages/personal/index.css` | 地球容器、tooltip、图例和移动端布局 |
-| `src/App.css` | 深浅主题下的地图容器、图例、tooltip 等 `--pl-map-*` token |
-| `rsbuild.config.ts` / `src/env.d.ts` | GeoJSON `?raw` 导入支持 |
+| `src/pages/personal/constants/airportsMap.ts`            | 共享的 `airportMapMarkers` 与 `MAP_ROUTES` 数据                  |
+| `src/components/map/map.geojson`                         | Natural Earth 国家边界和 `CONTINENT` 属性，供大洲填充与轮廓使用  |
+| `src/pages/personal/index.css`                           | 地球容器、tooltip、图例和移动端布局                              |
+| `src/App.css`                                            | 深浅主题下的地图容器、图例、tooltip 等 `--pl-map-*` token        |
+| `rsbuild.config.ts` / `src/env.d.ts`                     | GeoJSON `?raw` 导入支持                                          |
 
 ## 组件接口
 
@@ -24,11 +24,11 @@
 type EarthRenderEngine = "webgpu" | "webgl";
 
 interface EarthMapProps {
-  markers: WorldMapMarker[];
-  routes: WorldMapRoute[];
-  ariaLabel: string;
-  renderEngine: EarthRenderEngine;
-  onRendererReady: (renderEngine: EarthRenderEngine) => void;
+    markers: WorldMapMarker[];
+    routes: WorldMapRoute[];
+    ariaLabel: string;
+    renderEngine: EarthRenderEngine;
+    onRendererReady: (renderEngine: EarthRenderEngine) => void;
 }
 ```
 
@@ -38,11 +38,11 @@ interface EarthMapProps {
 
 ```tsx
 <EarthMap
-  ariaLabel="机场打卡三维地球"
-  markers={airportMapMarkers}
-  routes={MAP_ROUTES}
-  renderEngine={earthRenderEngine}
-  onRendererReady={handleEarthRendererReady}
+    ariaLabel="机场打卡三维地球"
+    markers={airportMapMarkers}
+    routes={MAP_ROUTES}
+    renderEngine={earthRenderEngine}
+    onRendererReady={handleEarthRendererReady}
 />
 ```
 
@@ -95,15 +95,15 @@ flowchart LR
 
 场景使用一个 `globeGroup` 承载地理对象，初始绕 Y 轴偏转，使亚洲与当前航线优先进入视野。
 
-| 层 | 几何 / 材质 | 半径或位置 | 作用 |
-| --- | --- | --- | --- |
-| 地球底球 | `SphereGeometry` + `MeshPhongMaterial` | `1` | 海洋底色、弱自发光与基础光照 |
-| 经纬网 | wireframe `SphereGeometry` | `1.002` | 辅助定位，低透明度显示 |
-| 大洲填充 | 按洲合并的 `BufferGeometry` + `MeshBasicMaterial` | `1.005` | 复用二维地图的大洲配色 |
-| 国家轮廓 | `THREE.Line` | `1.008` | 国界与海岸线，位于填充层上方 |
-| 大气层 | 背面 `SphereGeometry` | `1.055` | 轻量外沿氛围 |
-| 航线 | `THREE.Line` | 高于球面 | 国内/国际航段弧线 |
-| 机场 | 单位 `SphereGeometry`，逐帧缩放 | 表面半径 `1.028` | 机场点，供 Raycaster 命中 |
+| 层       | 几何 / 材质                                       | 半径或位置       | 作用                         |
+| -------- | ------------------------------------------------- | ---------------- | ---------------------------- |
+| 地球底球 | `SphereGeometry` + `MeshPhongMaterial`            | `1`              | 海洋底色、弱自发光与基础光照 |
+| 经纬网   | wireframe `SphereGeometry`                        | `1.002`          | 辅助定位，低透明度显示       |
+| 大洲填充 | 按洲合并的 `BufferGeometry` + `MeshBasicMaterial` | `1.005`          | 复用二维地图的大洲配色       |
+| 国家轮廓 | `THREE.Line`                                      | `1.008`          | 国界与海岸线，位于填充层上方 |
+| 大气层   | 背面 `SphereGeometry`                             | `1.055`          | 轻量外沿氛围                 |
+| 航线     | `THREE.Line`                                      | 高于球面         | 国内/国际航段弧线            |
+| 机场     | 单位 `SphereGeometry`，逐帧缩放                   | 表面半径 `1.028` | 机场点，供 Raycaster 命中    |
 
 大洲填充与轮廓使用不同半径，避免 z-fighting。轮廓使用 `THREE.Line` 而不是 `THREE.LineLoop`，因为 WebGPU 渲染器不支持 `LineLoop`；闭合效果由手动补齐首尾点实现。
 
@@ -165,15 +165,15 @@ routeLift = 0.045 + sin(progress * PI) * 0.2
 
 ## 交互与无障碍
 
-| 场景 | 行为 |
-| --- | --- |
-| 默认自转 | `OrbitControls.autoRotate` 默认开启，使用 `GLOBE_AUTO_ROTATE_SPEED` 控制速度；用户拖拽时由手势接管 |
-| 拖拽 | `OrbitControls` 绕地球旋转，启用阻尼，禁止平移 |
-| 滚轮 / 触控缩放 | 缩放距离限制在 `1` 到 `10` |
-| 机场悬停 | Raycaster 对机场 mesh 做命中检测，显示名称和可选描述 |
-| 指针离开 | 清空 tooltip 状态 |
-| 容器尺寸变化 | `ResizeObserver` 更新相机宽高比和 renderer 尺寸 |
-| 全屏 | Portal 覆盖视口；Escape 退出、锁定页面滚动，并将焦点还给入口 |
+| 场景            | 行为                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| 默认自转        | `OrbitControls.autoRotate` 默认开启，使用 `GLOBE_AUTO_ROTATE_SPEED` 控制速度；用户拖拽时由手势接管 |
+| 拖拽            | `OrbitControls` 绕地球旋转，启用阻尼，禁止平移                                                     |
+| 滚轮 / 触控缩放 | 缩放距离限制在 `1` 到 `10`                                                                         |
+| 机场悬停        | Raycaster 对机场 mesh 做命中检测，显示名称和可选描述                                               |
+| 指针离开        | 清空 tooltip 状态                                                                                  |
+| 容器尺寸变化    | `ResizeObserver` 更新相机宽高比和 renderer 尺寸                                                    |
+| 全屏            | Portal 覆盖视口；Escape 退出、锁定页面滚动，并将焦点还给入口                                       |
 
 外层 `.earth-map` 使用 `role="img"` 和调用方传入的 `ariaLabel`。canvas 被标记为 `aria-hidden`，避免屏幕阅读器暴露无语义的 WebGL/WebGPU 画布；当前的拖拽和缩放说明保留在容器内部的辅助文本中。
 
@@ -213,15 +213,15 @@ routeLift = 0.045 + sin(progress * PI) * 0.2
 
 ### 常见问题
 
-| 现象 | 原因 | 处理方式 |
-| --- | --- | --- |
-| WebGPU 选择后显示 WebGL（已降级） | 浏览器未提供 WebGPU，或初始化失败 | 属于预期回退；检查浏览器和 GPU 支持情况 |
-| 控制台提示 `LineLoop` 不受支持 | WebGPU 不支持该对象 | 使用闭合点序列的 `THREE.Line`，不要改回 `LineLoop` |
-| 大陆内部出现三角形空白 | 填充三角形没有贴合球面，被底球深度遮挡 | 保留球面细分逻辑；不要只增加填充半径 |
-| 大陆内部出现细微线条空隙 | 相邻三角形按不同段数投射球面，共享边出现 T 形接缝 | 保留多边形统一细分段数；不要恢复单三角形独立段数 |
-| 地球缩放后机场点过大或过小 | 未通过 `resolveMarkerWorldRadius` 将 CSS 像素半径换算到世界坐标 | 保留单位球体和逐帧缩放逻辑；不要恢复固定世界半径 |
-| 切换主题或引擎后地球短暂重建 | scene effect 的依赖变化 | 属于预期行为，旧 renderer 会在清理阶段释放 |
-| GeoJSON 导入报模块或解析错误 | `?raw` 声明或 Rsbuild 静态资源规则缺失 | 同时检查 `src/env.d.ts` 与 `rsbuild.config.ts` |
+| 现象                              | 原因                                                            | 处理方式                                           |
+| --------------------------------- | --------------------------------------------------------------- | -------------------------------------------------- |
+| WebGPU 选择后显示 WebGL（已降级） | 浏览器未提供 WebGPU，或初始化失败                               | 属于预期回退；检查浏览器和 GPU 支持情况            |
+| 控制台提示 `LineLoop` 不受支持    | WebGPU 不支持该对象                                             | 使用闭合点序列的 `THREE.Line`，不要改回 `LineLoop` |
+| 大陆内部出现三角形空白            | 填充三角形没有贴合球面，被底球深度遮挡                          | 保留球面细分逻辑；不要只增加填充半径               |
+| 大陆内部出现细微线条空隙          | 相邻三角形按不同段数投射球面，共享边出现 T 形接缝               | 保留多边形统一细分段数；不要恢复单三角形独立段数   |
+| 地球缩放后机场点过大或过小        | 未通过 `resolveMarkerWorldRadius` 将 CSS 像素半径换算到世界坐标 | 保留单位球体和逐帧缩放逻辑；不要恢复固定世界半径   |
+| 切换主题或引擎后地球短暂重建      | scene effect 的依赖变化                                         | 属于预期行为，旧 renderer 会在清理阶段释放         |
+| GeoJSON 导入报模块或解析错误      | `?raw` 声明或 Rsbuild 静态资源规则缺失                          | 同时检查 `src/env.d.ts` 与 `rsbuild.config.ts`     |
 
 ---
 

@@ -22,18 +22,11 @@ type RouteDirection = "forward" | "backward" | "neutral";
 /**
  * 根据前后路径在主导航中的索引比较切换方向。
  */
-const resolveRouteDirection = (
-    previousPath: string,
-    nextPath: string,
-): RouteDirection => {
+const resolveRouteDirection = (previousPath: string, nextPath: string): RouteDirection => {
     const previousIndex = ROUTE_PATH_ORDER.indexOf(previousPath);
     const nextIndex = ROUTE_PATH_ORDER.indexOf(nextPath);
 
-    if (
-        previousIndex < 0 ||
-        nextIndex < 0 ||
-        previousIndex === nextIndex
-    ) {
+    if (previousIndex < 0 || nextIndex < 0 || previousIndex === nextIndex) {
         return "neutral";
     }
 
@@ -49,11 +42,7 @@ export const RouteTransitionLayout = (): ReactElement => {
 
     // 用 ref 中尚未更新的旧路径计算方向，再在 layout 阶段写入新路径。
     const direction = useMemo(
-        (): RouteDirection =>
-            resolveRouteDirection(
-                previousPathRef.current,
-                location.pathname,
-            ),
+        (): RouteDirection => resolveRouteDirection(previousPathRef.current, location.pathname),
         [location.pathname],
     );
 
@@ -62,11 +51,7 @@ export const RouteTransitionLayout = (): ReactElement => {
     }, [location.pathname]);
 
     return (
-        <div
-            key={location.pathname}
-            className="route-transition"
-            data-direction={direction}
-        >
+        <div key={location.pathname} className="route-transition" data-direction={direction}>
             <Outlet />
         </div>
     );

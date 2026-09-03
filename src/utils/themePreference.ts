@@ -26,9 +26,7 @@ export function normalizeThemePreference(raw: string | null): ThemePreference {
  */
 export function readThemePreferenceFromStorage(): ThemePreference {
     try {
-        return normalizeThemePreference(
-            window.localStorage.getItem(THEME_STORAGE_KEY),
-        );
+        return normalizeThemePreference(window.localStorage.getItem(THEME_STORAGE_KEY));
     } catch {
         return "dark";
     }
@@ -39,9 +37,7 @@ export function readThemePreferenceFromStorage(): ThemePreference {
  *
  * @param preference 要持久化的主题。
  */
-export function writeThemePreferenceToStorage(
-    preference: ThemePreference,
-): void {
+export function writeThemePreferenceToStorage(preference: ThemePreference): void {
     try {
         window.localStorage.setItem(THEME_STORAGE_KEY, preference);
     } catch {
@@ -69,11 +65,8 @@ export const THEME_COLOR_LIGHT = "#f3f8fb";
  *
  * @param preference 当前主题。
  */
-export function updateDocumentThemeColor(
-    preference: ThemePreference,
-): void {
-    const content =
-        preference === "light" ? THEME_COLOR_LIGHT : THEME_COLOR_DARK;
+export function updateDocumentThemeColor(preference: ThemePreference): void {
+    const content = preference === "light" ? THEME_COLOR_LIGHT : THEME_COLOR_DARK;
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
         meta.setAttribute("content", content);

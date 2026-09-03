@@ -10,10 +10,7 @@ const GLB_MAGIC = "glTF";
 /** Three.js GLTFLoader 所需的 GLB/glTF 2.0 文件版本。 */
 const GLB_V2_VERSION = 2;
 /** 源子模块中待转换的 legacy GLB 模型目录。 */
-const SOURCE_MODELS_DIRECTORY_SEGMENTS = [
-    "fr24-3d-models",
-    "models",
-];
+const SOURCE_MODELS_DIRECTORY_SEGMENTS = ["fr24-3d-models", "models"];
 /** 根目录下存放转换产物的目录名称。 */
 const OUTPUT_DIRECTORY_NAME = "fr24-3d-models-glbv2";
 /** 输出仓库内保留与源仓库一致的模型目录名称。 */
@@ -41,9 +38,7 @@ const loadGlbConverter = () => {
     } catch (error) {
         const reason = error instanceof Error ? error.message : String(error);
 
-        throw new Error(
-            `无法加载 gltf-pipeline。请先执行 pnpm add -D gltf-pipeline。${reason}`,
-        );
+        throw new Error(`无法加载 gltf-pipeline。请先执行 pnpm add -D gltf-pipeline。${reason}`);
     }
 };
 
@@ -63,23 +58,15 @@ const getSourceModelFileNames = async (sourceDirectory) => {
     });
 
     return directoryEntries
-        .filter(
-            (entry) =>
-                entry.isFile() && extname(entry.name).toLowerCase() === ".glb",
-        )
+        .filter((entry) => entry.isFile() && extname(entry.name).toLowerCase() === ".glb")
         .map((entry) => entry.name)
-        .sort((firstFileName, secondFileName) =>
-            firstFileName.localeCompare(secondFileName),
-        );
+        .sort((firstFileName, secondFileName) => firstFileName.localeCompare(secondFileName));
 };
 
 /** 顺序转换全部 legacy GLB v1 文件，降低转换期间的峰值内存占用。 */
 const convertModels = async () => {
     const projectRoot = getProjectRoot();
-    const sourceDirectory = join(
-        projectRoot,
-        ...SOURCE_MODELS_DIRECTORY_SEGMENTS,
-    );
+    const sourceDirectory = join(projectRoot, ...SOURCE_MODELS_DIRECTORY_SEGMENTS);
     const outputRootDirectory = join(projectRoot, OUTPUT_DIRECTORY_NAME);
     const outputDirectory = join(outputRootDirectory, MODELS_DIRECTORY_NAME);
     const convertGlb = loadGlbConverter();
@@ -96,11 +83,7 @@ const convertModels = async () => {
         join(outputRootDirectory, LICENSE_FILE_NAME),
     );
 
-    for (
-        let sourceIndex = 0;
-        sourceIndex < sourceFileNames.length;
-        sourceIndex += 1
-    ) {
+    for (let sourceIndex = 0; sourceIndex < sourceFileNames.length; sourceIndex += 1) {
         const sourceFileName = sourceFileNames[sourceIndex];
 
         if (sourceFileName === undefined) {
@@ -121,25 +104,21 @@ const convertModels = async () => {
             }
 
             await writeFile(outputPath, conversionResult.glb);
-            console.log(
-                `[${sourceIndex + 1}/${sourceFileNames.length}] 已转换 ${sourceFileName}`,
-            );
+            console.log(`[${sourceIndex + 1}/${sourceFileNames.length}] 已转换 ${sourceFileName}`);
         } catch (error) {
             const reason = error instanceof Error ? error.message : String(error);
             failures.push(`${sourceFileName}: ${reason}`);
-            console.error(`[${sourceIndex + 1}/${sourceFileNames.length}] 失败 ${sourceFileName}: ${reason}`);
+            console.error(
+                `[${sourceIndex + 1}/${sourceFileNames.length}] 失败 ${sourceFileName}: ${reason}`,
+            );
         }
     }
 
     if (failures.length > 0) {
-        throw new Error(
-            `${failures.length} 个模型转换失败：\n${failures.join("\n")}`,
-        );
+        throw new Error(`${failures.length} 个模型转换失败：\n${failures.join("\n")}`);
     }
 
-    console.log(
-        `转换完成：${sourceFileNames.length} 个 GLB v2 文件，输出目录：${outputDirectory}`,
-    );
+    console.log(`转换完成：${sourceFileNames.length} 个 GLB v2 文件，输出目录：${outputDirectory}`);
 };
 
 await convertModels();

@@ -4,9 +4,5 @@ export const readThemeColor = (token: string, fallback: string): string => {
         return fallback;
     }
 
-    return (
-        getComputedStyle(document.documentElement)
-            .getPropertyValue(token)
-            .trim() || fallback
-    );
+    return getComputedStyle(document.documentElement).getPropertyValue(token).trim() || fallback;
 };

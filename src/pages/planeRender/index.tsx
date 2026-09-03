@@ -1,8 +1,5 @@
 import { useCallback, useRef, useState, type ReactElement } from "react";
-import {
-    AircraftModelViewport,
-    type AircraftModelLoadingProgress,
-} from "./AircraftModelViewport";
+import { AircraftModelViewport, type AircraftModelLoadingProgress } from "./AircraftModelViewport";
 import ModelDir from "./ModelDir";
 import { AIRCRAFT_MODEL_ASSETS, type AircraftModelAsset } from "./modelAssets";
 import "./index.css";
@@ -29,17 +26,13 @@ const MODEL_SWITCHING_PROGRESS: AircraftModelLoadingProgress = {
 const INITIAL_SELECTED_MODEL_ID = AIRCRAFT_MODEL_ASSETS[0]?.id ?? "";
 
 /** 根据加载阶段生成页面内的状态标题。 */
-const getLoadingStatusTitle = (
-    progress: AircraftModelLoadingProgress,
-): string => {
+const getLoadingStatusTitle = (progress: AircraftModelLoadingProgress): string => {
     if (progress.phase === "initializing") {
         return "正在初始化 WebGPU";
     }
 
     if (progress.phase === "loading") {
-        return progress.loadingStage === "parsing"
-            ? "正在解析当前模型"
-            : "正在载入当前模型";
+        return progress.loadingStage === "parsing" ? "正在解析当前模型" : "正在载入当前模型";
     }
 
     if (progress.phase === "error") {
@@ -50,9 +43,7 @@ const getLoadingStatusTitle = (
 };
 
 /** 根据加载阶段和可用字节进度生成页面内的状态说明。 */
-const getLoadingStatusDescription = (
-    progress: AircraftModelLoadingProgress,
-): string => {
+const getLoadingStatusDescription = (progress: AircraftModelLoadingProgress): string => {
     if (progress.message !== undefined) {
         return progress.message;
     }
@@ -73,9 +64,7 @@ const getLoadingStatusDescription = (
 };
 
 /** 将渲染后端状态转换为状态栏中的可读文本。 */
-const getRendererStatusLabel = (
-    progress: AircraftModelLoadingProgress,
-): string => {
+const getRendererStatusLabel = (progress: AircraftModelLoadingProgress): string => {
     if (progress.rendererStatus === "initializing") {
         return "初始化中";
     }
@@ -92,21 +81,15 @@ const getRendererStatusLabel = (
 };
 
 /** 从模型目录中查找当前选择的单架模型。 */
-const getSelectedModel = (
-    selectedModelId: string,
-): AircraftModelAsset | undefined =>
-    AIRCRAFT_MODEL_ASSETS.find(
-        (asset): boolean => asset.id === selectedModelId,
-    );
+const getSelectedModel = (selectedModelId: string): AircraftModelAsset | undefined =>
+    AIRCRAFT_MODEL_ASSETS.find((asset): boolean => asset.id === selectedModelId);
 
 /**
  * 使用 WebGPU 每次渲染当前选择的一架飞机模型。
  */
 const PlaneRenderPage = (): ReactElement => {
     const viewportRef = useRef<HTMLElement | null>(null);
-    const [selectedModelId, setSelectedModelId] = useState<string>(
-        INITIAL_SELECTED_MODEL_ID,
-    );
+    const [selectedModelId, setSelectedModelId] = useState<string>(INITIAL_SELECTED_MODEL_ID);
     const [loadingProgress, setLoadingProgress] =
         useState<AircraftModelLoadingProgress>(INITIAL_LOADING_PROGRESS);
     const [retryToken, setRetryToken] = useState<number>(0);
@@ -143,14 +126,10 @@ const PlaneRenderPage = (): ReactElement => {
     const selectedModelSummary = selectedModel?.label ?? "暂无模型";
     const hasFailedModels = loadingProgress.failedModelCount > 0;
     const isModelLoading =
-        loadingProgress.phase === "initializing" ||
-        loadingProgress.phase === "loading";
+        loadingProgress.phase === "initializing" || loadingProgress.phase === "loading";
 
     return (
-        <section
-            className="page-panel plane-render"
-            aria-labelledby="plane-render-heading"
-        >
+        <section className="page-panel plane-render" aria-labelledby="plane-render-heading">
             <header className="plane-render__header">
                 <p className="page-eyebrow">Model Studio</p>
                 <h1 id="plane-render-heading">飞机模型渲染</h1>
@@ -176,20 +155,11 @@ const PlaneRenderPage = (): ReactElement => {
                     {loadingProgress.phase !== "ready" ? (
                         <div
                             className={`plane-render__viewport-status plane-render__viewport-status--${loadingProgress.phase}`}
-                            role={
-                                loadingProgress.phase === "error"
-                                    ? "alert"
-                                    : "status"
-                            }
+                            role={loadingProgress.phase === "error" ? "alert" : "status"}
                         >
-                            <strong>
-                                {getLoadingStatusTitle(loadingProgress)}
-                            </strong>
-                            <span>
-                                {getLoadingStatusDescription(loadingProgress)}
-                            </span>
-                            {loadingProgress.phase === "error" &&
-                            selectedModel !== undefined ? (
+                            <strong>{getLoadingStatusTitle(loadingProgress)}</strong>
+                            <span>{getLoadingStatusDescription(loadingProgress)}</span>
+                            {loadingProgress.phase === "error" && selectedModel !== undefined ? (
                                 <button
                                     className="plane-render__retry-button"
                                     type="button"
@@ -200,10 +170,7 @@ const PlaneRenderPage = (): ReactElement => {
                             ) : null}
                         </div>
                     ) : null}
-                    <p
-                        className="plane-render__viewport-caption"
-                        aria-live="polite"
-                    >
+                    <p className="plane-render__viewport-caption" aria-live="polite">
                         {selectedModelSummary}
                     </p>
                 </section>
@@ -249,12 +216,9 @@ const PlaneRenderPage = (): ReactElement => {
                     rel="noreferrer"
                 >
                     fr24-3d-models
-                </a>{"、"}
-                <a
-                    href="https://sketchfab.com"
-                    target="_blank"
-                    rel="noreferrer"
-                >
+                </a>
+                {"、"}
+                <a href="https://sketchfab.com" target="_blank" rel="noreferrer">
                     sketchfab
                 </a>{" "}
                 提供。

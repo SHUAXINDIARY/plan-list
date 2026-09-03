@@ -10,9 +10,7 @@ import {
 import type { AircraftCamera } from "../types";
 
 /** 为飞机模型统一配置轨道相机的阻尼、缩放与极角边界。 */
-export const configureAircraftOrbitControls = (
-    controls: OrbitControls<AircraftCamera>,
-): void => {
+export const configureAircraftOrbitControls = (controls: OrbitControls<AircraftCamera>): void => {
     controls.enableDamping = true;
     controls.dampingFactor = 0.065;
     controls.minDistance = MINIMUM_CAMERA_DISTANCE;

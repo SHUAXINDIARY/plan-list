@@ -19,12 +19,7 @@ import { createPortal } from "react-dom";
 import type { SelectOption, SelectProps } from "./type";
 import "./index.css";
 
-export type {
-    MultipleSelectProps,
-    SelectOption,
-    SelectProps,
-    SingleSelectProps,
-} from "./type";
+export type { MultipleSelectProps, SelectOption, SelectProps, SingleSelectProps } from "./type";
 
 /** 下拉面板与触发器之间的间距（px），对应 CSS 0.35rem。 */
 const SELECT_MENU_GAP_PX = 6;
@@ -229,9 +224,7 @@ const normalizeSelectItems = (
  * 在可选项中查找第一个未禁用的索引；若全部禁用则返回 0。
  */
 const findFirstEnabledIndex = (items: SelectOption[]): number => {
-    const enabledIndex = items.findIndex(
-        (item: SelectOption): boolean => !item.disabled,
-    );
+    const enabledIndex = items.findIndex((item: SelectOption): boolean => !item.disabled);
     return enabledIndex >= 0 ? enabledIndex : 0;
 };
 
@@ -250,8 +243,7 @@ const findAdjacentEnabledIndex = (
     let cursor = startIndex;
 
     for (let step = 0; step < items.length; step += 1) {
-        cursor =
-            (cursor + direction + items.length) % items.length;
+        cursor = (cursor + direction + items.length) % items.length;
         if (!items[cursor]?.disabled) {
             return cursor;
         }
@@ -267,8 +259,8 @@ const findSelectedOrFirstEnabledIndex = (
     items: SelectOption[],
     selectedValues: string[],
 ): number => {
-    const selectedIndex = items.findIndex(
-        (item: SelectOption): boolean => selectedValues.includes(item.value),
+    const selectedIndex = items.findIndex((item: SelectOption): boolean =>
+        selectedValues.includes(item.value),
     );
 
     return selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items);
@@ -277,10 +269,7 @@ const findSelectedOrFirstEnabledIndex = (
 /**
  * 按展示文案过滤选项，保留禁用项以便用户了解其存在但不能提交。
  */
-const filterSelectItems = (
-    items: SelectOption[],
-    searchTerm: string,
-): SelectOption[] => {
+const filterSelectItems = (items: SelectOption[], searchTerm: string): SelectOption[] => {
     const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase();
 
     if (!normalizedSearchTerm) {
@@ -293,16 +282,10 @@ const filterSelectItems = (
 };
 
 /** 比较两组受控多选值是否完全一致，用于判断是否应展示清除按钮。 */
-const areSelectValuesEqual = (
-    firstValues: string[],
-    secondValues: string[],
-): boolean => {
+const areSelectValuesEqual = (firstValues: string[], secondValues: string[]): boolean => {
     return (
         firstValues.length === secondValues.length &&
-        firstValues.every(
-            (value: string, index: number): boolean =>
-                value === secondValues[index],
-        )
+        firstValues.every((value: string, index: number): boolean => value === secondValues[index])
     );
 };
 
@@ -455,20 +438,18 @@ const SelectOptionsMenu = ({
                 aria-multiselectable={multiple || undefined}
             >
                 {items.length > 0 ? (
-                    items.map(
-                        (option: SelectOption, index: number): ReactElement => (
-                            <SelectMenuOption
-                                key={option.value}
-                                option={option}
-                                index={index}
-                                optionId={`${listboxId}-option-${index}`}
-                                isSelected={selectedValues.includes(option.value)}
-                                isHighlighted={index === highlightedIndex}
-                                onSelect={onSelect}
-                                onHighlight={onHighlight}
-                            />
-                        ),
-                    )
+                    items.map((option: SelectOption, index: number): ReactElement => (
+                        <SelectMenuOption
+                            key={option.value}
+                            option={option}
+                            index={index}
+                            optionId={`${listboxId}-option-${index}`}
+                            isSelected={selectedValues.includes(option.value)}
+                            isHighlighted={index === highlightedIndex}
+                            onSelect={onSelect}
+                            onHighlight={onHighlight}
+                        />
+                    ))
                 ) : (
                     <li className="pl-select-menu__empty" role="presentation">
                         没有匹配的选项
@@ -505,8 +486,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
     const [isClosing, setIsClosing] = useState<boolean>(false);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [menuPlacement, setMenuPlacement] =
-        useState<SelectMenuPlacement | null>(null);
+    const [menuPlacement, setMenuPlacement] = useState<SelectMenuPlacement | null>(null);
 
     const items = useMemo(
         (): SelectOption[] => normalizeSelectItems(options, children),
@@ -515,23 +495,22 @@ const SelectControl = (props: SelectProps): ReactElement => {
 
     const selectedValues = props.multiple ? props.value : [props.value];
     const clearValue = props.multiple ? props.clearValue : undefined;
-    const selectedItems = items.filter(
-        (item: SelectOption): boolean => selectedValues.includes(item.value),
+    const selectedItems = items.filter((item: SelectOption): boolean =>
+        selectedValues.includes(item.value),
     );
-    const selectedIndex = items.findIndex(
-        (item: SelectOption): boolean => selectedValues.includes(item.value),
+    const selectedIndex = items.findIndex((item: SelectOption): boolean =>
+        selectedValues.includes(item.value),
     );
     const displayLabel = props.multiple
         ? selectedItems.length > 0
             ? selectedItems.map((item: SelectOption): string => item.label).join("、")
             : "未选择"
-        : selectedItems[0]?.label ?? props.value;
+        : (selectedItems[0]?.label ?? props.value);
     const controlAriaLabel = multiple
         ? `${ariaLabel ?? label ?? "选择选项"}，${displayLabel}`
         : ariaLabel;
     const shouldShowClearButton =
-        clearValue !== undefined &&
-        !areSelectValuesEqual(selectedValues, clearValue);
+        clearValue !== undefined && !areSelectValuesEqual(selectedValues, clearValue);
     const clearButtonLabel = `清空${label ?? ariaLabel ?? "已选项"}`;
     const visibleItems = useMemo(
         (): SelectOption[] => filterSelectItems(items, searchTerm),
@@ -543,12 +522,8 @@ const SelectControl = (props: SelectProps): ReactElement => {
           ? `搜索${ariaLabel}选项`
           : "搜索选项";
 
-    const controlClassName = className
-        ? `pl-select ${className}`
-        : "pl-select";
-    const wrapClassName = isOpen
-        ? "pl-select-wrap pl-select-wrap--open"
-        : "pl-select-wrap";
+    const controlClassName = className ? `pl-select ${className}` : "pl-select";
+    const wrapClassName = isOpen ? "pl-select-wrap pl-select-wrap--open" : "pl-select-wrap";
 
     /** 清理尚未完成的退出计时，供快速重开与组件卸载复用。 */
     const clearCloseTimer = useCallback((): void => {
@@ -575,9 +550,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
         clearCloseTimer();
         setIsOpen(false);
         setIsClosing(true);
-        setHighlightedIndex(
-            selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
-        );
+        setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items));
 
         closeTimerRef.current = setTimeout((): void => {
             setIsClosing(false);
@@ -595,8 +568,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
             if (props.multiple) {
                 const nextValues = selectedValues.includes(nextValue)
                     ? selectedValues.filter(
-                          (selectedValue: string): boolean =>
-                              selectedValue !== nextValue,
+                          (selectedValue: string): boolean => selectedValue !== nextValue,
                       )
                     : [...selectedValues, nextValue];
 
@@ -619,9 +591,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
         clearCloseTimer();
         setIsClosing(false);
         setSearchTerm("");
-        setHighlightedIndex(
-            selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
-        );
+        setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items));
         if (wrapRef.current) {
             setMenuPlacement(computeMenuPlacement(wrapRef.current));
         }
@@ -717,9 +687,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
             case "End":
                 if (isOpen) {
                     event.preventDefault();
-                    setHighlightedIndex(
-                        findAdjacentEnabledIndex(items, items.length - 1, -1),
-                    );
+                    setHighlightedIndex(findAdjacentEnabledIndex(items, items.length - 1, -1));
                 }
                 return;
             default:
@@ -730,24 +698,18 @@ const SelectControl = (props: SelectProps): ReactElement => {
     /**
      * 更新搜索词，并在过滤后的列表中将高亮复位到已选项或首个可用项。
      */
-    const handleSearchTermChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
+    const handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const nextSearchTerm = event.target.value;
         const nextVisibleItems = filterSelectItems(items, nextSearchTerm);
 
         setSearchTerm(nextSearchTerm);
-        setHighlightedIndex(
-            findSelectedOrFirstEnabledIndex(nextVisibleItems, selectedValues),
-        );
+        setHighlightedIndex(findSelectedOrFirstEnabledIndex(nextVisibleItems, selectedValues));
     };
 
     /**
      * 搜索框键盘操作：在匹配结果中移动、确认选择或返回触发器。
      */
-    const handleSearchKeyDown = (
-        event: KeyboardEvent<HTMLInputElement>,
-    ): void => {
+    const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
         switch (event.key) {
             case "ArrowDown":
                 event.preventDefault();
@@ -786,9 +748,7 @@ const SelectControl = (props: SelectProps): ReactElement => {
     /** 外部 value 变化时，保持高亮索引与选中项一致（面板关闭态）。 */
     useEffect((): void => {
         if (!isOpen) {
-            setHighlightedIndex(
-                selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items),
-            );
+            setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : findFirstEnabledIndex(items));
         }
     }, [isOpen, items, selectedIndex]);
 
@@ -887,20 +847,15 @@ const SelectControl = (props: SelectProps): ReactElement => {
                     <SelectClearIcon />
                 </button>
             ) : null}
-            {name
-                ? props.multiple
-                    ? selectedItems.map(
-                          (item: SelectOption): ReactElement => (
-                              <input
-                                  key={item.value}
-                                  type="hidden"
-                                  name={name}
-                                  value={item.value}
-                              />
-                          ),
-                      )
-                    : <input type="hidden" name={name} value={props.value} />
-                : null}
+            {name ? (
+                props.multiple ? (
+                    selectedItems.map((item: SelectOption): ReactElement => (
+                        <input key={item.value} type="hidden" name={name} value={item.value} />
+                    ))
+                ) : (
+                    <input type="hidden" name={name} value={props.value} />
+                )
+            ) : null}
             <span className="pl-select__affordance" aria-hidden>
                 <SelectChevron />
             </span>
@@ -943,9 +898,7 @@ export const Select = ({
 }: SelectProps): ReactElement => {
     const generatedId = useId();
     const resolvedId = id ?? (label ? generatedId : undefined);
-    const fieldClassName = className
-        ? `pl-select-field ${className}`
-        : "pl-select-field";
+    const fieldClassName = className ? `pl-select-field ${className}` : "pl-select-field";
 
     if (label) {
         return (

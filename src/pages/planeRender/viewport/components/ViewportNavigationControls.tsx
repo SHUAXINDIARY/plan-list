@@ -1,8 +1,5 @@
 import type { ChangeEvent, ReactElement } from "react";
-import type {
-    AircraftCameraView,
-    AircraftProjectionMode,
-} from "../types";
+import type { AircraftCameraView, AircraftProjectionMode } from "../types";
 
 /** 相机导航工具栏的状态和命令回调。 */
 export interface ViewportNavigationControlsProps {
@@ -35,11 +32,7 @@ export const ViewportNavigationControls = ({
     <>
         <label className="plane-render__camera-view-control">
             <span className="plane-render__visually-hidden">相机视角</span>
-            <select
-                aria-label="相机视角"
-                value={cameraView}
-                onChange={onCameraViewChange}
-            >
+            <select aria-label="相机视角" value={cameraView} onChange={onCameraViewChange}>
                 <option value="custom">自定义视角</option>
                 <option value="fit">适配视图</option>
                 <option value="front">正面</option>
@@ -49,9 +42,7 @@ export const ViewportNavigationControls = ({
             </select>
         </label>
         <label className="plane-render__camera-projection-control">
-            <span className="plane-render__visually-hidden">
-                摄像机投影模式
-            </span>
+            <span className="plane-render__visually-hidden">摄像机投影模式</span>
             <select
                 aria-label="摄像机投影模式"
                 value={projectionMode}

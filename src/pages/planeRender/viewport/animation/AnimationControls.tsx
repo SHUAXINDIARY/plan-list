@@ -25,11 +25,7 @@ export const AnimationControls = ({
             </output>
         </div>
         <div className="plane-render__animation-row">
-            <button
-                className="plane-render__viewport-action"
-                type="button"
-                onClick={onToggle}
-            >
+            <button className="plane-render__viewport-action" type="button" onClick={onToggle}>
                 {state.isPlaying ? "暂停" : "播放"}
             </button>
             <label className="plane-render__animation-range">

@@ -40,18 +40,9 @@ export const createAircraftLightingRig = (
     rimLightColor: THREE.ColorRepresentation,
 ): AircraftLightingRig => {
     const hemisphereLight = new THREE.HemisphereLight(0xeaf6ff, 0x102737, 2.1);
-    const keyLight = new THREE.DirectionalLight(
-        keyLightColor,
-        settings.keyLightIntensity,
-    );
-    const fillLight = new THREE.DirectionalLight(
-        fillLightColor,
-        settings.fillLightIntensity,
-    );
-    const rimLight = new THREE.DirectionalLight(
-        rimLightColor,
-        settings.rimLightIntensity,
-    );
+    const keyLight = new THREE.DirectionalLight(keyLightColor, settings.keyLightIntensity);
+    const fillLight = new THREE.DirectionalLight(fillLightColor, settings.fillLightIntensity);
+    const rimLight = new THREE.DirectionalLight(rimLightColor, settings.rimLightIntensity);
 
     keyLight.position.set(
         settings.lightPositionX,
@@ -116,17 +107,13 @@ export const loadHdriEnvironment = async (
 };
 
 /** 释放当前 HDRI PMREM，同时保留 RoomEnvironment 作为稳定回退。 */
-export const disposeHdriEnvironment = (
-    resources: AircraftEnvironmentResources,
-): void => {
+export const disposeHdriEnvironment = (resources: AircraftEnvironmentResources): void => {
     resources.hdriRenderTarget?.dispose();
     resources.hdriRenderTarget = null;
 };
 
 /** 释放 RoomEnvironment、其 PMREM 与当前 HDRI 资源。 */
-export const disposeEnvironmentResources = (
-    resources: AircraftEnvironmentResources,
-): void => {
+export const disposeEnvironmentResources = (resources: AircraftEnvironmentResources): void => {
     disposeHdriEnvironment(resources);
     resources.roomRenderTarget.dispose();
     resources.roomScene.dispose();

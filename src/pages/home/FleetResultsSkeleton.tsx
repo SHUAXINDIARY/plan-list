@@ -2,12 +2,7 @@ import type { ReactElement } from "react";
 import "./index.css";
 
 // 骨架屏每张航司卡内的制造商行与机型芯片数量，用于模拟真实列表的疏密节奏。
-const FLEET_SKELETON_ENTRY_ROWS: number[][] = [
-    [3, 7],
-    [5, 4],
-    [8, 5],
-    [3],
-];
+const FLEET_SKELETON_ENTRY_ROWS: number[][] = [[3, 7], [5, 4], [8, 5], [3]];
 
 // 骨架机型芯片宽度按真实型号长短交错，避免 loading 卡片呈现机械等宽。
 const FLEET_SKELETON_CHIP_SIZE_CLASSES: string[] = [
@@ -30,15 +25,10 @@ export const FleetResultsSkeleton = (): ReactElement => {
             aria-label="正在载入机型数据"
             role="status"
         >
-            <span className="fleet-results__loading-label">
-                正在载入机型数据...
-            </span>
+            <span className="fleet-results__loading-label">正在载入机型数据...</span>
             <div className="airline-list airline-list--skeleton" aria-hidden>
                 {FLEET_SKELETON_ENTRY_ROWS.map(
-                    (
-                        manufacturerRows: number[],
-                        skeletonEntryIndex: number,
-                    ): ReactElement => (
+                    (manufacturerRows: number[], skeletonEntryIndex: number): ReactElement => (
                         <article
                             className="airline-entry airline-entry--skeleton"
                             key={`fleet-skeleton-entry-${skeletonEntryIndex}`}
@@ -81,10 +71,7 @@ export const FleetResultsSkeleton = (): ReactElement => {
                                             <ul className="aircraft-model-list aircraft-model-list--skeleton">
                                                 {Array.from(
                                                     { length: chipCount },
-                                                    (
-                                                        _,
-                                                        chipIndex: number,
-                                                    ): ReactElement => (
+                                                    (_, chipIndex: number): ReactElement => (
                                                         <li
                                                             className={`aircraft-model-list__skeleton-chip ${FLEET_SKELETON_CHIP_SIZE_CLASSES[chipIndex % FLEET_SKELETON_CHIP_SIZE_CLASSES.length]}`}
                                                             key={`fleet-skeleton-chip-${skeletonEntryIndex}-${manufacturerRowIndex}-${chipIndex}`}

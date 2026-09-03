@@ -12,13 +12,8 @@ export const PersonalAirportMapFallback = (): ReactElement => {
             aria-busy="true"
             aria-label="正在载入机场足迹地图"
         >
-            <span
-                className="personal-airport-map-loading__indicator"
-                aria-hidden="true"
-            />
-            <p className="personal-airport-map-loading__label">
-                正在载入机场足迹地图...
-            </p>
+            <span className="personal-airport-map-loading__indicator" aria-hidden="true" />
+            <p className="personal-airport-map-loading__label">正在载入机场足迹地图...</p>
         </div>
     );
 };

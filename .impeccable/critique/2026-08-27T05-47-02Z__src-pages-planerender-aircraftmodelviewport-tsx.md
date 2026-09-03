@@ -6,25 +6,26 @@ p1_count: 2
 timestamp: 2026-08-27T05-47-02Z
 slug: src-pages-planerender-aircraftmodelviewport-tsx
 ---
+
 # Aircraft Attitude Gizmo Critique
 
 Target: `src/pages/planeRender/AircraftModelViewport.tsx` (3D attitude gizmo, lines 1038-1220) and `src/pages/planeRender/index.css` (gizmo styles, lines 141-364 and responsive rules).
 
 ## Design Health Score
 
-| # | Heuristic | Score | Key Issue |
-|---|---|---:|---|
-| 1 | Visibility of System Status | 3/4 | Live angle readouts and active presets work, but drag direction and completion feedback are implicit. |
-| 2 | Match System / Real World | 3/4 | Pitch, roll, yaw terminology fits aviation, while the glyph has a weak nose direction and landing semantics are underspecified. |
-| 3 | User Control and Freedom | 3/4 | Presets, reset, pointer capture, and keyboard input exist; there is no cancel/undo and pointer-loss cleanup is incomplete. |
-| 4 | Consistency and Standards | 3/4 | Project tokens and control vocabulary are consistent, but one 2D surface maps to two axes while the roll surface maps to one. |
-| 5 | Error Prevention | 3/4 | Angle clamping prevents invalid values, but there are no center marks or direct numeric entry to prevent over-rotation. |
-| 6 | Recognition Rather Than Recall | 2/4 | Labels and readouts are visible, but users must infer axis mapping, sign direction, and the meaning of the ring. |
-| 7 | Flexibility and Efficiency | 3/4 | Presets, drag, arrows, and Shift acceleration are useful; precision requires repeated dragging and hidden shortcuts are undocumented. |
-| 8 | Aesthetic and Minimalist Design | 3/4 | The gizmo is visually coherent and restrained, though grid, glyph, presets, readouts, and reset compete for attention. |
-| 9 | Error Recovery | 2/4 | Reset to level is clear, but lost pointer capture or window blur can leave the drag state unclear. |
-| 10 | Help and Documentation | 1/4 | No inline axis legend, tooltip, or first-use affordance explains the gestures. |
-| **Total** |  | **26/40** | **Acceptable, with a clear discoverability and accessibility gap.** |
+| #         | Heuristic                       |     Score | Key Issue                                                                                                                             |
+| --------- | ------------------------------- | --------: | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1         | Visibility of System Status     |       3/4 | Live angle readouts and active presets work, but drag direction and completion feedback are implicit.                                 |
+| 2         | Match System / Real World       |       3/4 | Pitch, roll, yaw terminology fits aviation, while the glyph has a weak nose direction and landing semantics are underspecified.       |
+| 3         | User Control and Freedom        |       3/4 | Presets, reset, pointer capture, and keyboard input exist; there is no cancel/undo and pointer-loss cleanup is incomplete.            |
+| 4         | Consistency and Standards       |       3/4 | Project tokens and control vocabulary are consistent, but one 2D surface maps to two axes while the roll surface maps to one.         |
+| 5         | Error Prevention                |       3/4 | Angle clamping prevents invalid values, but there are no center marks or direct numeric entry to prevent over-rotation.               |
+| 6         | Recognition Rather Than Recall  |       2/4 | Labels and readouts are visible, but users must infer axis mapping, sign direction, and the meaning of the ring.                      |
+| 7         | Flexibility and Efficiency      |       3/4 | Presets, drag, arrows, and Shift acceleration are useful; precision requires repeated dragging and hidden shortcuts are undocumented. |
+| 8         | Aesthetic and Minimalist Design |       3/4 | The gizmo is visually coherent and restrained, though grid, glyph, presets, readouts, and reset compete for attention.                |
+| 9         | Error Recovery                  |       2/4 | Reset to level is clear, but lost pointer capture or window blur can leave the drag state unclear.                                    |
+| 10        | Help and Documentation          |       1/4 | No inline axis legend, tooltip, or first-use affordance explains the gestures.                                                        |
+| **Total** |                                 | **26/40** | **Acceptable, with a clear discoverability and accessibility gap.**                                                                   |
 
 ## Anti-Patterns Verdict
 

@@ -1,13 +1,5 @@
 import { createRequire } from "node:module";
-import {
-    access,
-    mkdtemp,
-    mkdir,
-    readFile,
-    readdir,
-    rm,
-    writeFile,
-} from "node:fs/promises";
+import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -40,18 +32,10 @@ const UP_AXES = new Set(["AUTO", "X", "Y", "Z"]);
 /** 自动识别需要与视窗约定翻转前后方向的资源目录名称。 */
 const FORWARD_FLIP_DIRECTORY_PATTERN = /(?:^|[-_ ])(?:an)?225(?:$|[-_ ])/iu;
 /** 绕输出 Y 轴旋转 180 度，将机头前后方向翻转但保持上下方向不变。 */
-const FORWARD_FLIP_MATRIX = Object.freeze([
-    -1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, -1, 0,
-    0, 0, 0, 1,
-]);
+const FORWARD_FLIP_MATRIX = Object.freeze([-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1]);
 /** An-225 OBJ 的 X 轴为机身长度、Z 轴为翼展且 Y 轴向下；按列主序映射 x'=z、y'=-y、z'=-x。 */
 const AN225_AXIS_ALIGNMENT_MATRIX = Object.freeze([
-    0, 0, -1, 0,
-    0, -1, 0, 0,
-    1, 0, 0, 0,
-    0, 0, 0, 1,
+    0, 0, -1, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
 ]);
 
 /** 将依赖加载失败转换为包含安装命令的可操作错误。 */
@@ -67,9 +51,7 @@ const loadObj2Gltf = () => {
     } catch (error) {
         const reason = error instanceof Error ? error.message : String(error);
 
-        throw new Error(
-            `无法加载 obj2gltf，请先执行 pnpm install。${reason}`,
-        );
+        throw new Error(`无法加载 obj2gltf，请先执行 pnpm install。${reason}`);
     }
 };
 
@@ -95,7 +77,12 @@ const parseArguments = (argumentsList) => {
             continue;
         }
 
-        if (argument === "--output" || argument === "-o" || argument === "--input-up-axis" || argument === "--output-up-axis") {
+        if (
+            argument === "--output" ||
+            argument === "-o" ||
+            argument === "--input-up-axis" ||
+            argument === "--output-up-axis"
+        ) {
             const value = argumentsList[index + 1];
 
             if (!value || value.startsWith("-")) {
@@ -189,7 +176,9 @@ const collectFiles = async (directory, extensionSet) => {
     };
 
     await visit(directory);
-    files.sort((first, second) => relative(directory, first).localeCompare(relative(directory, second)));
+    files.sort((first, second) =>
+        relative(directory, first).localeCompare(relative(directory, second)),
+    );
 
     return files;
 };
@@ -230,7 +219,9 @@ const detectInputUpAxis = async (objFiles) => {
         throw new Error("无法根据 OBJ 顶点推断输入上方向，请使用 --input-up-axis 指定。");
     }
 
-    console.log(`自动检测输入上方向：${axisName}（跨度 X=${spans[0].toFixed(3)}，Y=${spans[1].toFixed(3)}，Z=${spans[2].toFixed(3)}）`);
+    console.log(
+        `自动检测输入上方向：${axisName}（跨度 X=${spans[0].toFixed(3)}，Y=${spans[1].toFixed(3)}，Z=${spans[2].toFixed(3)}）`,
+    );
 
     return axisName;
 };
@@ -239,7 +230,10 @@ const detectInputUpAxis = async (objFiles) => {
 const normalizeName = (filePath) => {
     return basename(filePath, extname(filePath))
         .toLowerCase()
-        .replace(/(?:_|-)?(?:diffuse|base.?color|albedo|occlusion|ambient|ao|normal|bump|roughness|metallic|color)/giu, "")
+        .replace(
+            /(?:_|-)?(?:diffuse|base.?color|albedo|occlusion|ambient|ao|normal|bump|roughness|metallic|color)/giu,
+            "",
+        )
         .replace(/[^a-z0-9]+/giu, "");
 };
 
@@ -273,13 +267,18 @@ const getSourceBounds = (sourceLines) => {
 /** 为没有 UV 的小型部件提供可读的玻璃/轮组回退色，避免静默显示纯白。 */
 const getFallbackMaterialColor = (objPath, bounds) => {
     const objectName = basename(objPath).toLowerCase();
-    const spans = bounds.maximum.map((value, axis) => value - bounds.minimum[axis]).sort((a, b) => a - b);
+    const spans = bounds.maximum
+        .map((value, axis) => value - bounds.minimum[axis])
+        .sort((a, b) => a - b);
 
     if (/(wheel|tire|tyre|gear|landing)/iu.test(objectName) || spans[2] <= 100) {
         return [0.06, 0.07, 0.08];
     }
 
-    if (/(glass|window|windshield|cockpit)/iu.test(objectName) || (spans[0] <= 15 && spans[2] <= 200)) {
+    if (
+        /(glass|window|windshield|cockpit)/iu.test(objectName) ||
+        (spans[0] <= 15 && spans[2] <= 200)
+    ) {
         return [0.04, 0.14, 0.3];
     }
 
@@ -296,7 +295,10 @@ const selectTexture = (objPath, candidates, textureIndex, vertexCount) => {
     const namedMatch = candidates.find((candidate) => {
         const textureName = normalizeName(candidate);
 
-        return textureName.length > 0 && (textureName.includes(objectName) || objectName.includes(textureName));
+        return (
+            textureName.length > 0 &&
+            (textureName.includes(objectName) || objectName.includes(textureName))
+        );
     });
 
     // 无 MTL 时无法从 OBJ 得知材质归属；Blender 导出的材质拆分通常与
@@ -307,24 +309,47 @@ const selectTexture = (objPath, candidates, textureIndex, vertexCount) => {
 };
 
 /** 为没有可用 MTL 的 OBJ 生成材料，并将可识别的贴图路径写入 MTL。 */
-const createGeneratedMaterial = (objPath, objectIndex, textureIndex, vertexCount, imageFiles, sourceBounds, hasUvs) => {
+const createGeneratedMaterial = (
+    objPath,
+    objectIndex,
+    textureIndex,
+    vertexCount,
+    imageFiles,
+    sourceBounds,
+    hasUvs,
+) => {
     const diffuseCandidates = imageFiles.filter((filePath) => {
         const fileName = basename(filePath);
 
-        return TEXTURE_PATTERNS.DIFFUSE.test(fileName) && !TEXTURE_PATTERNS.OCCLUSION.test(fileName) && !TEXTURE_PATTERNS.NORMAL.test(fileName);
+        return (
+            TEXTURE_PATTERNS.DIFFUSE.test(fileName) &&
+            !TEXTURE_PATTERNS.OCCLUSION.test(fileName) &&
+            !TEXTURE_PATTERNS.NORMAL.test(fileName)
+        );
     });
     const fallbackDiffuseCandidates = imageFiles.filter((filePath) => {
         const fileName = basename(filePath);
 
-        return !TEXTURE_PATTERNS.OCCLUSION.test(fileName) && !TEXTURE_PATTERNS.NORMAL.test(fileName) && !TEXTURE_PATTERNS.ROUGHNESS.test(fileName);
+        return (
+            !TEXTURE_PATTERNS.OCCLUSION.test(fileName) &&
+            !TEXTURE_PATTERNS.NORMAL.test(fileName) &&
+            !TEXTURE_PATTERNS.ROUGHNESS.test(fileName)
+        );
     });
     const diffuseTexture = hasUvs
-        ? selectTexture(objPath, diffuseCandidates.length > 0 ? diffuseCandidates : fallbackDiffuseCandidates, textureIndex, vertexCount)
+        ? selectTexture(
+              objPath,
+              diffuseCandidates.length > 0 ? diffuseCandidates : fallbackDiffuseCandidates,
+              textureIndex,
+              vertexCount,
+          )
         : undefined;
     const matchingName = diffuseTexture === undefined ? "" : normalizeName(diffuseTexture);
     const findRelated = (pattern) => {
         const relatedCandidates = imageFiles.filter((filePath) => pattern.test(basename(filePath)));
-        const namedRelated = relatedCandidates.find((filePath) => matchingName === "" || normalizeName(filePath).includes(matchingName));
+        const namedRelated = relatedCandidates.find(
+            (filePath) => matchingName === "" || normalizeName(filePath).includes(matchingName),
+        );
 
         return namedRelated ?? relatedCandidates[0];
     };
@@ -400,7 +425,10 @@ const buildCombinedObj = async (objFiles, imageFiles, temporaryDirectory) => {
         const sourceLines = sourceText.split(/\r?\n/u);
         const localCounts = [0, 0, 0];
         const offsets = [...globalCounts];
-        const objectName = `${basename(objPath, EXTENSIONS.OBJ)}_${objectIndex}`.replace(/[^a-z0-9_]+/giu, "_");
+        const objectName = `${basename(objPath, EXTENSIONS.OBJ)}_${objectIndex}`.replace(
+            /[^a-z0-9_]+/giu,
+            "_",
+        );
         const mtlReferences = [];
         const sourceVertexCount = sourceLines.filter((line) => /^v\s/iu.test(line.trim())).length;
         const sourceBounds = getSourceBounds(sourceLines);
@@ -422,7 +450,15 @@ const buildCombinedObj = async (objFiles, imageFiles, temporaryDirectory) => {
         const usableMtl = mtlReferences.length > 0;
         const generatedMaterial = usableMtl
             ? undefined
-            : createGeneratedMaterial(objPath, objectIndex, texturedObjectIndex, sourceVertexCount, imageFiles, sourceBounds, sourceHasUvs);
+            : createGeneratedMaterial(
+                  objPath,
+                  objectIndex,
+                  texturedObjectIndex,
+                  sourceVertexCount,
+                  imageFiles,
+                  sourceBounds,
+                  sourceHasUvs,
+              );
 
         if (!sourceHasUvs) {
             untexturedObjects.push(basename(objPath));
@@ -450,7 +486,12 @@ const buildCombinedObj = async (objFiles, imageFiles, temporaryDirectory) => {
         for (const line of sourceLines) {
             const trimmedLine = line.trim();
 
-            if (trimmedLine === "" || trimmedLine.startsWith("#") || /^mtllib\s/iu.test(trimmedLine) || /^o\s/iu.test(trimmedLine)) {
+            if (
+                trimmedLine === "" ||
+                trimmedLine.startsWith("#") ||
+                /^mtllib\s/iu.test(trimmedLine) ||
+                /^o\s/iu.test(trimmedLine)
+            ) {
                 continue;
             }
 
@@ -482,14 +523,21 @@ const buildCombinedObj = async (objFiles, imageFiles, temporaryDirectory) => {
 
             if (/^f\s/iu.test(trimmedLine)) {
                 const faceTokens = trimmedLine.slice(1).trim().split(/\s+/u);
-                const adjustedTokens = faceTokens.map((token) => offsetFaceToken(token, offsets, localCounts));
+                const adjustedTokens = faceTokens.map((token) =>
+                    offsetFaceToken(token, offsets, localCounts),
+                );
 
                 combinedLines.push(`f ${adjustedTokens.join(" ")}`);
                 continue;
             }
 
             if (/^g\s/iu.test(trimmedLine)) {
-                combinedLines.push(`g ${objectName}_${trimmedLine.slice(1).trim().replace(/[^a-z0-9_]+/giu, "_")}`);
+                combinedLines.push(
+                    `g ${objectName}_${trimmedLine
+                        .slice(1)
+                        .trim()
+                        .replace(/[^a-z0-9_]+/giu, "_")}`,
+                );
                 continue;
             }
 
@@ -516,7 +564,12 @@ const buildCombinedObj = async (objFiles, imageFiles, temporaryDirectory) => {
 
 /** 检查转换结果是合法的 glTF 2.0 二进制文件。 */
 const assertGlbV2 = (glb) => {
-    if (!Buffer.isBuffer(glb) || glb.length < 12 || glb.readUInt32LE(0) !== GLB_MAGIC || glb.readUInt32LE(4) !== GLB_VERSION) {
+    if (
+        !Buffer.isBuffer(glb) ||
+        glb.length < 12 ||
+        glb.readUInt32LE(0) !== GLB_MAGIC ||
+        glb.readUInt32LE(4) !== GLB_VERSION
+    ) {
         throw new Error("obj2gltf 返回的结果不是合法 GLB v2 文件。");
     }
 };
@@ -527,7 +580,8 @@ const getRootTransformMatrix = (sourceDirectory, option) => {
         return option ? FORWARD_FLIP_MATRIX : undefined;
     }
 
-    return FORWARD_FLIP_DIRECTORY_PATTERN.test(basename(sourceDirectory)) || /antonov/iu.test(basename(sourceDirectory))
+    return FORWARD_FLIP_DIRECTORY_PATTERN.test(basename(sourceDirectory)) ||
+        /antonov/iu.test(basename(sourceDirectory))
         ? AN225_AXIS_ALIGNMENT_MATRIX
         : undefined;
 };
@@ -535,7 +589,12 @@ const getRootTransformMatrix = (sourceDirectory, option) => {
 /** 在 GLB 场景根部增加旋转节点，保留原始网格、材质和访问器数据。 */
 const wrapGlbWithTransform = (glb, matrix) => {
     const jsonLength = glb.readUInt32LE(12);
-    const json = JSON.parse(glb.subarray(20, 20 + jsonLength).toString("utf8").trim());
+    const json = JSON.parse(
+        glb
+            .subarray(20, 20 + jsonLength)
+            .toString("utf8")
+            .trim(),
+    );
     const sceneIndex = json.scene ?? 0;
     const scene = json.scenes?.[sceneIndex];
 
@@ -553,7 +612,10 @@ const wrapGlbWithTransform = (glb, matrix) => {
 
     const jsonBuffer = Buffer.from(JSON.stringify(json), "utf8");
     const paddedJsonLength = Math.ceil(jsonBuffer.length / 4) * 4;
-    const paddedJson = Buffer.concat([jsonBuffer, Buffer.alloc(paddedJsonLength - jsonBuffer.length, 0x20)]);
+    const paddedJson = Buffer.concat([
+        jsonBuffer,
+        Buffer.alloc(paddedJsonLength - jsonBuffer.length, 0x20),
+    ]);
     const binaryChunks = glb.subarray(20 + jsonLength);
     const header = Buffer.alloc(12);
     const jsonHeader = Buffer.alloc(8);
@@ -582,11 +644,13 @@ const bundleDirectory = async (options) => {
     }
 
     const imageFiles = await collectFiles(sourceDirectory, EXTENSIONS.IMAGE);
-    const inputUpAxis = options.inputUpAxis === "AUTO"
-        ? await detectInputUpAxis(objFiles)
-        : options.inputUpAxis;
+    const inputUpAxis =
+        options.inputUpAxis === "AUTO" ? await detectInputUpAxis(objFiles) : options.inputUpAxis;
     const rootTransformMatrix = getRootTransformMatrix(sourceDirectory, options.flipForward);
-    const outputPath = resolve(sourceDirectory, options.output ?? `${basename(sourceDirectory)}.glb`);
+    const outputPath = resolve(
+        sourceDirectory,
+        options.output ?? `${basename(sourceDirectory)}.glb`,
+    );
 
     if (!isAbsolute(outputPath) || !outputPath.startsWith(`${sourceDirectory}/`)) {
         throw new Error("输出 GLB 必须位于输入资源目录内。");
@@ -600,7 +664,11 @@ const bundleDirectory = async (options) => {
     const convert = loadObj2Gltf();
 
     try {
-        const { combinedObjPath, untexturedObjects } = await buildCombinedObj(objFiles, imageFiles, temporaryDirectory);
+        const { combinedObjPath, untexturedObjects } = await buildCombinedObj(
+            objFiles,
+            imageFiles,
+            temporaryDirectory,
+        );
         const glb = await convert(combinedObjPath, {
             binary: true,
             checkTransparency: true,
@@ -610,18 +678,23 @@ const bundleDirectory = async (options) => {
             triangleWindingOrderSanitization: true,
         });
 
-        const outputGlb = rootTransformMatrix !== undefined
-            ? wrapGlbWithTransform(glb, rootTransformMatrix)
-            : glb;
+        const outputGlb =
+            rootTransformMatrix !== undefined
+                ? wrapGlbWithTransform(glb, rootTransformMatrix)
+                : glb;
 
         assertGlbV2(outputGlb);
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, outputGlb);
         console.log(`打包完成：${objFiles.length} 个 OBJ，${imageFiles.length} 张图片`);
-        console.log(`输出文件：${outputPath}（${outputGlb.length} bytes，根节点变换：${rootTransformMatrix === undefined ? "无" : "有"}）`);
+        console.log(
+            `输出文件：${outputPath}（${outputGlb.length} bytes，根节点变换：${rootTransformMatrix === undefined ? "无" : "有"}）`,
+        );
 
         if (untexturedObjects.length > 0) {
-            console.warn(`以下 OBJ 没有 UV 坐标，无法按图片贴图，已使用回退材质：${untexturedObjects.join("、")}`);
+            console.warn(
+                `以下 OBJ 没有 UV 坐标，无法按图片贴图，已使用回退材质：${untexturedObjects.join("、")}`,
+            );
         }
     } finally {
         await rm(temporaryDirectory, { recursive: true, force: true });

@@ -4,20 +4,20 @@
  * Imports the SVG file as a React component.
  * @requires [@rsbuild/plugin-svgr](https://npmjs.com/package/@rsbuild/plugin-svgr)
  */
-declare module '*.svg?react' {
-  import type React from 'react';
-  const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  export default ReactComponent;
+declare module "*.svg?react" {
+    import type React from "react";
+    const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    export default ReactComponent;
 }
 
 /** 将 SVG 作为静态资源 URL 导入，供 Canvas 位图加载使用。 */
-declare module '*.svg?url' {
-  const assetUrl: string;
-  export default assetUrl;
+declare module "*.svg?url" {
+    const assetUrl: string;
+    export default assetUrl;
 }
 
 /** 将 GeoJSON 原始内容作为字符串导入，再由地图组件解析为结构化数据。 */
-declare module '*.geojson?raw' {
-  const source: string;
-  export default source;
+declare module "*.geojson?raw" {
+    const source: string;
+    export default source;
 }

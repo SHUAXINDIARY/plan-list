@@ -1,12 +1,4 @@
-import {
-    lazy,
-    Suspense,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-    type ReactElement,
-} from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import { MAP_ROUTES, airportMapMarkers } from "../constants/airportsMap";
 import { airportCountryGroups } from "../constants/summary";
@@ -14,12 +6,8 @@ import type { AirportCountryGroup, CheckedAirport } from "../type";
 import EarthMap, { type EarthRenderEngine } from "./EarthMap";
 import { PersonalAirportMapFallback } from "./PersonalAirportMapFallback";
 
-const AnnotatedWorldMap = lazy(
-    async () => import("../../../components/map"),
-);
-const PersonalAirportFlow = lazy(
-    async () => import("./PersonalAirportFlow"),
-);
+const AnnotatedWorldMap = lazy(async () => import("../../../components/map"));
+const PersonalAirportFlow = lazy(async () => import("./PersonalAirportFlow"));
 
 /** 机场足迹主视图的展示模式。 */
 type AirportVisualizationMode = "map" | "earth" | "flow";
@@ -35,15 +23,13 @@ const EARTH_RENDER_ENGINE_LABELS: Record<EarthRenderEngine, string> = {
  */
 const PersonalAirportSection = (): ReactElement => {
     /** 当前展开的国家或地区名；`undefined` 表示全部折叠。 */
-    const [expandedAirportCountry, setExpandedAirportCountry] = useState<
-        string | undefined
-    >(undefined);
+    const [expandedAirportCountry, setExpandedAirportCountry] = useState<string | undefined>(
+        undefined,
+    );
     /** 当前机场足迹可视化模式，默认保留原有地图体验。 */
-    const [visualizationMode, setVisualizationMode] =
-        useState<AirportVisualizationMode>("map");
+    const [visualizationMode, setVisualizationMode] = useState<AirportVisualizationMode>("map");
     /** 用户为三维地球选择的渲染引擎，切换后会重建地球场景。 */
-    const [earthRenderEngine, setEarthRenderEngine] =
-        useState<EarthRenderEngine>("webgpu");
+    const [earthRenderEngine, setEarthRenderEngine] = useState<EarthRenderEngine>("webgpu");
     /** 当前地球实例实际启用的渲染引擎，初始化期间暂不显示具体后端。 */
     const [activeEarthRenderEngine, setActiveEarthRenderEngine] = useState<
         EarthRenderEngine | undefined
@@ -100,9 +86,7 @@ const PersonalAirportSection = (): ReactElement => {
     };
 
     /** 切换机场足迹视图，并在进入三维地球时清空旧实例的引擎状态。 */
-    const changeVisualizationMode = (
-        nextVisualizationMode: AirportVisualizationMode,
-    ): void => {
+    const changeVisualizationMode = (nextVisualizationMode: AirportVisualizationMode): void => {
         if (nextVisualizationMode === "earth") {
             setActiveEarthRenderEngine(undefined);
         }
@@ -111,9 +95,7 @@ const PersonalAirportSection = (): ReactElement => {
     };
 
     /** 切换三维地球的渲染偏好，随后由 EarthMap 重新初始化对应后端。 */
-    const changeEarthRenderEngine = (
-        nextEarthRenderEngine: EarthRenderEngine,
-    ): void => {
+    const changeEarthRenderEngine = (nextEarthRenderEngine: EarthRenderEngine): void => {
         if (nextEarthRenderEngine === earthRenderEngine) {
             return;
         }
@@ -134,22 +116,20 @@ const PersonalAirportSection = (): ReactElement => {
     const toggleAirportCountry = (countryName: string): void => {
         setExpandedAirportCountry(
             (currentExpandedAirportCountry: string | undefined): string | undefined =>
-                currentExpandedAirportCountry === countryName
-                    ? undefined
-                    : countryName,
+                currentExpandedAirportCountry === countryName ? undefined : countryName,
         );
     };
 
     /** 渲染三种机场足迹可视化模式的切换控件。 */
     const renderVisualizationModeSwitcher = (): ReactElement => (
-        <div
-            className="airport-view-switcher"
-            role="group"
-            aria-label="机场足迹展示方式"
-        >
+        <div className="airport-view-switcher" role="group" aria-label="机场足迹展示方式">
             <button
                 type="button"
-                className={visualizationMode === "map" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                className={
+                    visualizationMode === "map"
+                        ? "airport-view-switcher__button airport-view-switcher__button--active"
+                        : "airport-view-switcher__button"
+                }
                 aria-pressed={visualizationMode === "map"}
                 onClick={(): void => changeVisualizationMode("map")}
             >
@@ -157,7 +137,11 @@ const PersonalAirportSection = (): ReactElement => {
             </button>
             <button
                 type="button"
-                className={visualizationMode === "earth" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                className={
+                    visualizationMode === "earth"
+                        ? "airport-view-switcher__button airport-view-switcher__button--active"
+                        : "airport-view-switcher__button"
+                }
                 aria-pressed={visualizationMode === "earth"}
                 onClick={(): void => changeVisualizationMode("earth")}
             >
@@ -165,7 +149,11 @@ const PersonalAirportSection = (): ReactElement => {
             </button>
             <button
                 type="button"
-                className={visualizationMode === "flow" ? "airport-view-switcher__button airport-view-switcher__button--active" : "airport-view-switcher__button"}
+                className={
+                    visualizationMode === "flow"
+                        ? "airport-view-switcher__button airport-view-switcher__button--active"
+                        : "airport-view-switcher__button"
+                }
                 aria-pressed={visualizationMode === "flow"}
                 onClick={(): void => changeVisualizationMode("flow")}
             >
@@ -182,18 +170,14 @@ const PersonalAirportSection = (): ReactElement => {
 
         const isRendererInitializing = activeEarthRenderEngine === undefined;
         const isRendererFallback =
-            !isRendererInitializing &&
-            activeEarthRenderEngine !== earthRenderEngine;
+            !isRendererInitializing && activeEarthRenderEngine !== earthRenderEngine;
         const rendererStatusLabel = isRendererInitializing
             ? "正在初始化"
             : `${EARTH_RENDER_ENGINE_LABELS[activeEarthRenderEngine]}${isRendererFallback ? "（已降级）" : ""}`;
 
         return (
             <div className="airport-renderer-switcher">
-                <span
-                    className="airport-renderer-switcher__status"
-                    aria-live="polite"
-                >
+                <span className="airport-renderer-switcher__status" aria-live="polite">
                     当前引擎：<strong>{rendererStatusLabel}</strong>
                 </span>
                 <div
@@ -202,50 +186,35 @@ const PersonalAirportSection = (): ReactElement => {
                     aria-label="三维地球渲染引擎"
                 >
                     {(
-                        Object.entries(EARTH_RENDER_ENGINE_LABELS) as [
-                            EarthRenderEngine,
-                            string,
-                        ][]
-                    ).map(
-                        ([engine, label]: [EarthRenderEngine, string]): ReactElement => (
-                            <button
-                                key={engine}
-                                className={`airport-renderer-switcher__button${earthRenderEngine === engine ? " airport-renderer-switcher__button--active" : ""}`}
-                                type="button"
-                                aria-pressed={earthRenderEngine === engine}
-                                onClick={(): void => changeEarthRenderEngine(engine)}
-                            >
-                                {label}
-                            </button>
-                        ),
-                    )}
+                        Object.entries(EARTH_RENDER_ENGINE_LABELS) as [EarthRenderEngine, string][]
+                    ).map(([engine, label]: [EarthRenderEngine, string]): ReactElement => (
+                        <button
+                            key={engine}
+                            className={`airport-renderer-switcher__button${earthRenderEngine === engine ? " airport-renderer-switcher__button--active" : ""}`}
+                            type="button"
+                            aria-pressed={earthRenderEngine === engine}
+                            onClick={(): void => changeEarthRenderEngine(engine)}
+                        >
+                            {label}
+                        </button>
+                    ))}
                 </div>
             </div>
         );
     };
 
     /** 根据展示位置渲染进入全屏或退出全屏的控制按钮。 */
-    const renderFullscreenToggle = (
-        isFullscreenControl: boolean,
-    ): ReactElement => (
+    const renderFullscreenToggle = (isFullscreenControl: boolean): ReactElement => (
         <button
             className="airport-visualization-fullscreen-toggle"
             type="button"
-            ref={
-                isFullscreenControl
-                    ? fullscreenCloseButtonRef
-                    : fullscreenEntryButtonRef
-            }
+            ref={isFullscreenControl ? fullscreenCloseButtonRef : fullscreenEntryButtonRef}
             onClick={
                 isFullscreenControl
                     ? closeAirportVisualizationFullscreen
                     : openAirportVisualizationFullscreen
             }
-            aria-label={
-                isFullscreenControl
-                    ? "退出机场足迹全屏展示"
-                    : "全屏展示机场足迹"
-            }
+            aria-label={isFullscreenControl ? "退出机场足迹全屏展示" : "全屏展示机场足迹"}
             title={isFullscreenControl ? "退出全屏展示" : "全屏展示"}
         >
             <svg
@@ -274,10 +243,7 @@ const PersonalAirportSection = (): ReactElement => {
                 )}
             </svg>
             {isFullscreenControl ? (
-                <span
-                    className="airport-visualization-fullscreen-toggle__label"
-                    aria-hidden="true"
-                >
+                <span className="airport-visualization-fullscreen-toggle__label" aria-hidden="true">
                     退出全屏
                 </span>
             ) : null}
@@ -334,10 +300,7 @@ const PersonalAirportSection = (): ReactElement => {
     return (
         <>
             {!isAirportVisualizationFullscreen ? (
-                <section
-                    className="personal-section"
-                    aria-labelledby="airport-map-title"
-                >
+                <section className="personal-section" aria-labelledby="airport-map-title">
                     <div className="personal-section__header">
                         <div>
                             <p className="personal-section__eyebrow">机场足迹</p>
@@ -354,10 +317,7 @@ const PersonalAirportSection = (): ReactElement => {
 
             {fullscreenAirportVisualization}
 
-            <section
-                className="airport-country-list"
-                aria-label="机场打卡列表"
-            >
+            <section className="airport-country-list" aria-label="机场打卡列表">
                 {airportCountryGroups.map(
                     (
                         airportCountryGroup: AirportCountryGroup,
@@ -365,8 +325,7 @@ const PersonalAirportSection = (): ReactElement => {
                     ): ReactElement =>
                         (() => {
                             const isAirportCountryExpanded =
-                                expandedAirportCountry ===
-                                airportCountryGroup.countryName;
+                                expandedAirportCountry === airportCountryGroup.countryName;
                             const airportCountryPanelId = `airport-country-airports-${airportCountryGroupIndex}`;
 
                             return (
@@ -390,8 +349,7 @@ const PersonalAirportSection = (): ReactElement => {
                                                 {airportCountryGroup.countryName}
                                             </span>
                                             <span className="airport-country__meta">
-                                                {airportCountryGroup.airports.length}{" "}
-                                                个机场
+                                                {airportCountryGroup.airports.length} 个机场
                                             </span>
                                             <span
                                                 className="airport-country__indicator"
@@ -406,9 +364,7 @@ const PersonalAirportSection = (): ReactElement => {
                                     >
                                         <ul>
                                             {airportCountryGroup.airports.map(
-                                                (
-                                                    airport: CheckedAirport,
-                                                ): ReactElement => (
+                                                (airport: CheckedAirport): ReactElement => (
                                                     <li key={airport.name}>
                                                         <span>{airport.name}</span>
                                                         <small>

@@ -1,17 +1,5 @@
-import {
-    Suspense,
-    lazy,
-    useLayoutEffect,
-    useState,
-    type ReactElement,
-} from "react";
-import {
-    BrowserRouter,
-    NavLink,
-    Route,
-    Routes,
-    useLocation,
-} from "react-router";
+import { Suspense, lazy, useLayoutEffect, useState, type ReactElement } from "react";
+import { BrowserRouter, NavLink, Route, Routes, useLocation } from "react-router";
 import { BackToTop } from "./components/back-to-top";
 import { RouteTransitionLayout } from "./components/route-transition";
 import { ThemeToggle } from "./components/theme-toggle";
@@ -55,11 +43,7 @@ const ReferencesPage = lazy(async () => import("./pages/references"));
 const PlaneRenderPage = lazy(async () => import("./pages/planeRender"));
 
 // 根据路由激活状态生成导航类名，保持当前页面入口高亮。
-const getNavigationClassName = ({
-    isActive,
-}: {
-    isActive: boolean;
-}): string => {
+const getNavigationClassName = ({ isActive }: { isActive: boolean }): string => {
     return isActive ? "app-nav__link app-nav__link--active" : "app-nav__link";
 };
 
@@ -76,16 +60,13 @@ const RouteLoadingFallback = (): ReactElement => {
 
 // 应用根组件负责装配导航、路由和页面级懒加载边界。
 const App = (): ReactElement => {
-    const [themePreference, setThemePreference] = useState<ThemePreference>(
-        (): ThemePreference => {
-            const fromAttr =
-                document.documentElement.getAttribute("data-theme");
-            if (fromAttr === "light" || fromAttr === "dark") {
-                return fromAttr;
-            }
-            return readThemePreferenceFromStorage();
-        },
-    );
+    const [themePreference, setThemePreference] = useState<ThemePreference>((): ThemePreference => {
+        const fromAttr = document.documentElement.getAttribute("data-theme");
+        if (fromAttr === "light" || fromAttr === "dark") {
+            return fromAttr;
+        }
+        return readThemePreferenceFromStorage();
+    });
 
     useLayoutEffect(() => {
         applyThemePreference(themePreference);
@@ -99,7 +80,7 @@ const App = (): ReactElement => {
                 <header className="app-header">
                     <div className="app-brand" aria-label="Aircraft Log">
                         <span className="app-brand__mark" aria-hidden="true">
-                        ✈️
+                            ✈️
                         </span>
                         <span className="app-brand__name">Aircraft Log</span>
                     </div>
@@ -107,25 +88,22 @@ const App = (): ReactElement => {
                         <ThemeToggle
                             preference={themePreference}
                             onToggle={(): void => {
-                                setThemePreference(
-                                    (previous: ThemePreference) =>
-                                        previous === "dark" ? "light" : "dark",
+                                setThemePreference((previous: ThemePreference) =>
+                                    previous === "dark" ? "light" : "dark",
                                 );
                             }}
                         />
                         <nav className="app-nav" aria-label="主导航">
-                            {NAVIGATION_ITEMS.map(
-                                (item: NavigationItem): ReactElement => (
-                                    <NavLink
-                                        key={item.path}
-                                        to={item.path}
-                                        end={item.end}
-                                        className={getNavigationClassName}
-                                    >
-                                        {item.label}
-                                    </NavLink>
-                                ),
-                            )}
+                            {NAVIGATION_ITEMS.map((item: NavigationItem): ReactElement => (
+                                <NavLink
+                                    key={item.path}
+                                    to={item.path}
+                                    end={item.end}
+                                    className={getNavigationClassName}
+                                >
+                                    {item.label}
+                                </NavLink>
+                            ))}
                         </nav>
                     </div>
                 </header>
@@ -135,35 +113,17 @@ const App = (): ReactElement => {
                         <Routes>
                             <Route element={<RouteTransitionLayout />}>
                                 <Route path="/" element={<HomePage />} />
-                                <Route
-                                    path="/aircraft-wiki"
-                                    element={<AircraftWikiPage />}
-                                />
-                                <Route
-                                    path="/personal"
-                                    element={<PersonalPage />}
-                                />
-                                <Route
-                                    path="/photos"
-                                    element={<PhotosPage />}
-                                />
-                                <Route
-                                    path="/references"
-                                    element={<ReferencesPage />}
-                                />
-                                <Route
-                                    path="/plane-render"
-                                    element={<PlaneRenderPage />}
-                                />
+                                <Route path="/aircraft-wiki" element={<AircraftWikiPage />} />
+                                <Route path="/personal" element={<PersonalPage />} />
+                                <Route path="/photos" element={<PhotosPage />} />
+                                <Route path="/references" element={<ReferencesPage />} />
+                                <Route path="/plane-render" element={<PlaneRenderPage />} />
                             </Route>
                         </Routes>
                     </Suspense>
                 </main>
                 <footer className="app-footer" aria-label="联系与项目">
-                    <a
-                        className="app-footer__link"
-                        href={`mailto:${AUTHOR_EMAIL}`}
-                    >
+                    <a className="app-footer__link" href={`mailto:${AUTHOR_EMAIL}`}>
                         联系作者
                     </a>
                     <a

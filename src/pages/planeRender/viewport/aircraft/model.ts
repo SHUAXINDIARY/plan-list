@@ -8,10 +8,7 @@ export const FR24_MODEL_SOURCE_PREFIX = "fr24-3d-models-glbv2/models/";
 export const FR24_MODEL_FORWARD_CORRECTION = Math.PI;
 
 /** 将模型资源的导入坐标方向统一到视窗约定的机头朝 +Z、机身 Y-up。 */
-export const applyModelSourceOrientation = (
-    model: THREE.Object3D,
-    sourcePath: string,
-): void => {
+export const applyModelSourceOrientation = (model: THREE.Object3D, sourcePath: string): void => {
     if (!sourcePath.startsWith(FR24_MODEL_SOURCE_PREFIX)) {
         return;
     }
@@ -28,9 +25,7 @@ export const disposeSceneResources = (objectRoot: THREE.Object3D): void => {
 
         object.geometry.dispose();
 
-        const materials = Array.isArray(object.material)
-            ? object.material
-            : [object.material];
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
         materials.forEach((material: THREE.Material): void => {
             if (material instanceof THREE.MeshStandardMaterial) {
                 material.map?.dispose();

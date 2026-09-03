@@ -18,14 +18,14 @@
 
 ## 页面路由
 
-| 路径 | 页面 |
-| --- | --- |
-| `/` | 航司 WIKI（航司机型资料库） |
-| `/aircraft-wiki` | 机型 WIKI |
-| `/personal` | 飞行日志 |
-| `/photos` | 飞机照片 |
-| `/references` | 参考资料 |
-| `/plane-render` | 模型渲染 |
+| 路径             | 页面                        |
+| ---------------- | --------------------------- |
+| `/`              | 航司 WIKI（航司机型资料库） |
+| `/aircraft-wiki` | 机型 WIKI                   |
+| `/personal`      | 飞行日志                    |
+| `/photos`        | 飞机照片                    |
+| `/references`    | 参考资料                    |
+| `/plane-render`  | 模型渲染                    |
 
 ## 模型资源
 

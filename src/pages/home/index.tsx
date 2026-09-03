@@ -30,10 +30,7 @@ import {
     DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
     NO_AIRLINE_ALLIANCE_VALUE,
 } from "./constant";
-import {
-    CHECKED_AIRPORTS,
-    checkedCountryCount,
-} from "../personal/constants/summary";
+import { CHECKED_AIRPORTS, checkedCountryCount } from "../personal/constants/summary";
 import {
     FLIGHT_RECORD_COUNT,
     flightRecordsByYear,
@@ -86,22 +83,16 @@ const RECENT_FLIGHT_RECORDS: FlightRecord[] = flightRecordsByYear
     .slice(0, RECENT_FLIGHT_RECORD_LIMIT);
 
 // 判断下拉值是否为受支持的客机数量排序方式，避免直接信任 DOM 字符串。
-const isPassengerAircraftSortOrder = (
-    value: string,
-): value is PassengerAircraftSortOrder => {
+const isPassengerAircraftSortOrder = (value: string): value is PassengerAircraftSortOrder => {
     return value === "passenger-desc" || value === "passenger-asc";
 };
 
 // 校验下拉框返回值，避免将任意 DOM 字符串写入联盟筛选状态。
-const isAirlineAllianceFilter = (
-    value: string,
-): value is AirlineAllianceFilter => {
+const isAirlineAllianceFilter = (value: string): value is AirlineAllianceFilter => {
     return (
         value === ALL_AIRLINE_ALLIANCES_VALUE ||
         value === NO_AIRLINE_ALLIANCE_VALUE ||
-        AIRLINE_ALLIANCE_OPTIONS.some(
-            (allianceName): boolean => allianceName === value,
-        )
+        AIRLINE_ALLIANCE_OPTIONS.some((allianceName): boolean => allianceName === value)
     );
 };
 
@@ -144,16 +135,10 @@ const normalizeMultiFilterValues = <FilterValue extends string>(
 };
 
 // 比较筛选数组是否完全一致，避免依赖项变化后写入等价状态并触发额外渲染。
-const areStringArraysEqual = (
-    firstValues: string[],
-    secondValues: string[],
-): boolean => {
+const areStringArraysEqual = (firstValues: string[], secondValues: string[]): boolean => {
     return (
         firstValues.length === secondValues.length &&
-        firstValues.every(
-            (value: string, index: number): boolean =>
-                value === secondValues[index],
-        )
+        firstValues.every((value: string, index: number): boolean => value === secondValues[index])
     );
 };
 
@@ -172,9 +157,7 @@ const isHttpOrHttpsUrl = (value: string): boolean => {
 };
 
 const getAirlineBrandColor = (airlineEnglishName: string): string => {
-    return (
-        AIRLINE_BRAND_COLORS[airlineEnglishName] ?? DEFAULT_AIRLINE_BRAND_COLOR
-    );
+    return AIRLINE_BRAND_COLORS[airlineEnglishName] ?? DEFAULT_AIRLINE_BRAND_COLOR;
 };
 
 const createAirlineEntryStyle = (brandColor: string): AirlineEntryStyle => {
@@ -200,41 +183,30 @@ const countUniqueManufacturers = (airlineFleets: AirlineFleet[]): number => {
     const manufacturerNames = new Set<string>();
 
     airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
-        airlineFleet.manufacturers.forEach(
-            (manufacturer: ManufacturerFleet): void => {
-                manufacturerNames.add(manufacturer.manufacturerName);
-            },
-        );
+        airlineFleet.manufacturers.forEach((manufacturer: ManufacturerFleet): void => {
+            manufacturerNames.add(manufacturer.manufacturerName);
+        });
     });
 
     return manufacturerNames.size;
 };
 
 // 按航司机队客机数量生成 Top Airline 条形图数据。
-const createTopAirlineStats = (
-    airlineFleets: AirlineFleet[],
-): RankedFleetDatum[] => {
+const createTopAirlineStats = (airlineFleets: AirlineFleet[]): RankedFleetDatum[] => {
     const topAirlines = [...airlineFleets]
         .sort(
-            (
-                firstAirline: AirlineFleet,
-                secondAirline: AirlineFleet,
-            ): number =>
-                secondAirline.passengerAircraftCount -
-                firstAirline.passengerAircraftCount,
+            (firstAirline: AirlineFleet, secondAirline: AirlineFleet): number =>
+                secondAirline.passengerAircraftCount - firstAirline.passengerAircraftCount,
         )
         .slice(0, STAT_BAR_LIMIT);
-    const maxPassengerAircraftCount =
-        topAirlines[0]?.passengerAircraftCount ?? 0;
+    const maxPassengerAircraftCount = topAirlines[0]?.passengerAircraftCount ?? 0;
 
     return topAirlines.map((airlineFleet: AirlineFleet): RankedFleetDatum => {
         const ratio =
             maxPassengerAircraftCount > 0
                 ? Math.max(
                       8,
-                      (airlineFleet.passengerAircraftCount /
-                          maxPassengerAircraftCount) *
-                          100,
+                      (airlineFleet.passengerAircraftCount / maxPassengerAircraftCount) * 100,
                   )
                 : 0;
 
@@ -248,26 +220,16 @@ const createTopAirlineStats = (
 };
 
 // 汇总每个机型在航司列表中的出现次数，生成 Top Aircraft 条形图数据。
-const createTopAircraftModelStats = (
-    airlineFleets: AirlineFleet[],
-): RankedFleetDatum[] => {
+const createTopAircraftModelStats = (airlineFleets: AirlineFleet[]): RankedFleetDatum[] => {
     const aircraftModelCounts = new Map<string, number>();
 
     airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
-        airlineFleet.manufacturers.forEach(
-            (manufacturer: ManufacturerFleet): void => {
-                manufacturer.models.forEach(
-                    (modelEntry: AircraftModelEntry): void => {
-                        const currentCount =
-                            aircraftModelCounts.get(modelEntry.name) ?? 0;
-                        aircraftModelCounts.set(
-                            modelEntry.name,
-                            currentCount + 1,
-                        );
-                    },
-                );
-            },
-        );
+        airlineFleet.manufacturers.forEach((manufacturer: ManufacturerFleet): void => {
+            manufacturer.models.forEach((modelEntry: AircraftModelEntry): void => {
+                const currentCount = aircraftModelCounts.get(modelEntry.name) ?? 0;
+                aircraftModelCounts.set(modelEntry.name, currentCount + 1);
+            });
+        });
     });
 
     const topModels = Array.from(aircraftModelCounts.entries())
@@ -286,20 +248,15 @@ const createTopAircraftModelStats = (
         .slice(0, STAT_BAR_LIMIT);
     const maxModelCount = topModels[0]?.[1] ?? 0;
 
-    return topModels.map(
-        ([modelName, modelCount]: [string, number]): RankedFleetDatum => {
-            const ratio =
-                maxModelCount > 0
-                    ? Math.max(8, (modelCount / maxModelCount) * 100)
-                    : 0;
+    return topModels.map(([modelName, modelCount]: [string, number]): RankedFleetDatum => {
+        const ratio = maxModelCount > 0 ? Math.max(8, (modelCount / maxModelCount) * 100) : 0;
 
-            return {
-                label: modelName,
-                value: modelCount,
-                ratio,
-            };
-        },
-    );
+        return {
+            label: modelName,
+            value: modelCount,
+            ratio,
+        };
+    });
 };
 
 // 根据制造商名称生成机型 chip 的品牌色分组。
@@ -395,21 +352,15 @@ const createAirlineFleets = (airplaneData: AirplaneData): AirlineFleet[] => {
                 country: airplaneDataItem.country?.trim() || "未知",
                 airlineWebsite: airplaneDataItem.airlineWebsite,
                 airlineAlliance: airplaneDataItem.airlineAlliance,
-                brandColor: getAirlineBrandColor(
-                    airplaneDataItem.airlineEnglishName,
-                ),
+                brandColor: getAirlineBrandColor(airplaneDataItem.airlineEnglishName),
                 passengerAircraftCount: airplaneDataItem.passengerAircraftCount,
                 manufacturerCount: formattedManufacturers.length,
                 aircraftCount,
                 manufacturers: formattedManufacturers,
             };
         })
-        .sort(
-            (firstAirline: AirlineFleet, secondAirline: AirlineFleet): number =>
-                firstAirline.airlineName.localeCompare(
-                    secondAirline.airlineName,
-                    "zh-Hans-CN",
-                ),
+        .sort((firstAirline: AirlineFleet, secondAirline: AirlineFleet): number =>
+            firstAirline.airlineName.localeCompare(secondAirline.airlineName, "zh-Hans-CN"),
         );
 };
 
@@ -422,19 +373,14 @@ const sortAirlineFleetsByPassengerAircraftCount = (
         (firstAirline: AirlineFleet, secondAirline: AirlineFleet): number => {
             const passengerAircraftDifference =
                 sortOrder === "passenger-desc"
-                    ? secondAirline.passengerAircraftCount -
-                      firstAirline.passengerAircraftCount
-                    : firstAirline.passengerAircraftCount -
-                      secondAirline.passengerAircraftCount;
+                    ? secondAirline.passengerAircraftCount - firstAirline.passengerAircraftCount
+                    : firstAirline.passengerAircraftCount - secondAirline.passengerAircraftCount;
 
             if (passengerAircraftDifference !== 0) {
                 return passengerAircraftDifference;
             }
 
-            return firstAirline.airlineName.localeCompare(
-                secondAirline.airlineName,
-                "zh-Hans-CN",
-            );
+            return firstAirline.airlineName.localeCompare(secondAirline.airlineName, "zh-Hans-CN");
         },
     );
 };
@@ -444,16 +390,13 @@ const getManufacturerOptions = (airlineFleets: AirlineFleet[]): string[] => {
     const manufacturerNames = new Set<string>();
 
     airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
-        airlineFleet.manufacturers.forEach(
-            (manufacturer: ManufacturerFleet): void => {
-                manufacturerNames.add(manufacturer.manufacturerName);
-            },
-        );
+        airlineFleet.manufacturers.forEach((manufacturer: ManufacturerFleet): void => {
+            manufacturerNames.add(manufacturer.manufacturerName);
+        });
     });
 
-    return Array.from(manufacturerNames).sort(
-        (firstName: string, secondName: string): number =>
-            firstName.localeCompare(secondName, "zh-Hans-CN"),
+    return Array.from(manufacturerNames).sort((firstName: string, secondName: string): number =>
+        firstName.localeCompare(secondName, "zh-Hans-CN"),
     );
 };
 
@@ -465,9 +408,8 @@ const getCountryOptions = (airlineFleets: AirlineFleet[]): string[] => {
         countries.add(airlineFleet.country);
     });
 
-    return Array.from(countries).sort(
-        (firstCountry: string, secondCountry: string): number =>
-            firstCountry.localeCompare(secondCountry, "zh-Hans-CN"),
+    return Array.from(countries).sort((firstCountry: string, secondCountry: string): number =>
+        firstCountry.localeCompare(secondCountry, "zh-Hans-CN"),
     );
 };
 
@@ -477,33 +419,24 @@ const getAircraftModelOptions = (
     selectedManufacturers: string[],
 ): string[] => {
     const modelNames = new Set<string>();
-    const includesAllManufacturers = selectedManufacturers.includes(
-        ALL_MANUFACTURERS_VALUE,
-    );
+    const includesAllManufacturers = selectedManufacturers.includes(ALL_MANUFACTURERS_VALUE);
 
     airlineFleets.forEach((airlineFleet: AirlineFleet): void => {
-        airlineFleet.manufacturers.forEach(
-            (manufacturer: ManufacturerFleet): void => {
-                if (
-                    !includesAllManufacturers &&
-                    !selectedManufacturers.includes(
-                        manufacturer.manufacturerName,
-                    )
-                ) {
-                    return;
-                }
-                manufacturer.models.forEach(
-                    (modelEntry: AircraftModelEntry): void => {
-                        modelNames.add(modelEntry.name);
-                    },
-                );
-            },
-        );
+        airlineFleet.manufacturers.forEach((manufacturer: ManufacturerFleet): void => {
+            if (
+                !includesAllManufacturers &&
+                !selectedManufacturers.includes(manufacturer.manufacturerName)
+            ) {
+                return;
+            }
+            manufacturer.models.forEach((modelEntry: AircraftModelEntry): void => {
+                modelNames.add(modelEntry.name);
+            });
+        });
     });
 
-    return Array.from(modelNames).sort(
-        (firstName: string, secondName: string): number =>
-            firstName.localeCompare(secondName, "zh-Hans-CN"),
+    return Array.from(modelNames).sort((firstName: string, secondName: string): number =>
+        firstName.localeCompare(secondName, "zh-Hans-CN"),
     );
 };
 
@@ -522,23 +455,18 @@ const filterAirlineFleets = (
     const filteredAirlineFleets = airlineFleets
         .filter((airlineFleet: AirlineFleet): boolean => {
             const matchesAirlineAlliance =
-                selectedAirlineAlliances.includes(
-                    ALL_AIRLINE_ALLIANCES_VALUE,
-                ) ||
+                selectedAirlineAlliances.includes(ALL_AIRLINE_ALLIANCES_VALUE) ||
                 selectedAirlineAlliances.some(
                     (airlineAllianceFilter: AirlineAllianceFilter): boolean =>
                         airlineAllianceFilter === NO_AIRLINE_ALLIANCE_VALUE
                             ? airlineFleet.airlineAlliance === null
-                            : airlineAllianceFilter !==
-                                  ALL_AIRLINE_ALLIANCES_VALUE &&
-                              airlineFleet.airlineAlliance ===
-                                  airlineAllianceFilter,
+                            : airlineAllianceFilter !== ALL_AIRLINE_ALLIANCES_VALUE &&
+                              airlineFleet.airlineAlliance === airlineAllianceFilter,
                 );
             const matchesCountry =
                 selectedCountries.includes(ALL_COUNTRIES_VALUE) ||
                 selectedCountries.includes(airlineFleet.country);
-            const normalizedAirlineName =
-                airlineFleet.airlineName.toLocaleLowerCase();
+            const normalizedAirlineName = airlineFleet.airlineName.toLocaleLowerCase();
             const normalizedAirlineEnglishName =
                 airlineFleet.airlineEnglishName.toLocaleLowerCase();
 
@@ -551,39 +479,26 @@ const filterAirlineFleets = (
         })
         .map((airlineFleet: AirlineFleet): AirlineFleet => {
             // 制造商筛选只影响每家航司内部的制造商分组，不破坏原始数据。
-            const manufacturerFiltered =
-                selectedManufacturers.includes(ALL_MANUFACTURERS_VALUE)
-                    ? airlineFleet.manufacturers
-                    : airlineFleet.manufacturers.filter(
-                          (manufacturer: ManufacturerFleet): boolean =>
-                              selectedManufacturers.includes(
-                                  manufacturer.manufacturerName,
-                              ),
-                      );
+            const manufacturerFiltered = selectedManufacturers.includes(ALL_MANUFACTURERS_VALUE)
+                ? airlineFleet.manufacturers
+                : airlineFleet.manufacturers.filter((manufacturer: ManufacturerFleet): boolean =>
+                      selectedManufacturers.includes(manufacturer.manufacturerName),
+                  );
             // 具体型号筛选在制造商筛选结果上继续收窄，仅保留名称匹配的机型条目。
-            const filteredManufacturers =
-                selectedAircraftModels.includes(ALL_AIRCRAFT_MODELS_VALUE)
-                    ? manufacturerFiltered
-                    : manufacturerFiltered
-                          .map(
-                              (
-                                  manufacturer: ManufacturerFleet,
-                              ): ManufacturerFleet => ({
-                                  ...manufacturer,
-                                  models: manufacturer.models.filter(
-                                      (
-                                          modelEntry: AircraftModelEntry,
-                                      ): boolean =>
-                                          selectedAircraftModels.includes(
-                                              modelEntry.name,
-                                          ),
-                                  ),
-                              }),
-                          )
-                          .filter(
-                              (manufacturer: ManufacturerFleet): boolean =>
-                                  manufacturer.models.length > 0,
-                          );
+            const filteredManufacturers = selectedAircraftModels.includes(ALL_AIRCRAFT_MODELS_VALUE)
+                ? manufacturerFiltered
+                : manufacturerFiltered
+                      .map((manufacturer: ManufacturerFleet): ManufacturerFleet => ({
+                          ...manufacturer,
+                          models: manufacturer.models.filter(
+                              (modelEntry: AircraftModelEntry): boolean =>
+                                  selectedAircraftModels.includes(modelEntry.name),
+                          ),
+                      }))
+                      .filter(
+                          (manufacturer: ManufacturerFleet): boolean =>
+                              manufacturer.models.length > 0,
+                      );
             const aircraftCount = filteredManufacturers.reduce(
                 (total: number, manufacturer: ManufacturerFleet): number =>
                     total + manufacturer.models.length,
@@ -597,15 +512,9 @@ const filterAirlineFleets = (
                 manufacturers: filteredManufacturers,
             };
         })
-        .filter(
-            (airlineFleet: AirlineFleet): boolean =>
-                airlineFleet.manufacturers.length > 0,
-        );
+        .filter((airlineFleet: AirlineFleet): boolean => airlineFleet.manufacturers.length > 0);
 
-    return sortAirlineFleetsByPassengerAircraftCount(
-        filteredAirlineFleets,
-        sortOrder,
-    );
+    return sortAirlineFleetsByPassengerAircraftCount(filteredAirlineFleets, sortOrder);
 };
 
 // 首页负责加载公开机型数据，并提供航司搜索、制造商与具体型号筛选和分组展示。
@@ -614,21 +523,19 @@ const HomePage = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [airlineSearchTerm, setAirlineSearchTerm] = useState<string>("");
-    const [selectedAirlineAlliance, setSelectedAirlineAlliance] =
-        useState<AirlineAllianceFilter[]>([ALL_AIRLINE_ALLIANCES_VALUE]);
-    const [selectedCountry, setSelectedCountry] = useState<string[]>([
-        ALL_COUNTRIES_VALUE,
-    ]);
+    const [selectedAirlineAlliance, setSelectedAirlineAlliance] = useState<AirlineAllianceFilter[]>(
+        [ALL_AIRLINE_ALLIANCES_VALUE],
+    );
+    const [selectedCountry, setSelectedCountry] = useState<string[]>([ALL_COUNTRIES_VALUE]);
     const [selectedManufacturer, setSelectedManufacturer] = useState<string[]>([
         ALL_MANUFACTURERS_VALUE,
     ]);
     const [selectedAircraftModel, setSelectedAircraftModel] = useState<string[]>([
         ALL_AIRCRAFT_MODELS_VALUE,
     ]);
-    const [selectedSortOrder, setSelectedSortOrder] =
-        useState<PassengerAircraftSortOrder>(
-            DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
-        );
+    const [selectedSortOrder, setSelectedSortOrder] = useState<PassengerAircraftSortOrder>(
+        DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER,
+    );
     useEffect((): (() => void) => {
         let isMounted = true;
 
@@ -690,12 +597,7 @@ const HomePage = (): ReactElement => {
             aircraftModelOptions,
         );
 
-        if (
-            !areStringArraysEqual(
-                selectedAircraftModel,
-                nextSelectedAircraftModels,
-            )
-        ) {
+        if (!areStringArraysEqual(selectedAircraftModel, nextSelectedAircraftModels)) {
             setSelectedAircraftModel(nextSelectedAircraftModels);
         }
     }, [aircraftModelOptions, selectedAircraftModel]);
@@ -776,9 +678,7 @@ const HomePage = (): ReactElement => {
             },
             {
                 label: "航司",
-                value: isLoading
-                    ? loadingValue
-                    : formatDashboardNumber(airlineFleets.length),
+                value: isLoading ? loadingValue : formatDashboardNumber(airlineFleets.length),
                 detail: "机队档案",
             },
             {
@@ -792,11 +692,7 @@ const HomePage = (): ReactElement => {
                 detail: "航迹覆盖",
             },
         ];
-    }, [
-        airlineFleets.length,
-        isLoading,
-        totalFleetAircraftModelCount,
-    ]);
+    }, [airlineFleets.length, isLoading, totalFleetAircraftModelCount]);
 
     // 跟随筛选结果生成 Top Airline 统计，让仪表盘与当前列表保持同源。
     const topAirlineStats = useMemo((): RankedFleetDatum[] => {
@@ -809,25 +705,20 @@ const HomePage = (): ReactElement => {
     }, [filteredAirlineFleets]);
 
     // 航司搜索输入实时写入状态，驱动列表过滤。
-    const handleAirlineSearchChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
+    const handleAirlineSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setAirlineSearchTerm(event.target.value);
     };
 
     // 联盟下拉切换后，保留多个联盟与未加入联盟航司的并集。
-    const handleAirlineAllianceChange = (
-        nextValues: string[],
-    ): void => {
+    const handleAirlineAllianceChange = (nextValues: string[]): void => {
         setSelectedAirlineAlliance(
             normalizeMultiFilterValues(
                 selectedAirlineAlliance,
                 nextValues,
                 ALL_AIRLINE_ALLIANCES_VALUE,
-                [
-                    ...AIRLINE_ALLIANCE_OPTIONS,
-                    NO_AIRLINE_ALLIANCE_VALUE,
-                ].filter(isAirlineAllianceFilter),
+                [...AIRLINE_ALLIANCE_OPTIONS, NO_AIRLINE_ALLIANCE_VALUE].filter(
+                    isAirlineAllianceFilter,
+                ),
             ),
         );
     };
@@ -869,58 +760,43 @@ const HomePage = (): ReactElement => {
     };
 
     // 排序下拉切换后按客机数量重新组织当前过滤结果。
-    const handleSortOrderChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleSortOrderChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         if (isPassengerAircraftSortOrder(event.target.value)) {
             setSelectedSortOrder(event.target.value);
         }
     };
 
     return (
-        <section
-            className="page-panel aircraft-wiki"
-            aria-labelledby="home-page-title"
-        >
+        <section className="page-panel aircraft-wiki" aria-labelledby="home-page-title">
             <div className="aircraft-wiki__hero">
                 <div className="aircraft-wiki__intro">
-                <p className="page-eyebrow">Aircraft Wiki</p>
+                    <p className="page-eyebrow">Aircraft Wiki</p>
                     <h1 id="home-page-title">航司机型资料库</h1>
                     <p>按航司浏览当前机队中的制造商与机型。</p>
-                    <div
-                        className="aircraft-wiki__hero-actions"
-                        aria-label="首页快速入口"
-                    >
+                    <div className="aircraft-wiki__hero-actions" aria-label="首页快速入口">
                         <a
                             className="aircraft-wiki__hero-action aircraft-wiki__hero-action--primary"
                             href="#fleet-catalog"
                         >
                             浏览航司机队
                         </a>
-                        <a
-                            className="aircraft-wiki__hero-action"
-                            href="/personal"
-                        >
+                        <a className="aircraft-wiki__hero-action" href="/personal">
                             查看飞行地图
                         </a>
                     </div>
                 </div>
                 <dl className="aircraft-wiki__hero-stats" aria-label="飞机日志概览">
-                    {heroStats.map(
-                        (heroStat: AircraftLogHeroStat): ReactElement => (
-                            <div key={heroStat.label}>
-                                <dt>{heroStat.label}</dt>
-                                <dd>{heroStat.value}</dd>
-                                <span>{heroStat.detail}</span>
-                            </div>
-                        ),
-                    )}
+                    {heroStats.map((heroStat: AircraftLogHeroStat): ReactElement => (
+                        <div key={heroStat.label}>
+                            <dt>{heroStat.label}</dt>
+                            <dd>{heroStat.value}</dd>
+                            <span>{heroStat.detail}</span>
+                        </div>
+                    ))}
                 </dl>
             </div>
 
-            {errorMessage ? (
-                <p className="data-state data-state--error">{errorMessage}</p>
-            ) : null}
+            {errorMessage ? <p className="data-state data-state--error">{errorMessage}</p> : null}
 
             {isLoading && !errorMessage ? <FleetResultsSkeleton /> : null}
 
@@ -932,21 +808,12 @@ const HomePage = (): ReactElement => {
                     <header className="aircraft-stat-dashboard__header">
                         <div>
                             <p className="page-eyebrow">数据统计</p>
-                            <h2 id="aircraft-stat-dashboard-title">
-                                机队概览
-                            </h2>
+                            <h2 id="aircraft-stat-dashboard-title">机队概览</h2>
                         </div>
-                        <dl
-                            className="aircraft-stat-dashboard__summary"
-                            aria-label="机队资料统计"
-                        >
+                        <dl className="aircraft-stat-dashboard__summary" aria-label="机队资料统计">
                             <div>
                                 <dt>客机</dt>
-                                <dd>
-                                    {formatDashboardNumber(
-                                        totalFleetPassengerAircraftCount,
-                                    )}
-                                </dd>
+                                <dd>{formatDashboardNumber(totalFleetPassengerAircraftCount)}</dd>
                             </div>
                             <div>
                                 <dt>制造商</dt>
@@ -966,34 +833,21 @@ const HomePage = (): ReactElement => {
                             </header>
                             <ol className="aircraft-stat-bars">
                                 {topAirlineStats.map(
-                                    (
-                                        statDatum: RankedFleetDatum,
-                                    ): ReactElement => (
+                                    (statDatum: RankedFleetDatum): ReactElement => (
                                         <li key={statDatum.label}>
                                             <span>
-                                                <strong
-                                                    className="aircraft-stat-bars__label"
-                                                >
+                                                <strong className="aircraft-stat-bars__label">
                                                     {statDatum.label}
                                                     {statDatum.secondaryLabel ? (
                                                         <span className="airline-entry__english-name">
-                                                            {
-                                                                statDatum.secondaryLabel
-                                                            }
+                                                            {statDatum.secondaryLabel}
                                                         </span>
                                                     ) : null}
                                                 </strong>
-                                                <em>
-                                                    {formatDashboardNumber(
-                                                        statDatum.value,
-                                                    )}{" "}
-                                                    架
-                                                </em>
+                                                <em>{formatDashboardNumber(statDatum.value)} 架</em>
                                             </span>
                                             <i
-                                                style={createStatBarStyle(
-                                                    statDatum.ratio,
-                                                )}
+                                                style={createStatBarStyle(statDatum.ratio)}
                                                 aria-hidden="true"
                                             />
                                         </li>
@@ -1008,20 +862,14 @@ const HomePage = (): ReactElement => {
                             </header>
                             <ol className="aircraft-stat-bars">
                                 {topAircraftModelStats.map(
-                                    (
-                                        statDatum: RankedFleetDatum,
-                                    ): ReactElement => (
+                                    (statDatum: RankedFleetDatum): ReactElement => (
                                         <li key={statDatum.label}>
                                             <span>
-                                                <strong>
-                                                    {statDatum.label}
-                                                </strong>
+                                                <strong>{statDatum.label}</strong>
                                                 <em>{statDatum.value} 家航司</em>
                                             </span>
                                             <i
-                                                style={createStatBarStyle(
-                                                    statDatum.ratio,
-                                                )}
+                                                style={createStatBarStyle(statDatum.ratio)}
                                                 aria-hidden="true"
                                             />
                                         </li>
@@ -1050,23 +898,16 @@ const HomePage = (): ReactElement => {
                                             >
                                                 {flightRecord.departureDate}
                                             </time>
-                                            <strong>
-                                                {flightRecord.airline}
-                                            </strong>
+                                            <strong>{flightRecord.airline}</strong>
                                             <span>
                                                 {flightRecord.aircraft} /{" "}
-                                                {formatFlightRecordRoute(
-                                                    flightRecord,
-                                                )}
+                                                {formatFlightRecordRoute(flightRecord)}
                                             </span>
                                         </li>
                                     ),
                                 )}
                             </ol>
-                            <Link
-                                className="aircraft-log-timeline__more"
-                                to="/personal"
-                            >
+                            <Link className="aircraft-log-timeline__more" to="/personal">
                                 查看更多
                                 <span aria-hidden="true">→</span>
                             </Link>
@@ -1076,11 +917,7 @@ const HomePage = (): ReactElement => {
             ) : null}
 
             {!isLoading && !errorMessage && airlineFleets.length > 0 ? (
-                <div
-                    className="fleet-toolbar"
-                    id="fleet-catalog"
-                    aria-label="机型数据筛选与概览"
-                >
+                <div className="fleet-toolbar" id="fleet-catalog" aria-label="机型数据筛选与概览">
                     <div className="fleet-summary" aria-label="机型数据概览">
                         <div className="fleet-summary__stats">
                             <span>
@@ -1088,9 +925,7 @@ const HomePage = (): ReactElement => {
                                 家航司
                             </span>
                             <span>
-                                <strong>
-                                    {totalPassengerAircraftCount}
-                                </strong>
+                                <strong>{totalPassengerAircraftCount}</strong>
                                 架客机
                             </span>
                             <span>
@@ -1119,22 +954,13 @@ const HomePage = (): ReactElement => {
                             multiple
                             clearValue={[ALL_AIRLINE_ALLIANCES_VALUE]}
                         >
-                            <option value={ALL_AIRLINE_ALLIANCES_VALUE}>
-                                全部联盟
-                            </option>
-                            {AIRLINE_ALLIANCE_OPTIONS.map(
-                                (allianceName): ReactElement => (
-                                    <option
-                                        key={allianceName}
-                                        value={allianceName}
-                                    >
-                                        {allianceName}
-                                    </option>
-                                ),
-                            )}
-                            <option value={NO_AIRLINE_ALLIANCE_VALUE}>
-                                无联盟
-                            </option>
+                            <option value={ALL_AIRLINE_ALLIANCES_VALUE}>全部联盟</option>
+                            {AIRLINE_ALLIANCE_OPTIONS.map((allianceName): ReactElement => (
+                                <option key={allianceName} value={allianceName}>
+                                    {allianceName}
+                                </option>
+                            ))}
+                            <option value={NO_AIRLINE_ALLIANCE_VALUE}>无联盟</option>
                         </Select>
 
                         <Select
@@ -1146,16 +972,12 @@ const HomePage = (): ReactElement => {
                             multiple
                             clearValue={[ALL_COUNTRIES_VALUE]}
                         >
-                            <option value={ALL_COUNTRIES_VALUE}>
-                                全部国家或地区
-                            </option>
-                            {countryOptions.map(
-                                (country: string): ReactElement => (
-                                    <option key={country} value={country}>
-                                        {country}
-                                    </option>
-                                ),
-                            )}
+                            <option value={ALL_COUNTRIES_VALUE}>全部国家或地区</option>
+                            {countryOptions.map((country: string): ReactElement => (
+                                <option key={country} value={country}>
+                                    {country}
+                                </option>
+                            ))}
                         </Select>
 
                         <Select
@@ -1166,19 +988,12 @@ const HomePage = (): ReactElement => {
                             multiple
                             clearValue={[ALL_MANUFACTURERS_VALUE]}
                         >
-                            <option value={ALL_MANUFACTURERS_VALUE}>
-                                全部制造商
-                            </option>
-                            {manufacturerOptions.map(
-                                (manufacturerName: string): ReactElement => (
-                                    <option
-                                        key={manufacturerName}
-                                        value={manufacturerName}
-                                    >
-                                        {manufacturerName}
-                                    </option>
-                                ),
-                            )}
+                            <option value={ALL_MANUFACTURERS_VALUE}>全部制造商</option>
+                            {manufacturerOptions.map((manufacturerName: string): ReactElement => (
+                                <option key={manufacturerName} value={manufacturerName}>
+                                    {manufacturerName}
+                                </option>
+                            ))}
                         </Select>
 
                         <Select
@@ -1189,19 +1004,12 @@ const HomePage = (): ReactElement => {
                             multiple
                             clearValue={[ALL_AIRCRAFT_MODELS_VALUE]}
                         >
-                            <option value={ALL_AIRCRAFT_MODELS_VALUE}>
-                                全部型号
-                            </option>
-                            {aircraftModelOptions.map(
-                                (modelName: string): ReactElement => (
-                                    <option
-                                        key={modelName}
-                                        value={modelName}
-                                    >
-                                        {modelName}
-                                    </option>
-                                ),
-                            )}
+                            <option value={ALL_AIRCRAFT_MODELS_VALUE}>全部型号</option>
+                            {aircraftModelOptions.map((modelName: string): ReactElement => (
+                                <option key={modelName} value={modelName}>
+                                    {modelName}
+                                </option>
+                            ))}
                         </Select>
 
                         <Select
@@ -1221,180 +1029,151 @@ const HomePage = (): ReactElement => {
                         aria-label="航司机型筛选结果"
                         aria-live="polite"
                     >
-                    {filteredAirlineFleets.length === 0 ? (
-                        <p className="fleet-results__empty">
-                            没有匹配当前筛选条件的航司或机型。
-                        </p>
-                    ) : (
-                        <div className="airline-list">
-                            {filteredAirlineFleets.map(
-                                (airlineFleet: AirlineFleet): ReactElement => (
-                                    <article
-                                        className="airline-entry"
-                                        key={airlineFleet.airlineName}
-                                        style={createAirlineEntryStyle(
-                                            airlineFleet.brandColor,
-                                        )}
-                                    >
-                                        <header className="airline-entry__header">
-                                            <div className="airline-entry__identity">
-                                                <span
-                                                    className="airline-entry__logo"
-                                                    aria-hidden="true"
-                                                >
-                                                    {getAirlineLogoInitials(
-                                                        airlineFleet.airlineEnglishName,
-                                                    )}
-                                                </span>
-                                                <div className="airline-entry__title">
-                                                    <div className="airline-entry__heading">
-                                                        <h2>
-                                                            {
-                                                                airlineFleet.airlineName
-                                                            }
-                                                        </h2>
-                                                        <span className="airline-entry__english-name">
-                                                            {
-                                                                airlineFleet.airlineEnglishName
-                                                            }
-                                                        </span>
-                                                        {isHttpOrHttpsUrl(
-                                                            airlineFleet.airlineWebsite,
-                                                        ) ? (
-                                                            <a
-                                                                className="airline-entry__website"
-                                                                href={airlineFleet.airlineWebsite.trim()}
-                                                                target="_blank"
-                                                                rel="noreferrer"
-                                                                aria-label={`${airlineFleet.airlineName}官网`}
-                                                            >
-                                                                官网
-                                                            </a>
-                                                        ) : null}
+                        {filteredAirlineFleets.length === 0 ? (
+                            <p className="fleet-results__empty">
+                                没有匹配当前筛选条件的航司或机型。
+                            </p>
+                        ) : (
+                            <div className="airline-list">
+                                {filteredAirlineFleets.map(
+                                    (airlineFleet: AirlineFleet): ReactElement => (
+                                        <article
+                                            className="airline-entry"
+                                            key={airlineFleet.airlineName}
+                                            style={createAirlineEntryStyle(airlineFleet.brandColor)}
+                                        >
+                                            <header className="airline-entry__header">
+                                                <div className="airline-entry__identity">
+                                                    <span
+                                                        className="airline-entry__logo"
+                                                        aria-hidden="true"
+                                                    >
+                                                        {getAirlineLogoInitials(
+                                                            airlineFleet.airlineEnglishName,
+                                                        )}
+                                                    </span>
+                                                    <div className="airline-entry__title">
+                                                        <div className="airline-entry__heading">
+                                                            <h2>{airlineFleet.airlineName}</h2>
+                                                            <span className="airline-entry__english-name">
+                                                                {airlineFleet.airlineEnglishName}
+                                                            </span>
+                                                            {isHttpOrHttpsUrl(
+                                                                airlineFleet.airlineWebsite,
+                                                            ) ? (
+                                                                <a
+                                                                    className="airline-entry__website"
+                                                                    href={airlineFleet.airlineWebsite.trim()}
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                    aria-label={`${airlineFleet.airlineName}官网`}
+                                                                >
+                                                                    官网
+                                                                </a>
+                                                            ) : null}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <dl
-                                                className="airline-entry__facts"
-                                                aria-label={`${airlineFleet.airlineName}机队概览`}
-                                            >
-                                                <div className="airline-entry__country">
-                                                    <dt>国家/地区</dt>
-                                                    <dd>
-                                                        {airlineFleet.country}
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt>客机</dt>
-                                                    <dd>
-                                                        {
-                                                            airlineFleet.passengerAircraftCount
-                                                        }
-                                                        <span>架</span>
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt>制造商</dt>
-                                                    <dd>
-                                                        {
-                                                            airlineFleet.manufacturerCount
-                                                        }
-                                                        <span>个</span>
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt>机型</dt>
-                                                    <dd>
-                                                        {
-                                                            airlineFleet.aircraftCount
-                                                        }
-                                                        <span>个</span>
-                                                    </dd>
-                                                </div>
-                                                <div className="airline-entry__alliance">
-                                                    <dt>联盟</dt>
-                                                    <dd>
-                                                        {airlineFleet.airlineAlliance ??
-                                                            "-"}
-                                                    </dd>
-                                                </div>
-                                            </dl>
-                                        </header>
+                                                <dl
+                                                    className="airline-entry__facts"
+                                                    aria-label={`${airlineFleet.airlineName}机队概览`}
+                                                >
+                                                    <div className="airline-entry__country">
+                                                        <dt>国家/地区</dt>
+                                                        <dd>{airlineFleet.country}</dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>客机</dt>
+                                                        <dd>
+                                                            {airlineFleet.passengerAircraftCount}
+                                                            <span>架</span>
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>制造商</dt>
+                                                        <dd>
+                                                            {airlineFleet.manufacturerCount}
+                                                            <span>个</span>
+                                                        </dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt>机型</dt>
+                                                        <dd>
+                                                            {airlineFleet.aircraftCount}
+                                                            <span>个</span>
+                                                        </dd>
+                                                    </div>
+                                                    <div className="airline-entry__alliance">
+                                                        <dt>联盟</dt>
+                                                        <dd>
+                                                            {airlineFleet.airlineAlliance ?? "-"}
+                                                        </dd>
+                                                    </div>
+                                                </dl>
+                                            </header>
 
-                                        <div className="manufacturer-list">
-                                            {airlineFleet.manufacturers.map(
-                                                (
-                                                    manufacturer: ManufacturerFleet,
-                                                ): ReactElement => (
-                                                    <section
-                                                        className="manufacturer-block"
-                                                        key={
-                                                            manufacturer.manufacturerName
-                                                        }
-                                                    >
-                                                        <h3>
-                                                            {
-                                                                manufacturer.manufacturerName
-                                                            }
-                                                        </h3>
-                                                        <ul className="aircraft-model-list">
-                                                            {manufacturer.models.map(
-                                                                (
-                                                                    modelEntry: AircraftModelEntry,
-                                                                ): ReactElement => {
-                                                                    const listKey = `${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${modelEntry.name}`;
-                                                                    if (
-                                                                        isHttpOrHttpsUrl(
-                                                                            modelEntry.referenceUrl,
-                                                                        )
-                                                                    ) {
+                                            <div className="manufacturer-list">
+                                                {airlineFleet.manufacturers.map(
+                                                    (
+                                                        manufacturer: ManufacturerFleet,
+                                                    ): ReactElement => (
+                                                        <section
+                                                            className="manufacturer-block"
+                                                            key={manufacturer.manufacturerName}
+                                                        >
+                                                            <h3>{manufacturer.manufacturerName}</h3>
+                                                            <ul className="aircraft-model-list">
+                                                                {manufacturer.models.map(
+                                                                    (
+                                                                        modelEntry: AircraftModelEntry,
+                                                                    ): ReactElement => {
+                                                                        const listKey = `${airlineFleet.airlineName}-${manufacturer.manufacturerName}-${modelEntry.name}`;
+                                                                        if (
+                                                                            isHttpOrHttpsUrl(
+                                                                                modelEntry.referenceUrl,
+                                                                            )
+                                                                        ) {
+                                                                            return (
+                                                                                <li
+                                                                                    className={getAircraftModelChipClassName(
+                                                                                        manufacturer.manufacturerName,
+                                                                                    )}
+                                                                                    key={listKey}
+                                                                                >
+                                                                                    <a
+                                                                                        href={modelEntry.referenceUrl.trim()}
+                                                                                        target="_blank"
+                                                                                        rel="noreferrer"
+                                                                                    >
+                                                                                        {
+                                                                                            modelEntry.name
+                                                                                        }
+                                                                                    </a>
+                                                                                </li>
+                                                                            );
+                                                                        }
                                                                         return (
                                                                             <li
                                                                                 className={getAircraftModelChipClassName(
                                                                                     manufacturer.manufacturerName,
                                                                                 )}
-                                                                                key={
-                                                                                    listKey
-                                                                                }
+                                                                                key={listKey}
                                                                             >
-                                                                                <a
-                                                                                    href={modelEntry.referenceUrl.trim()}
-                                                                                    target="_blank"
-                                                                                    rel="noreferrer"
-                                                                                >
-                                                                                    {
-                                                                                        modelEntry.name
-                                                                                    }
-                                                                                </a>
+                                                                                {modelEntry.name}
                                                                             </li>
                                                                         );
-                                                                    }
-                                                                    return (
-                                                                        <li
-                                                                            className={getAircraftModelChipClassName(
-                                                                                manufacturer.manufacturerName,
-                                                                            )}
-                                                                            key={
-                                                                                listKey
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                modelEntry.name
-                                                                            }
-                                                                        </li>
-                                                                    );
-                                                                },
-                                                            )}
-                                                        </ul>
-                                                    </section>
-                                                ),
-                                            )}
-                                        </div>
-                                    </article>
-                                ),
-                            )}
-                        </div>
-                    )}
+                                                                    },
+                                                                )}
+                                                            </ul>
+                                                        </section>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </article>
+                                    ),
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : null}
@@ -1402,7 +1181,6 @@ const HomePage = (): ReactElement => {
             {!isLoading && !errorMessage && airlineFleets.length === 0 ? (
                 <p className="data-state">暂无机型数据。</p>
             ) : null}
-
         </section>
     );
 };

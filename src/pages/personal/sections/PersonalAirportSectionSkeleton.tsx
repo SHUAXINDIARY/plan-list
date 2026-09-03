@@ -26,9 +26,7 @@ export const PersonalAirportSectionSkeleton = (): ReactElement => {
                 aria-hidden="true"
             >
                 {airportCountryGroups.map(
-                    (
-                        airportCountryGroup: AirportCountryGroup,
-                    ): ReactElement => (
+                    (airportCountryGroup: AirportCountryGroup): ReactElement => (
                         <article
                             className="airport-country airport-country--skeleton"
                             key={airportCountryGroup.countryName}

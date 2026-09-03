@@ -24,9 +24,7 @@ export const BackToTop = (): ReactElement => {
     useEffect((): (() => void) => {
         const updateVisibility = (): void => {
             animationFrameRef.current = null;
-            setIsVisible(
-                getCurrentScrollOffset() > BACK_TO_TOP_VISIBILITY_OFFSET,
-            );
+            setIsVisible(getCurrentScrollOffset() > BACK_TO_TOP_VISIBILITY_OFFSET);
         };
 
         const handleScroll = (): void => {
@@ -34,8 +32,7 @@ export const BackToTop = (): ReactElement => {
                 return;
             }
 
-            animationFrameRef.current =
-                window.requestAnimationFrame(updateVisibility);
+            animationFrameRef.current = window.requestAnimationFrame(updateVisibility);
         };
 
         updateVisibility();
@@ -73,9 +70,7 @@ export const BackToTop = (): ReactElement => {
     return (
         <button
             type="button"
-            className={`back-to-top${
-                isVisible ? " back-to-top--visible" : ""
-            }`}
+            className={`back-to-top${isVisible ? " back-to-top--visible" : ""}`}
             onClick={handleBackToTop}
             aria-hidden={!isVisible}
             aria-label="返回页面顶部"

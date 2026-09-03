@@ -38,19 +38,10 @@ export type AircraftToneMapping = "aces" | "agx" | "neutral" | "none";
 export type AircraftShadowMode = "pcf" | "vsm";
 
 /** 模型视窗可选的渲染质量档位。 */
-export type AircraftRenderQuality =
-    | "performance"
-    | "balanced"
-    | "quality"
-    | "custom";
+export type AircraftRenderQuality = "performance" | "balanced" | "quality" | "custom";
 
 /** 模型视窗可选的工作室照明档位。 */
-export type AircraftLightingPreset =
-    | "neutral"
-    | "silhouette"
-    | "top"
-    | "three-point"
-    | "custom";
+export type AircraftLightingPreset = "neutral" | "silhouette" | "top" | "three-point" | "custom";
 
 /** 模型视窗中可即时写入 WebGPU 场景的用户偏好。 */
 export interface AircraftRenderSettings extends AircraftLightingSettings {
@@ -79,18 +70,10 @@ export interface AircraftRenderSettings extends AircraftLightingSettings {
 }
 
 /** 模型视窗当前所处的初始化或加载阶段。 */
-export type AircraftModelLoadingPhase =
-    | "initializing"
-    | "loading"
-    | "ready"
-    | "error";
+export type AircraftModelLoadingPhase = "initializing" | "loading" | "ready" | "error";
 
 /** 当前 WebGPU 渲染后端的可读状态。 */
-export type AircraftRendererStatus =
-    | "initializing"
-    | "webgpu"
-    | "unavailable"
-    | "lost";
+export type AircraftRendererStatus = "initializing" | "webgpu" | "unavailable" | "lost";
 
 /** 当前模型资源加载所处的细分阶段。 */
 export type AircraftModelLoadingStage = "renderer" | "downloading" | "parsing";
@@ -168,13 +151,7 @@ export interface AircraftCameraHudState {
 }
 
 /** 相机视角菜单支持的标准方向和自动适配状态。 */
-export type AircraftCameraView =
-    | "custom"
-    | "fit"
-    | "front"
-    | "side"
-    | "top"
-    | "bottom";
+export type AircraftCameraView = "custom" | "fit" | "front" | "side" | "top" | "bottom";
 
 /** 模型视窗支持的摄像机投影模式。 */
 export type AircraftProjectionMode = "perspective" | "orthographic";

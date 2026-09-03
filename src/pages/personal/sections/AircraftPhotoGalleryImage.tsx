@@ -19,13 +19,9 @@ export const AircraftPhotoGalleryImage = ({
     alt,
 }: AircraftPhotoGalleryImageProps): ReactElement => {
     const imageRef = useRef<HTMLImageElement>(null);
-    const [resolvedPreviewUrl, setResolvedPreviewUrl] = useState<string | null>(
-        null,
-    );
-    const [isPreviewImageReady, setIsPreviewImageReady] =
-        useState<boolean>(false);
-    const isPreviewPending =
-        resolvedPreviewUrl === null || !isPreviewImageReady;
+    const [resolvedPreviewUrl, setResolvedPreviewUrl] = useState<string | null>(null);
+    const [isPreviewImageReady, setIsPreviewImageReady] = useState<boolean>(false);
+    const isPreviewPending = resolvedPreviewUrl === null || !isPreviewImageReady;
 
     useEffect((): (() => void) | undefined => {
         setResolvedPreviewUrl(null);
@@ -46,8 +42,7 @@ export const AircraftPhotoGalleryImage = ({
         const intersectionObserver = new IntersectionObserver(
             (entries: IntersectionObserverEntry[]): void => {
                 const isImageNearViewport = entries.some(
-                    (entry: IntersectionObserverEntry): boolean =>
-                        entry.isIntersecting,
+                    (entry: IntersectionObserverEntry): boolean => entry.isIntersecting,
                 );
 
                 if (!isImageNearViewport) {
@@ -74,20 +69,13 @@ export const AircraftPhotoGalleryImage = ({
     return (
         <span className="aircraft-photo-gallery__image-frame">
             {isPreviewPending ? (
-                <span
-                    className="aircraft-photo-gallery__image-skeleton"
-                    aria-hidden="true"
-                />
+                <span className="aircraft-photo-gallery__image-skeleton" aria-hidden="true" />
             ) : null}
             <img
                 ref={imageRef}
                 src={resolvedPreviewUrl ?? undefined}
                 alt={alt}
-                className={
-                    isPreviewPending
-                        ? "aircraft-photo-gallery__image--pending"
-                        : undefined
-                }
+                className={isPreviewPending ? "aircraft-photo-gallery__image--pending" : undefined}
                 onLoad={markPreviewImageReady}
                 onError={markPreviewImageReady}
             />

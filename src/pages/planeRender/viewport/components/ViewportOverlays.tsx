@@ -1,10 +1,7 @@
 import type { ReactElement } from "react";
 import ModelDir from "../../ModelDir";
 import { AnimationControls } from "../animation";
-import type {
-    AircraftAnimationState,
-    AircraftCameraHudState,
-} from "../types";
+import type { AircraftAnimationState, AircraftCameraHudState } from "../types";
 import { CameraHud } from "../visualization";
 
 /** 视窗覆盖层的输入状态和交互回调。 */
@@ -49,14 +46,8 @@ export const ViewportOverlays = ({
 }: ViewportOverlaysProps): ReactElement => (
     <>
         {isFullscreen && isModelDirectoryOpen ? (
-            <div
-                id={modelDirectoryId}
-                className="plane-render__fullscreen-model-dir"
-            >
-                <ModelDir
-                    selectedModelId={selectedModelId}
-                    onModelSelection={onModelSelection}
-                />
+            <div id={modelDirectoryId} className="plane-render__fullscreen-model-dir">
+                <ModelDir selectedModelId={selectedModelId} onModelSelection={onModelSelection} />
             </div>
         ) : null}
         {cameraHudState !== null ? <CameraHud state={cameraHudState} /> : null}

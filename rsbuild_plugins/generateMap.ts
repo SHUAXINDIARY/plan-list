@@ -183,8 +183,8 @@ const graticule = (): string => {
 };
 
 const getSortedCountries = (continent: string): CountryPath[] =>
-    [...(countriesByContinent.get(continent) ?? [])].sort((a: CountryPath, b: CountryPath): number =>
-        a.name.localeCompare(b.name),
+    [...(countriesByContinent.get(continent) ?? [])].sort(
+        (a: CountryPath, b: CountryPath): number => a.name.localeCompare(b.name),
     );
 
 const countryGroups = sortedContinents
@@ -336,6 +336,4 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEI
 `;
 
 writeFileSync(OUTPUT_PATH, svg);
-console.log(
-    `Wrote ${OUTPUT_PATH} with ${geojson.features.length} country features.`,
-);
+console.log(`Wrote ${OUTPUT_PATH} with ${geojson.features.length} country features.`);

@@ -11,9 +11,7 @@ import * as THREE from "three";
 import { PMREMGenerator, type WebGPURenderer } from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import {
-    RenderControls,
-} from "./components/RenderControls";
+import { RenderControls } from "./components/RenderControls";
 import {
     applyAircraftLightingSettings,
     createAircraftLightingRig,
@@ -67,10 +65,7 @@ import {
     createAircraftDisplayFloor,
     readThemeColor,
 } from "./viewport/scene";
-import {
-    EMPTY_ANIMATION_STATE,
-    DEFAULT_MODEL_ANIMATION_NAME,
-} from "./viewport/animation";
+import { EMPTY_ANIMATION_STATE, DEFAULT_MODEL_ANIMATION_NAME } from "./viewport/animation";
 import {
     downloadBlob,
     FULLSCREEN_REQUEST_ERROR_MESSAGE,
@@ -111,9 +106,7 @@ export const AircraftModelViewport = ({
     const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<AircraftCamera | null>(null);
     const orbitControlsRef = useRef<OrbitControls<AircraftCamera> | null>(null);
-    const projectionModeApplyRef = useRef<
-        ((mode: AircraftProjectionMode) => void) | null
-    >(null);
+    const projectionModeApplyRef = useRef<((mode: AircraftProjectionMode) => void) | null>(null);
     const requestRenderRef = useRef<(() => void) | null>(null);
     const resizeRendererRef = useRef<(() => void) | null>(null);
     const aircraftModelRef = useRef<THREE.Object3D | null>(null);
@@ -130,26 +123,20 @@ export const AircraftModelViewport = ({
     const animationTimerRef = useRef<THREE.Timer>(new THREE.Timer());
     const animationPlayingRef = useRef<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-    const [isModelDirectoryOpen, setIsModelDirectoryOpen] =
-        useState<boolean>(false);
+    const [isModelDirectoryOpen, setIsModelDirectoryOpen] = useState<boolean>(false);
     const [cameraView, setCameraView] = useState<AircraftCameraView>("fit");
-    const [projectionMode, setProjectionMode] =
-        useState<AircraftProjectionMode>("perspective");
-    const [cameraHudState, setCameraHudState] =
-        useState<AircraftCameraHudState | null>(EMPTY_CAMERA_HUD_STATE);
+    const [projectionMode, setProjectionMode] = useState<AircraftProjectionMode>("perspective");
+    const [cameraHudState, setCameraHudState] = useState<AircraftCameraHudState | null>(
+        EMPTY_CAMERA_HUD_STATE,
+    );
     const [animationState, setAnimationState] =
         useState<AircraftAnimationState>(EMPTY_ANIMATION_STATE);
-    const [isRenderControlsOpen, setIsRenderControlsOpen] =
-        useState<boolean>(false);
+    const [isRenderControlsOpen, setIsRenderControlsOpen] = useState<boolean>(false);
     const [fullscreenError, setFullscreenError] = useState<string | null>(null);
     const [snapshotError, setSnapshotError] = useState<string | null>(null);
-    const [environmentError, setEnvironmentError] = useState<string | null>(
-        null,
-    );
-    const [environmentLoading, setEnvironmentLoading] =
-        useState<boolean>(false);
-    const [isSnapshotAvailable, setIsSnapshotAvailable] =
-        useState<boolean>(false);
+    const [environmentError, setEnvironmentError] = useState<string | null>(null);
+    const [environmentLoading, setEnvironmentLoading] = useState<boolean>(false);
+    const [isSnapshotAvailable, setIsSnapshotAvailable] = useState<boolean>(false);
     const {
         settings: renderSettings,
         onToneMappingChange: handleToneMappingChange,
@@ -194,20 +181,15 @@ export const AircraftModelViewport = ({
         }
 
         const nextState = getCameraHudState(camera, controls);
-        setCameraHudState(
-            (
-                currentState: AircraftCameraHudState | null,
-            ): AircraftCameraHudState =>
-                isCameraHudStateEqual(currentState, nextState)
-                    ? (currentState ?? nextState)
-                    : nextState,
+        setCameraHudState((currentState: AircraftCameraHudState | null): AircraftCameraHudState =>
+            isCameraHudStateEqual(currentState, nextState)
+                ? (currentState ?? nextState)
+                : nextState,
         );
     };
 
     /** 切换 Perspective 与 Orthographic，并由场景生命周期替换相机实例。 */
-    const handleProjectionModeChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleProjectionModeChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         const nextProjectionMode = event.currentTarget.value;
 
         if (!isAircraftProjectionMode(nextProjectionMode)) {
@@ -224,8 +206,7 @@ export const AircraftModelViewport = ({
     useEffect((): (() => void) => {
         /** 同步 Esc 退出及浏览器原生控件触发的全屏状态。 */
         const handleFullscreenChange = (): void => {
-            const nextIsFullscreen =
-                document.fullscreenElement === getFullscreenTarget();
+            const nextIsFullscreen = document.fullscreenElement === getFullscreenTarget();
 
             setIsFullscreen(nextIsFullscreen);
 
@@ -245,10 +226,7 @@ export const AircraftModelViewport = ({
         document.addEventListener("fullscreenchange", handleFullscreenChange);
 
         return (): void => {
-            document.removeEventListener(
-                "fullscreenchange",
-                handleFullscreenChange,
-            );
+            document.removeEventListener("fullscreenchange", handleFullscreenChange);
         };
     }, []);
 
@@ -306,9 +284,7 @@ export const AircraftModelViewport = ({
     };
 
     /** 将画布外的空白指针按下视为收起工具面板，面板自身不触发该行为。 */
-    const handleViewportPointerDown = (
-        event: PointerEvent<HTMLDivElement>,
-    ): void => {
+    const handleViewportPointerDown = (event: PointerEvent<HTMLDivElement>): void => {
         if (isViewportControlTarget(event.target)) {
             return;
         }
@@ -318,15 +294,10 @@ export const AircraftModelViewport = ({
     };
 
     /** 应用标准相机视角，模型尚未就绪时保留菜单选择不变。 */
-    const handleCameraViewChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleCameraViewChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         const nextCameraView = event.currentTarget.value;
 
-        if (
-            !isAircraftCameraView(nextCameraView) ||
-            nextCameraView === "custom"
-        ) {
+        if (!isAircraftCameraView(nextCameraView) || nextCameraView === "custom") {
             return;
         }
 
@@ -362,10 +333,7 @@ export const AircraftModelViewport = ({
             }
 
             const timeStamp = new Date().toISOString().replace(/[:.]/g, "-");
-            downloadBlob(
-                blob,
-                `plane-${asset?.id ?? "model"}-${timeStamp}.png`,
-            );
+            downloadBlob(blob, `plane-${asset?.id ?? "model"}-${timeStamp}.png`);
         }, "image/png");
     };
 
@@ -401,10 +369,7 @@ export const AircraftModelViewport = ({
         const settingsBlob = new Blob([JSON.stringify(settings, null, 2)], {
             type: "application/json",
         });
-        downloadBlob(
-            settingsBlob,
-            `plane-${asset?.id ?? "model"}-settings.json`,
-        );
+        downloadBlob(settingsBlob, `plane-${asset?.id ?? "model"}-settings.json`);
     };
 
     /** 切换当前 GLB 动画播放状态，并在播放时恢复按需渲染帧。 */
@@ -425,19 +390,15 @@ export const AircraftModelViewport = ({
             animationTimerRef.current.reset();
         }
 
-        setAnimationState(
-            (currentState: AircraftAnimationState): AircraftAnimationState => ({
-                ...currentState,
-                isPlaying,
-            }),
-        );
+        setAnimationState((currentState: AircraftAnimationState): AircraftAnimationState => ({
+            ...currentState,
+            isPlaying,
+        }));
         requestRenderRef.current?.();
     };
 
     /** 拖动动画时间轴时暂停播放并立刻把 mixer 定位到目标秒数。 */
-    const handleAnimationScrub = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
+    const handleAnimationScrub = (event: ChangeEvent<HTMLInputElement>): void => {
         const action = animationActionRef.current;
 
         if (action === null || !animationState.available) {
@@ -453,13 +414,11 @@ export const AircraftModelViewport = ({
         action.paused = true;
         animationPlayingRef.current = false;
         animationTimerRef.current.reset();
-        setAnimationState(
-            (currentState: AircraftAnimationState): AircraftAnimationState => ({
-                ...currentState,
-                currentTime,
-                isPlaying: false,
-            }),
-        );
+        setAnimationState((currentState: AircraftAnimationState): AircraftAnimationState => ({
+            ...currentState,
+            currentTime,
+            isPlaying: false,
+        }));
         requestRenderRef.current?.();
     };
 
@@ -491,8 +450,7 @@ export const AircraftModelViewport = ({
         // 更新渲染器后重新使用当前容器尺寸分配物理绘制缓冲区。
         applyRenderSettings(renderer, renderSettings);
         if (sceneRef.current !== null) {
-            sceneRef.current.environmentIntensity =
-                renderSettings.environmentIntensity;
+            sceneRef.current.environmentIntensity = renderSettings.environmentIntensity;
         }
         if (lightingRigRef.current !== null) {
             applyAircraftLightingSettings(lightingRigRef.current, renderSettings);
@@ -532,8 +490,7 @@ export const AircraftModelViewport = ({
 
     useEffect((): void => {
         if (sceneRef.current !== null) {
-            sceneRef.current.environmentIntensity =
-                renderSettings.environmentIntensity;
+            sceneRef.current.environmentIntensity = renderSettings.environmentIntensity;
             requestRenderRef.current?.();
         }
     }, [renderSettings.environmentIntensity]);
@@ -565,9 +522,7 @@ export const AircraftModelViewport = ({
         let renderLoopHandle: AircraftRenderLoopHandle | undefined;
 
         /** 在组件未卸载时将模型加载进度回传给页面。 */
-        const publishProgress = (
-            progress: AircraftModelLoadingProgress,
-        ): void => {
+        const publishProgress = (progress: AircraftModelLoadingProgress): void => {
             if (!isDisposed) {
                 onLoadingProgressChange(progress);
             }
@@ -649,9 +604,7 @@ export const AircraftModelViewport = ({
                 });
                 animationPlayingRef.current = false;
                 setAnimationState(
-                    (
-                        currentState: AircraftAnimationState,
-                    ): AircraftAnimationState => ({
+                    (currentState: AircraftAnimationState): AircraftAnimationState => ({
                         ...currentState,
                         isPlaying: false,
                     }),
@@ -659,10 +612,7 @@ export const AircraftModelViewport = ({
             };
 
             const scene = new THREE.Scene();
-            let camera: AircraftCamera = createAircraftCamera(
-                projectionModeRef.current,
-                1,
-            );
+            let camera: AircraftCamera = createAircraftCamera(projectionModeRef.current, 1);
             let controls: OrbitControls<AircraftCamera> = new OrbitControls<AircraftCamera>(
                 camera,
                 renderer.domElement,
@@ -672,24 +622,20 @@ export const AircraftModelViewport = ({
             const createdEnvironmentResources =
                 createRoomEnvironmentResources(environmentGenerator);
             environmentResources = createdEnvironmentResources;
-            const environmentController =
-                createAircraftEnvironmentController({
-                    environmentGenerator,
-                    resources: createdEnvironmentResources,
-                    scene,
-                    getCurrentSettings: (): AircraftRenderSettings =>
-                        renderSettingsRef.current,
-                    isDisposed: (): boolean => isDisposed,
-                    onLoadingChange: setEnvironmentLoading,
-                    onErrorChange: setEnvironmentError,
-                    requestRender: (): void => {
-                        requestRenderRef.current?.();
-                    },
-                });
-            scene.environment =
-                createdEnvironmentResources.roomRenderTarget.texture;
-            scene.environmentIntensity =
-                renderSettingsRef.current.environmentIntensity;
+            const environmentController = createAircraftEnvironmentController({
+                environmentGenerator,
+                resources: createdEnvironmentResources,
+                scene,
+                getCurrentSettings: (): AircraftRenderSettings => renderSettingsRef.current,
+                isDisposed: (): boolean => isDisposed,
+                onLoadingChange: setEnvironmentLoading,
+                onErrorChange: setEnvironmentError,
+                requestRender: (): void => {
+                    requestRenderRef.current?.();
+                },
+            });
+            scene.environment = createdEnvironmentResources.roomRenderTarget.texture;
+            scene.environmentIntensity = renderSettingsRef.current.environmentIntensity;
 
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             renderer.domElement.className = "plane-render__canvas";
@@ -714,9 +660,7 @@ export const AircraftModelViewport = ({
             keyLightRef.current = keyLight;
             lightingRigRef.current = lightingRig;
 
-            const displayFloor = createAircraftDisplayFloor(
-                renderSettingsRef.current.displayFloor,
-            );
+            const displayFloor = createAircraftDisplayFloor(renderSettingsRef.current.displayFloor);
             displayFloorRef.current = displayFloor;
             scene.add(displayFloor);
 
@@ -727,9 +671,7 @@ export const AircraftModelViewport = ({
                         readThemeColor(MODEL_FLOOR_COLOR_TOKEN, "#163343"),
                     );
                 }
-                keyLight.color.set(
-                    readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"),
-                );
+                keyLight.color.set(readThemeColor(MODEL_KEY_LIGHT_COLOR_TOKEN, "#ffffff"));
                 lightingRig.fillLight.color.set(
                     readThemeColor(MODEL_FILL_LIGHT_COLOR_TOKEN, "#8acbe7"),
                 );
@@ -757,18 +699,13 @@ export const AircraftModelViewport = ({
                 scene,
                 getCamera: (): AircraftCamera => camera,
                 getControls: (): OrbitControls<AircraftCamera> => controls,
-                getAnimationMixer: (): THREE.AnimationMixer | null =>
-                    animationMixerRef.current,
-                getAnimationAction: (): THREE.AnimationAction | null =>
-                    animationActionRef.current,
+                getAnimationMixer: (): THREE.AnimationMixer | null => animationMixerRef.current,
+                getAnimationAction: (): THREE.AnimationAction | null => animationActionRef.current,
                 animationTimer: animationTimerRef.current,
-                isAnimationPlaying: (): boolean =>
-                    animationPlayingRef.current,
+                isAnimationPlaying: (): boolean => animationPlayingRef.current,
                 onAnimationTimeChange: (currentTime: number): void => {
                     setAnimationState(
-                        (
-                            currentState: AircraftAnimationState,
-                        ): AircraftAnimationState => ({
+                        (currentState: AircraftAnimationState): AircraftAnimationState => ({
                             ...currentState,
                             currentTime,
                         }),
@@ -806,9 +743,7 @@ export const AircraftModelViewport = ({
             };
 
             /** 即时替换投影相机，保留观察目标和当前轨道位置。 */
-            const applyProjectionMode = (
-                nextProjectionMode: AircraftProjectionMode,
-            ): void => {
+            const applyProjectionMode = (nextProjectionMode: AircraftProjectionMode): void => {
                 if (
                     isDisposed ||
                     (nextProjectionMode === "orthographic" &&
@@ -823,10 +758,7 @@ export const AircraftModelViewport = ({
                 const previousControls = controls;
                 const { width, height } = container.getBoundingClientRect();
                 const aspect = Math.max(width, 1) / Math.max(height, 1);
-                const nextCamera = createAircraftCamera(
-                    nextProjectionMode,
-                    aspect,
-                );
+                const nextCamera = createAircraftCamera(nextProjectionMode, aspect);
 
                 nextCamera.position.copy(previousCamera.position);
                 nextCamera.up.copy(previousCamera.up);
@@ -837,9 +769,7 @@ export const AircraftModelViewport = ({
                 if (aircraftModel !== null) {
                     if (nextCamera instanceof THREE.OrthographicCamera) {
                         getCameraFitDistance(nextCamera, aircraftModel);
-                    } else if (
-                        previousCamera instanceof THREE.OrthographicCamera
-                    ) {
+                    } else if (previousCamera instanceof THREE.OrthographicCamera) {
                         const viewDirection = nextCamera.position
                             .clone()
                             .sub(previousControls.target)
@@ -859,10 +789,7 @@ export const AircraftModelViewport = ({
                 nextControls.target.copy(previousControls.target);
                 nextControls.addEventListener("change", handleControlsChange);
 
-                previousControls.removeEventListener(
-                    "change",
-                    handleControlsChange,
-                );
+                previousControls.removeEventListener("change", handleControlsChange);
                 previousControls.dispose();
 
                 camera = nextCamera;
@@ -883,10 +810,7 @@ export const AircraftModelViewport = ({
                 activeRenderLoop?.cleanup();
                 renderLoopHandle = undefined;
                 themeObserver?.disconnect();
-                if (
-                    requestRenderRef.current ===
-                    activeRenderLoop?.requestRender
-                ) {
+                if (requestRenderRef.current === activeRenderLoop?.requestRender) {
                     requestRenderRef.current = null;
                 }
                 controls.removeEventListener("change", handleControlsChange);
@@ -898,9 +822,7 @@ export const AircraftModelViewport = ({
                 animationTimerRef.current.dispose();
                 animationMixerRef.current?.stopAllAction();
                 if (aircraftModelRef.current !== null) {
-                    animationMixerRef.current?.uncacheRoot(
-                        aircraftModelRef.current,
-                    );
+                    animationMixerRef.current?.uncacheRoot(aircraftModelRef.current);
                 }
                 animationMixerRef.current = null;
                 animationActionRef.current = null;
@@ -910,9 +832,7 @@ export const AircraftModelViewport = ({
                     environmentResources = null;
                 }
                 environmentGenerator.dispose();
-                if (
-                    environmentApplyRef.current === environmentController.apply
-                ) {
+                if (environmentApplyRef.current === environmentController.apply) {
                     environmentApplyRef.current = null;
                 }
                 disposeSceneResources(scene);
@@ -976,22 +896,19 @@ export const AircraftModelViewport = ({
 
             try {
                 const modelUrl = await asset.loadUrl();
-                const gltf = await gltfLoader.loadAsync(
-                    modelUrl,
-                    (event: ProgressEvent): void => {
-                        publishProgress({
-                            phase: "loading",
-                            loadedModelCount: 0,
-                            failedModelCount: 0,
-                            rendererStatus: "webgpu",
-                            loadingStage: "downloading",
-                            progressRatio:
-                                event.lengthComputable && event.total > 0
-                                    ? event.loaded / event.total
-                                    : undefined,
-                        });
-                    },
-                );
+                const gltf = await gltfLoader.loadAsync(modelUrl, (event: ProgressEvent): void => {
+                    publishProgress({
+                        phase: "loading",
+                        loadedModelCount: 0,
+                        failedModelCount: 0,
+                        rendererStatus: "webgpu",
+                        loadingStage: "downloading",
+                        progressRatio:
+                            event.lengthComputable && event.total > 0
+                                ? event.loaded / event.total
+                                : undefined,
+                    });
+                });
 
                 if (isDisposed) {
                     disposeSceneResources(gltf.scene);
@@ -1021,8 +938,7 @@ export const AircraftModelViewport = ({
                 const animationClip = gltf.animations[0];
                 if (animationClip !== undefined && animationClip.duration > 0) {
                     const animationMixer = new THREE.AnimationMixer(model);
-                    const animationAction =
-                        animationMixer.clipAction(animationClip);
+                    const animationAction = animationMixer.clipAction(animationClip);
 
                     animationAction.play();
                     animationAction.paused = true;
@@ -1030,8 +946,7 @@ export const AircraftModelViewport = ({
                     animationActionRef.current = animationAction;
                     setAnimationState({
                         available: true,
-                        name:
-                            animationClip.name || DEFAULT_MODEL_ANIMATION_NAME,
+                        name: animationClip.name || DEFAULT_MODEL_ANIMATION_NAME,
                         duration: animationClip.duration,
                         currentTime: 0,
                         isPlaying: false,
@@ -1059,10 +974,7 @@ export const AircraftModelViewport = ({
                 loadedModelCount,
                 failedModelCount,
                 rendererStatus: "webgpu",
-                message:
-                    loadedModelCount > 0
-                        ? undefined
-                        : CURRENT_MODEL_FAILED_MESSAGE,
+                message: loadedModelCount > 0 ? undefined : CURRENT_MODEL_FAILED_MESSAGE,
             });
         };
 
@@ -1102,9 +1014,7 @@ export const AircraftModelViewport = ({
                     onHdriChange={handleHdriChange}
                     environmentError={environmentError}
                     environmentLoading={environmentLoading}
-                    onEnvironmentIntensityChange={
-                        handleEnvironmentIntensityChange
-                    }
+                    onEnvironmentIntensityChange={handleEnvironmentIntensityChange}
                     onExposureChange={handleExposureChange}
                     onPixelRatioChange={handlePixelRatioChange}
                     onLightPositionXChange={handleLightPositionXChange}

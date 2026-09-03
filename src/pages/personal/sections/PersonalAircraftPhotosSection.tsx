@@ -61,21 +61,14 @@ const getPhotoDirectoryLabel = (
 const PersonalAircraftPhotosSection = ({
     headingLevel = "h2",
 }: PersonalAircraftPhotosSectionProps): ReactElement => {
-    const [photosBundle, setPhotosBundle] = useState<AircraftPhotosBundle | null>(
-        null,
+    const [photosBundle, setPhotosBundle] = useState<AircraftPhotosBundle | null>(null);
+    const [photosBundleError, setPhotosBundleError] = useState<string | null>(null);
+    const [previewPhotoIndex, setPreviewPhotoIndex] = useState<number | null>(null);
+    const [isPhotoPreviewClosing, setIsPhotoPreviewClosing] = useState<boolean>(false);
+    const [isPreviewPhotoLoading, setIsPreviewPhotoLoading] = useState<boolean>(false);
+    const [selectedPhotoDirectory, setSelectedPhotoDirectory] = useState<string>(
+        ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE,
     );
-    const [photosBundleError, setPhotosBundleError] = useState<string | null>(
-        null,
-    );
-    const [previewPhotoIndex, setPreviewPhotoIndex] = useState<number | null>(
-        null,
-    );
-    const [isPhotoPreviewClosing, setIsPhotoPreviewClosing] =
-        useState<boolean>(false);
-    const [isPreviewPhotoLoading, setIsPreviewPhotoLoading] =
-        useState<boolean>(false);
-    const [selectedPhotoDirectory, setSelectedPhotoDirectory] =
-        useState<string>(ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE);
     const closePreviewButtonRef = useRef<HTMLButtonElement | null>(null);
     const photoPreviewCloseTimerRef = useRef<number | null>(null);
     const HeadingTag = headingLevel;
@@ -92,10 +85,7 @@ const PersonalAircraftPhotosSection = ({
                 }
             } catch (error: unknown) {
                 if (!isCancelled) {
-                    const message =
-                        error instanceof Error
-                            ? error.message
-                            : "相册数据加载失败";
+                    const message = error instanceof Error ? error.message : "相册数据加载失败";
                     setPhotosBundleError(message);
                 }
             }
@@ -163,9 +153,7 @@ const PersonalAircraftPhotosSection = ({
         };
         const originalBodyOverflow = document.body.style.overflow;
         const previouslyFocusedElement =
-            document.activeElement instanceof HTMLElement
-                ? document.activeElement
-                : null;
+            document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
         document.body.style.overflow = "hidden";
         window.addEventListener("keydown", handlePreviewKeyDown);
@@ -202,15 +190,11 @@ const PersonalAircraftPhotosSection = ({
         setIsPreviewPhotoLoading(false);
     };
 
-    const handlePhotoDirectoryChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handlePhotoDirectoryChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedPhotoDirectory(event.target.value);
     };
 
-    const closePhotoPreviewFromBackdrop = (
-        event: MouseEvent<HTMLDivElement>,
-    ): void => {
+    const closePhotoPreviewFromBackdrop = (event: MouseEvent<HTMLDivElement>): void => {
         if (event.target === event.currentTarget) {
             closePhotoPreview();
         }
@@ -218,15 +202,10 @@ const PersonalAircraftPhotosSection = ({
 
     if (photosBundleError !== null) {
         return (
-            <section
-                className="personal-section"
-                aria-labelledby="photo-aircraft-title"
-            >
+            <section className="personal-section" aria-labelledby="photo-aircraft-title">
                 <div className="personal-section__header">
                     <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <HeadingTag id="photo-aircraft-title">
-                        拍摄的飞机
-                    </HeadingTag>
+                    <HeadingTag id="photo-aircraft-title">拍摄的飞机</HeadingTag>
                 </div>
                 <p className="data-state data-state--error" role="alert">
                     {photosBundleError}
@@ -254,10 +233,7 @@ const PersonalAircraftPhotosSection = ({
                     <div>
                         <p>Aircraft Photo</p>
                         <h2 id="aircraft-photo-preview-title">
-                            拍摄的飞机照片{" "}
-                            {previewPhotoIndex === null
-                                ? ""
-                                : previewPhotoIndex + 1}
+                            拍摄的飞机照片 {previewPhotoIndex === null ? "" : previewPhotoIndex + 1}
                         </h2>
                     </div>
                     <button
@@ -281,9 +257,7 @@ const PersonalAircraftPhotosSection = ({
                 ) : null}
                 <img
                     className={
-                        isPreviewPhotoLoading
-                            ? "aircraft-photo-preview__image--loading"
-                            : undefined
+                        isPreviewPhotoLoading ? "aircraft-photo-preview__image--loading" : undefined
                     }
                     key={previewPhotoUrl}
                     src={previewPhotoUrl}
@@ -297,21 +271,13 @@ const PersonalAircraftPhotosSection = ({
 
     return (
         <>
-            <section
-                className="personal-section"
-                aria-labelledby="photo-aircraft-title"
-            >
+            <section className="personal-section" aria-labelledby="photo-aircraft-title">
                 <div className="personal-section__header">
                     <p className="personal-section__eyebrow">Aircraft Photos</p>
-                    <HeadingTag id="photo-aircraft-title">
-                        拍摄的飞机
-                    </HeadingTag>
+                    <HeadingTag id="photo-aircraft-title">拍摄的飞机</HeadingTag>
                 </div>
                 {aircraftPhotoDirectoryOptions.length > 1 ? (
-                    <div
-                        className="aircraft-photo-filters"
-                        aria-label="飞机照片目录筛选"
-                    >
+                    <div className="aircraft-photo-filters" aria-label="飞机照片目录筛选">
                         <Select
                             label="照片目录"
                             className="aircraft-photo-filter"
@@ -322,30 +288,23 @@ const PersonalAircraftPhotosSection = ({
                                 全部目录（{AIRCRAFT_PHOTO_COUNT}）
                             </option>
                             {aircraftPhotoDirectoryOptions.map(
-                                (
-                                    directoryOption: AircraftPhotoDirectoryOption,
-                                ): ReactElement => (
+                                (directoryOption: AircraftPhotoDirectoryOption): ReactElement => (
                                     <option
                                         key={directoryOption.value}
                                         value={directoryOption.value}
                                     >
-                                        {directoryOption.label}（
-                                        {directoryOption.photoCount}）
+                                        {directoryOption.label}（{directoryOption.photoCount}）
                                     </option>
                                 ),
                             )}
                         </Select>
                         <p className="aircraft-photo-filters__summary">
-                            当前显示{" "}
-                            <strong>{filteredAircraftPhotos.length}</strong> 张
+                            当前显示 <strong>{filteredAircraftPhotos.length}</strong> 张
                         </p>
                     </div>
                 ) : null}
                 {filteredAircraftPhotos.length > 0 ? (
-                    <ul
-                        className="aircraft-photo-gallery"
-                        aria-label="拍摄的飞机照片列表"
-                    >
+                    <ul className="aircraft-photo-gallery" aria-label="拍摄的飞机照片列表">
                         {filteredAircraftPhotos.map(
                             (
                                 aircraftPhoto: AircraftPhoto,
@@ -362,16 +321,12 @@ const PersonalAircraftPhotosSection = ({
                                             className="aircraft-photo-gallery__button"
                                             type="button"
                                             onClick={(): void =>
-                                                openPhotoPreview(
-                                                    aircraftPhotoIndex,
-                                                )
+                                                openPhotoPreview(aircraftPhotoIndex)
                                             }
                                             aria-label={`全屏查看 ${directoryLabel} 目录下的飞机照片 ${aircraftPhotoIndex + 1}`}
                                         >
                                             <AircraftPhotoGalleryImage
-                                                previewUrl={
-                                                    aircraftPhoto.previewUrl
-                                                }
+                                                previewUrl={aircraftPhoto.previewUrl}
                                                 alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                                             />
                                             <span
@@ -379,13 +334,8 @@ const PersonalAircraftPhotosSection = ({
                                                 aria-hidden="true"
                                             >
                                                 <span>Aircraft Photo</span>
-                                                <strong>
-                                                    {directoryLabel}
-                                                </strong>
-                                                <small>
-                                                    #
-                                                    {aircraftPhotoIndex + 1}
-                                                </small>
+                                                <strong>{directoryLabel}</strong>
+                                                <small>#{aircraftPhotoIndex + 1}</small>
                                             </span>
                                         </button>
                                     </li>
@@ -394,17 +344,12 @@ const PersonalAircraftPhotosSection = ({
                         )}
                     </ul>
                 ) : (
-                    <p
-                        className="aircraft-photo-gallery__empty"
-                        role="status"
-                    >
+                    <p className="aircraft-photo-gallery__empty" role="status">
                         当前目录下暂无照片，请切换其他目录查看。
                     </p>
                 )}
             </section>
-            {photoPreviewElement
-                ? createPortal(photoPreviewElement, document.body)
-                : null}
+            {photoPreviewElement ? createPortal(photoPreviewElement, document.body) : null}
         </>
     );
 };

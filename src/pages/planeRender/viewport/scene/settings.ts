@@ -1,7 +1,4 @@
-import type {
-    AircraftLightingPreset,
-    AircraftRenderSettings,
-} from "../types";
+import type { AircraftLightingPreset, AircraftRenderSettings } from "../types";
 
 /** 模型目录为空时的用户可见提示。 */
 export const EMPTY_MODEL_DIRECTORY_MESSAGE = "模型目录中没有可加载的 GLB 文件。";
@@ -67,10 +64,13 @@ export const LIGHTING_PRESET_VALUES: Readonly<
 
 /** 校验照明预设 select 的字符串值是否为已支持的档位。 */
 export const isAircraftLightingPreset = (value: string): value is AircraftLightingPreset =>
-    value === "neutral" || value === "silhouette" || value === "top" || value === "three-point" || value === "custom";
+    value === "neutral" ||
+    value === "silhouette" ||
+    value === "top" ||
+    value === "three-point" ||
+    value === "custom";
 
 /** 校验环境来源 select 的字符串值是否为已支持的环境类型。 */
 export const isAircraftEnvironmentPreset = (
     value: string,
-): value is AircraftRenderSettings["environmentPreset"] =>
-    value === "room" || value === "hdri";
+): value is AircraftRenderSettings["environmentPreset"] => value === "room" || value === "hdri";

@@ -15,47 +15,47 @@ for low-level primitives.
 **Incorrect (JS-based bottom sheet):**
 
 ```tsx
-import BottomSheet from 'custom-js-bottom-sheet'
+import BottomSheet from "custom-js-bottom-sheet";
 
 function MyScreen() {
-  const sheetRef = useRef<BottomSheet>(null)
+    const sheetRef = useRef<BottomSheet>(null);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Button onPress={() => sheetRef.current?.expand()} title='Open' />
-      <BottomSheet ref={sheetRef} snapPoints={['50%', '90%']}>
-        <View>
-          <Text>Sheet content</Text>
+    return (
+        <View style={{ flex: 1 }}>
+            <Button onPress={() => sheetRef.current?.expand()} title="Open" />
+            <BottomSheet ref={sheetRef} snapPoints={["50%", "90%"]}>
+                <View>
+                    <Text>Sheet content</Text>
+                </View>
+            </BottomSheet>
         </View>
-      </BottomSheet>
-    </View>
-  )
+    );
 }
 ```
 
 **Correct (native Modal with formSheet):**
 
 ```tsx
-import { Modal, View, Text, Button } from 'react-native'
+import { Modal, View, Text, Button } from "react-native";
 
 function MyScreen() {
-  const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Button onPress={() => setVisible(true)} title='Open' />
-      <Modal
-        visible={visible}
-        presentationStyle='formSheet'
-        animationType='slide'
-        onRequestClose={() => setVisible(false)}
-      >
-        <View>
-          <Text>Sheet content</Text>
+    return (
+        <View style={{ flex: 1 }}>
+            <Button onPress={() => setVisible(true)} title="Open" />
+            <Modal
+                visible={visible}
+                presentationStyle="formSheet"
+                animationType="slide"
+                onRequestClose={() => setVisible(false)}
+            >
+                <View>
+                    <Text>Sheet content</Text>
+                </View>
+            </Modal>
         </View>
-      </Modal>
-    </View>
-  )
+    );
 }
 ```
 
@@ -64,12 +64,12 @@ function MyScreen() {
 ```tsx
 // In your navigator
 <Stack.Screen
-  name='Details'
-  component={DetailsScreen}
-  options={{
-    presentation: 'formSheet',
-    sheetAllowedDetents: 'fitToContents',
-  }}
+    name="Details"
+    component={DetailsScreen}
+    options={{
+        presentation: "formSheet",
+        sheetAllowedDetents: "fitToContents",
+    }}
 />
 ```
 

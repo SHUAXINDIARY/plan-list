@@ -1,4 +1,4 @@
-import type { MapRouteScope, WorldMapMarker, WorldMapRoute } from './type';
+import type { MapRouteScope, WorldMapMarker, WorldMapRoute } from "./type";
 
 /** 地图内部坐标系宽度，与 `map.svg` viewBox 一致。 */
 export const WORLD_MAP_WIDTH = 1200;
@@ -53,522 +53,532 @@ export const MAX_INTERACTION_DEVICE_PIXEL_RATIO = 1.5;
 
 /** 经纬度在地图坐标系中的投影结果。 */
 export interface MarkerPosition {
-  /** 投影后的 X（地图坐标系，0 为左）。 */
-  left: number;
-  /** 投影后的 Y（地图坐标系，0 为上）。 */
-  top: number;
+    /** 投影后的 X（地图坐标系，0 为左）。 */
+    left: number;
+    /** 投影后的 Y（地图坐标系，0 为上）。 */
+    top: number;
 }
 
 /** 视口平移与缩放状态。 */
 export interface ViewportTransform {
-  /** 相对容器的缩放倍数。 */
-  scale: number;
-  /** 平移 X（CSS 像素）。 */
-  x: number;
-  /** 平移 Y（CSS 像素）。 */
-  y: number;
+    /** 相对容器的缩放倍数。 */
+    scale: number;
+    /** 平移 X（CSS 像素）。 */
+    x: number;
+    /** 平移 Y（CSS 像素）。 */
+    y: number;
 }
 
 /** 从 CSS 变量解析出的画布绘制配色。 */
 export interface MapCanvasPalette {
-  /** 国际航迹描边色。 */
-  routeStrokeInternational: string;
-  /** 国内航迹描边色。 */
-  routeStrokeDomestic: string;
-  /** 国内机场标记填充色。 */
-  markerDomesticFill: string;
-  /** 国内机场标记描边色。 */
-  markerDomesticStroke: string;
-  /** 高亮国内机场标记填充色。 */
-  markerDomesticFillActive: string;
-  /** 高亮国内机场标记描边色。 */
-  markerDomesticStrokeActive: string;
-  /** 境外机场标记填充色。 */
-  markerInternationalFill: string;
-  /** 境外机场标记描边色。 */
-  markerInternationalStroke: string;
-  /** 高亮境外机场标记填充色。 */
-  markerInternationalFillActive: string;
-  /** 高亮境外机场标记描边色。 */
-  markerInternationalStrokeActive: string;
+    /** 国际航迹描边色。 */
+    routeStrokeInternational: string;
+    /** 国内航迹描边色。 */
+    routeStrokeDomestic: string;
+    /** 国内机场标记填充色。 */
+    markerDomesticFill: string;
+    /** 国内机场标记描边色。 */
+    markerDomesticStroke: string;
+    /** 高亮国内机场标记填充色。 */
+    markerDomesticFillActive: string;
+    /** 高亮国内机场标记描边色。 */
+    markerDomesticStrokeActive: string;
+    /** 境外机场标记填充色。 */
+    markerInternationalFill: string;
+    /** 境外机场标记描边色。 */
+    markerInternationalStroke: string;
+    /** 高亮境外机场标记填充色。 */
+    markerInternationalFillActive: string;
+    /** 高亮境外机场标记描边色。 */
+    markerInternationalStrokeActive: string;
 }
 
 /** 画布尺寸与超采样后的像素比。 */
 export interface MapCanvasRenderMetrics {
-  /** 容器 CSS 宽度。 */
-  cssWidth: number;
-  /** 容器 CSS 高度。 */
-  cssHeight: number;
-  /** 画布 backing store 宽度。 */
-  pixelWidth: number;
-  /** 画布 backing store 高度。 */
-  pixelHeight: number;
-  /** CSS 像素到 backing store 的缩放比。 */
-  pixelRatio: number;
+    /** 容器 CSS 宽度。 */
+    cssWidth: number;
+    /** 容器 CSS 高度。 */
+    cssHeight: number;
+    /** 画布 backing store 宽度。 */
+    pixelWidth: number;
+    /** 画布 backing store 高度。 */
+    pixelHeight: number;
+    /** CSS 像素到 backing store 的缩放比。 */
+    pixelRatio: number;
 }
 
 /**
  * 将数值限制在闭区间内，避免缩放与平移越界。
  */
 export const clampNumber = (value: number, minValue: number, maxValue: number): number => {
-  return Math.min(Math.max(value, minValue), maxValue);
+    return Math.min(Math.max(value, minValue), maxValue);
 };
 
 /**
  * 根据容器尺寸收束视口位移，避免放大后把地图拖出可视区域。
  */
 export const constrainViewportTransform = (
-  viewportTransform: ViewportTransform,
-  containerWidth: number,
-  containerHeight: number,
+    viewportTransform: ViewportTransform,
+    containerWidth: number,
+    containerHeight: number,
 ): ViewportTransform => {
-  if (viewportTransform.scale <= MIN_MAP_SCALE) {
-    return {
-      scale: MIN_MAP_SCALE,
-      x: 0,
-      y: 0,
-    };
-  }
+    if (viewportTransform.scale <= MIN_MAP_SCALE) {
+        return {
+            scale: MIN_MAP_SCALE,
+            x: 0,
+            y: 0,
+        };
+    }
 
-  return {
-    scale: viewportTransform.scale,
-    x: clampNumber(viewportTransform.x, containerWidth * (1 - viewportTransform.scale), 0),
-    y: clampNumber(viewportTransform.y, containerHeight * (1 - viewportTransform.scale), 0),
-  };
+    return {
+        scale: viewportTransform.scale,
+        x: clampNumber(viewportTransform.x, containerWidth * (1 - viewportTransform.scale), 0),
+        y: clampNumber(viewportTransform.y, containerHeight * (1 - viewportTransform.scale), 0),
+    };
 };
 
 /**
  * 将经纬度换算为地图内部坐标（与 Natural Earth SVG viewBox 对齐）。
  */
 export const projectMapCoordinate = (coordinate: { lat: number; lng: number }): MarkerPosition => {
-  return {
-    left: WORLD_MAP_MARGIN_X + ((coordinate.lng + 180) / 360) * WORLD_MAP_CONTENT_WIDTH,
-    top: WORLD_MAP_MARGIN_Y + ((90 - coordinate.lat) / 180) * WORLD_MAP_CONTENT_HEIGHT,
-  };
+    return {
+        left: WORLD_MAP_MARGIN_X + ((coordinate.lng + 180) / 360) * WORLD_MAP_CONTENT_WIDTH,
+        top: WORLD_MAP_MARGIN_Y + ((90 - coordinate.lat) / 180) * WORLD_MAP_CONTENT_HEIGHT,
+    };
 };
 
 /**
  * 计算当前视口与 DPR 下的画布超采样指标，在清晰度与性能间折中。
  */
 export const getMapCanvasRenderMetrics = (
-  cssWidth: number,
-  cssHeight: number,
-  viewportScale: number,
-  devicePixelRatio: number,
+    cssWidth: number,
+    cssHeight: number,
+    viewportScale: number,
+    devicePixelRatio: number,
 ): MapCanvasRenderMetrics => {
-  const zoomBoost = clampNumber(
-    BASE_SUPERSAMPLE_FACTOR + (viewportScale - MIN_MAP_SCALE) * 0.35,
-    BASE_SUPERSAMPLE_FACTOR,
-    BASE_SUPERSAMPLE_FACTOR * MAX_ZOOM_SUPERSAMPLE_BOOST,
-  );
-  let pixelRatio = devicePixelRatio * zoomBoost;
-  let pixelWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
-  let pixelHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
+    const zoomBoost = clampNumber(
+        BASE_SUPERSAMPLE_FACTOR + (viewportScale - MIN_MAP_SCALE) * 0.35,
+        BASE_SUPERSAMPLE_FACTOR,
+        BASE_SUPERSAMPLE_FACTOR * MAX_ZOOM_SUPERSAMPLE_BOOST,
+    );
+    let pixelRatio = devicePixelRatio * zoomBoost;
+    let pixelWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
+    let pixelHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
 
-  if (pixelWidth * pixelHeight > MAX_CANVAS_PIXEL_AREA) {
-    const areaScale = Math.sqrt(MAX_CANVAS_PIXEL_AREA / (pixelWidth * pixelHeight));
-    pixelWidth = Math.max(1, Math.floor(pixelWidth * areaScale));
-    pixelHeight = Math.max(1, Math.floor(pixelHeight * areaScale));
-    pixelRatio *= areaScale;
-  }
+    if (pixelWidth * pixelHeight > MAX_CANVAS_PIXEL_AREA) {
+        const areaScale = Math.sqrt(MAX_CANVAS_PIXEL_AREA / (pixelWidth * pixelHeight));
+        pixelWidth = Math.max(1, Math.floor(pixelWidth * areaScale));
+        pixelHeight = Math.max(1, Math.floor(pixelHeight * areaScale));
+        pixelRatio *= areaScale;
+    }
 
-  return {
-    cssWidth,
-    cssHeight,
-    pixelWidth,
-    pixelHeight,
-    pixelRatio,
-  };
+    return {
+        cssWidth,
+        cssHeight,
+        pixelWidth,
+        pixelHeight,
+        pixelRatio,
+    };
 };
 
 /**
  * 拖拽平移阶段的画布指标：降低超采样与像素面积，减轻每帧 blit 成本。
  */
 export const getMapCanvasInteractionMetrics = (
-  cssWidth: number,
-  cssHeight: number,
-  devicePixelRatio: number,
+    cssWidth: number,
+    cssHeight: number,
+    devicePixelRatio: number,
 ): MapCanvasRenderMetrics => {
-  let pixelRatio = Math.min(devicePixelRatio, MAX_INTERACTION_DEVICE_PIXEL_RATIO);
-  let pixelWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
-  let pixelHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
+    let pixelRatio = Math.min(devicePixelRatio, MAX_INTERACTION_DEVICE_PIXEL_RATIO);
+    let pixelWidth = Math.max(1, Math.floor(cssWidth * pixelRatio));
+    let pixelHeight = Math.max(1, Math.floor(cssHeight * pixelRatio));
 
-  if (pixelWidth * pixelHeight > MAX_INTERACTION_CANVAS_PIXEL_AREA) {
-    const areaScale = Math.sqrt(MAX_INTERACTION_CANVAS_PIXEL_AREA / (pixelWidth * pixelHeight));
-    pixelWidth = Math.max(1, Math.floor(pixelWidth * areaScale));
-    pixelHeight = Math.max(1, Math.floor(pixelHeight * areaScale));
-    pixelRatio *= areaScale;
-  }
+    if (pixelWidth * pixelHeight > MAX_INTERACTION_CANVAS_PIXEL_AREA) {
+        const areaScale = Math.sqrt(MAX_INTERACTION_CANVAS_PIXEL_AREA / (pixelWidth * pixelHeight));
+        pixelWidth = Math.max(1, Math.floor(pixelWidth * areaScale));
+        pixelHeight = Math.max(1, Math.floor(pixelHeight * areaScale));
+        pixelRatio *= areaScale;
+    }
 
-  return {
-    cssWidth,
-    cssHeight,
-    pixelWidth,
-    pixelHeight,
-    pixelRatio,
-  };
+    return {
+        cssWidth,
+        cssHeight,
+        pixelWidth,
+        pixelHeight,
+        pixelRatio,
+    };
 };
 
 /**
  * 将地图坐标转换为容器内的屏幕 CSS 像素位置。
  */
 export const mapCoordinateToScreen = (
-  mapX: number,
-  mapY: number,
-  viewportTransform: ViewportTransform,
-  cssWidth: number,
-  cssHeight: number,
+    mapX: number,
+    mapY: number,
+    viewportTransform: ViewportTransform,
+    cssWidth: number,
+    cssHeight: number,
 ): MarkerPosition => {
-  const scaleX = (cssWidth / WORLD_MAP_WIDTH) * viewportTransform.scale;
-  const scaleY = (cssHeight / WORLD_MAP_HEIGHT) * viewportTransform.scale;
+    const scaleX = (cssWidth / WORLD_MAP_WIDTH) * viewportTransform.scale;
+    const scaleY = (cssHeight / WORLD_MAP_HEIGHT) * viewportTransform.scale;
 
-  return {
-    left: mapX * scaleX + viewportTransform.x,
-    top: mapY * scaleY + viewportTransform.y,
-  };
+    return {
+        left: mapX * scaleX + viewportTransform.x,
+        top: mapY * scaleY + viewportTransform.y,
+    };
 };
 
 /**
  * 将容器内指针位置反投影到地图坐标系，供命中检测使用。
  */
 export const screenToMapCoordinate = (
-  screenX: number,
-  screenY: number,
-  viewportTransform: ViewportTransform,
-  cssWidth: number,
-  cssHeight: number,
+    screenX: number,
+    screenY: number,
+    viewportTransform: ViewportTransform,
+    cssWidth: number,
+    cssHeight: number,
 ): MarkerPosition => {
-  const scaleX = (cssWidth / WORLD_MAP_WIDTH) * viewportTransform.scale;
-  const scaleY = (cssHeight / WORLD_MAP_HEIGHT) * viewportTransform.scale;
+    const scaleX = (cssWidth / WORLD_MAP_WIDTH) * viewportTransform.scale;
+    const scaleY = (cssHeight / WORLD_MAP_HEIGHT) * viewportTransform.scale;
 
-  return {
-    left: (screenX - viewportTransform.x) / scaleX,
-    top: (screenY - viewportTransform.y) / scaleY,
-  };
+    return {
+        left: (screenX - viewportTransform.x) / scaleX,
+        top: (screenY - viewportTransform.y) / scaleY,
+    };
 };
 
 /**
  * 在屏幕坐标下查找距离指针最近且在命中半径内的标记点。
  */
 export const hitTestMarkerAtScreen = (
-  markers: WorldMapMarker[],
-  screenX: number,
-  screenY: number,
-  viewportTransform: ViewportTransform,
-  cssWidth: number,
-  cssHeight: number,
+    markers: WorldMapMarker[],
+    screenX: number,
+    screenY: number,
+    viewportTransform: ViewportTransform,
+    cssWidth: number,
+    cssHeight: number,
 ): WorldMapMarker | null => {
-  let closestMarker: WorldMapMarker | null = null;
-  let closestDistance = MARKER_HIT_RADIUS_PX;
+    let closestMarker: WorldMapMarker | null = null;
+    let closestDistance = MARKER_HIT_RADIUS_PX;
 
-  markers.forEach((marker: WorldMapMarker): void => {
-    const markerPosition = projectMapCoordinate(marker.coordinate);
-    const screenPosition = mapCoordinateToScreen(
-      markerPosition.left,
-      markerPosition.top,
-      viewportTransform,
-      cssWidth,
-      cssHeight,
-    );
-    const distance = Math.hypot(screenX - screenPosition.left, screenY - screenPosition.top);
+    markers.forEach((marker: WorldMapMarker): void => {
+        const markerPosition = projectMapCoordinate(marker.coordinate);
+        const screenPosition = mapCoordinateToScreen(
+            markerPosition.left,
+            markerPosition.top,
+            viewportTransform,
+            cssWidth,
+            cssHeight,
+        );
+        const distance = Math.hypot(screenX - screenPosition.left, screenY - screenPosition.top);
 
-    if (distance <= closestDistance) {
-      closestDistance = distance;
-      closestMarker = marker;
-    }
-  });
+        if (distance <= closestDistance) {
+            closestDistance = distance;
+            closestMarker = marker;
+        }
+    });
 
-  return closestMarker;
+    return closestMarker;
 };
 
 /**
  * 从地图容器读取画布绘制所需的 CSS 变量配色。
  */
 export const readMapCanvasPalette = (container: HTMLElement): MapCanvasPalette => {
-  const styles = getComputedStyle(container);
+    const styles = getComputedStyle(container);
 
-  return {
-    routeStrokeInternational: styles.getPropertyValue('--pl-map-route-international').trim(),
-    routeStrokeDomestic: styles.getPropertyValue('--pl-map-route-domestic').trim(),
-    markerDomesticFill: styles.getPropertyValue('--pl-map-marker-domestic-fill').trim(),
-    markerDomesticStroke: styles.getPropertyValue('--pl-map-marker-domestic-stroke').trim(),
-    markerDomesticFillActive: styles.getPropertyValue('--pl-map-marker-domestic-fill-active').trim(),
-    markerDomesticStrokeActive: styles
-      .getPropertyValue('--pl-map-marker-domestic-stroke-active')
-      .trim(),
-    markerInternationalFill: styles.getPropertyValue('--pl-map-marker-international-fill').trim(),
-    markerInternationalStroke: styles
-      .getPropertyValue('--pl-map-marker-international-stroke')
-      .trim(),
-    markerInternationalFillActive: styles
-      .getPropertyValue('--pl-map-marker-international-fill-active')
-      .trim(),
-    markerInternationalStrokeActive: styles
-      .getPropertyValue('--pl-map-marker-international-stroke-active')
-      .trim(),
-  };
+    return {
+        routeStrokeInternational: styles.getPropertyValue("--pl-map-route-international").trim(),
+        routeStrokeDomestic: styles.getPropertyValue("--pl-map-route-domestic").trim(),
+        markerDomesticFill: styles.getPropertyValue("--pl-map-marker-domestic-fill").trim(),
+        markerDomesticStroke: styles.getPropertyValue("--pl-map-marker-domestic-stroke").trim(),
+        markerDomesticFillActive: styles
+            .getPropertyValue("--pl-map-marker-domestic-fill-active")
+            .trim(),
+        markerDomesticStrokeActive: styles
+            .getPropertyValue("--pl-map-marker-domestic-stroke-active")
+            .trim(),
+        markerInternationalFill: styles
+            .getPropertyValue("--pl-map-marker-international-fill")
+            .trim(),
+        markerInternationalStroke: styles
+            .getPropertyValue("--pl-map-marker-international-stroke")
+            .trim(),
+        markerInternationalFillActive: styles
+            .getPropertyValue("--pl-map-marker-international-fill-active")
+            .trim(),
+        markerInternationalStrokeActive: styles
+            .getPropertyValue("--pl-map-marker-international-stroke-active")
+            .trim(),
+    };
 };
 
 /**
  * 按机场范围解析标记点绘制配色，与航迹 domestic / international 语义一致。
  */
 const resolveMarkerPaintStyles = (
-  palette: MapCanvasPalette,
-  scope: MapRouteScope,
-  isActive: boolean,
+    palette: MapCanvasPalette,
+    scope: MapRouteScope,
+    isActive: boolean,
 ): { fillStyle: string; strokeStyle: string; lineWidth: number } => {
-  const isDomesticMarker = scope === 'domestic';
+    const isDomesticMarker = scope === "domestic";
 
-  if (isDomesticMarker) {
+    if (isDomesticMarker) {
+        return {
+            fillStyle: isActive ? palette.markerDomesticFillActive : palette.markerDomesticFill,
+            strokeStyle: isActive
+                ? palette.markerDomesticStrokeActive
+                : palette.markerDomesticStroke,
+            lineWidth: isActive ? 2.6 : 2,
+        };
+    }
+
     return {
-      fillStyle: isActive ? palette.markerDomesticFillActive : palette.markerDomesticFill,
-      strokeStyle: isActive ? palette.markerDomesticStrokeActive : palette.markerDomesticStroke,
-      lineWidth: isActive ? 2.6 : 2,
+        fillStyle: isActive
+            ? palette.markerInternationalFillActive
+            : palette.markerInternationalFill,
+        strokeStyle: isActive
+            ? palette.markerInternationalStrokeActive
+            : palette.markerInternationalStroke,
+        lineWidth: isActive ? 3 : 2.4,
     };
-  }
-
-  return {
-    fillStyle: isActive ? palette.markerInternationalFillActive : palette.markerInternationalFill,
-    strokeStyle: isActive
-      ? palette.markerInternationalStrokeActive
-      : palette.markerInternationalStroke,
-    lineWidth: isActive ? 3 : 2.4,
-  };
 };
 
 /**
  * 在已平移到标记中心的画布坐标系中绘制小飞机符号。
  */
 const paintAircraftMarkerGlyph = (
-  context: CanvasRenderingContext2D,
-  radius: number,
-  markerPaint: { fillStyle: string; strokeStyle: string; lineWidth: number },
+    context: CanvasRenderingContext2D,
+    radius: number,
+    markerPaint: { fillStyle: string; strokeStyle: string; lineWidth: number },
 ): void => {
-  context.beginPath();
-  context.moveTo(0, -radius * 1.45);
-  context.lineTo(radius * 0.36, -radius * 0.16);
-  context.lineTo(radius * 1.3, radius * 0.26);
-  context.lineTo(radius * 0.9, radius * 0.64);
-  context.lineTo(radius * 0.24, radius * 0.42);
-  context.lineTo(0, radius * 1.18);
-  context.lineTo(-radius * 0.24, radius * 0.42);
-  context.lineTo(-radius * 0.9, radius * 0.64);
-  context.lineTo(-radius * 1.3, radius * 0.26);
-  context.lineTo(-radius * 0.36, -radius * 0.16);
-  context.closePath();
-  context.fillStyle = markerPaint.fillStyle;
-  context.fill();
-  context.strokeStyle = markerPaint.strokeStyle;
-  context.lineWidth = markerPaint.lineWidth;
-  context.lineJoin = 'round';
-  context.stroke();
+    context.beginPath();
+    context.moveTo(0, -radius * 1.45);
+    context.lineTo(radius * 0.36, -radius * 0.16);
+    context.lineTo(radius * 1.3, radius * 0.26);
+    context.lineTo(radius * 0.9, radius * 0.64);
+    context.lineTo(radius * 0.24, radius * 0.42);
+    context.lineTo(0, radius * 1.18);
+    context.lineTo(-radius * 0.24, radius * 0.42);
+    context.lineTo(-radius * 0.9, radius * 0.64);
+    context.lineTo(-radius * 1.3, radius * 0.26);
+    context.lineTo(-radius * 0.36, -radius * 0.16);
+    context.closePath();
+    context.fillStyle = markerPaint.fillStyle;
+    context.fill();
+    context.strokeStyle = markerPaint.strokeStyle;
+    context.lineWidth = markerPaint.lineWidth;
+    context.lineJoin = "round";
+    context.stroke();
 };
 
 /**
  * 绘制单段航迹弧线，国内实线、国际虚线，色相均落在 Night Flight 冷青体系内。
  */
 const paintMapRouteArc = (
-  context: CanvasRenderingContext2D,
-  route: WorldMapRoute,
-  palette: MapCanvasPalette,
-  viewportScale: number,
+    context: CanvasRenderingContext2D,
+    route: WorldMapRoute,
+    palette: MapCanvasPalette,
+    viewportScale: number,
 ): void => {
-  const startPosition = projectMapCoordinate(route.start);
-  const endPosition = projectMapCoordinate(route.end);
-  const controlPointX = (startPosition.left + endPosition.left) / 2;
-  const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
-  const isDomesticRoute = route.scope === 'domestic';
+    const startPosition = projectMapCoordinate(route.start);
+    const endPosition = projectMapCoordinate(route.end);
+    const controlPointX = (startPosition.left + endPosition.left) / 2;
+    const controlPointY = Math.min(startPosition.top, endPosition.top) - 52;
+    const isDomesticRoute = route.scope === "domestic";
 
-  context.beginPath();
-  context.moveTo(startPosition.left, startPosition.top);
-  context.quadraticCurveTo(controlPointX, controlPointY, endPosition.left, endPosition.top);
-  context.strokeStyle = isDomesticRoute
-    ? palette.routeStrokeDomestic
-    : palette.routeStrokeInternational;
-  context.lineWidth = (isDomesticRoute ? 1.2 : 1.45) / viewportScale;
-  context.lineCap = 'round';
-  context.lineJoin = 'round';
-  if (isDomesticRoute) {
+    context.beginPath();
+    context.moveTo(startPosition.left, startPosition.top);
+    context.quadraticCurveTo(controlPointX, controlPointY, endPosition.left, endPosition.top);
+    context.strokeStyle = isDomesticRoute
+        ? palette.routeStrokeDomestic
+        : palette.routeStrokeInternational;
+    context.lineWidth = (isDomesticRoute ? 1.2 : 1.45) / viewportScale;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    if (isDomesticRoute) {
+        context.setLineDash([]);
+    } else {
+        context.setLineDash([7 / viewportScale, 9 / viewportScale]);
+    }
+    context.stroke();
     context.setLineDash([]);
-  } else {
-    context.setLineDash([7 / viewportScale, 9 / viewportScale]);
-  }
-  context.stroke();
-  context.setLineDash([]);
 };
 
 /**
  * 绘制底图与航线（随视口缩放）；可选省略视口平移，用于构建可平移 blit 的离屏缓存。
  */
 export const paintMapBaseLayer = (
-  context: CanvasRenderingContext2D,
-  worldMapImage: CanvasImageSource,
-  routes: WorldMapRoute[],
-  palette: MapCanvasPalette,
-  cssWidth: number,
-  cssHeight: number,
-  viewportTransform: ViewportTransform,
-  options?: { omitViewportTranslate?: boolean },
+    context: CanvasRenderingContext2D,
+    worldMapImage: CanvasImageSource,
+    routes: WorldMapRoute[],
+    palette: MapCanvasPalette,
+    cssWidth: number,
+    cssHeight: number,
+    viewportTransform: ViewportTransform,
+    options?: { omitViewportTranslate?: boolean },
 ): void => {
-  const scaleX = cssWidth / WORLD_MAP_WIDTH;
-  const scaleY = cssHeight / WORLD_MAP_HEIGHT;
-  const clearWidth = options?.omitViewportTranslate
-    ? cssWidth * viewportTransform.scale
-    : cssWidth;
-  const clearHeight = options?.omitViewportTranslate
-    ? cssHeight * viewportTransform.scale
-    : cssHeight;
+    const scaleX = cssWidth / WORLD_MAP_WIDTH;
+    const scaleY = cssHeight / WORLD_MAP_HEIGHT;
+    const clearWidth = options?.omitViewportTranslate
+        ? cssWidth * viewportTransform.scale
+        : cssWidth;
+    const clearHeight = options?.omitViewportTranslate
+        ? cssHeight * viewportTransform.scale
+        : cssHeight;
 
-  context.clearRect(0, 0, clearWidth, clearHeight);
-  context.save();
+    context.clearRect(0, 0, clearWidth, clearHeight);
+    context.save();
 
-  if (!options?.omitViewportTranslate) {
-    context.translate(viewportTransform.x, viewportTransform.y);
-  }
+    if (!options?.omitViewportTranslate) {
+        context.translate(viewportTransform.x, viewportTransform.y);
+    }
 
-  context.scale(viewportTransform.scale * scaleX, viewportTransform.scale * scaleY);
-  context.drawImage(worldMapImage, 0, 0, WORLD_MAP_WIDTH, WORLD_MAP_HEIGHT);
+    context.scale(viewportTransform.scale * scaleX, viewportTransform.scale * scaleY);
+    context.drawImage(worldMapImage, 0, 0, WORLD_MAP_WIDTH, WORLD_MAP_HEIGHT);
 
-  const domesticRoutes = routes.filter((route: WorldMapRoute): boolean => route.scope === 'domestic');
-  const internationalRoutes = routes.filter(
-    (route: WorldMapRoute): boolean => route.scope === 'international',
-  );
+    const domesticRoutes = routes.filter(
+        (route: WorldMapRoute): boolean => route.scope === "domestic",
+    );
+    const internationalRoutes = routes.filter(
+        (route: WorldMapRoute): boolean => route.scope === "international",
+    );
 
-  domesticRoutes.forEach((route: WorldMapRoute): void => {
-    paintMapRouteArc(context, route, palette, viewportTransform.scale);
-  });
-  internationalRoutes.forEach((route: WorldMapRoute): void => {
-    paintMapRouteArc(context, route, palette, viewportTransform.scale);
-  });
+    domesticRoutes.forEach((route: WorldMapRoute): void => {
+        paintMapRouteArc(context, route, palette, viewportTransform.scale);
+    });
+    internationalRoutes.forEach((route: WorldMapRoute): void => {
+        paintMapRouteArc(context, route, palette, viewportTransform.scale);
+    });
 
-  context.restore();
+    context.restore();
 };
 
 /**
  * 在屏幕坐标下绘制飞机标记，命中半径不随缩放变化。
  */
 export const paintMapMarkers = (
-  context: CanvasRenderingContext2D,
-  markers: WorldMapMarker[],
-  palette: MapCanvasPalette,
-  activeMarkerId: string | null,
-  cssWidth: number,
-  cssHeight: number,
-  viewportTransform: ViewportTransform,
+    context: CanvasRenderingContext2D,
+    markers: WorldMapMarker[],
+    palette: MapCanvasPalette,
+    activeMarkerId: string | null,
+    cssWidth: number,
+    cssHeight: number,
+    viewportTransform: ViewportTransform,
 ): void => {
-  markers.forEach((marker: WorldMapMarker): void => {
-    const markerPosition = projectMapCoordinate(marker.coordinate);
-    const screenPosition = mapCoordinateToScreen(
-      markerPosition.left,
-      markerPosition.top,
-      viewportTransform,
-      cssWidth,
-      cssHeight,
-    );
-    const isActive = marker.id === activeMarkerId;
-    const radius = isActive ? MARKER_RADIUS * 1.12 : MARKER_RADIUS;
-    const markerPaint = resolveMarkerPaintStyles(palette, marker.scope, isActive);
+    markers.forEach((marker: WorldMapMarker): void => {
+        const markerPosition = projectMapCoordinate(marker.coordinate);
+        const screenPosition = mapCoordinateToScreen(
+            markerPosition.left,
+            markerPosition.top,
+            viewportTransform,
+            cssWidth,
+            cssHeight,
+        );
+        const isActive = marker.id === activeMarkerId;
+        const radius = isActive ? MARKER_RADIUS * 1.12 : MARKER_RADIUS;
+        const markerPaint = resolveMarkerPaintStyles(palette, marker.scope, isActive);
 
-    context.save();
-    context.translate(screenPosition.left, screenPosition.top);
-    context.rotate(AIRCRAFT_MARKER_ROTATION_RADIANS);
-    paintAircraftMarkerGlyph(context, radius, markerPaint);
-    context.restore();
-  });
+        context.save();
+        context.translate(screenPosition.left, screenPosition.top);
+        context.rotate(AIRCRAFT_MARKER_ROTATION_RADIANS);
+        paintAircraftMarkerGlyph(context, radius, markerPaint);
+        context.restore();
+    });
 };
 
 /**
  * 将当前缩放下的底图+航线离屏缓存，供拖拽时按视口偏移做 blit。
  */
 export const buildMapLayerCache = (
-  worldMapImage: CanvasImageSource,
-  routes: WorldMapRoute[],
-  palette: MapCanvasPalette,
-  cssWidth: number,
-  cssHeight: number,
-  viewportScale: number,
+    worldMapImage: CanvasImageSource,
+    routes: WorldMapRoute[],
+    palette: MapCanvasPalette,
+    cssWidth: number,
+    cssHeight: number,
+    viewportScale: number,
 ): HTMLCanvasElement => {
-  const cacheCanvas = document.createElement('canvas');
-  const cacheCssWidth = Math.max(1, Math.ceil(cssWidth * viewportScale));
-  const cacheCssHeight = Math.max(1, Math.ceil(cssHeight * viewportScale));
+    const cacheCanvas = document.createElement("canvas");
+    const cacheCssWidth = Math.max(1, Math.ceil(cssWidth * viewportScale));
+    const cacheCssHeight = Math.max(1, Math.ceil(cssHeight * viewportScale));
 
-  cacheCanvas.width = cacheCssWidth;
-  cacheCanvas.height = cacheCssHeight;
+    cacheCanvas.width = cacheCssWidth;
+    cacheCanvas.height = cacheCssHeight;
 
-  const cacheContext = cacheCanvas.getContext('2d');
+    const cacheContext = cacheCanvas.getContext("2d");
 
-  if (cacheContext !== null) {
-    cacheContext.imageSmoothingEnabled = true;
-    cacheContext.imageSmoothingQuality = 'high';
-    paintMapBaseLayer(
-      cacheContext,
-      worldMapImage,
-      routes,
-      palette,
-      cssWidth,
-      cssHeight,
-      { scale: viewportScale, x: 0, y: 0 },
-      { omitViewportTranslate: true },
-    );
-  }
+    if (cacheContext !== null) {
+        cacheContext.imageSmoothingEnabled = true;
+        cacheContext.imageSmoothingQuality = "high";
+        paintMapBaseLayer(
+            cacheContext,
+            worldMapImage,
+            routes,
+            palette,
+            cssWidth,
+            cssHeight,
+            { scale: viewportScale, x: 0, y: 0 },
+            { omitViewportTranslate: true },
+        );
+    }
 
-  return cacheCanvas;
+    return cacheCanvas;
 };
 
 /**
  * 从离屏缓存裁切当前视口可见区域并绘制到主画布（仅平移，不重复缩放绘制底图）。
  */
 export const blitMapLayerCache = (
-  context: CanvasRenderingContext2D,
-  layerCache: HTMLCanvasElement,
-  viewportTransform: ViewportTransform,
-  cssWidth: number,
-  cssHeight: number,
+    context: CanvasRenderingContext2D,
+    layerCache: HTMLCanvasElement,
+    viewportTransform: ViewportTransform,
+    cssWidth: number,
+    cssHeight: number,
 ): void => {
-  context.clearRect(0, 0, cssWidth, cssHeight);
-  context.drawImage(
-    layerCache,
-    -viewportTransform.x,
-    -viewportTransform.y,
-    cssWidth,
-    cssHeight,
-    0,
-    0,
-    cssWidth,
-    cssHeight,
-  );
+    context.clearRect(0, 0, cssWidth, cssHeight);
+    context.drawImage(
+        layerCache,
+        -viewportTransform.x,
+        -viewportTransform.y,
+        cssWidth,
+        cssHeight,
+        0,
+        0,
+        cssWidth,
+        cssHeight,
+    );
 };
 
 /**
  * 绘制底图与航线（随视口缩放），标记点在屏幕坐标下以固定像素尺寸绘制以保证位置准确且大小不变。
  */
 export const paintAnnotatedWorldMap = (
-  context: CanvasRenderingContext2D,
-  worldMapImage: CanvasImageSource,
-  markers: WorldMapMarker[],
-  routes: WorldMapRoute[],
-  palette: MapCanvasPalette,
-  activeMarkerId: string | null,
-  cssWidth: number,
-  cssHeight: number,
-  viewportTransform: ViewportTransform,
+    context: CanvasRenderingContext2D,
+    worldMapImage: CanvasImageSource,
+    markers: WorldMapMarker[],
+    routes: WorldMapRoute[],
+    palette: MapCanvasPalette,
+    activeMarkerId: string | null,
+    cssWidth: number,
+    cssHeight: number,
+    viewportTransform: ViewportTransform,
 ): void => {
-  paintMapBaseLayer(
-    context,
-    worldMapImage,
-    routes,
-    palette,
-    cssWidth,
-    cssHeight,
-    viewportTransform,
-  );
-  paintMapMarkers(
-    context,
-    markers,
-    palette,
-    activeMarkerId,
-    cssWidth,
-    cssHeight,
-    viewportTransform,
-  );
+    paintMapBaseLayer(
+        context,
+        worldMapImage,
+        routes,
+        palette,
+        cssWidth,
+        cssHeight,
+        viewportTransform,
+    );
+    paintMapMarkers(
+        context,
+        markers,
+        palette,
+        activeMarkerId,
+        cssWidth,
+        cssHeight,
+        viewportTransform,
+    );
 };

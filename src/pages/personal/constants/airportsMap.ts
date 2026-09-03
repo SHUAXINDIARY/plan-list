@@ -48,9 +48,7 @@ export const airportMapMarkers: WorldMapMarker[] = CHECKED_AIRPORTS.map(
                 lng: airport.lng,
             },
             scope: countryName === "中国" ? "domestic" : "international",
-            flag:
-                AIRPORT_COUNTRY_FLAG_BY_NAME[countryName] ??
-                DEFAULT_AIRPORT_COUNTRY_FLAG,
+            flag: AIRPORT_COUNTRY_FLAG_BY_NAME[countryName] ?? DEFAULT_AIRPORT_COUNTRY_FLAG,
         };
     },
 );
@@ -165,9 +163,7 @@ export const MAP_REGION_LABELS: MapRegionLabel[] = [
  * 从已打卡机场常量中解析经纬度，供航迹弧线与 CHECKED_AIRPORTS 保持同源。
  * @param airportName - 须与 CHECKED_AIRPORTS 条目的 name 完全一致。
  */
-function coordinateOfCheckedAirport(
-    airportName: CheckedAirport["name"],
-): MapCoordinate {
+function coordinateOfCheckedAirport(airportName: CheckedAirport["name"]): MapCoordinate {
     const airport = CHECKED_AIRPORTS.find(
         (item: CheckedAirport): boolean => item.name === airportName,
     );
@@ -203,120 +199,25 @@ function createMapRoute(
 // 航迹弧线按个人实际航程串联机场（忽略航班号与机型）；坐标来自 CHECKED_AIRPORTS。
 // 北京：国际线用首都，国内线用大兴；曼谷亚航走廊曼、泰航/海航等走素万那普；东京国航/春秋走成田、全日空走羽田。
 export const MAP_ROUTES: MapRoute[] = [
-    createMapRoute(
-        "大阪至天津",
-        "大阪关西国际机场",
-        "天津滨海国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "天津至东京（成田）",
-        "天津滨海国际机场",
-        "东京成田国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "东京（成田）至天津",
-        "东京成田国际机场",
-        "天津滨海国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "大兴至三亚",
-        "北京大兴国际机场",
-        "三亚凤凰国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "三亚至大兴",
-        "三亚凤凰国际机场",
-        "北京大兴国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "首都至武汉",
-        "北京首都国际机场",
-        "武汉天河国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "武汉至首都",
-        "武汉天河国际机场",
-        "北京首都国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "大兴至西安",
-        "北京大兴国际机场",
-        "西安咸阳国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "西安至大兴",
-        "西安咸阳国际机场",
-        "北京大兴国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "西安至宜昌",
-        "西安咸阳国际机场",
-        "宜昌三峡国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "西安至杭州",
-        "西安咸阳国际机场",
-        "杭州萧山国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "西安至昆明",
-        "西安咸阳国际机场",
-        "昆明长水国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "西安至广州",
-        "西安咸阳国际机场",
-        "广州白云国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "广州至大兴",
-        "广州白云国际机场",
-        "北京大兴国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "首都至上海（虹桥）",
-        "北京首都国际机场",
-        "上海虹桥国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "上海（虹桥）至首都",
-        "上海虹桥国际机场",
-        "北京首都国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "首都至东京（成田）",
-        "北京首都国际机场",
-        "东京成田国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "首都至曼谷（廊曼）",
-        "北京首都国际机场",
-        "曼谷廊曼国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "曼谷（廊曼）至普吉",
-        "曼谷廊曼国际机场",
-        "普吉国际机场",
-        "international",
-    ),
+    createMapRoute("大阪至天津", "大阪关西国际机场", "天津滨海国际机场", "international"),
+    createMapRoute("天津至东京（成田）", "天津滨海国际机场", "东京成田国际机场", "international"),
+    createMapRoute("东京（成田）至天津", "东京成田国际机场", "天津滨海国际机场", "international"),
+    createMapRoute("大兴至三亚", "北京大兴国际机场", "三亚凤凰国际机场", "domestic"),
+    createMapRoute("三亚至大兴", "三亚凤凰国际机场", "北京大兴国际机场", "domestic"),
+    createMapRoute("首都至武汉", "北京首都国际机场", "武汉天河国际机场", "domestic"),
+    createMapRoute("武汉至首都", "武汉天河国际机场", "北京首都国际机场", "domestic"),
+    createMapRoute("大兴至西安", "北京大兴国际机场", "西安咸阳国际机场", "domestic"),
+    createMapRoute("西安至大兴", "西安咸阳国际机场", "北京大兴国际机场", "domestic"),
+    createMapRoute("西安至宜昌", "西安咸阳国际机场", "宜昌三峡国际机场", "domestic"),
+    createMapRoute("西安至杭州", "西安咸阳国际机场", "杭州萧山国际机场", "domestic"),
+    createMapRoute("西安至昆明", "西安咸阳国际机场", "昆明长水国际机场", "domestic"),
+    createMapRoute("西安至广州", "西安咸阳国际机场", "广州白云国际机场", "domestic"),
+    createMapRoute("广州至大兴", "广州白云国际机场", "北京大兴国际机场", "domestic"),
+    createMapRoute("首都至上海（虹桥）", "北京首都国际机场", "上海虹桥国际机场", "domestic"),
+    createMapRoute("上海（虹桥）至首都", "上海虹桥国际机场", "北京首都国际机场", "domestic"),
+    createMapRoute("首都至东京（成田）", "北京首都国际机场", "东京成田国际机场", "international"),
+    createMapRoute("首都至曼谷（廊曼）", "北京首都国际机场", "曼谷廊曼国际机场", "international"),
+    createMapRoute("曼谷（廊曼）至普吉", "曼谷廊曼国际机场", "普吉国际机场", "international"),
     createMapRoute(
         "普吉至曼谷（素万那普）",
         "普吉国际机场",
@@ -335,36 +236,11 @@ export const MAP_ROUTES: MapRoute[] = [
         "曼谷素万那普国际机场",
         "international",
     ),
-    createMapRoute(
-        "首都至首尔（仁川）",
-        "北京首都国际机场",
-        "首尔仁川国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "首尔（仁川）至首都",
-        "首尔仁川国际机场",
-        "北京首都国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "首都至大阪",
-        "北京首都国际机场",
-        "大阪关西国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "大阪至首都",
-        "大阪关西国际机场",
-        "北京首都国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "大兴至上海（浦东）",
-        "北京大兴国际机场",
-        "上海浦东国际机场",
-        "domestic",
-    ),
+    createMapRoute("首都至首尔（仁川）", "北京首都国际机场", "首尔仁川国际机场", "international"),
+    createMapRoute("首尔（仁川）至首都", "首尔仁川国际机场", "北京首都国际机场", "international"),
+    createMapRoute("首都至大阪", "北京首都国际机场", "大阪关西国际机场", "international"),
+    createMapRoute("大阪至首都", "大阪关西国际机场", "北京首都国际机场", "international"),
+    createMapRoute("大兴至上海（浦东）", "北京大兴国际机场", "上海浦东国际机场", "domestic"),
     createMapRoute(
         "上海（浦东）至巴塞罗那",
         "上海浦东国际机场",
@@ -377,12 +253,7 @@ export const MAP_ROUTES: MapRoute[] = [
         "罗马菲乌米奇诺机场",
         "international",
     ),
-    createMapRoute(
-        "罗马至巴黎（奥利）",
-        "罗马菲乌米奇诺机场",
-        "巴黎奥利机场",
-        "international",
-    ),
+    createMapRoute("罗马至巴黎（奥利）", "罗马菲乌米奇诺机场", "巴黎奥利机场", "international"),
     createMapRoute(
         "巴黎（奥利）至卡萨布兰卡",
         "巴黎奥利机场",
@@ -395,83 +266,23 @@ export const MAP_ROUTES: MapRoute[] = [
         "北京首都国际机场",
         "international",
     ),
-    createMapRoute(
-        "首都至名古屋",
-        "北京首都国际机场",
-        "名古屋中部国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "名古屋至首都",
-        "名古屋中部国际机场",
-        "北京首都国际机场",
-        "international",
-    ),
-    createMapRoute(
-        "首都至东京（羽田）",
-        "北京首都国际机场",
-        "东京羽田机场",
-        "international",
-    ),
-    createMapRoute(
-        "东京（羽田）至首都",
-        "东京羽田机场",
-        "北京首都国际机场",
-        "international",
-    ),
+    createMapRoute("首都至名古屋", "北京首都国际机场", "名古屋中部国际机场", "international"),
+    createMapRoute("名古屋至首都", "名古屋中部国际机场", "北京首都国际机场", "international"),
+    createMapRoute("首都至东京（羽田）", "北京首都国际机场", "东京羽田机场", "international"),
+    createMapRoute("东京（羽田）至首都", "东京羽田机场", "北京首都国际机场", "international"),
     createMapRoute("大兴至庆阳", "北京大兴国际机场", "庆阳机场", "domestic"),
-    createMapRoute(
-        "大兴至昆明",
-        "北京大兴国际机场",
-        "昆明长水国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "昆明至大兴",
-        "昆明长水国际机场",
-        "北京大兴国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "昆明至重庆",
-        "昆明长水国际机场",
-        "重庆江北国际机场",
-        "domestic",
-    ),
-    createMapRoute(
-        "昆明至清迈",
-        "昆明长水国际机场",
-        "清迈国际机场",
-        "international",
-    ),
+    createMapRoute("大兴至昆明", "北京大兴国际机场", "昆明长水国际机场", "domestic"),
+    createMapRoute("昆明至大兴", "昆明长水国际机场", "北京大兴国际机场", "domestic"),
+    createMapRoute("昆明至重庆", "昆明长水国际机场", "重庆江北国际机场", "domestic"),
+    createMapRoute("昆明至清迈", "昆明长水国际机场", "清迈国际机场", "international"),
     createMapRoute(
         "清迈至曼谷（素万那普）",
         "清迈国际机场",
         "曼谷素万那普国际机场",
         "international",
     ),
-    createMapRoute(
-        "首都至新加坡（樟宜）",
-        "北京首都国际机场",
-        "新加坡樟宜机场",
-        "international",
-    ),
-    createMapRoute(
-        "新加坡（樟宜）至悉尼",
-        "新加坡樟宜机场",
-        "悉尼机场",
-        "international",
-    ),
-    createMapRoute(
-        "悉尼至新加坡（樟宜）",
-        "悉尼机场",
-        "新加坡樟宜机场",
-        "international",
-    ),
-    createMapRoute(
-        "新加坡（樟宜）至首都",
-        "新加坡樟宜机场",
-        "北京首都国际机场",
-        "international",
-    ),
+    createMapRoute("首都至新加坡（樟宜）", "北京首都国际机场", "新加坡樟宜机场", "international"),
+    createMapRoute("新加坡（樟宜）至悉尼", "新加坡樟宜机场", "悉尼机场", "international"),
+    createMapRoute("悉尼至新加坡（樟宜）", "悉尼机场", "新加坡樟宜机场", "international"),
+    createMapRoute("新加坡（樟宜）至首都", "新加坡樟宜机场", "北京首都国际机场", "international"),
 ];

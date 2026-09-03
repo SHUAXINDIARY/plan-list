@@ -1,17 +1,12 @@
 import { aircraftPhotoPreviewUrls } from "../photoPreviews.generated";
 import { AIRCRAFT_PHOTO_ORIGINAL_URLS } from "../constants/photoMeta";
-import type {
-    AircraftPhoto,
-    AircraftPhotoDirectoryOption,
-    AircraftPhotosBundle,
-} from "../type";
+import type { AircraftPhoto, AircraftPhotoDirectoryOption, AircraftPhotosBundle } from "../type";
 
 /** `key` 仅含文件名时使用的根目录筛选键。 */
 const AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY = "root";
 
 /** 生成映射为空对象时仍以任意原图 URL 作为键读取，未命中则回退原图。 */
-const aircraftPhotoPreviewUrlByOriginalUrl: Record<string, string> =
-    aircraftPhotoPreviewUrls;
+const aircraftPhotoPreviewUrlByOriginalUrl: Record<string, string> = aircraftPhotoPreviewUrls;
 
 // 从图片链接的 key 参数提取文件所属目录，保留完整目录层级供筛选复用。
 const getAircraftPhotoDirectoryKey = (originalUrl: string): string => {
@@ -41,8 +36,7 @@ const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
 const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.map(
     (originalUrl: string): AircraftPhoto => ({
         originalUrl,
-        previewUrl:
-            aircraftPhotoPreviewUrlByOriginalUrl[originalUrl] ?? originalUrl,
+        previewUrl: aircraftPhotoPreviewUrlByOriginalUrl[originalUrl] ?? originalUrl,
         directory: getAircraftPhotoDirectoryKey(originalUrl),
     }),
 );
@@ -53,12 +47,8 @@ const aircraftPhotoDirectoryOptions: AircraftPhotoDirectoryOption[] =
         const directoryPhotoCounts = new Map<string, number>();
 
         aircraftPhotos.forEach((aircraftPhoto: AircraftPhoto): void => {
-            const currentPhotoCount =
-                directoryPhotoCounts.get(aircraftPhoto.directory) ?? 0;
-            directoryPhotoCounts.set(
-                aircraftPhoto.directory,
-                currentPhotoCount + 1,
-            );
+            const currentPhotoCount = directoryPhotoCounts.get(aircraftPhoto.directory) ?? 0;
+            directoryPhotoCounts.set(aircraftPhoto.directory, currentPhotoCount + 1);
         });
 
         return Array.from(directoryPhotoCounts.entries())
@@ -70,8 +60,7 @@ const aircraftPhotoDirectoryOptions: AircraftPhotoDirectoryOption[] =
                     const isFirstDirectoryRoot =
                         firstDirectoryKey === AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
                     const isSecondDirectoryRoot =
-                        secondDirectoryKey ===
-                        AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
+                        secondDirectoryKey === AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY;
 
                     if (isFirstDirectoryRoot && !isSecondDirectoryRoot) {
                         return -1;
@@ -85,10 +74,7 @@ const aircraftPhotoDirectoryOptions: AircraftPhotoDirectoryOption[] =
                 },
             )
             .map(
-                ([directoryValue, photoCount]: [
-                    string,
-                    number,
-                ]): AircraftPhotoDirectoryOption => ({
+                ([directoryValue, photoCount]: [string, number]): AircraftPhotoDirectoryOption => ({
                     value: directoryValue,
                     label: getAircraftPhotoDirectoryLabel(directoryValue),
                     photoCount,

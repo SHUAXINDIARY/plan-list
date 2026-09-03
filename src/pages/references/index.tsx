@@ -10,11 +10,7 @@ import {
 import { Select } from "../../components/Select";
 import type { SelectOption } from "../../components/Select";
 import type { AirlineReferenceSource } from "../home/type";
-import {
-    AIRLINE_REFERENCE_SOURCES,
-    CATE_MAP,
-    cate_enum,
-} from "./constant";
+import { AIRLINE_REFERENCE_SOURCES, CATE_MAP, cate_enum } from "./constant";
 import "./index.css";
 
 /** 参考资料类型筛选值。 */
@@ -117,13 +113,12 @@ const CATEGORY_ORDER: ReferenceCategory[] = [
     cate_enum.offical,
 ];
 
-const FILTERED_CATEGORY_OPTIONS: ReferenceCategoryOption[] =
-    CATEGORY_ORDER.map(
-        (category: ReferenceCategory): ReferenceCategoryOption => ({
-            value: category,
-            label: CATE_MAP[category],
-        }),
-    );
+const FILTERED_CATEGORY_OPTIONS: ReferenceCategoryOption[] = CATEGORY_ORDER.map(
+    (category: ReferenceCategory): ReferenceCategoryOption => ({
+        value: category,
+        label: CATE_MAP[category],
+    }),
+);
 
 const CATEGORY_OPTIONS: SelectOption[] = [
     { value: "all", label: "全部类型" },
@@ -168,9 +163,7 @@ const REGION_LABELS: Record<ReferenceRegion, string> = {
 };
 
 // 统计全部来源链接数量，供页面概览与 aria 文案复用。
-const getReferenceUrlCount = (
-    referenceSources: AirlineReferenceSource[],
-): number => {
+const getReferenceUrlCount = (referenceSources: AirlineReferenceSource[]): number => {
     return referenceSources.reduce(
         (total: number, referenceSource: AirlineReferenceSource): number =>
             total + referenceSource.urls.length,
@@ -192,9 +185,7 @@ const getReferenceUrlHost = (referenceUrl: string): string => {
 const getReferenceUrlPathLabel = (referenceUrl: string): string => {
     try {
         const parsedReferenceUrl = new URL(referenceUrl);
-        const pathSegments = parsedReferenceUrl.pathname
-            .split("/")
-            .filter(Boolean);
+        const pathSegments = parsedReferenceUrl.pathname.split("/").filter(Boolean);
         const lastSegment = pathSegments[pathSegments.length - 1];
 
         if (!lastSegment) {
@@ -210,9 +201,7 @@ const getReferenceUrlPathLabel = (referenceUrl: string): string => {
 };
 
 // 从中文名称与域名推断地区，用于 prompt 中要求的地区筛选。
-const inferReferenceRegion = (
-    referenceSource: AirlineReferenceSource,
-): ReferenceRegion => {
+const inferReferenceRegion = (referenceSource: AirlineReferenceSource): ReferenceRegion => {
     const combinedText =
         `${referenceSource.airlineName} ${referenceSource.urls.join(" ")}`.toLocaleLowerCase();
 
@@ -229,10 +218,7 @@ const inferReferenceRegion = (
     ) {
         return "japan";
     }
-    if (
-        /韩国|korea|korean/.test(referenceSource.airlineName) ||
-        combinedText.includes(".kr")
-    ) {
+    if (/韩国|korea|korean/.test(referenceSource.airlineName) || combinedText.includes(".kr")) {
         return "korea";
     }
     if (
@@ -285,13 +271,8 @@ const createReferenceDirectoryItems = (
     referenceSources: AirlineReferenceSource[],
 ): ReferenceDirectoryItem[] => {
     return referenceSources.map(
-        (
-            referenceSource: AirlineReferenceSource,
-            sourceIndex: number,
-        ): ReferenceDirectoryItem => {
-            const domains = Array.from(
-                new Set(referenceSource.urls.map(getReferenceUrlHost)),
-            );
+        (referenceSource: AirlineReferenceSource, sourceIndex: number): ReferenceDirectoryItem => {
+            const domains = Array.from(new Set(referenceSource.urls.map(getReferenceUrlHost)));
             const category = referenceSource.category;
             const urlCount = referenceSource.urls.length;
 
@@ -304,23 +285,15 @@ const createReferenceDirectoryItems = (
                 primaryUrl: referenceSource.urls[0] ?? "#",
                 category,
                 region: inferReferenceRegion(referenceSource),
-                isRecent:
-                    sourceIndex >=
-                    referenceSources.length - RECENT_SOURCE_COUNT,
-                usageScore: getReferenceUsageScore(
-                    category,
-                    urlCount,
-                    domains.length,
-                ),
+                isRecent: sourceIndex >= referenceSources.length - RECENT_SOURCE_COUNT,
+                usageScore: getReferenceUsageScore(category, urlCount, domains.length),
             };
         },
     );
 };
 
 // 统计目录项中唯一域名数量。
-const getUniqueDomainCount = (
-    referenceItems: ReferenceDirectoryItem[],
-): number => {
+const getUniqueDomainCount = (referenceItems: ReferenceDirectoryItem[]): number => {
     const domains = new Set<string>();
 
     referenceItems.forEach((referenceItem: ReferenceDirectoryItem): void => {
@@ -341,33 +314,27 @@ const filterReferenceItems = (
 ): ReferenceDirectoryItem[] => {
     const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase();
 
-    return referenceItems.filter(
-        (referenceItem: ReferenceDirectoryItem): boolean => {
-            const matchesCategory =
-                selectedCategory === "all" ||
-                referenceItem.category === selectedCategory;
-            const matchesRegion =
-                selectedRegion === "all" ||
-                referenceItem.region === selectedRegion;
-            const searchableText = [
-                referenceItem.name,
-                referenceItem.primaryDomain,
-                referenceItem.domains.join(" "),
-                referenceItem.urls.join(" "),
-                CATE_MAP[referenceItem.category],
-                REGION_LABELS[referenceItem.region],
-            ]
-                .join(" ")
-                .toLocaleLowerCase();
+    return referenceItems.filter((referenceItem: ReferenceDirectoryItem): boolean => {
+        const matchesCategory =
+            selectedCategory === "all" || referenceItem.category === selectedCategory;
+        const matchesRegion = selectedRegion === "all" || referenceItem.region === selectedRegion;
+        const searchableText = [
+            referenceItem.name,
+            referenceItem.primaryDomain,
+            referenceItem.domains.join(" "),
+            referenceItem.urls.join(" "),
+            CATE_MAP[referenceItem.category],
+            REGION_LABELS[referenceItem.region],
+        ]
+            .join(" ")
+            .toLocaleLowerCase();
 
-            return (
-                matchesCategory &&
-                matchesRegion &&
-                (normalizedSearchTerm.length === 0 ||
-                    searchableText.includes(normalizedSearchTerm))
-            );
-        },
-    );
+        return (
+            matchesCategory &&
+            matchesRegion &&
+            (normalizedSearchTerm.length === 0 || searchableText.includes(normalizedSearchTerm))
+        );
+    });
 };
 
 // 根据用户选择的排序方式组织卡片顺序。
@@ -376,10 +343,7 @@ const sortReferenceItems = (
     selectedSortOrder: ReferenceSortOrder,
 ): ReferenceDirectoryItem[] => {
     return [...referenceItems].sort(
-        (
-            firstItem: ReferenceDirectoryItem,
-            secondItem: ReferenceDirectoryItem,
-        ): number => {
+        (firstItem: ReferenceDirectoryItem, secondItem: ReferenceDirectoryItem): number => {
             if (selectedSortOrder === "name") {
                 return firstItem.name.localeCompare(secondItem.name, "zh-Hans");
             }
@@ -398,31 +362,23 @@ const sortReferenceItems = (
 const createReferenceSections = (
     referenceItems: ReferenceDirectoryItem[],
 ): ReferenceSectionGroup[] => {
-    return CATEGORY_ORDER.map(
-        (category: ReferenceCategory): ReferenceSectionGroup => {
-            const items = referenceItems.filter(
-                (referenceItem: ReferenceDirectoryItem): boolean =>
-                    referenceItem.category === category,
-            );
+    return CATEGORY_ORDER.map((category: ReferenceCategory): ReferenceSectionGroup => {
+        const items = referenceItems.filter(
+            (referenceItem: ReferenceDirectoryItem): boolean => referenceItem.category === category,
+        );
 
-            return {
-                id: category,
-                title: CATE_MAP[category],
-                description: CATEGORY_DESCRIPTIONS[category],
-                items,
-                linkCount: items.reduce(
-                    (
-                        total: number,
-                        referenceItem: ReferenceDirectoryItem,
-                    ): number => total + referenceItem.urls.length,
-                    0,
-                ),
-            };
-        },
-    ).filter(
-        (sectionGroup: ReferenceSectionGroup): boolean =>
-            sectionGroup.items.length > 0,
-    );
+        return {
+            id: category,
+            title: CATE_MAP[category],
+            description: CATEGORY_DESCRIPTIONS[category],
+            items,
+            linkCount: items.reduce(
+                (total: number, referenceItem: ReferenceDirectoryItem): number =>
+                    total + referenceItem.urls.length,
+                0,
+            ),
+        };
+    }).filter((sectionGroup: ReferenceSectionGroup): boolean => sectionGroup.items.length > 0);
 };
 
 // 为卡片 logo fallback 生成两位识别字符。
@@ -438,10 +394,7 @@ const getReferenceInitials = (referenceName: string): string => {
 };
 
 // 分段渲染搜索命中的文本，避免使用 dangerouslySetInnerHTML。
-const renderHighlightedText = (
-    value: string,
-    searchTerm: string,
-): ReactNode => {
+const renderHighlightedText = (value: string, searchTerm: string): ReactNode => {
     const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase();
     if (normalizedSearchTerm.length === 0) {
         return value;
@@ -458,9 +411,7 @@ const renderHighlightedText = (
         }
         const nextCursor = matchIndex + normalizedSearchTerm.length;
         fragments.push(
-            <mark key={`${value}-${matchIndex}`}>
-                {value.slice(matchIndex, nextCursor)}
-            </mark>,
+            <mark key={`${value}-${matchIndex}`}>{value.slice(matchIndex, nextCursor)}</mark>,
         );
         cursor = nextCursor;
         matchIndex = normalizedValue.indexOf(normalizedSearchTerm, cursor);
@@ -563,9 +514,7 @@ const ReferenceCard = ({
                         {renderHighlightedText(item.primaryDomain, searchTerm)}
                     </span>
                 </div>
-                {item.isRecent ? (
-                    <span className="reference-card__recent">NEW</span>
-                ) : null}
+                {item.isRecent ? <span className="reference-card__recent">NEW</span> : null}
             </header>
 
             <div className="reference-card__tags" aria-label="资料标签">
@@ -574,40 +523,32 @@ const ReferenceCard = ({
                 <span>{item.urls.length} links</span>
             </div>
 
-            <p className="reference-card__note">
-                {CATEGORY_DESCRIPTIONS[item.category]}
-            </p>
+            <p className="reference-card__note">{CATEGORY_DESCRIPTIONS[item.category]}</p>
 
-            <ul
-                className="reference-card__links"
-                aria-label={`${item.name} 参考链接`}
-            >
-                {item.urls.map(
-                    (referenceUrl: string, linkIndex: number): ReactElement => {
-                        const host = getReferenceUrlHost(referenceUrl);
-                        const pathLabel =
-                            getReferenceUrlPathLabel(referenceUrl);
+            <ul className="reference-card__links" aria-label={`${item.name} 参考链接`}>
+                {item.urls.map((referenceUrl: string, linkIndex: number): ReactElement => {
+                    const host = getReferenceUrlHost(referenceUrl);
+                    const pathLabel = getReferenceUrlPathLabel(referenceUrl);
 
-                        return (
-                            <li key={`${item.name}-${referenceUrl}`}>
-                                <a
-                                    href={referenceUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    aria-label={`打开 ${item.name} 的第 ${linkIndex + 1} 条参考链接`}
-                                >
-                                    <span className="reference-card__link-index">
-                                        {String(linkIndex + 1).padStart(2, "0")}
-                                    </span>
-                                    <span className="reference-card__link-text">
-                                        <span>{host}</span>
-                                        <small>{pathLabel}</small>
-                                    </span>
-                                </a>
-                            </li>
-                        );
-                    },
-                )}
+                    return (
+                        <li key={`${item.name}-${referenceUrl}`}>
+                            <a
+                                href={referenceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={`打开 ${item.name} 的第 ${linkIndex + 1} 条参考链接`}
+                            >
+                                <span className="reference-card__link-index">
+                                    {String(linkIndex + 1).padStart(2, "0")}
+                                </span>
+                                <span className="reference-card__link-text">
+                                    <span>{host}</span>
+                                    <small>{pathLabel}</small>
+                                </span>
+                            </a>
+                        </li>
+                    );
+                })}
             </ul>
 
             <footer className="reference-card__actions">
@@ -650,8 +591,7 @@ const ReferenceCard = ({
 // 独立参考资料页：现代数据目录结构，支持搜索、筛选、分组与复制域名。
 const ReferencesPage = (): ReactElement => {
     const referenceItems = useMemo(
-        (): ReferenceDirectoryItem[] =>
-            createReferenceDirectoryItems(AIRLINE_REFERENCE_SOURCES),
+        (): ReferenceDirectoryItem[] => createReferenceDirectoryItems(AIRLINE_REFERENCE_SOURCES),
         [],
     );
     const referenceGroupCount = referenceItems.length;
@@ -659,48 +599,24 @@ const ReferencesPage = (): ReactElement => {
     const domainCount = getUniqueDomainCount(referenceItems);
 
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [selectedCategory, setSelectedCategory] =
-        useState<ReferenceCategoryFilter>("all");
-    const [selectedRegion, setSelectedRegion] =
-        useState<ReferenceRegionFilter>("all");
-    const [selectedSortOrder, setSelectedSortOrder] =
-        useState<ReferenceSortOrder>("recent");
-    const [expandedSectionIds, setExpandedSectionIds] = useState<
-        ReferenceCategory[]
-    >([]);
+    const [selectedCategory, setSelectedCategory] = useState<ReferenceCategoryFilter>("all");
+    const [selectedRegion, setSelectedRegion] = useState<ReferenceRegionFilter>("all");
+    const [selectedSortOrder, setSelectedSortOrder] = useState<ReferenceSortOrder>("recent");
+    const [expandedSectionIds, setExpandedSectionIds] = useState<ReferenceCategory[]>([]);
     const [toastMessage, setToastMessage] = useState<string>("");
-    const [copyFeedbackSourceIndex, setCopyFeedbackSourceIndex] = useState<
-        number | null
-    >(null);
-    const [isCopyFeedbackChanging, setIsCopyFeedbackChanging] =
-        useState<boolean>(false);
-    const [showsCopiedFeedback, setShowsCopiedFeedback] =
-        useState<boolean>(false);
+    const [copyFeedbackSourceIndex, setCopyFeedbackSourceIndex] = useState<number | null>(null);
+    const [isCopyFeedbackChanging, setIsCopyFeedbackChanging] = useState<boolean>(false);
+    const [showsCopiedFeedback, setShowsCopiedFeedback] = useState<boolean>(false);
     const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const copyFeedbackTransitionTimerRef = useRef<ReturnType<
-        typeof setTimeout
-    > | null>(null);
-    const copyFeedbackVisibleTimerRef = useRef<ReturnType<
-        typeof setTimeout
-    > | null>(null);
+    const copyFeedbackTransitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const copyFeedbackVisibleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const filteredItems = useMemo((): ReferenceDirectoryItem[] => {
         return sortReferenceItems(
-            filterReferenceItems(
-                referenceItems,
-                searchTerm,
-                selectedCategory,
-                selectedRegion,
-            ),
+            filterReferenceItems(referenceItems, searchTerm, selectedCategory, selectedRegion),
             selectedSortOrder,
         );
-    }, [
-        referenceItems,
-        searchTerm,
-        selectedCategory,
-        selectedRegion,
-        selectedSortOrder,
-    ]);
+    }, [referenceItems, searchTerm, selectedCategory, selectedRegion, selectedSortOrder]);
 
     const referenceSections = useMemo(
         (): ReferenceSectionGroup[] => createReferenceSections(filteredItems),
@@ -710,8 +626,7 @@ const ReferencesPage = (): ReactElement => {
     const visibleSectionIds = useMemo(
         (): ReferenceCategory[] =>
             referenceSections.map(
-                (sectionGroup: ReferenceSectionGroup): ReferenceCategory =>
-                    sectionGroup.id,
+                (sectionGroup: ReferenceSectionGroup): ReferenceCategory => sectionGroup.id,
             ),
         [referenceSections],
     );
@@ -720,22 +635,10 @@ const ReferencesPage = (): ReactElement => {
 
     useEffect((): void => {
         const hasActiveFilter =
-            searchTerm.trim().length > 0 ||
-            selectedCategory !== "all" ||
-            selectedRegion !== "all";
+            searchTerm.trim().length > 0 || selectedCategory !== "all" || selectedRegion !== "all";
 
-        setExpandedSectionIds(
-            hasActiveFilter
-                ? visibleSectionIds
-                : [],
-        );
-    }, [
-        filterKey,
-        selectedCategory,
-        selectedRegion,
-        searchTerm,
-        visibleSectionIds,
-    ]);
+        setExpandedSectionIds(hasActiveFilter ? visibleSectionIds : []);
+    }, [filterKey, selectedCategory, selectedRegion, searchTerm, visibleSectionIds]);
 
     useEffect((): (() => void) => {
         return (): void => {
@@ -780,33 +683,23 @@ const ReferencesPage = (): ReactElement => {
         0,
     );
 
-    const handleSearchTermChange = (
-        event: ChangeEvent<HTMLInputElement>,
-    ): void => {
+    const handleSearchTermChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setSearchTerm(event.target.value);
     };
 
-    const handleCategorySelectChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleCategorySelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedCategory(event.target.value as ReferenceCategoryFilter);
     };
 
-    const handleRegionSelectChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleRegionSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedRegion(event.target.value as ReferenceRegionFilter);
     };
 
-    const handleSortSelectChange = (
-        event: ChangeEvent<HTMLSelectElement>,
-    ): void => {
+    const handleSortSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         setSelectedSortOrder(event.target.value as ReferenceSortOrder);
     };
 
-    const handleCategoryChipClick = (
-        category: ReferenceCategoryFilter,
-    ): void => {
+    const handleCategoryChipClick = (category: ReferenceCategoryFilter): void => {
         setSelectedCategory(category);
     };
 
@@ -837,10 +730,7 @@ const ReferencesPage = (): ReactElement => {
         });
     };
 
-    const handleCopyDomain = async (
-        sourceIndex: number,
-        domain: string,
-    ): Promise<void> => {
+    const handleCopyDomain = async (sourceIndex: number, domain: string): Promise<void> => {
         if (toastTimerRef.current) {
             clearTimeout(toastTimerRef.current);
         }
@@ -866,15 +756,12 @@ const ReferencesPage = (): ReactElement => {
                 copyFeedbackVisibleTimerRef.current = setTimeout((): void => {
                     setIsCopyFeedbackChanging(true);
 
-                    copyFeedbackTransitionTimerRef.current = setTimeout(
-                        (): void => {
-                            setCopyFeedbackSourceIndex(null);
-                            setShowsCopiedFeedback(false);
-                            setIsCopyFeedbackChanging(false);
-                            copyFeedbackTransitionTimerRef.current = null;
-                        },
-                        COPY_FEEDBACK_TRANSITION_DURATION_MS,
-                    );
+                    copyFeedbackTransitionTimerRef.current = setTimeout((): void => {
+                        setCopyFeedbackSourceIndex(null);
+                        setShowsCopiedFeedback(false);
+                        setIsCopyFeedbackChanging(false);
+                        copyFeedbackTransitionTimerRef.current = null;
+                    }, COPY_FEEDBACK_TRANSITION_DURATION_MS);
                     copyFeedbackVisibleTimerRef.current = null;
                 }, COPY_FEEDBACK_VISIBLE_DURATION_MS);
             }, COPY_FEEDBACK_TRANSITION_DURATION_MS);
@@ -891,25 +778,19 @@ const ReferencesPage = (): ReactElement => {
     };
 
     return (
-        <section
-            className="page-panel reference-archive"
-            aria-labelledby="references-page-title"
-        >
+        <section className="page-panel reference-archive" aria-labelledby="references-page-title">
             <div className="reference-archive__hero">
                 <div className="reference-archive__intro">
                     <p className="page-eyebrow">References</p>
                     <h1 id="references-page-title">参考资料</h1>
                     <p>
-                        共 {referenceGroupCount} 个来源、{referenceUrlCount}{" "}
-                        个链接、最近更新 {LAST_UPDATED_DATE}
+                        共 {referenceGroupCount} 个来源、{referenceUrlCount} 个链接、最近更新{" "}
+                        {LAST_UPDATED_DATE}
                         。集中收纳航司官网、公开年报、百科与航空资料站链接。
                     </p>
                 </div>
 
-                <div
-                    className="reference-archive__hero-tools"
-                    aria-label="参考资料搜索与排序"
-                >
+                <div className="reference-archive__hero-tools" aria-label="参考资料搜索与排序">
                     <label className="reference-search">
                         <span>搜索参考资料</span>
                         <IconSearch />
@@ -940,15 +821,13 @@ const ReferencesPage = (): ReactElement => {
             </div>
 
             <div className="reference-stats" aria-label="参考资料统计">
-                {stats.map(
-                    (stat: ReferenceStat): ReactElement => (
-                        <div className="reference-stat" key={stat.label}>
-                            <span>{stat.label}</span>
-                            <strong>{stat.value}</strong>
-                            <small>{stat.detail}</small>
-                        </div>
-                    ),
-                )}
+                {stats.map((stat: ReferenceStat): ReactElement => (
+                    <div className="reference-stat" key={stat.label}>
+                        <span>{stat.label}</span>
+                        <strong>{stat.value}</strong>
+                        <small>{stat.detail}</small>
+                    </div>
+                ))}
             </div>
 
             <div className="reference-toolbar">
@@ -974,9 +853,7 @@ const ReferencesPage = (): ReactElement => {
                                         ? "reference-chip reference-chip--active"
                                         : "reference-chip"
                                 }
-                                onClick={(): void =>
-                                    handleCategoryChipClick(option.value)
-                                }
+                                onClick={(): void => handleCategoryChipClick(option.value)}
                             >
                                 {option.label}
                             </button>
@@ -994,10 +871,7 @@ const ReferencesPage = (): ReactElement => {
                             options={REGION_OPTIONS}
                         />
                     </div>
-                    <div
-                        className="reference-toolbar__actions"
-                        aria-label="参考资料分组操作"
-                    >
+                    <div className="reference-toolbar__actions" aria-label="参考资料分组操作">
                         <button
                             type="button"
                             className="reference-toolbar__button"
@@ -1024,8 +898,7 @@ const ReferencesPage = (): ReactElement => {
 
                 <p className="reference-toolbar__result" aria-live="polite">
                     <span className="reference-toolbar__result-value">
-                        显示 {filteredItems.length} 个来源 / {filteredLinkCount}{" "}
-                        条链接
+                        显示 {filteredItems.length} 个来源 / {filteredLinkCount} 条链接
                     </span>
                 </p>
             </div>
@@ -1035,104 +908,84 @@ const ReferencesPage = (): ReactElement => {
                     未找到匹配的参考资料。尝试调整搜索关键词或筛选条件。
                 </p>
             ) : (
-                <div
-                    className="reference-sections"
-                    aria-label="参考资料分组列表"
-                >
-                    {referenceSections.map(
-                        (sectionGroup: ReferenceSectionGroup): ReactElement => {
-                            const isExpanded = expandedSectionIds.includes(
-                                sectionGroup.id,
-                            );
+                <div className="reference-sections" aria-label="参考资料分组列表">
+                    {referenceSections.map((sectionGroup: ReferenceSectionGroup): ReactElement => {
+                        const isExpanded = expandedSectionIds.includes(sectionGroup.id);
 
-                            return (
-                                <section
-                                    className={
-                                        isExpanded
-                                            ? "reference-section reference-section--expanded"
-                                            : "reference-section"
-                                    }
-                                    key={sectionGroup.id}
-                                    aria-labelledby={`reference-section-${sectionGroup.id}`}
+                        return (
+                            <section
+                                className={
+                                    isExpanded
+                                        ? "reference-section reference-section--expanded"
+                                        : "reference-section"
+                                }
+                                key={sectionGroup.id}
+                                aria-labelledby={`reference-section-${sectionGroup.id}`}
+                            >
+                                <button
+                                    type="button"
+                                    className="reference-section__header"
+                                    onClick={(): void => handleSectionToggle(sectionGroup.id)}
+                                    aria-expanded={isExpanded}
+                                    aria-controls={`reference-section-panel-${sectionGroup.id}`}
                                 >
-                                    <button
-                                        type="button"
-                                        className="reference-section__header"
-                                        onClick={(): void =>
-                                            handleSectionToggle(sectionGroup.id)
-                                        }
-                                        aria-expanded={isExpanded}
-                                        aria-controls={`reference-section-panel-${sectionGroup.id}`}
-                                    >
-                                        <span>
-                                            <strong
-                                                id={`reference-section-${sectionGroup.id}`}
-                                            >
-                                                {sectionGroup.title}
-                                            </strong>
-                                            <small>
-                                                {sectionGroup.items.length}{" "}
-                                                个来源 ·{" "}
-                                                {sectionGroup.linkCount} 条链接
-                                            </small>
-                                        </span>
-                                        <span className="reference-section__meta">
-                                            {sectionGroup.description}
-                                        </span>
-                                        <IconChevron />
-                                    </button>
+                                    <span>
+                                        <strong id={`reference-section-${sectionGroup.id}`}>
+                                            {sectionGroup.title}
+                                        </strong>
+                                        <small>
+                                            {sectionGroup.items.length} 个来源 ·{" "}
+                                            {sectionGroup.linkCount} 条链接
+                                        </small>
+                                    </span>
+                                    <span className="reference-section__meta">
+                                        {sectionGroup.description}
+                                    </span>
+                                    <IconChevron />
+                                </button>
 
-                                    <div
-                                        id={`reference-section-panel-${sectionGroup.id}`}
-                                        className="reference-section__panel"
-                                        aria-hidden={!isExpanded}
-                                        inert={!isExpanded}
-                                    >
-                                        <div className="reference-section__panel-inner">
-                                            <div className="reference-card-list">
-                                                {sectionGroup.items.map(
-                                                    (
-                                                        referenceItem: ReferenceDirectoryItem,
-                                                    ): ReactElement => (
-                                                        <ReferenceCard
-                                                            key={
-                                                                referenceItem.name
-                                                            }
-                                                            item={referenceItem}
-                                                            searchTerm={
-                                                                searchTerm
-                                                            }
-                                                            onCopyDomain={
-                                                                handleCopyDomain
-                                                            }
-                                                            isCopied={
-                                                                copyFeedbackSourceIndex ===
-                                                                    referenceItem.sourceIndex &&
-                                                                showsCopiedFeedback
-                                                            }
-                                                            isCopyFeedbackChanging={
-                                                                copyFeedbackSourceIndex ===
-                                                                    referenceItem.sourceIndex &&
-                                                                isCopyFeedbackChanging
-                                                            }
-                                                        />
-                                                    ),
-                                                )}
-                                            </div>
+                                <div
+                                    id={`reference-section-panel-${sectionGroup.id}`}
+                                    className="reference-section__panel"
+                                    aria-hidden={!isExpanded}
+                                    inert={!isExpanded}
+                                >
+                                    <div className="reference-section__panel-inner">
+                                        <div className="reference-card-list">
+                                            {sectionGroup.items.map(
+                                                (
+                                                    referenceItem: ReferenceDirectoryItem,
+                                                ): ReactElement => (
+                                                    <ReferenceCard
+                                                        key={referenceItem.name}
+                                                        item={referenceItem}
+                                                        searchTerm={searchTerm}
+                                                        onCopyDomain={handleCopyDomain}
+                                                        isCopied={
+                                                            copyFeedbackSourceIndex ===
+                                                                referenceItem.sourceIndex &&
+                                                            showsCopiedFeedback
+                                                        }
+                                                        isCopyFeedbackChanging={
+                                                            copyFeedbackSourceIndex ===
+                                                                referenceItem.sourceIndex &&
+                                                            isCopyFeedbackChanging
+                                                        }
+                                                    />
+                                                ),
+                                            )}
                                         </div>
                                     </div>
-                                </section>
-                            );
-                        },
-                    )}
+                                </div>
+                            </section>
+                        );
+                    })}
                 </div>
             )}
 
             <div
                 className={
-                    toastMessage
-                        ? "reference-toast reference-toast--visible"
-                        : "reference-toast"
+                    toastMessage ? "reference-toast reference-toast--visible" : "reference-toast"
                 }
                 role="status"
                 aria-live="polite"

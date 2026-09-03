@@ -39,27 +39,27 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 补充 frontmatter 描述。
-  - 扩展项目基础规则。
-  - 增加当前目录结构与文件生成约束。
-  - 增加 Cursor Skills 使用规则。
-  - 增加 `PRODUCT.md` 和 `DESIGN.md` 的目录职责说明。
+    - 补充 frontmatter 描述。
+    - 扩展项目基础规则。
+    - 增加当前目录结构与文件生成约束。
+    - 增加 Cursor Skills 使用规则。
+    - 增加 `PRODUCT.md` 和 `DESIGN.md` 的目录职责说明。
 
 - `PRODUCT.md`
-  - 新增产品定位文档。
-  - 记录项目 register 为 `product`。
-  - 明确项目是航司机型 wiki 与个人乘坐记录工具。
-  - 补充目标用户、产品目的、品牌语气、反参考、设计原则和可访问性要求。
+    - 新增产品定位文档。
+    - 记录项目 register 为 `product`。
+    - 明确项目是航司机型 wiki 与个人乘坐记录工具。
+    - 补充目标用户、产品目的、品牌语气、反参考、设计原则和可访问性要求。
 
 - `DESIGN.md`
-  - 新增 seed 版设计系统文档。
-  - 指定 UI 基调为 `Night Flight Archive`。
-  - 明确深色夜航档案风、信息层级、色彩策略、字体方向、组件原则和禁忌项。
-  - 标记后续可在真实组件和 tokens 建立后重新运行 `/impeccable document` 提取正式设计系统。
+    - 新增 seed 版设计系统文档。
+    - 指定 UI 基调为 `Night Flight Archive`。
+    - 明确深色夜航档案风、信息层级、色彩策略、字体方向、组件原则和禁忌项。
+    - 标记后续可在真实组件和 tokens 建立后重新运行 `/impeccable document` 提取正式设计系统。
 
 - `taskRecord.md`
-  - 新增本次对话任务记录。
-  - 当前已调整为“日期、任务目的、完成过程、修改具体文件”的格式。
+    - 新增本次对话任务记录。
+    - 当前已调整为“日期、任务目的、完成过程、修改具体文件”的格式。
 
 ---
 
@@ -84,11 +84,11 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 新增 `taskRecord.md` 的目录职责说明。
-  - 新增 `任务记录` 小节，规定后续任务完成后自动更新任务记录。
+    - 新增 `taskRecord.md` 的目录职责说明。
+    - 新增 `任务记录` 小节，规定后续任务完成后自动更新任务记录。
 
 - `taskRecord.md`
-  - 追加本次规则变更的任务记录。
+    - 追加本次规则变更的任务记录。
 
 ---
 
@@ -112,12 +112,12 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 新增 `.agents/skills/vercel-react-native-skills/` 的目录职责说明。
-  - 新增 `public/data/` 和 `public/data/airplan.json` 的目录与数据职责说明。
-  - 新增 `.gitignore` 的文件职责说明。
+    - 新增 `.agents/skills/vercel-react-native-skills/` 的目录职责说明。
+    - 新增 `public/data/` 和 `public/data/airplan.json` 的目录与数据职责说明。
+    - 新增 `.gitignore` 的文件职责说明。
 
 - `taskRecord.md`
-  - 追加本次目录更新任务记录。
+    - 追加本次目录更新任务记录。
 
 ---
 
@@ -140,11 +140,11 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 新增 `src/pages/` 页面级模块目录说明。
-  - 新增 `src/pages/home/` 和 `src/pages/personal/` 页面子目录职责说明。
+    - 新增 `src/pages/` 页面级模块目录说明。
+    - 新增 `src/pages/home/` 和 `src/pages/personal/` 页面子目录职责说明。
 
 - `taskRecord.md`
-  - 追加本次目录扫描修正记录。
+    - 追加本次目录扫描修正记录。
 
 ---
 
@@ -172,28 +172,28 @@
 ## 修改具体文件
 
 - `package.json`
-  - 新增 `react-router` 依赖。
+    - 新增 `react-router` 依赖。
 
 - `pnpm-lock.yaml`
-  - 因安装 `react-router` 自动更新锁文件。
+    - 因安装 `react-router` 自动更新锁文件。
 
 - `src/App.tsx`
-  - 新增 React Router 路由配置。
-  - 新增主导航和 `NavLink` 跳转入口。
-  - 接入 `HomePage` 与 `PersonalPage` 页面组件。
+    - 新增 React Router 路由配置。
+    - 新增主导航和 `NavLink` 跳转入口。
+    - 接入 `HomePage` 与 `PersonalPage` 页面组件。
 
 - `src/App.css`
-  - 替换初始页样式。
-  - 新增应用壳、导航、页面面板和移动端适配样式。
+    - 替换初始页样式。
+    - 新增应用壳、导航、页面面板和移动端适配样式。
 
 - `src/pages/home/index.tsx`
-  - 新增航司机型资料库页面占位组件。
+    - 新增航司机型资料库页面占位组件。
 
 - `src/pages/personal/index.tsx`
-  - 新增个人乘坐记录页面占位组件。
+    - 新增个人乘坐记录页面占位组件。
 
 - `taskRecord.md`
-  - 追加本次新增路由与页面占位任务记录。
+    - 追加本次新增路由与页面占位任务记录。
 
 ---
 
@@ -220,16 +220,16 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增读取和渲染 `public/data/airplan.json` 的逻辑。
-  - 新增加载、错误、空数据和数据摘要状态。
-  - 按航司、制造商、机型层级渲染数据。
+    - 新增读取和渲染 `public/data/airplan.json` 的逻辑。
+    - 新增加载、错误、空数据和数据摘要状态。
+    - 按航司、制造商、机型层级渲染数据。
 
 - `src/App.css`
-  - 新增首页数据渲染相关样式。
-  - 新增航司条目、制造商分组、机型标签、统计摘要和状态提示样式。
+    - 新增首页数据渲染相关样式。
+    - 新增航司条目、制造商分组、机型标签、统计摘要和状态提示样式。
 
 - `taskRecord.md`
-  - 追加本次首页数据渲染任务记录。
+    - 追加本次首页数据渲染任务记录。
 
 ---
 
@@ -257,16 +257,16 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增航司搜索输入和机型制造商下拉筛选。
-  - 新增制造商选项提取和数据过滤逻辑。
-  - 将统计摘要改为基于过滤结果展示。
-  - 新增筛选无结果提示。
+    - 新增航司搜索输入和机型制造商下拉筛选。
+    - 新增制造商选项提取和数据过滤逻辑。
+    - 将统计摘要改为基于过滤结果展示。
+    - 新增筛选无结果提示。
 
 - `src/App.css`
-  - 新增筛选工具栏、输入框、下拉框和小屏适配样式。
+    - 新增筛选工具栏、输入框、下拉框和小屏适配样式。
 
 - `taskRecord.md`
-  - 追加本次筛选功能任务记录。
+    - 追加本次筛选功能任务记录。
 
 ---
 
@@ -288,10 +288,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 在 `常量与注释` 小节补充所有函数必须添加逻辑注释的规则。
+    - 在 `常量与注释` 小节补充所有函数必须添加逻辑注释的规则。
 
 - `taskRecord.md`
-  - 追加本次规则补充任务记录。
+    - 追加本次规则补充任务记录。
 
 ---
 
@@ -320,16 +320,16 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 补充函数逻辑注释。
-  - 为加载状态增加专用 `data-state--loading` 类名。
+    - 补充函数逻辑注释。
+    - 为加载状态增加专用 `data-state--loading` 类名。
 
 - `src/App.css`
-  - 新增动效变量、进入动画和加载态脉冲动画。
-  - 新增导航、筛选控件、航司条目和机型标签的微交互。
-  - 新增 `prefers-reduced-motion` 降级规则。
+    - 新增动效变量、进入动画和加载态脉冲动画。
+    - 新增导航、筛选控件、航司条目和机型标签的微交互。
+    - 新增 `prefers-reduced-motion` 降级规则。
 
 - `taskRecord.md`
-  - 追加本次 `/animate` 动效增强任务记录。
+    - 追加本次 `/animate` 动效增强任务记录。
 
 ---
 
@@ -352,11 +352,11 @@
 ## 修改具体文件
 
 - `src/App.css`
-  - 调整首页筛选工具栏、统计摘要和筛选控件的水平对齐方式。
-  - 保留小屏下纵向适配，避免控件挤压。
+    - 调整首页筛选工具栏、统计摘要和筛选控件的水平对齐方式。
+    - 保留小屏下纵向适配，避免控件挤压。
 
 - `taskRecord.md`
-  - 追加本次 UI 对齐调整任务记录。
+    - 追加本次 UI 对齐调整任务记录。
 
 ---
 
@@ -379,14 +379,14 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增筛选结果视图 key，并用于结果列表和筛选无结果状态的重新渲染过渡。
+    - 新增筛选结果视图 key，并用于结果列表和筛选无结果状态的重新渲染过渡。
 
 - `src/App.css`
-  - 新增 `archive-filter-swap` 数据切换动画。
-  - 为列表、条目和无结果状态增加轻量进入过渡与条目错峰。
+    - 新增 `archive-filter-swap` 数据切换动画。
+    - 为列表、条目和无结果状态增加轻量进入过渡与条目错峰。
 
 - `taskRecord.md`
-  - 追加本次 `/animate` 数据切换过渡任务记录。
+    - 追加本次 `/animate` 数据切换过渡任务记录。
 
 ---
 
@@ -409,16 +409,16 @@
 ## 修改具体文件
 
 - `src/pages/home/index.css`
-  - 新增首页专属样式文件，承载首页筛选、列表、数据状态、机型标签和相关动画样式。
+    - 新增首页专属样式文件，承载首页筛选、列表、数据状态、机型标签和相关动画样式。
 
 - `src/pages/home/index.tsx`
-  - 引入首页专属 `index.css`。
+    - 引入首页专属 `index.css`。
 
 - `src/App.css`
-  - 移除首页专属样式，保留应用级全局样式。
+    - 移除首页专属样式，保留应用级全局样式。
 
 - `taskRecord.md`
-  - 追加本次首页样式拆分任务记录。
+    - 追加本次首页样式拆分任务记录。
 
 ---
 
@@ -441,14 +441,14 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增 `fleet-results` 结果区结构，统一承载筛选无结果和列表渲染。
+    - 新增 `fleet-results` 结果区结构，统一承载筛选无结果和列表渲染。
 
 - `src/pages/home/index.css`
-  - 新增稳定高度的结果区样式和小屏高度适配。
-  - 调整列表间距，避免切换数据时外层面板高度跳变。
+    - 新增稳定高度的结果区样式和小屏高度适配。
+    - 调整列表间距，避免切换数据时外层面板高度跳变。
 
 - `taskRecord.md`
-  - 追加本次首页结果区布局优化任务记录。
+    - 追加本次首页结果区布局优化任务记录。
 
 ---
 
@@ -472,17 +472,17 @@
 ## 修改具体文件
 
 - `src/App.tsx`
-  - 将首页和个人记录页从静态 import 改为 `lazy` 动态导入。
-  - 使用 `Suspense` 包裹路由，增加页面按需加载边界。
+    - 将首页和个人记录页从静态 import 改为 `lazy` 动态导入。
+    - 使用 `Suspense` 包裹路由，增加页面按需加载边界。
 
 - `src/App.css`
-  - 新增 `route-loading` 页面加载态样式。
+    - 新增 `route-loading` 页面加载态样式。
 
 - `tsconfig.json`
-  - 新增 `module: "ESNext"`，支持动态导入和路由级代码分割。
+    - 新增 `module: "ESNext"`，支持动态导入和路由级代码分割。
 
 - `taskRecord.md`
-  - 追加本次页面按需加载任务记录。
+    - 追加本次页面按需加载任务记录。
 
 ---
 
@@ -504,10 +504,10 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增结果区 ref 和筛选变化后的滚动位置重置逻辑。
+    - 新增结果区 ref 和筛选变化后的滚动位置重置逻辑。
 
 - `taskRecord.md`
-  - 追加本次筛选滚动重置任务记录。
+    - 追加本次筛选滚动重置任务记录。
 
 ---
 
@@ -529,13 +529,13 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增数据来源说明和外部 PDF 链接。
+    - 新增数据来源说明和外部 PDF 链接。
 
 - `src/pages/home/index.css`
-  - 新增数据来源说明与链接交互样式。
+    - 新增数据来源说明与链接交互样式。
 
 - `taskRecord.md`
-  - 追加本次数据来源说明任务记录。
+    - 追加本次数据来源说明任务记录。
 
 ---
 
@@ -558,11 +558,11 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 调整 `AirplaneData` 类型与数据转换逻辑以匹配新 JSON 结构。
-  - 新增客机数量统计与航司条目展示字段。
+    - 调整 `AirplaneData` 类型与数据转换逻辑以匹配新 JSON 结构。
+    - 新增客机数量统计与航司条目展示字段。
 
 - `taskRecord.md`
-  - 追加本次数据结构适配任务记录。
+    - 追加本次数据结构适配任务记录。
 
 ---
 
@@ -586,11 +586,11 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增客机数量排序状态、排序控件和排序逻辑。
-  - 按 `passengerAircraftCount` 对筛选结果进行升序或降序排列。
+    - 新增客机数量排序状态、排序控件和排序逻辑。
+    - 按 `passengerAircraftCount` 对筛选结果进行升序或降序排列。
 
 - `taskRecord.md`
-  - 追加本次筛选排序功能任务记录。
+    - 追加本次筛选排序功能任务记录。
 
 ---
 
@@ -614,11 +614,11 @@
 ## 修改具体文件
 
 - `src/pages/home/index.css`
-  - 优化首页筛选工具栏、统计摘要和筛选控件的布局样式。
-  - 新增中屏断点并简化小屏适配规则。
+    - 优化首页筛选工具栏、统计摘要和筛选控件的布局样式。
+    - 新增中屏断点并简化小屏适配规则。
 
 - `taskRecord.md`
-  - 追加本次筛选工具栏布局优化任务记录。
+    - 追加本次筛选工具栏布局优化任务记录。
 
 ---
 
@@ -640,10 +640,10 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - 新增 HTML 标题与站点相关 meta 信息配置。
+    - 新增 HTML 标题与站点相关 meta 信息配置。
 
 - `taskRecord.md`
-  - 追加本次 HTML 站点信息配置任务记录。
+    - 追加本次 HTML 站点信息配置任务记录。
 
 ---
 
@@ -664,10 +664,10 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - 新增 `html.favicon`，配置站点标签页 icon。
+    - 新增 `html.favicon`，配置站点标签页 icon。
 
 - `taskRecord.md`
-  - 追加本次 favicon 配置任务记录。
+    - 追加本次 favicon 配置任务记录。
 
 ---
 
@@ -689,10 +689,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 为每个航司对象新增 `imgs: []` 字段。
+    - 为每个航司对象新增 `imgs: []` 字段。
 
 - `taskRecord.md`
-  - 追加本次数据字段扩展任务记录。
+    - 追加本次数据字段扩展任务记录。
 
 ---
 
@@ -716,14 +716,14 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增航司图片字段映射、图片弹窗状态和查看图片按钮。
-  - 新增图片弹窗渲染、空状态和 Escape 关闭逻辑。
+    - 新增航司图片字段映射、图片弹窗状态和查看图片按钮。
+    - 新增图片弹窗渲染、空状态和 Escape 关闭逻辑。
 
 - `src/pages/home/index.css`
-  - 新增航司卡片图片按钮、图片弹窗、图片网格和空状态样式。
+    - 新增航司卡片图片按钮、图片弹窗、图片网格和空状态样式。
 
 - `taskRecord.md`
-  - 追加本次航司图片弹窗功能任务记录。
+    - 追加本次航司图片弹窗功能任务记录。
 
 ---
 
@@ -746,14 +746,14 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增补充数据参考来源常量。
-  - 在页面底部新增参考来源分组渲染。
+    - 新增补充数据参考来源常量。
+    - 在页面底部新增参考来源分组渲染。
 
 - `src/pages/home/index.css`
-  - 新增底部参考来源区域与链接样式。
+    - 新增底部参考来源区域与链接样式。
 
 - `taskRecord.md`
-  - 追加本次补充数据参考来源任务记录。
+    - 追加本次补充数据参考来源任务记录。
 
 ---
 
@@ -776,15 +776,15 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 将全局 CAAC 统计来源并入统一参考来源数组。
-  - 移除顶部单独数据来源说明，改为底部统一折叠展示。
+    - 将全局 CAAC 统计来源并入统一参考来源数组。
+    - 移除顶部单独数据来源说明，改为底部统一折叠展示。
 
 - `src/pages/home/index.css`
-  - 移除旧顶部数据来源样式。
-  - 重写参考来源区域为低干扰、默认收起的折叠样式，并补充响应式适配。
+    - 移除旧顶部数据来源样式。
+    - 重写参考来源区域为低干扰、默认收起的折叠样式，并补充响应式适配。
 
 - `taskRecord.md`
-  - 追加本次参考来源集中展示设计调整记录。
+    - 追加本次参考来源集中展示设计调整记录。
 
 ---
 
@@ -805,10 +805,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 为选中 6 家航司补充空图片数组 `imgs` 字段。
+    - 为选中 6 家航司补充空图片数组 `imgs` 字段。
 
 - `taskRecord.md`
-  - 追加本次数据字段补齐任务记录。
+    - 追加本次数据字段补齐任务记录。
 
 ---
 
@@ -831,14 +831,14 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增机场打卡数据、统计概览、足迹图和国家地区分组列表。
-  - 新增拍摄飞机模块空状态，为后续照片数据扩展预留结构。
+    - 新增机场打卡数据、统计概览、足迹图和国家地区分组列表。
+    - 新增拍摄飞机模块空状态，为后续照片数据扩展预留结构。
 
 - `src/pages/personal/index.css`
-  - 新增个人页概览、拍摄飞机空状态、机场足迹图、标记点和机场分组列表样式。
+    - 新增个人页概览、拍摄飞机空状态、机场足迹图、标记点和机场分组列表样式。
 
 - `taskRecord.md`
-  - 追加本次个人航空档案页面任务记录。
+    - 追加本次个人航空档案页面任务记录。
 
 ---
 
@@ -859,11 +859,11 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.css`
-  - 调整 `.personal-summary span` 的内部对齐方式。
-  - 为 `.personal-summary strong` 补充行高。
+    - 调整 `.personal-summary span` 的内部对齐方式。
+    - 为 `.personal-summary strong` 补充行高。
 
 - `taskRecord.md`
-  - 追加本次统计项居中调整任务记录。
+    - 追加本次统计项居中调整任务记录。
 
 ---
 
@@ -886,14 +886,14 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增简化地图数据、区域标签数据和 SVG 地图渲染。
-  - 复用经纬度投射函数渲染陆地区块、标签和机场点位。
+    - 新增简化地图数据、区域标签数据和 SVG 地图渲染。
+    - 复用经纬度投射函数渲染陆地区块、标签和机场点位。
 
 - `src/pages/personal/index.css`
-  - 新增地图边框、陆地区块、区域标签和层级样式。
+    - 新增地图边框、陆地区块、区域标签和层级样式。
 
 - `taskRecord.md`
-  - 追加本次机场足迹图优化任务记录。
+    - 追加本次机场足迹图优化任务记录。
 
 ---
 
@@ -916,13 +916,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增主要航迹数据、航线生成函数和航迹 SVG 渲染。
+    - 新增主要航迹数据、航线生成函数和航迹 SVG 渲染。
 
 - `src/pages/personal/index.css`
-  - 优化地图背景、陆地区块、航迹线、机场点、区域标签和图例样式。
+    - 优化地图背景、陆地区块、航迹线、机场点、区域标签和图例样式。
 
 - `taskRecord.md`
-  - 追加本次地图样式优化任务记录。
+    - 追加本次地图样式优化任务记录。
 
 ---
 
@@ -945,17 +945,17 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 为 `imgs` 图片数组补充显式类型声明，并统一字符串写法。
+    - 为 `imgs` 图片数组补充显式类型声明，并统一字符串写法。
 
 - `src/pages/personal/index.tsx`
-  - 导入图片数组并渲染拍摄飞机图片网格。
-  - 将拍摄飞机统计数改为图片数量。
+    - 导入图片数组并渲染拍摄飞机图片网格。
+    - 将拍摄飞机统计数改为图片数量。
 
 - `src/pages/personal/index.css`
-  - 移除拍摄飞机空状态样式，新增图片画廊网格样式。
+    - 移除拍摄飞机空状态样式，新增图片画廊网格样式。
 
 - `taskRecord.md`
-  - 追加本次图片数据渲染任务记录。
+    - 追加本次图片数据渲染任务记录。
 
 ---
 
@@ -977,13 +977,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 新增并导出个人页机场、地图和航迹相关常量数据及类型。
+    - 新增并导出个人页机场、地图和航迹相关常量数据及类型。
 
 - `src/pages/personal/index.tsx`
-  - 改为从 `constant.ts` 导入静态数据和共享类型，删除页面内常量数据定义。
+    - 改为从 `constant.ts` 导入静态数据和共享类型，删除页面内常量数据定义。
 
 - `taskRecord.md`
-  - 追加本次常量拆分任务记录。
+    - 追加本次常量拆分任务记录。
 
 ---
 
@@ -1006,16 +1006,16 @@
 ## 修改具体文件
 
 - `src/pages/personal/type.d.ts`
-  - 新增个人页机场、地图、航迹、机场分组和坐标定位相关类型定义。
+    - 新增个人页机场、地图、航迹、机场分组和坐标定位相关类型定义。
 
 - `src/pages/personal/constant.ts`
-  - 移除内联接口定义，改为从 `type.d.ts` 导入类型。
+    - 移除内联接口定义，改为从 `type.d.ts` 导入类型。
 
 - `src/pages/personal/index.tsx`
-  - 移除页面内接口定义，改为从 `type.d.ts` 导入类型。
+    - 移除页面内接口定义，改为从 `type.d.ts` 导入类型。
 
 - `taskRecord.md`
-  - 追加本次类型拆分任务记录。
+    - 追加本次类型拆分任务记录。
 
 ---
 
@@ -1038,14 +1038,14 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增图片预览状态、打开关闭逻辑、键盘退出、背景滚动锁定和焦点管理。
-  - 将图片缩略图改为按钮触发，并渲染全屏预览层。
+    - 新增图片预览状态、打开关闭逻辑、键盘退出、背景滚动锁定和焦点管理。
+    - 将图片缩略图改为按钮触发，并渲染全屏预览层。
 
 - `src/pages/personal/index.css`
-  - 新增缩略图按钮、焦点态和全屏图片预览层样式。
+    - 新增缩略图按钮、焦点态和全屏图片预览层样式。
 
 - `taskRecord.md`
-  - 追加本次图片全屏预览任务记录。
+    - 追加本次图片全屏预览任务记录。
 
 ---
 
@@ -1068,13 +1068,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 使用 `createPortal` 将图片预览层挂载到 `document.body`。
+    - 使用 `createPortal` 将图片预览层挂载到 `document.body`。
 
 - `src/pages/personal/index.css`
-  - 调整预览层为整屏覆盖布局，并让预览图片在视口中居中。
+    - 调整预览层为整屏覆盖布局，并让预览图片在视口中居中。
 
 - `taskRecord.md`
-  - 追加本次全屏预览布局修复记录。
+    - 追加本次全屏预览布局修复记录。
 
 ---
 
@@ -1097,13 +1097,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增预览关闭状态、退出动画延迟卸载和计时器清理逻辑。
+    - 新增预览关闭状态、退出动画延迟卸载和计时器清理逻辑。
 
 - `src/pages/personal/index.css`
-  - 新增图片预览遮罩和内容的进入、退出过渡动画。
+    - 新增图片预览遮罩和内容的进入、退出过渡动画。
 
 - `taskRecord.md`
-  - 追加本次图片预览动效任务记录。
+    - 追加本次图片预览动效任务记录。
 
 ---
 
@@ -1128,28 +1128,28 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - 新增生产构建期图片预览图生成插件，包含 URL 提取、下载、压缩、缓存和超时兜底逻辑。
+    - 新增生产构建期图片预览图生成插件，包含 URL 提取、下载、压缩、缓存和超时兜底逻辑。
 
 - `src/pages/personal/photoPreviews.generated.ts`
-  - 新增构建生成的图片预览图映射模块。
+    - 新增构建生成的图片预览图映射模块。
 
 - `src/pages/personal/type.d.ts`
-  - 新增 `AircraftPhoto` 类型。
+    - 新增 `AircraftPhoto` 类型。
 
 - `src/pages/personal/constant.ts`
-  - 新增 `aircraftPhotos` 数据，将原图 URL 与构建期预览图 URL 组合输出。
+    - 新增 `aircraftPhotos` 数据，将原图 URL 与构建期预览图 URL 组合输出。
 
 - `src/pages/personal/index.tsx`
-  - 图片列表改用预览图展示，全屏预览继续使用原图。
+    - 图片列表改用预览图展示，全屏预览继续使用原图。
 
 - `package.json`
-  - 新增 `sharp` 和 `@types/node` 构建期开发依赖。
+    - 新增 `sharp` 和 `@types/node` 构建期开发依赖。
 
 - `pnpm-lock.yaml`
-  - 更新依赖锁定信息。
+    - 更新依赖锁定信息。
 
 - `taskRecord.md`
-  - 追加本次构建期图片预览图生成任务记录。
+    - 追加本次构建期图片预览图生成任务记录。
 
 ---
 
@@ -1173,13 +1173,13 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - 移除构建期图片预览图生成实现，改为从插件文件导入并注册 `pluginAircraftPhotoPreviews`。
+    - 移除构建期图片预览图生成实现，改为从插件文件导入并注册 `pluginAircraftPhotoPreviews`。
 
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
-  - 新增飞机照片预览图生成插件实现，封装原有下载、压缩、缓存和生成模块逻辑。
+    - 新增飞机照片预览图生成插件实现，封装原有下载、压缩、缓存和生成模块逻辑。
 
 - `taskRecord.md`
-  - 追加本次 Rsbuild 插件逻辑拆分任务记录。
+    - 追加本次 Rsbuild 插件逻辑拆分任务记录。
 
 ---
 
@@ -1203,13 +1203,13 @@
 ## 修改具体文件
 
 - `src/App.tsx`
-  - 新增 `AUTHOR_PROFILE_URL` 常量和底部“联系作者”外链。
+    - 新增 `AUTHOR_PROFILE_URL` 常量和底部“联系作者”外链。
 
 - `src/App.css`
-  - 新增应用底部和联系作者链接样式，包含 hover、focus-visible 与小屏布局。
+    - 新增应用底部和联系作者链接样式，包含 hover、focus-visible 与小屏布局。
 
 - `taskRecord.md`
-  - 追加本次底部联系作者入口任务记录。
+    - 追加本次底部联系作者入口任务记录。
 
 ---
 
@@ -1233,13 +1233,13 @@
 ## 修改具体文件
 
 - `src/App.tsx`
-  - 将“联系作者”外链从底部 footer 移入顶部导航栏。
+    - 将“联系作者”外链从底部 footer 移入顶部导航栏。
 
 - `src/App.css`
-  - 删除底部 footer 与联系作者链接样式，保留顶部导航统一样式。
+    - 删除底部 footer 与联系作者链接样式，保留顶部导航统一样式。
 
 - `taskRecord.md`
-  - 追加本次联系作者入口位置调整任务记录。
+    - 追加本次联系作者入口位置调整任务记录。
 
 ---
 
@@ -1264,13 +1264,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增全屏原图加载状态、加载完成处理和加载提示结构。
+    - 新增全屏原图加载状态、加载完成处理和加载提示结构。
 
 - `src/pages/personal/index.css`
-  - 新增加载提示、转动指示和加载期间图片隐藏样式。
+    - 新增加载提示、转动指示和加载期间图片隐藏样式。
 
 - `taskRecord.md`
-  - 追加本次全屏图片预览 loading 任务记录。
+    - 追加本次全屏图片预览 loading 任务记录。
 
 ---
 
@@ -1295,13 +1295,13 @@
 ## 修改具体文件
 
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
-  - 提升预览图尺寸、WebP 压缩质量和超时时间，并新增缓存版本校验。
+    - 提升预览图尺寸、WebP 压缩质量和超时时间，并新增缓存版本校验。
 
 - `src/pages/personal/photoPreviews.generated.ts`
-  - 由构建刷新为新版更高清的预览图 data URL 映射。
+    - 由构建刷新为新版更高清的预览图 data URL 映射。
 
 - `taskRecord.md`
-  - 追加本次预览图压缩质量提升任务记录。
+    - 追加本次预览图压缩质量提升任务记录。
 
 ---
 
@@ -1326,10 +1326,10 @@
 ## 修改具体文件
 
 - `rsbuild_plugins/generateMap.ts`
-  - 转换为 TypeScript ESM 写法，补齐 GeoJSON 与 SVG 生成逻辑类型声明。
+    - 转换为 TypeScript ESM 写法，补齐 GeoJSON 与 SVG 生成逻辑类型声明。
 
 - `taskRecord.md`
-  - 追加本次地图生成脚本 TypeScript 化任务记录。
+    - 追加本次地图生成脚本 TypeScript 化任务记录。
 
 ---
 
@@ -1355,22 +1355,22 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - 接入 `@rsbuild/plugin-svgr`，支持 `*.svg?react` 组件导入。
+    - 接入 `@rsbuild/plugin-svgr`，支持 `*.svg?react` 组件导入。
 
 - `package.json`
-  - 新增 `@rsbuild/plugin-svgr` 开发依赖。
+    - 新增 `@rsbuild/plugin-svgr` 开发依赖。
 
 - `pnpm-lock.yaml`
-  - 更新 SVG React 组件插件依赖锁定信息。
+    - 更新 SVG React 组件插件依赖锁定信息。
 
 - `src/pages/personal/index.tsx`
-  - 使用 `WorldMap` 组件渲染机场足迹底图，并改用世界地图 SVG 坐标叠加航线与机场点。
+    - 使用 `WorldMap` 组件渲染机场足迹底图，并改用世界地图 SVG 坐标叠加航线与机场点。
 
 - `src/pages/personal/index.css`
-  - 调整地图底图、航线叠层和清理旧地块/标签样式。
+    - 调整地图底图、航线叠层和清理旧地块/标签样式。
 
 - `taskRecord.md`
-  - 追加本次 SVG 地图组件渲染任务记录。
+    - 追加本次 SVG 地图组件渲染任务记录。
 
 ---
 
@@ -1395,13 +1395,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 将机场经纬度数据点渲染进 SVG 叠层，并统一地图、航线与点位的坐标系。
+    - 将机场经纬度数据点渲染进 SVG 叠层，并统一地图、航线与点位的坐标系。
 
 - `src/pages/personal/index.css`
-  - 设置地图容器宽高比，并将机场点位样式改为 SVG circle 样式。
+    - 设置地图容器宽高比，并将机场点位样式改为 SVG circle 样式。
 
 - `taskRecord.md`
-  - 追加本次地图尺寸适配与坐标点渲染任务记录。
+    - 追加本次地图尺寸适配与坐标点渲染任务记录。
 
 ---
 
@@ -1426,13 +1426,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增机场点悬停状态与名称浮层渲染，并为点位补充键盘焦点交互。
+    - 新增机场点悬停状态与名称浮层渲染，并为点位补充键盘焦点交互。
 
 - `src/pages/personal/index.css`
-  - 新增机场名称 tooltip 样式，统一机场点 hover 与 focus 高亮效果。
+    - 新增机场名称 tooltip 样式，统一机场点 hover 与 focus 高亮效果。
 
 - `taskRecord.md`
-  - 追加本次地图坐标点名称提示任务记录。
+    - 追加本次地图坐标点名称提示任务记录。
 
 ---
 
@@ -1457,13 +1457,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增机场所属国家国旗映射、鼠标坐标状态与国旗光标渲染逻辑。
+    - 新增机场所属国家国旗映射、鼠标坐标状态与国旗光标渲染逻辑。
 
 - `src/pages/personal/index.css`
-  - 新增国旗光标样式，并在机场点 hover 时隐藏原生光标。
+    - 新增国旗光标样式，并在机场点 hover 时隐藏原生光标。
 
 - `taskRecord.md`
-  - 追加本次地图点位国旗光标任务记录。
+    - 追加本次地图点位国旗光标任务记录。
 
 ---
 
@@ -1489,19 +1489,19 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 新增通用地图组件及其标注、航线数据类型，封装地图渲染与交互逻辑。
+    - 新增通用地图组件及其标注、航线数据类型，封装地图渲染与交互逻辑。
 
 - `src/components/map/index.css`
-  - 新增地图组件样式，承载底图容器、航线、点位、tooltip、国旗光标和图例视觉。
+    - 新增地图组件样式，承载底图容器、航线、点位、tooltip、国旗光标和图例视觉。
 
 - `src/pages/personal/index.tsx`
-  - 改为生成机场标注数据并调用通用地图组件，移除页面内地图坐标投影与 hover 交互逻辑。
+    - 改为生成机场标注数据并调用通用地图组件，移除页面内地图坐标投影与 hover 交互逻辑。
 
 - `src/pages/personal/index.css`
-  - 删除已迁移到地图组件内的地图相关样式。
+    - 删除已迁移到地图组件内的地图相关样式。
 
 - `taskRecord.md`
-  - 追加本次地图通用组件拆分任务记录。
+    - 追加本次地图通用组件拆分任务记录。
 
 ---
 
@@ -1525,13 +1525,13 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 将国旗光标改为 portal 渲染，保持基于鼠标 `clientX/clientY` 的固定定位。
+    - 将国旗光标改为 portal 渲染，保持基于鼠标 `clientX/clientY` 的固定定位。
 
 - `src/components/map/index.css`
-  - 调整国旗光标偏移方式，使其显示在鼠标正上方。
+    - 调整国旗光标偏移方式，使其显示在鼠标正上方。
 
 - `taskRecord.md`
-  - 追加本次国旗光标位置修正任务记录。
+    - 追加本次国旗光标位置修正任务记录。
 
 ---
 
@@ -1554,10 +1554,10 @@
 ## 修改具体文件
 
 - `src/components/map/index.css`
-  - 将国旗光标偏移从上方悬浮调整为鼠标 hover 位置居中显示。
+    - 将国旗光标偏移从上方悬浮调整为鼠标 hover 位置居中显示。
 
 - `taskRecord.md`
-  - 追加本次国旗光标 hover 位置微调任务记录。
+    - 追加本次国旗光标 hover 位置微调任务记录。
 
 ---
 
@@ -1581,10 +1581,10 @@
 ## 修改具体文件
 
 - `src/components/map/index.css`
-  - 将地图标记点默认光标改为隐藏，消除切换到国旗光标前的问号闪烁。
+    - 将地图标记点默认光标改为隐藏，消除切换到国旗光标前的问号闪烁。
 
 - `taskRecord.md`
-  - 追加本次国旗光标闪烁修复任务记录。
+    - 追加本次国旗光标闪烁修复任务记录。
 
 ---
 
@@ -1608,10 +1608,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 新增通用组件目录说明，并补充页面/组件模块四类文件的职责约定。
+    - 新增通用组件目录说明，并补充页面/组件模块四类文件的职责约定。
 
 - `taskRecord.md`
-  - 追加本次项目规则维护任务记录。
+    - 追加本次项目规则维护任务记录。
 
 ---
 
@@ -1637,13 +1637,13 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 新增地图缩放、局部锚点计算、边界收束和放大后拖拽平移逻辑。
+    - 新增地图缩放、局部锚点计算、边界收束和放大后拖拽平移逻辑。
 
 - `src/components/map/index.css`
-  - 新增地图视口层样式、放大/拖拽光标状态和触控拖拽配置。
+    - 新增地图视口层样式、放大/拖拽光标状态和触控拖拽配置。
 
 - `taskRecord.md`
-  - 追加本次地图缩放拖拽交互任务记录。
+    - 追加本次地图缩放拖拽交互任务记录。
 
 ---
 
@@ -1665,10 +1665,10 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 原生非 passive `wheel` 监听、`stopPropagation`、tooltip 的 `transformOrigin` 与相关 hooks 调整。
+    - 原生非 passive `wheel` 监听、`stopPropagation`、tooltip 的 `transformOrigin` 与相关 hooks 调整。
 
 - `taskRecord.md`
-  - 追加本次地图滚轮与 tooltip 修正记录。
+    - 追加本次地图滚轮与 tooltip 修正记录。
 
 ---
 
@@ -1690,16 +1690,16 @@
 ## 修改具体文件
 
 - `src/pages/home/type.d.ts`（新建）
-  - 页面相关接口与类型别名。
+    - 页面相关接口与类型别名。
 
 - `src/pages/home/constant.ts`（新建）
-  - `AIRPLANE_DATA_URL`、`ALL_MANUFACTURERS_VALUE`、`DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER`、`AIRLINE_REFERENCE_SOURCES`。
+    - `AIRPLANE_DATA_URL`、`ALL_MANUFACTURERS_VALUE`、`DEFAULT_PASSENGER_AIRCRAFT_SORT_ORDER`、`AIRLINE_REFERENCE_SOURCES`。
 
 - `src/pages/home/index.tsx`
-  - 移除内联类型与常量，改为从上述模块导入。
+    - 移除内联类型与常量，改为从上述模块导入。
 
 - `taskRecord.md`
-  - 追加本次首页模块拆分记录。
+    - 追加本次首页模块拆分记录。
 
 ---
 
@@ -1722,19 +1722,19 @@
 ## 修改具体文件
 
 - `src/pages/home/type.d.ts`
-  - `AirlineFleet`、`AirplaneDataItem` 不再包含 `imgs`。
+    - `AirlineFleet`、`AirplaneDataItem` 不再包含 `imgs`。
 
 - `src/pages/home/index.tsx`
-  - 移除图片按钮、弹窗及相关 effect 与 state。
+    - 移除图片按钮、弹窗及相关 effect 与 state。
 
 - `src/pages/home/index.css`
-  - 移除图片按钮与弹窗样式；微调航司卡片 header。
+    - 移除图片按钮与弹窗样式；微调航司卡片 header。
 
 - `public/data/airplan.json`
-  - 删除全部 `imgs` 属性。
+    - 删除全部 `imgs` 属性。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1755,9 +1755,9 @@
 ## 修改具体文件
 
 - `src/pages/references/index.css`
-  - 移除参考资料外链 hover/focus 时的边框高亮。
+    - 移除参考资料外链 hover/focus 时的边框高亮。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1778,9 +1778,9 @@
 ## 修改具体文件
 
 - `src/pages/references/index.css`
-  - 调整参考资料概览胶囊内文本垂直对齐方式。
+    - 调整参考资料概览胶囊内文本垂直对齐方式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1803,19 +1803,19 @@
 ## 修改具体文件
 
 - `src/App.tsx`
-  - 新增“参考资料”导航项、懒加载页面和 `/references` 路由。
+    - 新增“参考资料”导航项、懒加载页面和 `/references` 路由。
 - `src/pages/home/index.tsx`
-  - 移除首页内嵌参考来源区块。
+    - 移除首页内嵌参考来源区块。
 - `src/pages/home/index.css`
-  - 移除首页参考来源折叠区样式。
+    - 移除首页参考来源折叠区样式。
 - `src/pages/references/index.tsx`
-  - 新增独立参考资料页面，复用现有数据常量并展示来源分组。
+    - 新增独立参考资料页面，复用现有数据常量并展示来源分组。
 - `src/pages/references/index.css`
-  - 新增参考资料页布局、列表、外链和响应式样式。
+    - 新增参考资料页布局、列表、外链和响应式样式。
 - `DESIGN.md`
-  - 更新当前产品结构中的路由说明。
+    - 更新当前产品结构中的路由说明。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1838,12 +1838,12 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 新增 `getReferenceUrlHost` 辅助函数。
-  - 优化参考来源区域结构与链接展示文案。
+    - 新增 `getReferenceUrlHost` 辅助函数。
+    - 优化参考来源区域结构与链接展示文案。
 - `src/pages/home/index.css`
-  - 重写参考来源区 summary、分组、链接行与移动端样式。
+    - 重写参考来源区 summary、分组、链接行与移动端样式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1866,13 +1866,13 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 将机场列表包裹为可过渡的折叠内容区域。
-  - 保留按钮控制关系，并用 `aria-hidden` 表达内容区折叠状态。
+    - 将机场列表包裹为可过渡的折叠内容区域。
+    - 保留按钮控制关系，并用 `aria-hidden` 表达内容区折叠状态。
 - `src/pages/personal/index.css`
-  - 新增折叠内容区展开/收起过渡效果。
-  - 移除 `hidden` 直接 `display: none` 的即时切换样式。
+    - 新增折叠内容区展开/收起过渡效果。
+    - 移除 `hidden` 直接 `display: none` 的即时切换样式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1895,13 +1895,13 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 航司机队转换保留英文名字段，并在航司标题中文名后展示英文名。
+    - 航司机队转换保留英文名字段，并在航司标题中文名后展示英文名。
 - `src/pages/home/index.css`
-  - 新增 `.airline-entry__heading`、`.airline-entry__english-name`、`.airline-entry__meta` 样式，控制同行标题与辅助字号。
+    - 新增 `.airline-entry__heading`、`.airline-entry__english-name`、`.airline-entry__meta` 样式，控制同行标题与辅助字号。
 - `src/pages/home/type.d.ts`
-  - 为 `AirlineFleet` 增加 `airlineEnglishName` 字段说明。
+    - 为 `AirlineFleet` 增加 `airlineEnglishName` 字段说明。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1923,11 +1923,11 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 为每个航司对象新增 `airlineEnglishName` 字段，值为用户提供的英文航司名称。
+    - 为每个航司对象新增 `airlineEnglishName` 字段，值为用户提供的英文航司名称。
 - `src/pages/home/type.d.ts`
-  - 为 `AirplaneDataItem` 增加 `airlineEnglishName` 类型字段及说明。
+    - 为 `AirplaneDataItem` 增加 `airlineEnglishName` 类型字段及说明。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1949,16 +1949,16 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - `models` 内由 `string[]` 改为 `Record<string, "" | string>`（当前值均为空串）。
+    - `models` 内由 `string[]` 改为 `Record<string, "" | string>`（当前值均为空串）。
 
 - `src/pages/home/type.d.ts`
-  - `AirplaneDataItem.models` 类型与上述结构对齐。
+    - `AirplaneDataItem.models` 类型与上述结构对齐。
 
 - `src/pages/home/index.tsx`
-  - `createAirlineFleets` 从新映射结构提取机型名称数组。
+    - `createAirlineFleets` 从新映射结构提取机型名称数组。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -1981,16 +1981,16 @@
 ## 修改具体文件
 
 - `src/pages/home/type.d.ts`
-  - 新增 `AircraftModelEntry`；`ManufacturerFleet.models` 改为该数组；补充 `AirplaneDataItem.models` 注释。
+    - 新增 `AircraftModelEntry`；`ManufacturerFleet.models` 改为该数组；补充 `AirplaneDataItem.models` 注释。
 
 - `src/pages/home/index.tsx`
-  - `isHttpOrHttpsUrl`、数据映射与机型列表条件渲染外链。
+    - `isHttpOrHttpsUrl`、数据映射与机型列表条件渲染外链。
 
 - `src/pages/home/index.css`
-  - 机型列表内链接颜色与下划线样式。
+    - 机型列表内链接颜色与下划线样式。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2013,13 +2013,13 @@
 ## 修改具体文件
 
 - `src/pages/home/constant.ts`
-  - 新增 `ALL_AIRCRAFT_MODELS_VALUE`。
+    - 新增 `ALL_AIRCRAFT_MODELS_VALUE`。
 
 - `src/pages/home/index.tsx`
-  - `getAircraftModelOptions`、`filterAirlineFleets` 型号参数、型号选项 memo、`useEffect` 校正非法选中、工具栏「具体型号」下拉。
+    - `getAircraftModelOptions`、`filterAirlineFleets` 型号参数、型号选项 memo、`useEffect` 校正非法选中、工具栏「具体型号」下拉。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2041,10 +2041,10 @@
 ## 修改具体文件
 
 - `src/pages/home/index.css`
-  - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters`、`.fleet-filter` 布局与响应式调整。
+    - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters`、`.fleet-filter` 布局与响应式调整。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2065,10 +2065,10 @@
 ## 修改具体文件
 
 - `src/pages/home/index.css`
-  - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters` 两行布局调整。
+    - `.fleet-toolbar`、`.fleet-summary`、`.fleet-filters` 两行布局调整。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2088,10 +2088,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 补充类型与成员注释约定。
+    - 补充类型与成员注释约定。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2111,10 +2111,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 补充上述 edge case 约定。
+    - 补充上述 edge case 约定。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2134,10 +2134,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 补充函数内部逻辑注释约定。
+    - 补充函数内部逻辑注释约定。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2157,10 +2157,10 @@
 ## 修改具体文件
 
 - `.cursor/rules/project-base-rules.mdc`
-  - 增加技术栈参考文档链接。
+    - 增加技术栈参考文档链接。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2180,10 +2180,10 @@
 ## 修改具体文件
 
 - `src/pages/home/constant.ts`
-  - 新增参考来源项。
+    - 新增参考来源项。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2204,13 +2204,13 @@
 ## 修改具体文件
 
 - `src/App.tsx`
-  - 飞书表单 URL 常量与导航链接。
+    - 飞书表单 URL 常量与导航链接。
 
 - `src/App.css`
-  - `.app-nav__link--cta` 样式。
+    - `.app-nav__link--cta` 样式。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2232,19 +2232,19 @@
 ## 修改具体文件
 
 - `src/constants/external-links.ts`
-  - 新增：`CONTRIBUTION_FORM_URL` 常量与文件说明注释。
+    - 新增：`CONTRIBUTION_FORM_URL` 常量与文件说明注释。
 
 - `src/App.tsx`
-  - 从共享常量导入表单 URL，移除本地重复字符串。
+    - 从共享常量导入表单 URL，移除本地重复字符串。
 
 - `src/pages/home/index.tsx`
-  - 导入 `CONTRIBUTION_FORM_URL`；概览区结构与「补充资料」链接。
+    - 导入 `CONTRIBUTION_FORM_URL`；概览区结构与「补充资料」链接。
 
 - `src/pages/home/index.css`
-  - `.fleet-summary`、`.fleet-summary__stats`、`.fleet-summary__cta`；统计胶囊选择器改为 `.fleet-summary__stats span`。
+    - `.fleet-summary`、`.fleet-summary__stats`、`.fleet-summary__cta`；统计胶囊选择器改为 `.fleet-summary__stats span`。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2269,25 +2269,25 @@
 ## 修改具体文件
 
 - `rsbuild.config.ts`
-  - viewport 增加 `viewport-fit=cover`。
+    - viewport 增加 `viewport-fit=cover`。
 
 - `src/App.tsx`
-  - 移除未使用的 `CONTRIBUTION_FORM_URL` 导入与注释掉的「补充资料」导航。
+    - 移除未使用的 `CONTRIBUTION_FORM_URL` 导入与注释掉的「补充资料」导航。
 
 - `src/App.css`
-  - 壳层横向裁剪、`app-header` / `app-main` 安全区与内边距；`page-panel` `max-width`；导航链接 `inline-flex`；640px 以下触控高度与标题字号。
+    - 壳层横向裁剪、`app-header` / `app-main` 安全区与内边距；`page-panel` `max-width`；导航链接 `inline-flex`；640px 以下触控高度与标题字号。
 
 - `src/pages/home/index.css`
-  - 640px 以下工具条、概览、筛选、列表与参考来源栅格的移动端规则。
+    - 640px 以下工具条、概览、筛选、列表与参考来源栅格的移动端规则。
 
 - `src/pages/personal/index.css`
-  - 640px 以下概览、图库、机场列表与照片预览的移动端规则。
+    - 640px 以下概览、图库、机场列表与照片预览的移动端规则。
 
 - `src/components/map/index.css`
-  - 640px 以下地图装饰边距、图例安全区、标记与提示样式。
+    - 640px 以下地图装饰边距、图例安全区、标记与提示样式。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2308,10 +2308,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 中国东方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
+    - 中国东方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2332,10 +2332,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 中国南方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
+    - 中国南方航空：Airbus / Boeing / COMAC 下补充上述机型与空链接占位。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2356,10 +2356,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 中国国际航空：Boeing / COMAC 下补充上述机型与空链接占位。
+    - 中国国际航空：Boeing / COMAC 下补充上述机型与空链接占位。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2380,10 +2380,10 @@
 ## 修改具体文件
 
 - `public/data/airplan.json`
-  - 中国国际航空：Airbus 增加 `A319`、`A321NX`；Boeing 增加 `B747-8`；COMAC 增加 `C919-700ER`，均为空链接占位。
+    - 中国国际航空：Airbus 增加 `A319`、`A321NX`；Boeing 增加 `B747-8`；COMAC 增加 `C919-700ER`，均为空链接占位。
 
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2404,9 +2404,9 @@
 ## 修改具体文件
 
 - `src/pages/home/index.css`
-  - `.fleet-results`：细滚动条配色、WebKit 圆角 thumb、hover 提亮；去掉右侧手填 padding。
+    - `.fleet-results`：细滚动条配色、WebKit 圆角 thumb、hover 提亮；去掉右侧手填 padding。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2427,9 +2427,9 @@
 ## 修改具体文件
 
 - `src/App.css`
-  - `:root` 视口滚动条细轨道与同色系 thumb/hover。
+    - `:root` 视口滚动条细轨道与同色系 thumb/hover。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2450,9 +2450,9 @@
 ## 修改具体文件
 
 - `README.md`
-  - 站点简介、功能、技术栈、本地命令与外链；中英文混排以中文为主便于读者理解。
+    - 站点简介、功能、技术栈、本地命令与外链；中英文混排以中文为主便于读者理解。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2473,13 +2473,13 @@
 ## 修改具体文件
 
 - `src/App.css`
-  - 顶层滚动 token；视口与其他挂载 `scroll-area-night` 的容器共用滚动条样式。
+    - 顶层滚动 token；视口与其他挂载 `scroll-area-night` 的容器共用滚动条样式。
 - `src/pages/home/index.tsx`
-  - `.fleet-results` 增加 `scroll-area-night`。
+    - `.fleet-results` 增加 `scroll-area-night`。
 - `src/pages/home/index.css`
-  - 删除与全局重复的 Fleet 纵向滚动条规则。
+    - 删除与全局重复的 Fleet 纵向滚动条规则。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2500,9 +2500,9 @@
 ## 修改具体文件
 
 - `DESIGN.md`
-  - 与设计实现同步的语义 token、结构与 Do/Don't 更新。
+    - 与设计实现同步的语义 token、结构与 Do/Don't 更新。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2523,21 +2523,21 @@
 ## 修改具体文件
 
 - `src/App.css`
-  - `--pl-*` 深浅两套 token；`.app-header__actions`、`.theme-toggle`。
+    - `--pl-*` 深浅两套 token；`.app-header__actions`、`.theme-toggle`。
 - `src/App.tsx`
-  - 主题状态、持久化与顶栏 `ThemeToggle` 编排。
+    - 主题状态、持久化与顶栏 `ThemeToggle` 编排。
 - `src/utils/themePreference.ts`
-  - 存储键、读写与 `meta theme-color` 辅助函数（新建）。
+    - 存储键、读写与 `meta theme-color` 辅助函数（新建）。
 - `src/components/theme-toggle/index.tsx`
-  - 无障碍主题切换按钮（新建）。
+    - 无障碍主题切换按钮（新建）。
 - `src/pages/home/index.css`、`src/pages/personal/index.css`、`src/components/map/index.css`
-  - 颜色改为 `var(--pl-*)`；地图在亮色下补充 route/marker 对比微调。
+    - 颜色改为 `var(--pl-*)`；地图在亮色下补充 route/marker 对比微调。
 - `rsbuild.config.ts`
-  - `html.tags` 首屏主题恢复脚本。
+    - `html.tags` 首屏主题恢复脚本。
 - `DESIGN.md`
-  - §2.4 亮色说明、双主题概览、Header 与 Do 条款小幅更新。
+    - §2.4 亮色说明、双主题概览、Header 与 Do 条款小幅更新。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2556,11 +2556,11 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 集中个人页机场分组、国家地区计数、全屏预览关闭时长、地图 markers 与国旗映射逻辑。
+    - 集中个人页机场分组、国家地区计数、全屏预览关闭时长、地图 markers 与国旗映射逻辑。
 - `src/pages/personal/index.tsx`
-  - 仅保留组件与从 `constant` 的导入。
+    - 仅保留组件与从 `constant` 的导入。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2580,17 +2580,17 @@
 ## 修改具体文件
 
 - `src/components/map/canvasMap.ts`（新建）
-  - Canvas 绘制与超采样、命中检测、视口数学工具。
+    - Canvas 绘制与超采样、命中检测、视口数学工具。
 - `src/components/map/type.d.ts`（新建）
-  - 地图组件公共类型。
+    - 地图组件公共类型。
 - `src/components/map/index.tsx`
-  - Canvas 渲染主流程，替代 `map.svg?react` + SVG overlay。
+    - Canvas 渲染主流程，替代 `map.svg?react` + SVG overlay。
 - `src/components/map/index.css`
-  - Canvas/主题绘制变量与样式清理。
+    - Canvas/主题绘制变量与样式清理。
 - `src/env.d.ts`
-  - `*.svg?url` 模块声明。
+    - `*.svg?url` 模块声明。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2609,9 +2609,9 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 底图加载就绪状态与首帧重绘触发修复。
+    - 底图加载就绪状态与首帧重绘触发修复。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2629,9 +2629,9 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - 画布内实时跟随指针的国旗光标展示逻辑。
+    - 画布内实时跟随指针的国旗光标展示逻辑。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2650,9 +2650,9 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - rAF 批处理重绘、拖拽视口 ref 化、国旗光标直连 DOM 更新。
+    - rAF 批处理重绘、拖拽视口 ref 化、国旗光标直连 DOM 更新。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2670,9 +2670,9 @@
 ## 修改具体文件
 
 - `src/components/map/canvasMap.ts`
-  - 标记点屏幕空间固定尺寸绘制与坐标投影。
+    - 标记点屏幕空间固定尺寸绘制与坐标投影。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2691,11 +2691,11 @@
 ## 修改具体文件
 
 - `src/components/map/index.tsx`
-  - hover 与 Canvas 重绘解耦、悬停状态去重、光标 DOM 直连。
+    - hover 与 Canvas 重绘解耦、悬停状态去重、光标 DOM 直连。
 - `src/components/map/index.css`
-  - tooltip 合成层提示。
+    - tooltip 合成层提示。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2715,11 +2715,11 @@
 ## 修改具体文件
 
 - `src/components/map/canvasMap.ts`
-  - 交互期画布指标、底图离屏缓存、blit 与绘制函数拆分。
+    - 交互期画布指标、底图离屏缓存、blit 与绘制函数拆分。
 - `src/components/map/index.tsx`
-  - 拖拽快路径、缓存失效键、画布尺寸复用与拖拽起止流程调整。
+    - 拖拽快路径、缓存失效键、画布尺寸复用与拖拽起止流程调整。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2738,13 +2738,13 @@
 ## 修改具体文件
 
 - `src/components/map/map.svg`
-  - Night Flight Archive 配色与无障碍文案更新。
+    - Night Flight Archive 配色与无障碍文案更新。
 - `src/components/map/map-light.svg`
-  - Daylight Archive 亮色主题变体（新建）。
+    - Daylight Archive 亮色主题变体（新建）。
 - `src/components/map/index.tsx`
-  - 双主题 SVG 加载与 `worldMapTheme` 状态联动。
+    - 双主题 SVG 加载与 `worldMapTheme` 状态联动。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2764,11 +2764,11 @@
 ## 修改具体文件
 
 - `src/components/map/map.svg`
-  - 洲界、国界与填色对比度调整。
+    - 洲界、国界与填色对比度调整。
 - `src/components/map/map-light.svg`
-  - 同上（亮色主题参数）。
+    - 同上（亮色主题参数）。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2787,13 +2787,13 @@
 ## 修改具体文件
 
 - `src/constants/external-links.ts`
-  - 承接机场打卡静态数据与类型定义。
+    - 承接机场打卡静态数据与类型定义。
 - `src/pages/personal/constant.ts`
-  - 移除内联数组，转引 constants。
+    - 移除内联数组，转引 constants。
 - `src/pages/personal/type.d.ts`
-  - `CheckedAirport` 类型来源改为 constants。
+    - `CheckedAirport` 类型来源改为 constants。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2813,9 +2813,9 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 新增航迹构造辅助函数；`MAP_ROUTES` 改为基于 `CHECKED_AIRPORTS` 的实际航程。
+    - 新增航迹构造辅助函数；`MAP_ROUTES` 改为基于 `CHECKED_AIRPORTS` 的实际航程。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2834,9 +2834,9 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 更新 `MAP_ROUTES` 机场映射与注释。
+    - 更新 `MAP_ROUTES` 机场映射与注释。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2854,9 +2854,9 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - `MAP_ROUTES` 新增 6 条国内航线。
+    - `MAP_ROUTES` 新增 6 条国内航线。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2874,9 +2874,9 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - `MAP_ROUTES` 新增 7 条航线。
+    - `MAP_ROUTES` 新增 7 条航线。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2896,11 +2896,11 @@
 ## 修改具体文件
 
 - `src/components/map/type.d.ts`、`canvasMap.ts`、`index.tsx`、`index.css`
-  - 双轨航迹绘制与图例。
+    - 双轨航迹绘制与图例。
 - `src/pages/personal/type.d.ts`、`constant.ts`、`index.tsx`
-  - 航迹 scope 数据与图例入参调整。
+    - 航迹 scope 数据与图例入参调整。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2940,9 +2940,9 @@
 ## 修改具体文件
 
 - `docs/map.md`
-  - 新增世界地图组件使用文档。
+    - 新增世界地图组件使用文档。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ## 日期
 
@@ -2959,9 +2959,9 @@
 ## 修改具体文件
 
 - `src/pages/personal/constant.ts`
-  - 新增大兴—庆阳、昆明—重庆航线。
+    - 新增大兴—庆阳、昆明—重庆航线。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -2984,12 +2984,12 @@
 ## 修改具体文件
 
 - `src/pages/personal/index.tsx`
-  - 新增机场国家/地区分组展开状态与切换逻辑。
-  - 将机场列表改为默认折叠、点击 header 展开/收起。
+    - 新增机场国家/地区分组展开状态与切换逻辑。
+    - 将机场列表改为默认折叠、点击 header 展开/收起。
 - `src/pages/personal/index.css`
-  - 新增折叠按钮、展开指示、隐藏列表与小屏适配样式。
+    - 新增折叠按钮、展开指示、隐藏列表与小屏适配样式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3011,10 +3011,10 @@
 ## 修改具体文件
 
 - `src/pages/home/constant.ts`
-  - 扩展 `AIRLINE_REFERENCE_SOURCES`，新增多家国内外航司参考来源。
-  - 合并瑞安航空、全日空、亚洲航空、泰国航空、泛航航空、泰国狮子航空、国泰航空和汉莎航空等既有条目来源。
+    - 扩展 `AIRLINE_REFERENCE_SOURCES`，新增多家国内外航司参考来源。
+    - 合并瑞安航空、全日空、亚洲航空、泰国航空、泛航航空、泰国狮子航空、国泰航空和汉莎航空等既有条目来源。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3035,9 +3035,9 @@
 ## 修改具体文件
 
 - `src/pages/references/index.css`
-  - 调整参考资料概览胶囊内文本垂直对齐方式。
+    - 调整参考资料概览胶囊内文本垂直对齐方式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3060,11 +3060,11 @@
 ## 修改具体文件
 
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`
-  - 修复 URL 提取正则；增加空结果保护；重构生成逻辑为独立函数。
+    - 修复 URL 提取正则；增加空结果保护；重构生成逻辑为独立函数。
 - `src/pages/personal/photoPreviews.generated.ts`
-  - 构建插件重新生成的预览图 data URL 映射。
+    - 构建插件重新生成的预览图 data URL 映射。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3085,13 +3085,13 @@
 ## 修改具体文件
 
 - `src/components/Select/type.d.ts`
-  - 新增 `SelectOption`、`SelectProps` 类型声明。
+    - 新增 `SelectOption`、`SelectProps` 类型声明。
 - `src/components/Select/index.css`
-  - 通用下拉字段与控件样式，对齐档案型深色/亮色主题 token。
+    - 通用下拉字段与控件样式，对齐档案型深色/亮色主题 token。
 - `src/components/Select/index.tsx`
-  - 导出 `Select` 组件与类型。
+    - 导出 `Select` 组件与类型。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3113,15 +3113,15 @@
 ## 修改具体文件
 
 - `src/pages/home/index.tsx`
-  - 引入 `Select` 并替换 3 处筛选下拉。
+    - 引入 `Select` 并替换 3 处筛选下拉。
 - `src/pages/personal/index.tsx`
-  - 引入 `Select` 并替换照片目录下拉。
+    - 引入 `Select` 并替换照片目录下拉。
 - `src/pages/home/index.css`
-  - 移除 select 专用规则；保留搜索 input 样式与 Select 布局修饰。
+    - 移除 select 专用规则；保留搜索 input 样式与 Select 布局修饰。
 - `src/pages/personal/index.css`
-  - 移除 select/label 重复样式，保留 `max-width` 布局修饰。
+    - 移除 select/label 重复样式，保留 `max-width` 布局修饰。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3142,11 +3142,11 @@
 ## 修改具体文件
 
 - `src/components/Select/index.css`
-  - 新增 hover、active、chevron 与 label 联动动效；扩展 reduced-motion 覆盖。
+    - 新增 hover、active、chevron 与 label 联动动效；扩展 reduced-motion 覆盖。
 - `src/components/Select/index.tsx`
-  - 更新组件注释以反映动效分层。
+    - 更新组件注释以反映动效分层。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3167,11 +3167,11 @@
 ## 修改具体文件
 
 - `src/components/Select/index.css`
-  - 数据字色、内嵌高光、affordance 轨道与状态联动样式。
+    - 数据字色、内嵌高光、affordance 轨道与状态联动样式。
 - `src/components/Select/index.tsx`
-  - 增加 affordance 包裹结构，微调 chevron SVG。
+    - 增加 affordance 包裹结构，微调 chevron SVG。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3193,13 +3193,13 @@
 ## 修改具体文件
 
 - `src/components/Select/index.tsx`
-  - 自定义 listbox 选项渲染与 combobox 交互逻辑。
+    - 自定义 listbox 选项渲染与 combobox 交互逻辑。
 - `src/components/Select/index.css`
-  - 下拉面板、选项行、展开态与 check 图标样式。
+    - 下拉面板、选项行、展开态与 check 图标样式。
 - `src/components/Select/type.d.ts`
-  - 更新组件契约说明。
+    - 更新组件契约说明。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3221,11 +3221,11 @@
 ## 修改具体文件
 
 - `src/components/Select/index.tsx`
-  - 修正 label/控件 DOM 结构；触发器 click 阻止冒泡；外点监听使用 capture。
+    - 修正 label/控件 DOM 结构；触发器 click 阻止冒泡；外点监听使用 capture。
 - `src/components/Select/index.css`
-  - `pl-select-field__label` 改为 block 级可点击 label。
+    - `pl-select-field__label` 改为 block 级可点击 label。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -3247,11 +3247,11 @@
 ## 修改具体文件
 
 - `src/components/Select/index.tsx`
-  - Portal 渲染 listbox；`computeMenuPlacement` 与滚动/缩放重定位。
+    - Portal 渲染 listbox；`computeMenuPlacement` 与滚动/缩放重定位。
 - `src/components/Select/index.css`
-  - 新增 `pl-select-menu--portal` fixed 定位样式。
+    - 新增 `pl-select-menu--portal` fixed 定位样式。
 - `taskRecord.md`
-  - 追加本次任务记录。
+    - 追加本次任务记录。
 
 ---
 
@@ -4174,7 +4174,7 @@
 - `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：新增缩略图加载完成状态和渲染前骨架占位。
 - `src/pages/personal/index.css`：补充缩略图媒体槽、骨架层和淡入样式。
 - `taskRecord.md`：追加本次照片页骨架屏任务记录。
-整理一份基于 VueUse `useIdle` 的站点用户活跃时长统计 Hook 技术方案文档，便于直接复制、评审和后续实现。
+  整理一份基于 VueUse `useIdle` 的站点用户活跃时长统计 Hook 技术方案文档，便于直接复制、评审和后续实现。
 
 ## 完成过程
 
@@ -4243,7 +4243,7 @@
 
 - `public/data/airplan.json`：将芬兰航空 A319/A320/A321/A330/A350、ATR 72-500、E190 的机型链接改为 Planespotters 来源。
 - `taskRecord.md`：追加本次数据来源调整任务记录。
-<<<<<<< HEAD
+  <<<<<<< HEAD
 
 ## 日期
 
@@ -4428,8 +4428,9 @@
 
 - `src/pages/personal/constants/photoMeta.ts`：在 `AIRCRAFT_PHOTO_ORIGINAL_URLS` 中新增两条 `plane-model` 图片 URL。
 - `taskRecord.md`：追加本次飞机照片原图 URL 补充任务记录。
-=======
->>>>>>> 66185a4 (feat: add air line data)
+  \=======
+
+> > > > > > > 66185a4 (feat: add air line data)
 
 ## 日期
 

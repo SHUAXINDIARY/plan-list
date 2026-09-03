@@ -6,9 +6,9 @@ optimized for agents and LLMs.
 ## Structure
 
 - `rules/` - Individual rule files (one per rule)
-  - `_sections.md` - Section metadata (titles, impacts, descriptions)
-  - `_template.md` - Template for creating new rules
-  - `area-description.md` - Individual rule files
+    - `_sections.md` - Section metadata (titles, impacts, descriptions)
+    - `_template.md` - Template for creating new rules
+    - `area-description.md` - Individual rule files
 - `metadata.json` - Document metadata (version, organization, abstract)
 - **`AGENTS.md`** - Compiled output (generated)
 
@@ -99,20 +99,20 @@ optimized for agents and LLMs.
 
 1. Copy `rules/_template.md` to `rules/area-description.md`
 2. Choose the appropriate area prefix:
-   - `rendering-` for Core Rendering
-   - `list-performance-` for List Performance
-   - `animation-` for Animation
-   - `scroll-` for Scroll Performance
-   - `navigation-` for Navigation
-   - `react-state-` for React State
-   - `state-` for State Architecture
-   - `react-compiler-` for React Compiler
-   - `ui-` for User Interface
-   - `design-system-` for Design System
-   - `monorepo-` for Monorepo
-   - `imports-` for Third-Party Dependencies
-   - `js-` for JavaScript
-   - `fonts-` for Fonts
+    - `rendering-` for Core Rendering
+    - `list-performance-` for List Performance
+    - `animation-` for Animation
+    - `scroll-` for Scroll Performance
+    - `navigation-` for Navigation
+    - `react-state-` for React State
+    - `state-` for State Architecture
+    - `react-compiler-` for React Compiler
+    - `ui-` for User Interface
+    - `design-system-` for Design System
+    - `monorepo-` for Monorepo
+    - `imports-` for Third-Party Dependencies
+    - `js-` for JavaScript
+    - `fonts-` for Fonts
 3. Fill in the frontmatter and content
 4. Ensure you have clear examples with explanations
 

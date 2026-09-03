@@ -1,266 +1,276 @@
 .annotated-world-map {
-  --pl-map-route-international: oklch(0.5 0.095 235 / 0.64);
-  --pl-map-route-domestic: oklch(0.5 0.065 185 / 0.58);
-  --pl-map-marker-domestic-fill: oklch(0.5 0.07 185 / 0.94);
-  --pl-map-marker-domestic-stroke: oklch(0.83 0.055 180 / 0.94);
-  --pl-map-marker-domestic-fill-active: oklch(0.61 0.095 185 / 0.98);
-  --pl-map-marker-domestic-stroke-active: oklch(0.96 0.025 180 / 0.98);
-  --pl-map-marker-international-fill: oklch(0.54 0.105 235 / 0.96);
-  --pl-map-marker-international-stroke: oklch(0.93 0.03 230 / 0.98);
-  --pl-map-marker-international-fill-active: oklch(0.65 0.12 235 / 0.98);
-  --pl-map-marker-international-stroke-active: oklch(0.98 0.012 230 / 1);
-  --pl-map-tooltip-bg: rgba(250, 252, 251, 0.96);
-  --pl-map-tooltip-border: rgba(46, 104, 114, 0.3);
-  --pl-map-tooltip-text: #233d43;
-  --pl-map-tooltip-shadow: 0 0.75rem 1.45rem rgba(38, 64, 68, 0.16);
-  position: relative;
-  aspect-ratio: 1200 / 650;
-  margin-top: 1rem;
-  overflow: hidden;
-  touch-action: none;
-  background: var(--pl-map-bg);
-  border: 1px solid var(--pl-map-border);
-  border-radius: 1rem;
-  box-shadow: var(--pl-map-inset);
+    --pl-map-route-international: oklch(0.5 0.095 235 / 0.64);
+    --pl-map-route-domestic: oklch(0.5 0.065 185 / 0.58);
+    --pl-map-marker-domestic-fill: oklch(0.5 0.07 185 / 0.94);
+    --pl-map-marker-domestic-stroke: oklch(0.83 0.055 180 / 0.94);
+    --pl-map-marker-domestic-fill-active: oklch(0.61 0.095 185 / 0.98);
+    --pl-map-marker-domestic-stroke-active: oklch(0.96 0.025 180 / 0.98);
+    --pl-map-marker-international-fill: oklch(0.54 0.105 235 / 0.96);
+    --pl-map-marker-international-stroke: oklch(0.93 0.03 230 / 0.98);
+    --pl-map-marker-international-fill-active: oklch(0.65 0.12 235 / 0.98);
+    --pl-map-marker-international-stroke-active: oklch(0.98 0.012 230 / 1);
+    --pl-map-tooltip-bg: rgba(250, 252, 251, 0.96);
+    --pl-map-tooltip-border: rgba(46, 104, 114, 0.3);
+    --pl-map-tooltip-text: #233d43;
+    --pl-map-tooltip-shadow: 0 0.75rem 1.45rem rgba(38, 64, 68, 0.16);
+    position: relative;
+    aspect-ratio: 1200 / 650;
+    margin-top: 1rem;
+    overflow: hidden;
+    touch-action: none;
+    background: var(--pl-map-bg);
+    border: 1px solid var(--pl-map-border);
+    border-radius: 1rem;
+    box-shadow: var(--pl-map-inset);
 }
 
 .annotated-world-map--theme-dark {
-  --pl-map-route-international: oklch(0.78 0.11 218 / 0.62);
-  --pl-map-route-domestic: oklch(0.68 0.06 226 / 0.48);
-  --pl-map-marker-domestic-fill: oklch(0.6 0.058 228 / 0.92);
-  --pl-map-marker-domestic-stroke: oklch(0.86 0.055 222 / 0.88);
-  --pl-map-marker-domestic-fill-active: oklch(0.74 0.09 222 / 0.98);
-  --pl-map-marker-domestic-stroke-active: oklch(0.96 0.03 220 / 0.98);
-  --pl-map-marker-international-fill: oklch(0.78 0.12 214 / 0.94);
-  --pl-map-marker-international-stroke: oklch(0.96 0.03 218 / 0.96);
-  --pl-map-marker-international-fill-active: oklch(0.88 0.135 212 / 0.98);
-  --pl-map-marker-international-stroke-active: oklch(0.99 0.02 218 / 1);
-  --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
-  --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
-  --pl-map-tooltip-text: var(--pl-text-emphasis);
-  --pl-map-tooltip-shadow: var(--pl-shadow-map-tooltip);
+    --pl-map-route-international: oklch(0.78 0.11 218 / 0.62);
+    --pl-map-route-domestic: oklch(0.68 0.06 226 / 0.48);
+    --pl-map-marker-domestic-fill: oklch(0.6 0.058 228 / 0.92);
+    --pl-map-marker-domestic-stroke: oklch(0.86 0.055 222 / 0.88);
+    --pl-map-marker-domestic-fill-active: oklch(0.74 0.09 222 / 0.98);
+    --pl-map-marker-domestic-stroke-active: oklch(0.96 0.03 220 / 0.98);
+    --pl-map-marker-international-fill: oklch(0.78 0.12 214 / 0.94);
+    --pl-map-marker-international-stroke: oklch(0.96 0.03 218 / 0.96);
+    --pl-map-marker-international-fill-active: oklch(0.88 0.135 212 / 0.98);
+    --pl-map-marker-international-stroke-active: oklch(0.99 0.02 218 / 1);
+    --pl-map-tooltip-bg: oklch(0.15 0.024 244 / 0.94);
+    --pl-map-tooltip-border: rgba(164, 188, 201, 0.22);
+    --pl-map-tooltip-text: var(--pl-text-emphasis);
+    --pl-map-tooltip-shadow: var(--pl-shadow-map-tooltip);
 }
 
 .annotated-world-map--zoomed {
-  cursor: grab;
+    cursor: grab;
 }
 
 .annotated-world-map--dragging {
-  cursor: grabbing;
+    cursor: grabbing;
 }
 
 .annotated-world-map::before {
-  position: absolute;
-  inset: 1.25rem;
-  border: 1px solid var(--pl-map-frame);
-  border-radius: 0.8rem;
-  content: '';
-  pointer-events: none;
+    position: absolute;
+    inset: 1.25rem;
+    border: 1px solid var(--pl-map-frame);
+    border-radius: 0.8rem;
+    content: "";
+    pointer-events: none;
 }
 
 .annotated-world-map::after {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: var(--pl-map-vignette);
-  content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: var(--pl-map-vignette);
+    content: "";
 }
 
 .annotated-world-map__canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: none;
-  outline: none;
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: none;
+    outline: none;
 }
 
 .annotated-world-map__canvas:focus-visible {
-  outline: 2px solid var(--pl-border-focus);
-  outline-offset: -0.2rem;
+    outline: 2px solid var(--pl-border-focus);
+    outline-offset: -0.2rem;
 }
 
 .annotated-world-map__tooltip {
-  position: absolute;
-  z-index: 6;
-  will-change: left, top;
-  max-width: min(12rem, calc(100% - 2rem));
-  padding: 0.45rem 0.62rem;
-  color: var(--pl-map-tooltip-text);
-  font-size: 0.78rem;
-  font-weight: 800;
-  line-height: 1.2;
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
-  background-color: var(--pl-map-tooltip-bg);
-  border: 1px solid var(--pl-map-tooltip-border);
-  border-radius: 999px;
-  box-shadow: var(--pl-map-tooltip-shadow);
-  transform: translate3d(-50%, calc(-100% - 0.72rem), 0);
+    position: absolute;
+    z-index: 6;
+    will-change: left, top;
+    max-width: min(12rem, calc(100% - 2rem));
+    padding: 0.45rem 0.62rem;
+    color: var(--pl-map-tooltip-text);
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    background-color: var(--pl-map-tooltip-bg);
+    border: 1px solid var(--pl-map-tooltip-border);
+    border-radius: 999px;
+    box-shadow: var(--pl-map-tooltip-shadow);
+    transform: translate3d(-50%, calc(-100% - 0.72rem), 0);
 }
 
 .annotated-world-map__tooltip::after {
-  position: absolute;
-  bottom: -0.32rem;
-  left: 50%;
-  width: 0.55rem;
-  height: 0.55rem;
-  background-color: var(--pl-map-tooltip-bg);
-  border-right: 1px solid var(--pl-map-tooltip-border);
-  border-bottom: 1px solid var(--pl-map-tooltip-border);
-  content: '';
-  transform: translateX(-50%) rotate(45deg);
+    position: absolute;
+    bottom: -0.32rem;
+    left: 50%;
+    width: 0.55rem;
+    height: 0.55rem;
+    background-color: var(--pl-map-tooltip-bg);
+    border-right: 1px solid var(--pl-map-tooltip-border);
+    border-bottom: 1px solid var(--pl-map-tooltip-border);
+    content: "";
+    transform: translateX(-50%) rotate(45deg);
 }
 
 .annotated-world-map__tooltip--domestic {
-  --pl-map-tooltip-bg: var(--pl-map-marker-domestic-fill-active);
-  --pl-map-tooltip-border: var(--pl-map-marker-domestic-stroke-active);
-  --pl-map-tooltip-text: #153c3d;
+    --pl-map-tooltip-bg: var(--pl-map-marker-domestic-fill-active);
+    --pl-map-tooltip-border: var(--pl-map-marker-domestic-stroke-active);
+    --pl-map-tooltip-text: #153c3d;
 }
 
 .annotated-world-map__tooltip--international {
-  --pl-map-tooltip-bg: var(--pl-map-marker-international-fill-active);
-  --pl-map-tooltip-border: var(--pl-map-marker-international-stroke-active);
-  --pl-map-tooltip-text: oklch(0.98 0.012 224 / 1);
+    --pl-map-tooltip-bg: var(--pl-map-marker-international-fill-active);
+    --pl-map-tooltip-border: var(--pl-map-marker-international-stroke-active);
+    --pl-map-tooltip-text: oklch(0.98 0.012 224 / 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .annotated-world-map__tooltip--pointer {
-    animation: map-tooltip-enter var(--motion-duration-fast)
-      var(--motion-ease-out-quart) both;
-  }
+    .annotated-world-map__tooltip--pointer {
+        animation: map-tooltip-enter var(--motion-duration-fast) var(--motion-ease-out-quart) both;
+    }
 }
 
 @keyframes map-tooltip-enter {
-  from {
-    opacity: 0;
-    transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(0.97);
-  }
+    from {
+        opacity: 0;
+        transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(0.97);
+    }
 
-  to {
-    opacity: 1;
-    transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(1);
-  }
+    to {
+        opacity: 1;
+        transform: translate3d(-50%, calc(-100% - 0.72rem), 0) scale(1);
+    }
 }
 
 .annotated-world-map--theme-dark .annotated-world-map__tooltip--domestic,
 .annotated-world-map--theme-dark .annotated-world-map__tooltip--international {
-  --pl-map-tooltip-text: oklch(0.98 0.02 220 / 1);
+    --pl-map-tooltip-text: oklch(0.98 0.02 220 / 1);
 }
 
 .annotated-world-map__flag-cursor {
-  position: fixed;
-  z-index: 60;
-  display: grid;
-  place-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  font-size: 1.45rem;
-  line-height: 1;
-  pointer-events: none;
-  text-shadow: var(--pl-text-shadow-flag);
-  transform: translate3d(-50%, -50%, 0);
+    position: fixed;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.45rem;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: var(--pl-text-shadow-flag);
+    transform: translate3d(-50%, -50%, 0);
 }
 
 .annotated-world-map__legend {
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 5;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  pointer-events: none;
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    pointer-events: none;
 }
 
 .annotated-world-map__legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 1.65rem;
-  padding: 0 0.56rem;
-  color: var(--pl-map-legend-text);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  background-color: var(--pl-map-legend-bg);
-  border: 1px solid var(--pl-map-legend-border);
-  border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 1.65rem;
+    padding: 0 0.56rem;
+    color: var(--pl-map-legend-text);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background-color: var(--pl-map-legend-bg);
+    border: 1px solid var(--pl-map-legend-border);
+    border-radius: 999px;
 }
 
 .annotated-world-map__legend-marker--domestic::before,
 .annotated-world-map__legend-marker--international::before {
-  flex-shrink: 0;
-  width: 0.78rem;
-  height: 0.78rem;
-  content: '';
-  clip-path: polygon(50% 0, 62% 42%, 100% 58%, 84% 76%, 58% 66%, 50% 100%, 42% 66%, 16% 76%, 0 58%, 38% 42%);
-  transform: rotate(-20deg);
+    flex-shrink: 0;
+    width: 0.78rem;
+    height: 0.78rem;
+    content: "";
+    clip-path: polygon(
+        50% 0,
+        62% 42%,
+        100% 58%,
+        84% 76%,
+        58% 66%,
+        50% 100%,
+        42% 66%,
+        16% 76%,
+        0 58%,
+        38% 42%
+    );
+    transform: rotate(-20deg);
 }
 
 .annotated-world-map__legend-marker--domestic::before {
-  background-color: var(--pl-map-marker-domestic-fill);
-  border: 1.5px solid var(--pl-map-marker-domestic-stroke);
+    background-color: var(--pl-map-marker-domestic-fill);
+    border: 1.5px solid var(--pl-map-marker-domestic-stroke);
 }
 
 .annotated-world-map__legend-marker--international::before {
-  background-color: var(--pl-map-marker-international-fill);
-  border: 1.5px solid var(--pl-map-marker-international-stroke);
+    background-color: var(--pl-map-marker-international-fill);
+    border: 1.5px solid var(--pl-map-marker-international-stroke);
 }
 
 .annotated-world-map__legend-route--domestic::before,
 .annotated-world-map__legend-route--international::before {
-  flex-shrink: 0;
-  width: 0.95rem;
-  height: 0;
-  background: none;
-  border-radius: 0;
-  content: '';
+    flex-shrink: 0;
+    width: 0.95rem;
+    height: 0;
+    background: none;
+    border-radius: 0;
+    content: "";
 }
 
 .annotated-world-map__legend-route--domestic::before {
-  border-bottom: 2px solid var(--pl-map-route-domestic);
+    border-bottom: 2px solid var(--pl-map-route-domestic);
 }
 
 .annotated-world-map__legend-route--international::before {
-  border-bottom: 2px dashed var(--pl-map-route-international);
+    border-bottom: 2px dashed var(--pl-map-route-international);
 }
 
 @media (max-width: 640px) {
-  .annotated-world-map::before {
-    inset: 0.65rem;
-  }
+    .annotated-world-map::before {
+        inset: 0.65rem;
+    }
 
-  .annotated-world-map__legend {
-    right: max(0.65rem, env(safe-area-inset-right, 0px));
-    bottom: max(0.65rem, env(safe-area-inset-bottom, 0px));
-  }
+    .annotated-world-map__legend {
+        right: max(0.65rem, env(safe-area-inset-right, 0px));
+        bottom: max(0.65rem, env(safe-area-inset-bottom, 0px));
+    }
 
-  .annotated-world-map__tooltip {
-    max-width: min(14rem, calc(100vw - 2.25rem));
-    white-space: normal;
-    text-align: center;
-    line-height: 1.35;
-  }
+    .annotated-world-map__tooltip {
+        max-width: min(14rem, calc(100vw - 2.25rem));
+        white-space: normal;
+        text-align: center;
+        line-height: 1.35;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .annotated-world-map__tooltip--pointer {
-    animation-duration: 120ms;
-    animation-name: map-tooltip-fade-enter;
-  }
+    .annotated-world-map__tooltip--pointer {
+        animation-duration: 120ms;
+        animation-name: map-tooltip-fade-enter;
+    }
 }
 
 @keyframes map-tooltip-fade-enter {
-  from {
-    opacity: 0;
-  }
+    from {
+        opacity: 0;
+    }
 
-  to {
-    opacity: 1;
-  }
+    to {
+        opacity: 1;
+    }
 }
