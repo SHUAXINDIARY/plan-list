@@ -165,7 +165,7 @@ export const RenderControls = ({
         {isOpen ? (
             <aside
                 id={renderControlsId}
-                className="plane-render__render-controls-panel"
+                className="plane-render__render-controls-panel scroll-area-night"
                 aria-label="WebGPU 渲染控制"
             >
                 <div className="plane-render__render-controls-heading">

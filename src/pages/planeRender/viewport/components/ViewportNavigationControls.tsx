@@ -69,13 +69,13 @@ export const ViewportNavigationControls = ({
         >
             导出 PNG
         </button>
-        <button
+        {/* <button
             className="plane-render__viewport-action"
             type="button"
             disabled={!isSnapshotAvailable}
             onClick={onSettingsExport}
         >
             导出设置
-        </button>
+        </button> */}
     </>
 );

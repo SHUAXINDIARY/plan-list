@@ -20,9 +20,12 @@
 }
 
 .plane-render__viewport {
+    --plane-render-render-controls-panel-clearance: 4.5rem;
+
     position: relative;
     min-height: 0;
     overflow: hidden;
+    container-type: size;
     background: var(--pl-map-bg);
     border: 1px solid var(--pl-border-default);
     border-radius: 1rem;
@@ -196,7 +199,12 @@
     top: calc(100% + 0.48rem);
     right: 0;
     width: min(15.5rem, calc(100vw - 2rem));
+    max-height: calc(
+        100cqh - var(--plane-render-render-controls-panel-clearance)
+    );
     padding: 0.82rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     color: var(--pl-text-secondary);
     background-color: var(--pl-surface-toolbar);
     border: 1px solid var(--pl-border-default);
@@ -1513,6 +1521,8 @@
     }
 
     .plane-render__viewport {
+        --plane-render-render-controls-panel-clearance: 7.5rem;
+
         min-height: 21rem;
     }
 
@@ -1571,16 +1581,6 @@
 
     .plane-render__render-controls-panel {
         width: min(100%, calc(100vw - 1.3rem));
-        max-height: min(20rem, calc(100vh - 5.5rem));
-        max-height: min(
-            20rem,
-            calc(
-                100dvh - env(safe-area-inset-top) -
-                    env(safe-area-inset-bottom) - 4.5rem
-            )
-        );
-        overflow-y: auto;
-        overscroll-behavior: contain;
     }
 
     .plane-render__attitude-gizmo {
