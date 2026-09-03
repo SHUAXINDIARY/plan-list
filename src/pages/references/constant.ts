@@ -7,21 +7,26 @@ export const AIRLINE_REFERENCE_SOURCES: AirlineReferenceSource[] = [
         urls: ["https://www.flightradar24.com/"],
     },
     {
-        airlineName: "模型站点",
+        airlineName: "模型品牌官网",
         urls: [
-            "https://hikoukicyann.stores.jp/",
+            "https://inflight200-models.com/",
             "https://www.geminijets.com/",
+            "https://yywings.com/",
+            "https://www.jcwings.com/",
             "https://www.sqwings.com/",
             "https://www.herpa.de/en/buy-products/wings",
+        ]
+    },
+    {
+        airlineName: "模型店家自营官网",
+        urls: [
+            "https://hikoukicyann.stores.jp/",
             "https://www.aviationmegastore.com/en/",
             "https://futurewingsmodel.com/",
-            "https://yywings.com/",
             "https://top-gun.jp/zh",
-            "https://www.jcwings.com/",
             "https://www.modelaircraftdatabase.com",
             "https://www.collectorwingsmodel.com",
-            "https://inflight200-models.com/",
-            "https://www.geminijets.com/database"
+            "https://www.top-gun.jp/",
         ],
     },
     {
