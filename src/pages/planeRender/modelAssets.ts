@@ -19,13 +19,13 @@ const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 
 // FR24 的 glTF 1.0 文件不在 GLTFLoade r 2.0 支持范围内，因此只收集兼容的 GLB 模型。
 const fr24ModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../fr24-3d-models-glbv2/models/**/*.glb", {
+    import.meta.glob<string>("../../../public/models/fr24-3d-models-glbv2/models/**/*.glb", {
         import: "default",
     });
 
 // 自定义模型目录由项目本地维护，同样只收集 GLTFLoader 兼容的  GLB 文件。
 const customModelModules: Record<string, () => Promise<string>> =
-    import.meta.glob<string>("../../../sketchfab/**/*.glb", {
+    import.meta.glob<string>("../../../public/models/sketchfab/**/*.glb", {
         import: "default",
     });
 
