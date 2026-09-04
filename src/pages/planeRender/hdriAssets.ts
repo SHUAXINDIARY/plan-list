@@ -15,7 +15,7 @@ const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 
 /** 仅收集 hdri 目录下的 RGBE HDR 文件，避免把 .DS_Store 等文件展示到控件。 */
 const hdriModules: Record<string, string> = import.meta.glob<string>(
-    "../../../hdri/*.hdr",
+    "../../../public/hdri/*.hdr",
     {
         eager: true,
         import: "default",
