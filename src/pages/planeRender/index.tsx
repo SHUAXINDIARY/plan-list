@@ -1,4 +1,11 @@
-import { useCallback, useRef, useState, type ReactElement } from "react";
+import {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    type ReactElement,
+} from "react";
+import { useSearchParams } from "react-router";
 import {
     AircraftModelViewport,
     type AircraftModelLoadingProgress,
@@ -27,6 +34,9 @@ const MODEL_SWITCHING_PROGRESS: AircraftModelLoadingProgress = {
 
 /** 页面首次打开时默认渲染模型目录中的第一架飞机。 */
 const INITIAL_SELECTED_MODEL_ID = AIRCRAFT_MODEL_ASSETS[0]?.id ?? "";
+
+/** 当前模型在 URL 查询参数中使用的键名。 */
+const SELECTED_MODEL_QUERY_PARAMETER = "model";
 
 /** 根据加载阶段生成页面内的状态标题。 */
 const getLoadingStatusTitle = (
@@ -99,17 +109,68 @@ const getSelectedModel = (
         (asset): boolean => asset.id === selectedModelId,
     );
 
+/** 从 URL 读取有效的模型 ID；缺失或失效时回退到目录中的默认模型。 */
+const getSelectedModelIdFromSearchParams = (
+    searchParams: URLSearchParams,
+): string => {
+    const requestedModelId = searchParams.get(SELECTED_MODEL_QUERY_PARAMETER);
+    const requestedModel = getSelectedModel(requestedModelId ?? "");
+
+    return requestedModel?.id ?? INITIAL_SELECTED_MODEL_ID;
+};
+
+/** 保留其他页面查询参数，并写入当前模型的稳定选择标识。 */
+const createSearchParamsWithSelectedModel = (
+    searchParams: URLSearchParams,
+    selectedModelId: string,
+): URLSearchParams => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+
+    nextSearchParams.set(SELECTED_MODEL_QUERY_PARAMETER, selectedModelId);
+
+    return nextSearchParams;
+};
+
 /**
  * 使用 WebGPU 每次渲染当前选择的一架飞机模型。
  */
 const PlaneRenderPage = (): ReactElement => {
     const viewportRef = useRef<HTMLElement | null>(null);
-    const [selectedModelId, setSelectedModelId] = useState<string>(
-        INITIAL_SELECTED_MODEL_ID,
-    );
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedModelId = getSelectedModelIdFromSearchParams(searchParams);
+    const selectedModelIdRef = useRef<string>(selectedModelId);
     const [loadingProgress, setLoadingProgress] =
         useState<AircraftModelLoadingProgress>(INITIAL_LOADING_PROGRESS);
     const [retryToken, setRetryToken] = useState<number>(0);
+
+    /** 将缺失或无效模型参数替换为当前可加载的默认选择。 */
+    useEffect((): void => {
+        const requestedModelId = searchParams.get(
+            SELECTED_MODEL_QUERY_PARAMETER,
+        );
+
+        if (
+            selectedModelId === "" ||
+            requestedModelId === selectedModelId
+        ) {
+            return;
+        }
+
+        setSearchParams(
+            createSearchParamsWithSelectedModel(searchParams, selectedModelId),
+            { replace: true },
+        );
+    }, [searchParams, selectedModelId, setSearchParams]);
+
+    /** 响应浏览器前进和后退造成的模型 query 变化，及时清除旧模型状态。 */
+    useEffect((): void => {
+        if (selectedModelIdRef.current === selectedModelId) {
+            return;
+        }
+
+        selectedModelIdRef.current = selectedModelId;
+        setLoadingProgress(MODEL_SWITCHING_PROGRESS);
+    }, [selectedModelId]);
 
     /** 接收视窗的异步进度更新，驱动目录与状态区显示。 */
     const handleLoadingProgressChange = useCallback(
@@ -121,12 +182,18 @@ const PlaneRenderPage = (): ReactElement => {
 
     /** 切换当前模型，并在点击提交的同一帧反馈新模型正在载入。 */
     const handleModelSelection = (modelId: string): void => {
-        if (modelId === selectedModelId) {
+        if (
+            modelId === selectedModelId ||
+            getSelectedModel(modelId) === undefined
+        ) {
             return;
         }
 
         setLoadingProgress(MODEL_SWITCHING_PROGRESS);
-        setSelectedModelId(modelId);
+        selectedModelIdRef.current = modelId;
+        setSearchParams(
+            createSearchParamsWithSelectedModel(searchParams, modelId),
+        );
     };
 
     /** 重新初始化当前模型视窗，并立即清除旧错误状态。 */
