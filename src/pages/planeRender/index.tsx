@@ -235,14 +235,14 @@ const PlaneRenderPage = (): ReactElement => {
             ) : null}
             <p className="plane-render__attribution">
                 模型资源由{" "}
-                <a
+                {/* <a
                     href="https://github.com/amvlab/aircraft-models"
                     target="_blank"
                     rel="noreferrer"
                 >
                     amvlab
                 </a>
-                {"、"}
+                {"、"} */}
                 <a
                     href="https://github.com/Flightradar24/fr24-3d-models"
                     target="_blank"

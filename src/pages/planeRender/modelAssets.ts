@@ -17,12 +17,6 @@ export interface AircraftModelAsset {
 /** Rspack 返回的模型模块路径中，指向项目根目录的相对前缀。 */
 const PROJECT_ROOT_RELATIVE_PREFIX_PATTERN = /^(?:\.\.\/)+/;
 
-// 每个 Rspack glob 保持为独立的字面量调用，确保构建期分别生成各模型目录上下文。
-// const amvModelModules: Record<string, () => Promise<string>> =
-//     import.meta.glob<string>("../../../aircraft-models/models/**/*.glb", {
-//         import: "default",
-//     });
-
 // FR24 的 glTF 1.0 文件不在 GLTFLoade r 2.0 支持范围内，因此只收集兼容的 GLB 模型。
 const fr24ModelModules: Record<string, () => Promise<string>> =
     import.meta.glob<string>("../../../fr24-3d-models-glbv2/models/**/*.glb", {
@@ -38,7 +32,6 @@ const customModelModules: Record<string, () => Promise<string>> =
 /** 各模型目录的构建期 GLB 加载器映射，键保留完整相对路径避免同名模型冲突。 */
 const modelModules: Record<string, () => Promise<string>> = {
     ...customModelModules,
-    // ...amvModelModules,
     ...fr24ModelModules,
 };
 
