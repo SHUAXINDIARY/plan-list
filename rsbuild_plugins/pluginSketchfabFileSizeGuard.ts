@@ -5,7 +5,7 @@ import type { RsbuildPlugin } from "@rsbuild/core";
 
 const PLUGIN_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(PLUGIN_DIRECTORY, "..");
-const SKETCHFAB_DIRECTORY = join(PROJECT_ROOT, "sketchfab");
+const SKETCHFAB_DIRECTORY = join(PROJECT_ROOT, "public/models/sketchfab");
 const UPLOAD_OSS_GLB_DIRECTORY = join(PROJECT_ROOT, "upload_oss_glb");
 const MAX_SKETCHFAB_FILE_SIZE_BYTES = 25 * 1024 * 1024;
 const UPLOAD_OSS_GLB_ASSETS_MODULE_PATH = join(
