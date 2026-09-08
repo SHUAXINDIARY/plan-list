@@ -8760,3 +8760,26 @@
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：重写照片列表解析、JPEG 缩略图生成、缓存读取与分批持久化流程。
 - `src/pages/personal/photoPreviews.generated.ts`：更新缓存版本并写入本次构建的失败冷却记录。
 - `taskRecord.md`：追加本次插件重写与验证记录。
+
+---
+
+## 日期
+
+2026-09-08
+
+## 任务目的
+
+修复照片预览插件构建时大图因字节/像素上限失败，并恢复生成模块写入。
+
+## 完成过程
+
+1. 将下载体积上限从 20MB 提升到 100MB，sharp 像素上限从 40MP 提升到约 268MP，覆盖 `PANA0930.jpg` 与 `IMG_4418.jpg` 这类相机原图。
+2. 为大图处理开启 `sequentialRead`，并放宽单张下载超时与单次构建生成预算。
+3. 恢复被误删的 `writePhotoPreviewsModule` 与失败冷却逻辑，清空过期失败记录以便下次构建重试。
+4. 本机 Agent 环境无法连通 `akdb.nixideshuaxin.workers.dev`（连接超时），未实测远程下载；逻辑改动依据构建日志中的明确上限报错。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：放宽下载/像素限制，恢复映射写入与失败冷却，优化大图解码参数。
+- `src/pages/personal/photoPreviews.generated.ts`：清空失败冷却记录，便于新限制下重试。
+- `taskRecord.md`：追加本次修复记录。
