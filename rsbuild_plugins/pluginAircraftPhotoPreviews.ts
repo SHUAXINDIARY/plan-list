@@ -708,10 +708,10 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
         const failedAt = existingCache.failureTimestamps[photoUrl];
 
         // 冷却期内的失败项跳过网络请求，避免每次构建重复打超限原图。
-        if (isFailureCoolingDown(failedAt, currentTime)) {
-            failureTimestamps[photoUrl] = failedAt;
-            return;
-        }
+        // if (isFailureCoolingDown(failedAt, currentTime)) {
+        //     failureTimestamps[photoUrl] = failedAt;
+        //     return;
+        // }
 
         photoUrlsToGenerate.push(photoUrl);
     });
