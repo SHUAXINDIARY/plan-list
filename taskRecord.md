@@ -8737,3 +8737,26 @@
 - `src/pages/personal/data/aircraftPhotosData.ts`：同步静态预览图回退说明。
 - `.gitignore`：忽略构建生成的照片预览静态资源目录。
 - `taskRecord.md`：追加本次预览插件优化记录。
+
+---
+
+## 日期
+
+2026-09-08
+
+## 任务目的
+
+重写飞机照片预览图 Rsbuild 插件，使其按等比、不裁切的 JPEG 策略生成压缩封面图。
+
+## 完成过程
+
+1. 将预览输出改为自动纠正 EXIF 方向、宽度不超过 600px、质量 82 的渐进式 MozJPEG；保留完整照片构图且不会放大小图。
+2. 仅通过 TypeScript AST 解析页面实际使用的 `AIRCRAFT_PHOTO_ORIGINAL_URLS`，并递归展开同文件内的本地数组 spread。
+3. 保留并梳理了下载/像素限制、每图与全局时间预算、失败冷却、原子写入、缓存文件校验和未引用资源清理；新图片按批次落盘以限制内存占用。
+4. 使用独立 TypeScript 编译检查插件并运行 `pnpm run build`。生产构建成功；远程图片服务在本机请求失败或超时，插件按设计记录失败冷却并让页面回退原图。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：重写照片列表解析、JPEG 缩略图生成、缓存读取与分批持久化流程。
+- `src/pages/personal/photoPreviews.generated.ts`：更新缓存版本并写入本次构建的失败冷却记录。
+- `taskRecord.md`：追加本次插件重写与验证记录。
