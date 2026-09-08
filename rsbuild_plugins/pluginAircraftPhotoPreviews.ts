@@ -28,8 +28,6 @@ interface PhotoPreviewEntry {
 interface PhotoPreviewCache {
     /** 原图 URL 到已验证静态预览路径的映射。 */
     previewUrls: Record<string, string>;
-    /** 上一次失败的时间，用于避免每次构建重复请求故障图片。 */
-    failureTimestamps: Record<string, number>;
 }
 
 const PLUGIN_DIRECTORY = dirname(fileURLToPath(import.meta.url));
@@ -51,8 +49,6 @@ const PHOTO_URL_LIST_EXPORT = "AIRCRAFT_PHOTO_ORIGINAL_URLS";
 const PREVIEW_BATCH_SIZE = 4;
 /** 单张下载超时；大体积原图在弱网下需要更长窗口。 */
 const PREVIEW_DOWNLOAD_TIMEOUT_MS = 30_000;
-/** 单次构建内允许的预览生成总时长，覆盖大批量首次生成。 */
-const PREVIEW_GENERATION_BUDGET_MS = 180_000;
 /** 下载体积上限；相机 JPEG 常超过 20MB，保留安全余量。 */
 const PREVIEW_MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024;
 /**
@@ -60,7 +56,6 @@ const PREVIEW_MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024;
  * 取 libvips 常用上限（约 16383²）以兼容超高分辨率输入。
  */
 const PREVIEW_MAX_INPUT_PIXELS = 268_402_689;
-const PREVIEW_FAILURE_RETRY_AFTER_MS = 60 * 60 * 1000;
 const PREVIEW_CACHE_VERSION = "600w-jpeg-q82-v3";
 const PREVIEW_IMAGE_WIDTH = 600;
 const PREVIEW_IMAGE_QUALITY = 82;
@@ -410,45 +405,6 @@ const parsePreviewUrlRecord = (moduleSource: string): Record<string, string> => 
     return previewUrls;
 };
 
-/** 从生成模块中解析最近的预览生成失败时间。 */
-const parseFailureTimestampRecord = (
-    moduleSource: string,
-): Record<string, number> => {
-    const recordLiteral = getGeneratedRecordLiteral(
-        moduleSource,
-        "aircraftPhotoPreviewFailures",
-    );
-    const failureTimestamps: Record<string, number> = {};
-
-    if (recordLiteral === null) {
-        return failureTimestamps;
-    }
-
-    recordLiteral.properties.forEach((property: ts.ObjectLiteralElementLike): void => {
-        const initializer =
-            ts.isPropertyAssignment(property)
-                ? unwrapExpression(property.initializer)
-                : null;
-
-        if (
-            !ts.isPropertyAssignment(property) ||
-            !ts.isStringLiteral(property.name) ||
-            initializer === null ||
-            !ts.isNumericLiteral(initializer)
-        ) {
-            return;
-        }
-
-        const timestamp = Number(initializer.text);
-
-        if (Number.isFinite(timestamp) && timestamp >= 0) {
-            failureTimestamps[property.name.text] = timestamp;
-        }
-    });
-
-    return failureTimestamps;
-};
-
 /** 读取版本匹配、路径合法且本地文件仍存在的静态预览缓存。 */
 const readExistingPhotoPreviewCache = async (): Promise<PhotoPreviewCache> => {
     try {
@@ -459,7 +415,7 @@ const readExistingPhotoPreviewCache = async (): Promise<PhotoPreviewCache> => {
                 `Preview cache version: ${PREVIEW_CACHE_VERSION}`,
             )
         ) {
-            return { previewUrls: {}, failureTimestamps: {} };
+            return { previewUrls: {} };
         }
 
         const cachedPreviewUrls = parsePreviewUrlRecord(moduleSource);
@@ -491,10 +447,9 @@ const readExistingPhotoPreviewCache = async (): Promise<PhotoPreviewCache> => {
                         entry !== null,
                 ),
             ),
-            failureTimestamps: parseFailureTimestampRecord(moduleSource),
         };
     } catch {
-        return { previewUrls: {}, failureTimestamps: {} };
+        return { previewUrls: {} };
     }
 };
 
@@ -568,21 +523,14 @@ const pruneUnusedPhotoPreviewAssets = async (
     }
 };
 
-/** 写入供页面运行时读取的预览路径映射及失败冷却记录。 */
+/** 写入供页面运行时读取的预览路径映射。 */
 const writePhotoPreviewsModule = async (
     previewUrls: Readonly<Record<string, string>>,
-    failureTimestamps: Readonly<Record<string, number>>,
 ): Promise<void> => {
     const previewRecordEntries = Object.entries(previewUrls)
         .map(
             ([originalUrl, previewUrl]: [string, string]): string =>
                 `  ${JSON.stringify(originalUrl)}: ${JSON.stringify(previewUrl)},`,
-        )
-        .join("\n");
-    const failureRecordEntries = Object.entries(failureTimestamps)
-        .map(
-            ([originalUrl, failedAt]: [string, number]): string =>
-                `  ${JSON.stringify(originalUrl)}: ${failedAt},`,
         )
         .join("\n");
     const moduleSource = [
@@ -593,64 +541,33 @@ const writePhotoPreviewsModule = async (
         previewRecordEntries,
         "} satisfies Record<string, string>;",
         "",
-        "export const aircraftPhotoPreviewFailures = {",
-        failureRecordEntries,
-        "} satisfies Record<string, number>;",
-        "",
     ].join("\n");
 
     await writeFileAtomically(PHOTO_PREVIEWS_MODULE_PATH, moduleSource);
 };
 
-/** 判断失败记录是否仍处于冷却期，冷却期内保留原图回退并不发起网络请求。 */
-const isFailureCoolingDown = (
-    failedAt: number | undefined,
-    currentTime: number,
-): failedAt is number =>
-    failedAt !== undefined &&
-    currentTime - failedAt < PREVIEW_FAILURE_RETRY_AFTER_MS;
-
 /** 分批下载、编码并立即落盘，避免在一个构建批次中长期保留大量图片 Buffer。 */
 const generateMissingPhotoPreviews = async (
     photoUrls: readonly string[],
-    generationDeadline: number,
 ): Promise<{
     /** 本次构建新增的原图 URL 到预览路径映射。 */
     generatedPreviewUrls: Map<string, string>;
-    /** 本次构建下载、编码或写入失败的原图 URL。 */
-    failedPhotoUrls: Set<string>;
 }> => {
     const generatedPreviewUrls = new Map<string, string>();
-    const failedPhotoUrls = new Set<string>();
 
     for (
         let startIndex = 0;
         startIndex < photoUrls.length;
         startIndex += PREVIEW_BATCH_SIZE
     ) {
-        const remainingTimeMs = generationDeadline - Date.now();
-
-        if (remainingTimeMs <= 0) {
-            photoUrls
-                .slice(startIndex)
-                .forEach((photoUrl: string): void => {
-                    failedPhotoUrls.add(photoUrl);
-                });
-            break;
-        }
-
         const photoUrlBatch = photoUrls.slice(
             startIndex,
             startIndex + PREVIEW_BATCH_SIZE,
         );
-        const batchTimeoutMs = Math.min(
-            PREVIEW_DOWNLOAD_TIMEOUT_MS,
-            remainingTimeMs,
-        );
         const previewEntries = await Promise.all(
             photoUrlBatch.map(
                 (photoUrl: string): Promise<PhotoPreviewEntry | null> =>
-                    createPhotoPreviewEntry(photoUrl, batchTimeoutMs),
+                    createPhotoPreviewEntry(photoUrl, PREVIEW_DOWNLOAD_TIMEOUT_MS),
             ),
         );
 
@@ -662,7 +579,6 @@ const generateMissingPhotoPreviews = async (
             }
 
             if (previewEntry === null) {
-                failedPhotoUrls.add(photoUrl);
                 continue;
             }
 
@@ -674,7 +590,6 @@ const generateMissingPhotoPreviews = async (
                 );
             } catch (error) {
                 const reason = error instanceof Error ? error.message : "未知错误";
-                failedPhotoUrls.add(photoUrl);
                 console.warn(
                     `[photo-preview] 预览文件写入失败（${reason}），已回退原图：${photoUrl}`,
                 );
@@ -682,49 +597,23 @@ const generateMissingPhotoPreviews = async (
         }
     }
 
-    return { generatedPreviewUrls, failedPhotoUrls };
+    return { generatedPreviewUrls };
 };
 
-/** 读取照片元数据，复用合法缓存并生成缺失预览，最后同步运行时映射和磁盘资源。 */
+/** 读取照片元数据，每次构建完整请求全部照片并覆盖生成预览。 */
 const generateAircraftPhotoPreviews = async (): Promise<void> => {
     const constantSource = await readFile(PERSONAL_PHOTO_META_PATH, "utf8");
     const photoUrls = extractAircraftPhotoUrls(constantSource);
     const existingCache = await readExistingPhotoPreviewCache();
-    const currentTime = Date.now();
-
-    // 先保留可验证的文件，再跳过冷却期内的失败项，剩余 URL 才会触发网络请求。
     const previewUrls: Record<string, string> = {};
-    const failureTimestamps: Record<string, number> = {};
-    const photoUrlsToGenerate: string[] = [];
-
-    photoUrls.forEach((photoUrl: string): void => {
-        const cachedPreviewUrl = existingCache.previewUrls[photoUrl];
-
-        if (cachedPreviewUrl !== undefined) {
-            previewUrls[photoUrl] = cachedPreviewUrl;
-            return;
-        }
-
-        const failedAt = existingCache.failureTimestamps[photoUrl];
-
-        // 冷却期内的失败项跳过网络请求，避免每次构建重复打超限原图。
-        // if (isFailureCoolingDown(failedAt, currentTime)) {
-        //     failureTimestamps[photoUrl] = failedAt;
-        //     return;
-        // }
-
-        photoUrlsToGenerate.push(photoUrl);
-    });
 
     await mkdir(PHOTO_PREVIEW_ASSET_DIRECTORY, { recursive: true });
 
-    const { generatedPreviewUrls, failedPhotoUrls } =
-        await generateMissingPhotoPreviews(
-            photoUrlsToGenerate,
-            currentTime + PREVIEW_GENERATION_BUDGET_MS,
-        );
+    const { generatedPreviewUrls } = await generateMissingPhotoPreviews(
+        photoUrls,
+    );
 
-    // 仅将成功写入磁盘的资源发布给页面；失败项保持原图 URL 回退。
+    // 成功项发布新预览；失败项若本地仍有合法缓存则沿用，否则页面回退原图。
     photoUrls.forEach((photoUrl: string): void => {
         const generatedPreviewUrl = generatedPreviewUrls.get(photoUrl);
 
@@ -733,12 +622,14 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
             return;
         }
 
-        if (failedPhotoUrls.has(photoUrl)) {
-            failureTimestamps[photoUrl] = Date.now();
+        const cachedPreviewUrl = existingCache.previewUrls[photoUrl];
+
+        if (cachedPreviewUrl !== undefined) {
+            previewUrls[photoUrl] = cachedPreviewUrl;
         }
     });
 
-    await writePhotoPreviewsModule(previewUrls, failureTimestamps);
+    await writePhotoPreviewsModule(previewUrls);
     await pruneUnusedPhotoPreviewAssets(previewUrls);
 };
 

@@ -4,7 +4,3 @@
 export const aircraftPhotoPreviewUrls = {
 
 } satisfies Record<string, string>;
-
-export const aircraftPhotoPreviewFailures = {
-
-} satisfies Record<string, number>;

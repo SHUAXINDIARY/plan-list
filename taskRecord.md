@@ -8783,3 +8783,26 @@
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：放宽下载/像素限制，恢复映射写入与失败冷却，优化大图解码参数。
 - `src/pages/personal/photoPreviews.generated.ts`：清空失败冷却记录，便于新限制下重试。
 - `taskRecord.md`：追加本次修复记录。
+
+---
+
+## 日期
+
+2026-09-08
+
+## 任务目的
+
+去掉照片预览插件的失败冷却，每次构建对全部照片完整请求并生成。
+
+## 完成过程
+
+1. 删除失败时间戳、冷却判断和 `aircraftPhotoPreviewFailures` 生成导出。
+2. 每次构建不再跳过已缓存或曾失败的 URL，按列表完整下载、缩放并覆盖预览。
+3. 去掉单次构建总时长预算，避免剩余照片被提前放弃；单张仍保留 30 秒下载超时。
+4. 某张本次失败时，若本地仍有合法预览文件则沿用，否则页面回退原图。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：移除冷却与总时长截断，改为每次全量请求。
+- `src/pages/personal/photoPreviews.generated.ts`：去掉失败冷却导出。
+- `taskRecord.md`：追加本次调整记录。
