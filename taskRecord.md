@@ -8709,3 +8709,31 @@
 
 - `src/pages/planeRender/ModelDir.tsx`：为当前选中模型添加局部目录自动滚动行为。
 - `taskRecord.md`：追加本次目录定位交互记录。
+
+---
+
+## 日期
+
+2026-09-07
+
+## 任务目的
+
+优化飞机照片预览图构建插件的资源解析、构建性能、缓存和失败回退机制。
+
+## 完成过程
+
+1. 使用 TypeScript AST 扫描 `photoMeta.ts` 中的 URL 字符串，覆盖 `MODEL_PHOTO_URLS` 的 spread 内容并自动排除注释。
+2. 将预览图从 JS data URL 改为 `public/generated/aircraft-photo-previews/` 下的静态 WebP 文件，生成模块仅记录原图 URL 到公开路径的映射。
+3. 增加响应体字节上限、Sharp 像素上限、单次构建总耗时预算和失败冷却缓存，避免异常资源或远程服务故障长时间阻塞构建。
+4. 增加静态缓存文件存在性校验、生成文件原子写入和未引用预览文件清理，并更新生成模块缓存版本。
+5. 未运行生产构建或开发服务器；插件定向 TypeScript 检查与 `git diff --check` 通过，项目级类型检查仍被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：重构 URL 解析、静态 WebP 输出、缓存、下载限制、超时预算和原子写入。
+- `src/pages/personal/photoPreviews.generated.ts`：更新静态预览缓存版本与失败记录导出结构。
+- `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：同步静态预览地址与懒加载注释。
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：向缩略图组件传入原图回退地址。
+- `src/pages/personal/data/aircraftPhotosData.ts`：同步静态预览图回退说明。
+- `.gitignore`：忽略构建生成的照片预览静态资源目录。
+- `taskRecord.md`：追加本次预览插件优化记录。

@@ -7,6 +7,9 @@
 node_modules
 dist/
 
+# Build-generated photo preview assets
+public/generated/aircraft-photo-previews/
+
 # Profile
 .rspack-profile-*/
 

@@ -37,7 +37,7 @@ const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
     return directoryKey;
 };
 
-// 列表使用构建期生成的小体积预览图，未生成时回退到原图以保证开发环境可用。
+// 列表使用构建期生成的静态预览图，未生成时回退到原图以保证开发环境可用。
 const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.map(
     (originalUrl: string): AircraftPhoto => ({
         originalUrl,

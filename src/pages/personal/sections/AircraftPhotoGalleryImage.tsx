@@ -4,18 +4,21 @@ import { useEffect, useRef, useState, type ReactElement } from "react";
 const GALLERY_IMAGE_ROOT_MARGIN = "120px 0px";
 
 interface AircraftPhotoGalleryImageProps {
-    /** 构建期生成的预览图地址（可为 base64 data URI）。 */
+    /** 构建期生成的预览图静态地址。 */
     previewUrl: string;
+    /** 预览图不可用时使用的原图地址。 */
+    originalUrl: string;
     /** 图片替代文本，供屏幕阅读器与无图时展示。 */
     alt: string;
 }
 
 /**
  * 相册缩略图：仅在接近视口时写入 `src`。
- * 原生 `loading="lazy"` 对 data URI 无效，离屏节点仍会立即解码 base64。
+ * 通过 IntersectionObserver 减少离屏静态资源的请求与解码。
  */
 export const AircraftPhotoGalleryImage = ({
     previewUrl,
+    originalUrl,
     alt,
 }: AircraftPhotoGalleryImageProps): ReactElement => {
     const imageRef = useRef<HTMLImageElement>(null);
@@ -67,7 +70,14 @@ export const AircraftPhotoGalleryImage = ({
         };
     }, [previewUrl]);
 
-    const markPreviewImageReady = (): void => {
+    /** 预览图失败时切换到原图；原图也失败时仅结束 loading 状态。 */
+    const handlePreviewImageError = (): void => {
+        if (resolvedPreviewUrl !== originalUrl) {
+            setResolvedPreviewUrl(originalUrl);
+            setIsPreviewImageReady(false);
+            return;
+        }
+
         setIsPreviewImageReady(true);
     };
 
@@ -88,8 +98,8 @@ export const AircraftPhotoGalleryImage = ({
                         ? "aircraft-photo-gallery__image--pending"
                         : undefined
                 }
-                onLoad={markPreviewImageReady}
-                onError={markPreviewImageReady}
+                onLoad={(): void => setIsPreviewImageReady(true)}
+                onError={handlePreviewImageError}
             />
         </span>
     );

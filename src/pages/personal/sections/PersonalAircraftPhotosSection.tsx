@@ -372,6 +372,9 @@ const PersonalAircraftPhotosSection = ({
                                                 previewUrl={
                                                     aircraftPhoto.previewUrl
                                                 }
+                                                originalUrl={
+                                                    aircraftPhoto.originalUrl
+                                                }
                                                 alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                                             />
                                             <span
