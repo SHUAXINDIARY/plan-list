@@ -698,10 +698,10 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
 
         const failedAt = existingCache.failureTimestamps[photoUrl];
 
-        if (isFailureCoolingDown(failedAt, currentTime)) {
-            failureTimestamps[photoUrl] = failedAt;
-            return;
-        }
+        // if (isFailureCoolingDown(failedAt, currentTime)) {
+        //     failureTimestamps[photoUrl] = failedAt;
+        //     return;
+        // }
 
         photoUrlsToGenerate.push(photoUrl);
     });
@@ -728,7 +728,7 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
         }
     });
 
-    await writePhotoPreviewsModule(previewUrls, failureTimestamps);
+    // await writePhotoPreviewsModule(previewUrls, failureTimestamps);
     await pruneUnusedPhotoPreviewAssets(previewUrls);
 };
 
