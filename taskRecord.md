@@ -8854,3 +8854,30 @@
 - `src/pages/aircraftWiki/index.css`：扩展筛选工具栏及其响应式布局和表单样式。
 - `src/pages/aircraftWiki/Card.tsx`：补全研发中状态类型与展示文案。
 - `taskRecord.md`：追加本次机型筛选功能记录。
+
+---
+
+## 日期
+
+2026-09-09
+
+## 任务目的
+
+让飞机照片相册完整消费构建期生成在 `/Preview` 下的本地图片，不再由浏览器回源加载远程原图。
+
+## 完成过程
+
+1. 将相册数据收紧为仅包含生成映射中存在的照片，构建失败且没有有效缓存的条目不再发布到页面。
+2. 缩略图移除远程原图回退逻辑，全屏预览改为使用同一构建期本地图片地址。
+3. 目录总数改为按实际生成的本地照片计算，并为空映射补充明确的生产构建提示。
+4. 同步更新预览插件失败日志与数据类型注释，使其与“不发布失败条目”的实际行为一致。
+5. 定向 TypeScript 校验与 `ReadLints` 通过；标准 `pnpm run type-check` 仍被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截。未重复运行生产构建，避免在已知远程图片服务不可达时再次等待全部下载超时。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：更新下载或写入失败时的日志及发布语义说明。
+- `src/pages/personal/data/aircraftPhotosData.ts`：仅构造具有 `/Preview` 本地映射的相册条目。
+- `src/pages/personal/sections/AircraftPhotoGalleryImage.tsx`：移除缩略图远程原图回退。
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：全屏预览改用本地图片，并按本地产物计算数量。
+- `src/pages/personal/type.d.ts`：明确远程 URL 仅用于标识与目录解析，本地 URL 用于图片展示。
+- `taskRecord.md`：追加本次构建产物消费适配记录。

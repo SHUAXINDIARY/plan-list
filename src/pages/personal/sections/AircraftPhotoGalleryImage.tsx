@@ -6,8 +6,6 @@ const GALLERY_IMAGE_ROOT_MARGIN = "120px 0px";
 interface AircraftPhotoGalleryImageProps {
     /** 构建期生成的预览图静态地址。 */
     previewUrl: string;
-    /** 预览图不可用时使用的原图地址。 */
-    originalUrl: string;
     /** 图片替代文本，供屏幕阅读器与无图时展示。 */
     alt: string;
 }
@@ -18,7 +16,6 @@ interface AircraftPhotoGalleryImageProps {
  */
 export const AircraftPhotoGalleryImage = ({
     previewUrl,
-    originalUrl,
     alt,
 }: AircraftPhotoGalleryImageProps): ReactElement => {
     const imageRef = useRef<HTMLImageElement>(null);
@@ -70,14 +67,8 @@ export const AircraftPhotoGalleryImage = ({
         };
     }, [previewUrl]);
 
-    /** 预览图失败时切换到原图；原图也失败时仅结束 loading 状态。 */
+    /** 本地预览图加载失败时结束骨架状态，不再向远程原图回源。 */
     const handlePreviewImageError = (): void => {
-        if (resolvedPreviewUrl !== originalUrl) {
-            setResolvedPreviewUrl(originalUrl);
-            setIsPreviewImageReady(false);
-            return;
-        }
-
         setIsPreviewImageReady(true);
     };
 

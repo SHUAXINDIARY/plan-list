@@ -11,7 +11,6 @@ import {
 import { createPortal } from "react-dom";
 import { Select } from "../../../components/Select";
 import {
-    AIRCRAFT_PHOTO_COUNT,
     ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE,
     PHOTO_PREVIEW_EXIT_DURATION_MS,
 } from "../constants/photoMeta";
@@ -128,7 +127,7 @@ const PersonalAircraftPhotosSection = ({
     const previewPhotoUrl =
         previewPhotoIndex === null
             ? null
-            : (filteredAircraftPhotos[previewPhotoIndex]?.originalUrl ?? null);
+            : (filteredAircraftPhotos[previewPhotoIndex]?.previewUrl ?? null);
 
     const clearPhotoPreviewCloseTimer = useCallback((): void => {
         if (photoPreviewCloseTimerRef.current !== null) {
@@ -239,7 +238,7 @@ const PersonalAircraftPhotosSection = ({
         return <PersonalPhotosSectionSkeleton headingLevel={headingLevel} />;
     }
 
-    const { aircraftPhotoDirectoryOptions } = photosBundle;
+    const { aircraftPhotos, aircraftPhotoDirectoryOptions } = photosBundle;
 
     const photoPreviewElement = previewPhotoUrl ? (
         <div
@@ -276,7 +275,7 @@ const PersonalAircraftPhotosSection = ({
                         aria-live="polite"
                     >
                         <span aria-hidden="true" />
-                        <p>正在载入原图...</p>
+                        <p>正在载入本地预览图...</p>
                     </div>
                 ) : null}
                 <img
@@ -319,7 +318,7 @@ const PersonalAircraftPhotosSection = ({
                             onChange={handlePhotoDirectoryChange}
                         >
                             <option value={ALL_AIRCRAFT_PHOTO_DIRECTORIES_VALUE}>
-                                全部目录（{AIRCRAFT_PHOTO_COUNT}）
+                                全部目录（{aircraftPhotos.length}）
                             </option>
                             {aircraftPhotoDirectoryOptions.map(
                                 (
@@ -372,9 +371,6 @@ const PersonalAircraftPhotosSection = ({
                                                 previewUrl={
                                                     aircraftPhoto.previewUrl
                                                 }
-                                                originalUrl={
-                                                    aircraftPhoto.originalUrl
-                                                }
                                                 alt={`拍摄的飞机照片 ${aircraftPhotoIndex + 1}`}
                                             />
                                             <span
@@ -401,7 +397,7 @@ const PersonalAircraftPhotosSection = ({
                         className="aircraft-photo-gallery__empty"
                         role="status"
                     >
-                        当前目录下暂无照片，请切换其他目录查看。
+                        暂无已生成的本地预览图，请先完成生产构建。
                     </p>
                 )}
             </section>

@@ -332,7 +332,7 @@ const createPhotoPreviewEntry = async (
                 ? `图片下载或处理失败（${error.message}）`
                 : "图片下载或处理失败";
 
-        console.warn(`[photo-preview] ${failureReason}，已回退原图：${photoUrl}`);
+        console.warn(`[photo-preview] ${failureReason}，本次不发布该照片：${photoUrl}`);
         return null;
     } finally {
         clearTimeout(timeoutId);
@@ -591,7 +591,7 @@ const generateMissingPhotoPreviews = async (
             } catch (error) {
                 const reason = error instanceof Error ? error.message : "未知错误";
                 console.warn(
-                    `[photo-preview] 预览文件写入失败（${reason}），已回退原图：${photoUrl}`,
+                    `[photo-preview] 预览文件写入失败（${reason}），本次不发布该照片：${photoUrl}`,
                 );
             }
         }
@@ -613,7 +613,7 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
         photoUrls,
     );
 
-    // 成功项发布新预览；失败项若本地仍有合法缓存则沿用，否则页面回退原图。
+    // 成功项发布新预览；失败项若本地仍有合法缓存则沿用，否则不进入页面相册。
     photoUrls.forEach((photoUrl: string): void => {
         const generatedPreviewUrl = generatedPreviewUrls.get(photoUrl);
 

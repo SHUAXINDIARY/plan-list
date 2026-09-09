@@ -9,7 +9,7 @@ import type {
 /** `key` 仅含文件名时使用的根目录筛选键。 */
 const AIRCRAFT_PHOTO_ROOT_DIRECTORY_KEY = "root";
 
-/** 生成映射为空对象时仍以任意原图 URL 作为键读取，未命中则回退原图。 */
+/** 原图 URL 到构建期生成的本地预览图 URL 映射。 */
 const aircraftPhotoPreviewUrlByOriginalUrl: Record<string, string> =
     aircraftPhotoPreviewUrls;
 
@@ -37,14 +37,23 @@ const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
     return directoryKey;
 };
 
-// 列表使用构建期生成的静态预览图，未生成时回退到原图以保证开发环境可用。
-const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.map(
-    (originalUrl: string): AircraftPhoto => ({
-        originalUrl,
-        previewUrl:
-            aircraftPhotoPreviewUrlByOriginalUrl[originalUrl] ?? originalUrl,
-        directory: getAircraftPhotoDirectoryKey(originalUrl),
-    }),
+// 相册仅发布构建成功且具有本地映射的照片，避免浏览器回源请求远程图片。
+const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.flatMap(
+    (originalUrl: string): AircraftPhoto[] => {
+        const previewUrl = aircraftPhotoPreviewUrlByOriginalUrl[originalUrl];
+
+        if (previewUrl === undefined) {
+            return [];
+        }
+
+        return [
+            {
+                originalUrl,
+                previewUrl,
+                directory: getAircraftPhotoDirectoryKey(originalUrl),
+            },
+        ];
+    },
 );
 
 // 汇总各目录照片数量，根目录优先、其余按路径字母序排列。
