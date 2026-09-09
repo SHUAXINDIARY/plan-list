@@ -37,7 +37,7 @@ const getAircraftPhotoDirectoryLabel = (directoryKey: string): string => {
     return directoryKey;
 };
 
-// 相册仅发布构建成功且具有本地映射的照片，避免浏览器回源请求远程图片。
+// 相册仅发布构建成功且具有本地缩略图的照片，全屏查看时仍使用对应远程原图。
 const aircraftPhotos: AircraftPhoto[] = AIRCRAFT_PHOTO_ORIGINAL_URLS.flatMap(
     (originalUrl: string): AircraftPhoto[] => {
         const previewUrl = aircraftPhotoPreviewUrlByOriginalUrl[originalUrl];

@@ -8927,3 +8927,28 @@
 
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：将预览图生成逻辑注册为前置构建钩子，确保生成文件被复制到最终产物。
 - `taskRecord.md`：追加本次构建产物时序修复与验证记录。
+
+---
+
+## 日期
+
+2026-09-09
+
+## 任务目的
+
+让飞机照片相册继续使用本地缩略图展示列表，并在点击全屏查看时加载对应的远程原始图片。
+
+## 完成过程
+
+1. 保留相册列表对构建期 `/Preview` 本地缩略图的使用方式。
+2. 将全屏图片地址从本地预览图切换为当前照片的 `originalUrl`，并同步调整原图加载提示。
+3. 更新相册数据与类型注释，明确本地缩略图和远程原图各自的展示职责。
+4. 使用 `ReadLints` 检查本次修改文件，未发现问题。
+5. 运行 `pnpm run type-check`；检查仍被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截，本次修改未引入新的类型诊断。
+
+## 修改具体文件
+
+- `src/pages/personal/sections/PersonalAircraftPhotosSection.tsx`：全屏查看改为加载远程原图，并更新加载提示。
+- `src/pages/personal/data/aircraftPhotosData.ts`：更新照片发布与原图展示职责说明。
+- `src/pages/personal/type.d.ts`：明确 `originalUrl` 用于全屏原图、`previewUrl` 用于本地缩略图。
+- `taskRecord.md`：追加本次全屏原图切换与验证记录。

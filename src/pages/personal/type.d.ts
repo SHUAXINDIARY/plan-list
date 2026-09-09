@@ -32,9 +32,9 @@ export interface AirportCountryGroup {
 }
 
 export interface AircraftPhoto {
-  /** 原始远程 URL，仅用于稳定标识和解析目录，不作为页面图片地址。 */
+  /** 原始远程 URL，用于稳定标识、解析目录和全屏原图展示。 */
   originalUrl: string;
-  /** 构建期生成在 `/Preview` 下的本地图片地址。 */
+  /** 构建期生成在 `/Preview` 下的本地缩略图地址。 */
   previewUrl: string;
   /** 相册目录键：`key` 仅含文件名时为根目录，否则为文件名前的完整目录路径。 */
   directory: string;

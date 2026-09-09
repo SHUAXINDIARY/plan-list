@@ -124,10 +124,10 @@ const PersonalAircraftPhotosSection = ({
         );
     }, [photosBundle, selectedPhotoDirectory]);
 
-    const previewPhotoUrl =
+    const fullSizePhotoUrl =
         previewPhotoIndex === null
             ? null
-            : (filteredAircraftPhotos[previewPhotoIndex]?.previewUrl ?? null);
+            : (filteredAircraftPhotos[previewPhotoIndex]?.originalUrl ?? null);
 
     const clearPhotoPreviewCloseTimer = useCallback((): void => {
         if (photoPreviewCloseTimerRef.current !== null) {
@@ -240,7 +240,7 @@ const PersonalAircraftPhotosSection = ({
 
     const { aircraftPhotos, aircraftPhotoDirectoryOptions } = photosBundle;
 
-    const photoPreviewElement = previewPhotoUrl ? (
+    const photoPreviewElement = fullSizePhotoUrl ? (
         <div
             className={`aircraft-photo-preview${isPhotoPreviewClosing ? " aircraft-photo-preview--closing" : ""}`}
             role="dialog"
@@ -275,7 +275,7 @@ const PersonalAircraftPhotosSection = ({
                         aria-live="polite"
                     >
                         <span aria-hidden="true" />
-                        <p>正在载入本地预览图...</p>
+                        <p>正在载入原始图片...</p>
                     </div>
                 ) : null}
                 <img
@@ -284,8 +284,8 @@ const PersonalAircraftPhotosSection = ({
                             ? "aircraft-photo-preview__image--loading"
                             : undefined
                     }
-                    key={previewPhotoUrl}
-                    src={previewPhotoUrl}
+                    key={fullSizePhotoUrl}
+                    src={fullSizePhotoUrl}
                     alt={`全屏预览拍摄的飞机照片 ${previewPhotoIndex === null ? "" : previewPhotoIndex + 1}`}
                     onLoad={settlePreviewPhotoLoading}
                     onError={settlePreviewPhotoLoading}
