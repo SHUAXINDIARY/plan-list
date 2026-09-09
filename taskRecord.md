@@ -8904,3 +8904,26 @@
 
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：新增全流程、单图结果、汇总和致命错误日志。
 - `taskRecord.md`：追加本次日志增强及构建验证记录。
+
+---
+
+## 日期
+
+2026-09-09
+
+## 任务目的
+
+修复云端生产构建中飞机照片预览生成成功但未进入最终 `dist/Preview/` 产物目录的问题。
+
+## 完成过程
+
+1. 核对 Rsbuild 内置 public 目录复制插件与项目预览图插件的 `onBeforeBuild` 注册顺序，确认内置复制此前早于图片生成执行。
+2. 将预览图生成钩子调整为 `pre` 顺序，使 `public/Preview/` 在 Rsbuild 复制 public 目录前完成写入。
+3. 更新钩子注释和日志文案，明确其前置执行语义。
+4. 使用 `ReadLints` 检查插件文件，未发现问题。
+5. 运行 `pnpm run type-check`；检查仍被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截，本次修改未引入新的类型诊断。未运行完整生产构建，避免再次下载并处理全部远程照片。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：将预览图生成逻辑注册为前置构建钩子，确保生成文件被复制到最终产物。
+- `taskRecord.md`：追加本次构建产物时序修复与验证记录。

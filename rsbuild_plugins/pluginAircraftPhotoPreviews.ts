@@ -699,22 +699,25 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
     );
 };
 
-/** 在生产构建开始前生成可缓存的飞机照片预览图与页面读取的 URL 映射。 */
+/** 在 Rsbuild 复制 public 目录前生成预览图与页面读取的 URL 映射。 */
 export const pluginAircraftPhotoPreviews = (): RsbuildPlugin => ({
     name: "plugin-aircraft-photo-previews",
     setup(api): void {
-        api.onBeforeBuild(async (): Promise<void> => {
-            logPhotoPreviewInfo("生产构建钩子已触发。");
+        api.onBeforeBuild({
+            order: "pre",
+            handler: async (): Promise<void> => {
+                logPhotoPreviewInfo("生产构建前置钩子已触发。");
 
-            try {
-                await generateAircraftPhotoPreviews();
-                logPhotoPreviewInfo("插件执行成功。");
-            } catch (error) {
-                const reason =
-                    error instanceof Error ? error.message : "未知错误";
-                logPhotoPreviewError(`插件执行失败：${reason}`);
-                throw error;
-            }
+                try {
+                    await generateAircraftPhotoPreviews();
+                    logPhotoPreviewInfo("插件执行成功。");
+                } catch (error) {
+                    const reason =
+                        error instanceof Error ? error.message : "未知错误";
+                    logPhotoPreviewError(`插件执行失败：${reason}`);
+                    throw error;
+                }
+            },
         });
     },
 });
