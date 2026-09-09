@@ -44,6 +44,26 @@
             "mtowKg": 117000,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
           },
+          "707-138B": {
+            "model": "707-138B",
+            "icaoType": "B701",
+            "status": "discontinued",
+            "firstFlight": "1959-05-07",
+            "engines": [
+              "Pratt & Whitney JT3D-1",
+              "Pratt & Whitney JT3D-3"
+            ],
+            "seats": {
+              "typical": 104,
+              "max": 174
+            },
+            "rangeKm": 7400,
+            "lengthM": 41.0,
+            "wingspanM": 39.88,
+            "heightM": 12.93,
+            "mtowKg": 117000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
           "707-220": {
             "model": "707-220",
             "icaoType": "B702",
@@ -99,6 +119,25 @@
             "wingspanM": 44.42,
             "heightM": 12.93,
             "mtowKg": 149700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
+          },
+          "707-320B_Advanced": {
+            "model": "707-320B Advanced",
+            "icaoType": "B703",
+            "status": "discontinued",
+            "firstFlight": "1965-03-31",
+            "engines": [
+              "Pratt & Whitney JT3D-7"
+            ],
+            "seats": {
+              "typical": 147,
+              "max": 219
+            },
+            "rangeKm": 10196,
+            "lengthM": 46.61,
+            "wingspanM": 44.42,
+            "heightM": 12.93,
+            "mtowKg": 152400,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_707"
           },
           "707-320C": {
@@ -557,6 +596,27 @@
             "mtowKg": 333400,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
+          "747SP": {
+            "model": "747SP",
+            "icaoType": "B74S",
+            "status": "discontinued",
+            "firstFlight": "1975-07-04",
+            "engines": [
+              "Pratt & Whitney JT9D",
+              "General Electric CF6",
+              "Rolls-Royce RB211"
+            ],
+            "seats": {
+              "typical": 276,
+              "max": 400
+            },
+            "rangeKm": 15400,
+            "lengthM": 56.31,
+            "wingspanM": 59.64,
+            "heightM": 20.07,
+            "mtowKg": 315700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747SP"
+          },
           "747-200": {
             "model": "747-200",
             "icaoType": "B742",
@@ -620,6 +680,47 @@
             "mtowKg": 396900,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
           },
+          "747-400ER": {
+            "model": "747-400ER",
+            "icaoType": "B744",
+            "status": "discontinued",
+            "firstFlight": "2002-07-31",
+            "engines": [
+              "Pratt & Whitney PW4000",
+              "General Electric CF6-80C2"
+            ],
+            "seats": {
+              "typical": 416,
+              "max": 660
+            },
+            "rangeKm": 14205,
+            "lengthM": 70.66,
+            "wingspanM": 64.44,
+            "heightM": 19.41,
+            "mtowKg": 412770,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747-400"
+          },
+          "747-400F": {
+            "model": "747-400F",
+            "icaoType": "B744",
+            "status": "discontinued",
+            "firstFlight": "1993-05-04",
+            "engines": [
+              "Pratt & Whitney PW4000",
+              "General Electric CF6-80C2",
+              "Rolls-Royce RB211-524G/H"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 13450,
+            "lengthM": 70.66,
+            "wingspanM": 64.44,
+            "heightM": 19.41,
+            "mtowKg": 396900,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747-400"
+          },
           "747-8": {
             "model": "747-8",
             "icaoType": "B748",
@@ -638,6 +739,25 @@
             "heightM": 19.35,
             "mtowKg": 447700,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747"
+          },
+          "747-8F": {
+            "model": "747-8F",
+            "icaoType": "B748",
+            "status": "discontinued",
+            "firstFlight": "2010-02-08",
+            "engines": [
+              "General Electric GEnx-2B67"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 14815,
+            "lengthM": 76.25,
+            "wingspanM": 68.45,
+            "heightM": 19.35,
+            "mtowKg": 447700,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_747-8"
           }
         }
       }
@@ -715,6 +835,26 @@
             "mtowKg": 136080,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
           },
+          "767-200ER": {
+            "model": "767-200ER",
+            "icaoType": "B762",
+            "status": "discontinued",
+            "firstFlight": "1984-03-06",
+            "engines": [
+              "General Electric CF6",
+              "Pratt & Whitney PW4000"
+            ],
+            "seats": {
+              "typical": 181,
+              "max": 290
+            },
+            "rangeKm": 11825,
+            "lengthM": 48.51,
+            "wingspanM": 47.57,
+            "heightM": 15.85,
+            "mtowKg": 179170,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
+          },
           "767-300": {
             "model": "767-300",
             "icaoType": "B763",
@@ -734,6 +874,46 @@
             "wingspanM": 47.57,
             "heightM": 15.85,
             "mtowKg": 159210,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
+          },
+          "767-300ER": {
+            "model": "767-300ER",
+            "icaoType": "B763",
+            "status": "discontinued",
+            "firstFlight": "1986-12-19",
+            "engines": [
+              "General Electric CF6",
+              "Pratt & Whitney PW4000",
+              "Rolls-Royce RB211"
+            ],
+            "seats": {
+              "typical": 218,
+              "max": 351
+            },
+            "rangeKm": 11070,
+            "lengthM": 54.94,
+            "wingspanM": 47.57,
+            "heightM": 15.85,
+            "mtowKg": 186880,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
+          },
+          "767-300F": {
+            "model": "767-300F",
+            "icaoType": "B763",
+            "status": "in_production",
+            "firstFlight": "1995-06-20",
+            "engines": [
+              "General Electric CF6-80C2"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 6025,
+            "lengthM": 54.94,
+            "wingspanM": 47.57,
+            "heightM": 15.85,
+            "mtowKg": 186880,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_767"
           },
           "767-400ER": {
@@ -824,6 +1004,25 @@
             "mtowKg": 347450,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
+          "777F": {
+            "model": "777F",
+            "icaoType": "B77L",
+            "status": "in_production",
+            "firstFlight": "2008-07-14",
+            "engines": [
+              "General Electric GE90-110B1"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 15840,
+            "lengthM": 63.73,
+            "wingspanM": 64.8,
+            "heightM": 18.52,
+            "mtowKg": 347450,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
+          },
           "777-300": {
             "model": "777-300",
             "icaoType": "B773",
@@ -883,6 +1082,25 @@
             "mtowKg": 351500,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
           },
+          "777-8F": {
+            "model": "777-8F",
+            "icaoType": "B778",
+            "status": "in_development",
+            "firstFlight": null,
+            "engines": [
+              "General Electric GE9X"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 15200,
+            "lengthM": 69.8,
+            "wingspanM": 71.75,
+            "heightM": 19.48,
+            "mtowKg": 351500,
+            "wikipedia": "https://en.wikipedia.org/wiki/Boeing_777"
+          },
           "777-9": {
             "model": "777-9",
             "icaoType": "B779",
@@ -926,7 +1144,7 @@
             "rangeKm": 13620,
             "lengthM": 56.72,
             "wingspanM": 60.12,
-            "heightM": 17,
+            "heightM": 17.0,
             "mtowKg": 227930,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           },
@@ -946,7 +1164,7 @@
             "rangeKm": 14140,
             "lengthM": 62.81,
             "wingspanM": 60.12,
-            "heightM": 17,
+            "heightM": 17.0,
             "mtowKg": 254010,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           },
@@ -965,7 +1183,7 @@
             "rangeKm": 11910,
             "lengthM": 68.28,
             "wingspanM": 60.12,
-            "heightM": 17,
+            "heightM": 17.0,
             "mtowKg": 254010,
             "wikipedia": "https://en.wikipedia.org/wiki/Boeing_787"
           }
@@ -992,7 +1210,7 @@
               "max": 135
             },
             "rangeKm": 6297,
-            "lengthM": 35,
+            "lengthM": 35.0,
             "wingspanM": 35.1,
             "heightM": 11.5,
             "mtowKg": 63867,
@@ -1355,6 +1573,26 @@
             "mtowKg": 242000,
             "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
           },
+          "A330-200F": {
+            "model": "A330-200F",
+            "icaoType": "A332",
+            "status": "in_production",
+            "firstFlight": "2009-11-05",
+            "engines": [
+              "Pratt & Whitney PW4000",
+              "Rolls-Royce Trent 700"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 7400,
+            "lengthM": 58.82,
+            "wingspanM": 60.3,
+            "heightM": 17.39,
+            "mtowKg": 233000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
+          },
           "A330-300": {
             "model": "A330-300",
             "icaoType": "A333",
@@ -1390,7 +1628,7 @@
             },
             "rangeKm": 15100,
             "lengthM": 58.82,
-            "wingspanM": 64,
+            "wingspanM": 64.0,
             "heightM": 18.86,
             "mtowKg": 251000,
             "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
@@ -1409,7 +1647,7 @@
             },
             "rangeKm": 13340,
             "lengthM": 63.66,
-            "wingspanM": 64,
+            "wingspanM": 64.0,
             "heightM": 13.4,
             "mtowKg": 251000,
             "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A330"
@@ -1525,6 +1763,25 @@
             "mtowKg": 283000,
             "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
           },
+          "A350-900ULR": {
+            "model": "A350-900ULR",
+            "icaoType": "A359",
+            "status": "in_production",
+            "firstFlight": "2018-04-23",
+            "engines": [
+              "Rolls-Royce Trent XWB-84"
+            ],
+            "seats": {
+              "typical": 161,
+              "max": 440
+            },
+            "rangeKm": 18000,
+            "lengthM": 66.8,
+            "wingspanM": 64.75,
+            "heightM": 17.05,
+            "mtowKg": 280000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
+          },
           "A350-1000": {
             "model": "A350-1000",
             "icaoType": "A35K",
@@ -1542,6 +1799,25 @@
             "wingspanM": 64.75,
             "heightM": 17.08,
             "mtowKg": 322000,
+            "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
+          },
+          "A350F": {
+            "model": "A350F",
+            "icaoType": "A35F",
+            "status": "in_development",
+            "firstFlight": null,
+            "engines": [
+              "Rolls-Royce Trent XWB-97"
+            ],
+            "seats": {
+              "typical": 0,
+              "max": 0
+            },
+            "rangeKm": 8700,
+            "lengthM": 70.8,
+            "wingspanM": 64.75,
+            "heightM": 17.08,
+            "mtowKg": 319000,
             "wikipedia": "https://en.wikipedia.org/wiki/Airbus_A350"
           }
         }
