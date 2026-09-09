@@ -61,6 +61,22 @@ const PREVIEW_IMAGE_WIDTH = 600;
 const PREVIEW_IMAGE_QUALITY = 82;
 const PREVIEW_ASSET_FILE_NAME_PATTERN = /^[a-f0-9]{64}\.jpg$/;
 const REMOTE_PHOTO_URL_PATTERN = /^https?:\/\//;
+const PHOTO_PREVIEW_LOG_PREFIX = "[photo-preview]";
+
+/** 输出预览图构建过程中的常规进度。 */
+const logPhotoPreviewInfo = (message: string): void => {
+    console.info(`${PHOTO_PREVIEW_LOG_PREFIX} ${message}`);
+};
+
+/** 输出单图失败、缓存缺失或清理异常等可恢复问题。 */
+const logPhotoPreviewWarning = (message: string): void => {
+    console.warn(`${PHOTO_PREVIEW_LOG_PREFIX} ${message}`);
+};
+
+/** 输出会中断插件执行的致命错误。 */
+const logPhotoPreviewError = (message: string): void => {
+    console.error(`${PHOTO_PREVIEW_LOG_PREFIX} ${message}`);
+};
 
 /** 移除 TypeScript 仅用于类型层面的表达式包装，取得实际初始化表达式。 */
 const unwrapExpression = (expression: ts.Expression): ts.Expression => {
@@ -289,8 +305,8 @@ const createPhotoPreviewEntry = async (
         });
 
         if (!imageResponse.ok) {
-            console.warn(
-                `[photo-preview] 图片下载失败（HTTP ${imageResponse.status}）：${photoUrl}`,
+            logPhotoPreviewWarning(
+                `生成失败（HTTP ${imageResponse.status}）：${photoUrl}`,
             );
             return null;
         }
@@ -298,8 +314,8 @@ const createPhotoPreviewEntry = async (
         const imageBuffer = await readImageResponseBuffer(imageResponse);
 
         if (imageBuffer === null) {
-            console.warn(
-                `[photo-preview] 图片超过 ${PREVIEW_MAX_DOWNLOAD_BYTES} 字节或响应体为空：${photoUrl}`,
+            logPhotoPreviewWarning(
+                `生成失败（图片超过 ${PREVIEW_MAX_DOWNLOAD_BYTES} 字节或响应体为空）：${photoUrl}`,
             );
             return null;
         }
@@ -332,7 +348,9 @@ const createPhotoPreviewEntry = async (
                 ? `图片下载或处理失败（${error.message}）`
                 : "图片下载或处理失败";
 
-        console.warn(`[photo-preview] ${failureReason}，本次不发布该照片：${photoUrl}`);
+        logPhotoPreviewWarning(
+            `生成失败（${failureReason}），本次不发布该照片：${photoUrl}`,
+        );
         return null;
     } finally {
         clearTimeout(timeoutId);
@@ -505,21 +523,23 @@ const pruneUnusedPhotoPreviewAssets = async (
             withFileTypes: true,
         });
 
+        const unusedAssetEntries = assetEntries.filter(
+            (assetEntry): boolean =>
+                assetEntry.isFile() &&
+                PREVIEW_ASSET_FILE_NAME_PATTERN.test(assetEntry.name) &&
+                !activeFileNames.has(assetEntry.name),
+        );
         await Promise.all(
-            assetEntries
-                .filter(
-                    (assetEntry): boolean =>
-                        assetEntry.isFile() &&
-                        PREVIEW_ASSET_FILE_NAME_PATTERN.test(assetEntry.name) &&
-                        !activeFileNames.has(assetEntry.name),
-                )
-                .map((assetEntry): Promise<void> =>
-                    unlink(join(PHOTO_PREVIEW_ASSET_DIRECTORY, assetEntry.name)),
-                ),
+            unusedAssetEntries.map((assetEntry): Promise<void> =>
+                unlink(join(PHOTO_PREVIEW_ASSET_DIRECTORY, assetEntry.name)),
+            ),
+        );
+        logPhotoPreviewInfo(
+            `历史资源清理成功：删除 ${unusedAssetEntries.length} 个未引用文件。`,
         );
     } catch (error) {
         const reason = error instanceof Error ? error.message : "未知错误";
-        console.warn(`[photo-preview] 清理未引用预览图失败：${reason}`);
+        logPhotoPreviewWarning(`历史资源清理失败：${reason}`);
     }
 };
 
@@ -554,6 +574,7 @@ const generateMissingPhotoPreviews = async (
     generatedPreviewUrls: Map<string, string>;
 }> => {
     const generatedPreviewUrls = new Map<string, string>();
+    const totalBatchCount = Math.ceil(photoUrls.length / PREVIEW_BATCH_SIZE);
 
     for (
         let startIndex = 0;
@@ -564,6 +585,14 @@ const generateMissingPhotoPreviews = async (
             startIndex,
             startIndex + PREVIEW_BATCH_SIZE,
         );
+        const currentBatchNumber =
+            Math.floor(startIndex / PREVIEW_BATCH_SIZE) + 1;
+        let successfulPhotoCount = 0;
+
+        logPhotoPreviewInfo(
+            `开始处理批次 ${currentBatchNumber}/${totalBatchCount}，共 ${photoUrlBatch.length} 张。`,
+        );
+
         const previewEntries = await Promise.all(
             photoUrlBatch.map(
                 (photoUrl: string): Promise<PhotoPreviewEntry | null> =>
@@ -575,6 +604,9 @@ const generateMissingPhotoPreviews = async (
             const photoUrl = photoUrlBatch[entryIndex];
 
             if (photoUrl === undefined) {
+                logPhotoPreviewWarning(
+                    `批次 ${currentBatchNumber} 的第 ${entryIndex + 1} 个条目缺少原图 URL。`,
+                );
                 continue;
             }
 
@@ -588,13 +620,21 @@ const generateMissingPhotoPreviews = async (
                     previewEntry.originalUrl,
                     previewEntry.previewUrl,
                 );
+                successfulPhotoCount += 1;
+                logPhotoPreviewInfo(
+                    `生成成功（${startIndex + entryIndex + 1}/${photoUrls.length}）：${photoUrl} -> ${previewEntry.previewUrl}`,
+                );
             } catch (error) {
                 const reason = error instanceof Error ? error.message : "未知错误";
-                console.warn(
-                    `[photo-preview] 预览文件写入失败（${reason}），本次不发布该照片：${photoUrl}`,
+                logPhotoPreviewWarning(
+                    `生成失败（预览文件写入失败：${reason}），本次不发布该照片：${photoUrl}`,
                 );
             }
         }
+
+        logPhotoPreviewInfo(
+            `批次 ${currentBatchNumber}/${totalBatchCount} 处理完成：成功 ${successfulPhotoCount} 张，失败 ${photoUrlBatch.length - successfulPhotoCount} 张。`,
+        );
     }
 
     return { generatedPreviewUrls };
@@ -602,12 +642,23 @@ const generateMissingPhotoPreviews = async (
 
 /** 读取照片元数据，每次构建完整请求全部照片并覆盖生成预览。 */
 const generateAircraftPhotoPreviews = async (): Promise<void> => {
+    logPhotoPreviewInfo("开始读取飞机照片元数据。");
     const constantSource = await readFile(PERSONAL_PHOTO_META_PATH, "utf8");
     const photoUrls = extractAircraftPhotoUrls(constantSource);
+    logPhotoPreviewInfo(`照片元数据读取成功：发现 ${photoUrls.length} 个唯一 URL。`);
+
     const existingCache = await readExistingPhotoPreviewCache();
+    const existingCacheCount = Object.keys(existingCache.previewUrls).length;
+    logPhotoPreviewInfo(`有效本地缓存检查完成：可复用 ${existingCacheCount} 张。`);
+
     const previewUrls: Record<string, string> = {};
+    let reusedCachedPreviewCount = 0;
+    let unpublishedPhotoCount = 0;
 
     await mkdir(PHOTO_PREVIEW_ASSET_DIRECTORY, { recursive: true });
+    logPhotoPreviewInfo(
+        `输出目录准备成功：${PHOTO_PREVIEW_ASSET_DIRECTORY}。`,
+    );
 
     const { generatedPreviewUrls } = await generateMissingPhotoPreviews(
         photoUrls,
@@ -626,11 +677,26 @@ const generateAircraftPhotoPreviews = async (): Promise<void> => {
 
         if (cachedPreviewUrl !== undefined) {
             previewUrls[photoUrl] = cachedPreviewUrl;
+            reusedCachedPreviewCount += 1;
+            logPhotoPreviewInfo(
+                `缓存复用成功：${photoUrl} -> ${cachedPreviewUrl}`,
+            );
+            return;
         }
+
+        unpublishedPhotoCount += 1;
+        logPhotoPreviewWarning(`发布失败（无新文件或有效缓存）：${photoUrl}`);
     });
 
     await writePhotoPreviewsModule(previewUrls);
+    logPhotoPreviewInfo(
+        `映射模块写入成功：发布 ${Object.keys(previewUrls).length} 条本地预览映射。`,
+    );
+
     await pruneUnusedPhotoPreviewAssets(previewUrls);
+    logPhotoPreviewInfo(
+        `任务完成：总数 ${photoUrls.length} 张，新生成 ${generatedPreviewUrls.size} 张，缓存复用 ${reusedCachedPreviewCount} 张，未发布 ${unpublishedPhotoCount} 张。`,
+    );
 };
 
 /** 在生产构建开始前生成可缓存的飞机照片预览图与页面读取的 URL 映射。 */
@@ -638,7 +704,17 @@ export const pluginAircraftPhotoPreviews = (): RsbuildPlugin => ({
     name: "plugin-aircraft-photo-previews",
     setup(api): void {
         api.onBeforeBuild(async (): Promise<void> => {
-            await generateAircraftPhotoPreviews();
+            logPhotoPreviewInfo("生产构建钩子已触发。");
+
+            try {
+                await generateAircraftPhotoPreviews();
+                logPhotoPreviewInfo("插件执行成功。");
+            } catch (error) {
+                const reason =
+                    error instanceof Error ? error.message : "未知错误";
+                logPhotoPreviewError(`插件执行失败：${reason}`);
+                throw error;
+            }
         });
     },
 });
