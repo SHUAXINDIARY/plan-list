@@ -8829,3 +8829,28 @@
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：将预览图存储目录和公开访问前缀改为 `Preview`。
 - `.gitignore`：忽略新的 `public/Preview/` 构建产物目录，并保留旧目录忽略规则。
 - `taskRecord.md`：追加本次目录迁移与验证记录。
+
+---
+
+## 日期
+
+2026-09-09
+
+## 任务目的
+
+为机型 WIKI 目录新增“是否停产”和“引擎供应商”组合筛选。
+
+## 完成过程
+
+1. 新增停产状态与引擎供应商筛选状态，并与型号、系列、ICAO 搜索条件组合过滤机型目录。
+2. 根据 `aircraft.json` 的发动机型号前缀归类供应商，兼容 CFM、IAE、普惠等简写，并只展示目录中实际存在的供应商选项。
+3. 补充 `in_development` 生产状态及“研发中”文案，使“未停产”筛选覆盖生产中和研发中的机型。
+4. 将筛选工具栏调整为桌面四列、中屏两列和移动端单列布局，并保留原生表单语义、关联标签和键盘焦点样式。
+5. `ReadLints` 与关闭既有未使用参数检查后的 TypeScript 校验通过；标准 `pnpm run type-check` 仍被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截。
+
+## 修改具体文件
+
+- `src/pages/aircraftWiki/index.tsx`：新增组合筛选、供应商识别、筛选控件和对应空状态文案。
+- `src/pages/aircraftWiki/index.css`：扩展筛选工具栏及其响应式布局和表单样式。
+- `src/pages/aircraftWiki/Card.tsx`：补全研发中状态类型与展示文案。
+- `taskRecord.md`：追加本次机型筛选功能记录。

@@ -48,8 +48,12 @@
 
 .aircraft-model-wiki__toolbar {
     display: grid;
-    grid-template-columns: auto minmax(14rem, 28rem) 1fr;
-    align-items: center;
+    grid-template-columns:
+        minmax(16rem, 2fr)
+        minmax(9rem, 0.75fr)
+        minmax(12rem, 1fr)
+        auto;
+    align-items: end;
     gap: 0.75rem;
     margin-top: 1.5rem;
     padding: 0.9rem 1rem;
@@ -58,13 +62,20 @@
     border-radius: 0.85rem;
 }
 
+.aircraft-model-wiki__control {
+    display: grid;
+    gap: 0.38rem;
+    min-width: 0;
+}
+
 .aircraft-model-wiki__toolbar label {
     color: var(--pl-text-heading);
     font-size: 0.8rem;
     font-weight: 750;
 }
 
-.aircraft-model-wiki__toolbar input {
+.aircraft-model-wiki__toolbar input,
+.aircraft-model-wiki__toolbar select {
     width: 100%;
     min-height: 2.55rem;
     box-sizing: border-box;
@@ -81,17 +92,24 @@
     color: var(--pl-text-placeholder);
 }
 
-.aircraft-model-wiki__toolbar input:focus-visible {
+.aircraft-model-wiki__toolbar select {
+    cursor: pointer;
+}
+
+.aircraft-model-wiki__toolbar input:focus-visible,
+.aircraft-model-wiki__toolbar select:focus-visible {
     border-color: var(--pl-border-focus);
     outline: none;
     box-shadow: var(--pl-focus-glow);
 }
 
-.aircraft-model-wiki__toolbar > span {
+.aircraft-model-wiki__result {
     justify-self: end;
+    padding-bottom: 0.85rem;
     color: var(--pl-text-meta);
     font-size: 0.78rem;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .aircraft-model-wiki__source {
@@ -184,6 +202,22 @@
     margin-top: 1rem;
 }
 
+@media (max-width: 960px) {
+    .aircraft-model-wiki__toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .aircraft-model-wiki__control--search,
+    .aircraft-model-wiki__result {
+        grid-column: 1 / -1;
+    }
+
+    .aircraft-model-wiki__result {
+        justify-self: start;
+        padding-bottom: 0;
+    }
+}
+
 @media (max-width: 640px) {
     .aircraft-model-wiki__header {
         align-items: start;
@@ -203,8 +237,9 @@
         align-items: stretch;
     }
 
-    .aircraft-model-wiki__toolbar > span {
-        justify-self: start;
+    .aircraft-model-wiki__control--search,
+    .aircraft-model-wiki__result {
+        grid-column: auto;
     }
 
     .aircraft-model-wiki__cards {

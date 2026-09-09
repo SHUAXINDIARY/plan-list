@@ -17,7 +17,10 @@ export interface JsonRecord {
 export type JetManufacturer = "Airbus" | "Boeing";
 
 /** 机型生产状态，对应 aircraft.json 中的状态枚举。 */
-export type AircraftStatus = "in_production" | "discontinued";
+export type AircraftStatus =
+    | "in_production"
+    | "in_development"
+    | "discontinued";
 
 /** 典型和最大座位数。 */
 export interface AircraftSeats extends JsonRecord {
@@ -68,6 +71,7 @@ export interface AircraftCatalogEntry extends AircraftDetail {
 /** 将生产状态枚举转换为页面可读文案。 */
 const AIRCRAFT_STATUS_LABELS: Record<AircraftStatus, string> = {
     in_production: "生产中",
+    in_development: "研发中",
     discontinued: "停产",
 };
 

@@ -16,8 +16,86 @@ interface ManufacturerCatalog {
     models: AircraftCatalogEntry[];
 }
 
+/** “是否停产”筛选器的可选值。 */
+type AircraftDiscontinuedFilter = "all" | "not_discontinued" | "discontinued";
+
+/** aircraft.json 中发动机型号对应的供应商。 */
+type EngineSupplier =
+    | "CFM International"
+    | "Engine Alliance"
+    | "General Electric"
+    | "International Aero Engines"
+    | "Pratt & Whitney"
+    | "Rolls-Royce"
+    | "其他";
+
+/** 发动机供应商筛选器的可选值。 */
+type EngineSupplierFilter = "all" | EngineSupplier;
+
+/** 一项生产状态筛选选项。 */
+interface AircraftDiscontinuedFilterOption {
+    /** 写入筛选状态的稳定值。 */
+    value: AircraftDiscontinuedFilter;
+    /** 下拉框中展示的中文标签。 */
+    label: string;
+}
+
+/** 从发动机型号识别供应商所需的前缀规则。 */
+interface EngineSupplierDefinition {
+    /** 页面展示和筛选使用的供应商名称。 */
+    supplier: Exclude<EngineSupplier, "其他">;
+    /** aircraft.json 中属于该供应商的发动机型号前缀。 */
+    enginePrefixes: readonly string[];
+}
+
 const AIRCRAFT_DATA_URL = "/data/aircraft.json";
 const JET_MANUFACTURERS: readonly JetManufacturer[] = ["Boeing", "Airbus"];
+const ALL_FILTER_VALUE = "all";
+
+/** “是否停产”下拉框的固定选项。 */
+const AIRCRAFT_DISCONTINUED_FILTER_OPTIONS: readonly AircraftDiscontinuedFilterOption[] =
+    [
+        { value: ALL_FILTER_VALUE, label: "全部" },
+        { value: "not_discontinued", label: "未停产" },
+        { value: "discontinued", label: "已停产" },
+    ];
+
+/** 供应商识别与展示顺序，以 aircraft.json 当前发动机命名方式为准。 */
+const ENGINE_SUPPLIER_DEFINITIONS: readonly EngineSupplierDefinition[] = [
+    {
+        supplier: "CFM International",
+        enginePrefixes: ["CFM International ", "CFM56-", "CFM LEAP-"],
+    },
+    {
+        supplier: "Engine Alliance",
+        enginePrefixes: ["Engine Alliance "],
+    },
+    {
+        supplier: "General Electric",
+        enginePrefixes: ["General Electric "],
+    },
+    {
+        supplier: "International Aero Engines",
+        enginePrefixes: ["International Aero Engines ", "IAE ", "V2500-"],
+    },
+    {
+        supplier: "Pratt & Whitney",
+        enginePrefixes: ["Pratt & Whitney ", "PW"],
+    },
+    {
+        supplier: "Rolls-Royce",
+        enginePrefixes: ["Rolls-Royce "],
+    },
+];
+
+/** 供应商筛选器允许接收的全部具体选项，用于安全收窄表单值。 */
+const ENGINE_SUPPLIERS: readonly EngineSupplier[] = [
+    ...ENGINE_SUPPLIER_DEFINITIONS.map(
+        (definition: EngineSupplierDefinition): EngineSupplier =>
+            definition.supplier,
+    ),
+    "其他",
+];
 
 /** 制造商官网地址，用于在分组标题旁提供权威资料入口。 */
 const MANUFACTURER_WEBSITE_URLS: Record<JetManufacturer, string> = {
@@ -141,14 +219,106 @@ const createAircraftCatalog = (value: JsonValue): ManufacturerCatalog[] => {
     );
 };
 
-// 按型号、系列或 ICAO 代码过滤卡片，保留制造商分组结构以便快速定位。
+/** 根据发动机型号前缀识别供应商，未覆盖的新命名统一归入“其他”。 */
+const getEngineSupplier = (engine: string): EngineSupplier => {
+    const supplierDefinition = ENGINE_SUPPLIER_DEFINITIONS.find(
+        (definition: EngineSupplierDefinition): boolean =>
+            definition.enginePrefixes.some((enginePrefix: string): boolean =>
+                engine.startsWith(enginePrefix),
+            ),
+    );
+
+    return supplierDefinition?.supplier ?? "其他";
+};
+
+/** 取得一款机型使用的全部发动机供应商并去重。 */
+const getAircraftEngineSuppliers = (
+    model: AircraftCatalogEntry,
+): EngineSupplier[] => {
+    return Array.from(
+        new Set((model.engines ?? []).map(getEngineSupplier)),
+    );
+};
+
+/** 汇总目录中实际存在的发动机供应商，避免展示无结果的固定选项。 */
+const collectEngineSupplierOptions = (
+    catalog: ManufacturerCatalog[],
+): EngineSupplier[] => {
+    const suppliers = new Set<EngineSupplier>();
+
+    catalog.forEach((manufacturerCatalog: ManufacturerCatalog): void => {
+        manufacturerCatalog.models.forEach(
+            (model: AircraftCatalogEntry): void => {
+                getAircraftEngineSuppliers(model).forEach(
+                    (supplier: EngineSupplier): void => {
+                        suppliers.add(supplier);
+                    },
+                );
+            },
+        );
+    });
+
+    return ENGINE_SUPPLIERS.filter((supplier: EngineSupplier): boolean =>
+        suppliers.has(supplier),
+    );
+};
+
+/** 判断表单字符串是否为合法的停产筛选值。 */
+const isAircraftDiscontinuedFilter = (
+    value: string,
+): value is AircraftDiscontinuedFilter => {
+    return AIRCRAFT_DISCONTINUED_FILTER_OPTIONS.some(
+        (option: AircraftDiscontinuedFilterOption): boolean =>
+            option.value === value,
+    );
+};
+
+/** 判断表单字符串是否为合法的发动机供应商筛选值。 */
+const isEngineSupplierFilter = (
+    value: string,
+): value is EngineSupplierFilter => {
+    return (
+        value === ALL_FILTER_VALUE ||
+        ENGINE_SUPPLIERS.some(
+            (supplier: EngineSupplier): boolean => supplier === value,
+        )
+    );
+};
+
+/** 判断机型是否符合“是否停产”筛选；研发中与生产中均属于未停产。 */
+const matchesAircraftDiscontinuedFilter = (
+    model: AircraftCatalogEntry,
+    filter: AircraftDiscontinuedFilter,
+): boolean => {
+    if (filter === ALL_FILTER_VALUE) {
+        return true;
+    }
+
+    if (filter === "discontinued") {
+        return model.status === "discontinued";
+    }
+
+    return (
+        model.status !== null &&
+        model.status !== undefined &&
+        model.status !== "discontinued"
+    );
+};
+
+// 组合型号搜索、停产状态和发动机供应商条件，保留制造商分组结构。
 const filterAircraftCatalog = (
     catalog: ManufacturerCatalog[],
     searchTerm: string,
+    discontinuedFilter: AircraftDiscontinuedFilter,
+    engineSupplierFilter: EngineSupplierFilter,
 ): ManufacturerCatalog[] => {
     const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase();
 
-    if (!normalizedSearchTerm) {
+    if (
+        !normalizedSearchTerm &&
+        discontinuedFilter === ALL_FILTER_VALUE &&
+        engineSupplierFilter === ALL_FILTER_VALUE
+    ) {
         return catalog;
     }
 
@@ -156,8 +326,27 @@ const filterAircraftCatalog = (
         (manufacturerCatalog): ManufacturerCatalog => ({
             ...manufacturerCatalog,
             models: manufacturerCatalog.models.filter((model): boolean => {
-                return [model.model, model.family, model.icaoType].some((value): boolean =>
-                    value?.toLocaleLowerCase().includes(normalizedSearchTerm) ?? false,
+                const matchesSearchTerm =
+                    !normalizedSearchTerm ||
+                    [model.model, model.family, model.icaoType].some(
+                        (value): boolean =>
+                            value
+                                ?.toLocaleLowerCase()
+                                .includes(normalizedSearchTerm) ?? false,
+                    );
+                const matchesEngineSupplier =
+                    engineSupplierFilter === ALL_FILTER_VALUE ||
+                    getAircraftEngineSuppliers(model).includes(
+                        engineSupplierFilter,
+                    );
+
+                return (
+                    matchesSearchTerm &&
+                    matchesAircraftDiscontinuedFilter(
+                        model,
+                        discontinuedFilter,
+                    ) &&
+                    matchesEngineSupplier
                 );
             }),
         }),
@@ -172,6 +361,10 @@ const AircraftWikiPage = (): ReactElement => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [discontinuedFilter, setDiscontinuedFilter] =
+        useState<AircraftDiscontinuedFilter>(ALL_FILTER_VALUE);
+    const [engineSupplierFilter, setEngineSupplierFilter] =
+        useState<EngineSupplierFilter>(ALL_FILTER_VALUE);
 
     useEffect((): (() => void) => {
         let isMounted = true;
@@ -211,8 +404,17 @@ const AircraftWikiPage = (): ReactElement => {
     }, []);
 
     const visibleCatalog = useMemo((): ManufacturerCatalog[] => {
-        return filterAircraftCatalog(catalog, searchTerm);
-    }, [catalog, searchTerm]);
+        return filterAircraftCatalog(
+            catalog,
+            searchTerm,
+            discontinuedFilter,
+            engineSupplierFilter,
+        );
+    }, [catalog, discontinuedFilter, engineSupplierFilter, searchTerm]);
+
+    const engineSupplierOptions = useMemo((): EngineSupplier[] => {
+        return collectEngineSupplierOptions(catalog);
+    }, [catalog]);
 
     const totalModelCount = useMemo((): number => {
         return catalog.reduce(
@@ -252,19 +454,77 @@ const AircraftWikiPage = (): ReactElement => {
                 </p>
             </header>
 
-            <div className="aircraft-model-wiki__toolbar" role="search">
-                <label htmlFor="aircraft-model-search">搜索型号</label>
-                <input
-                    id="aircraft-model-search"
-                    type="search"
-                    value={searchTerm}
-                    onChange={(event): void => {
-                        setSearchTerm(event.target.value);
-                    }}
-                    placeholder="输入 A320、737 或 ICAO 代码..."
-                    autoComplete="off"
-                />
-                <span aria-live="polite">
+            <div
+                className="aircraft-model-wiki__toolbar"
+                role="search"
+                aria-label="筛选机型目录"
+            >
+                <div className="aircraft-model-wiki__control aircraft-model-wiki__control--search">
+                    <label htmlFor="aircraft-model-search">搜索型号</label>
+                    <input
+                        id="aircraft-model-search"
+                        type="search"
+                        value={searchTerm}
+                        onChange={(event): void => {
+                            setSearchTerm(event.target.value);
+                        }}
+                        placeholder="输入 A320、737 或 ICAO 代码..."
+                        autoComplete="off"
+                    />
+                </div>
+                <div className="aircraft-model-wiki__control">
+                    <label htmlFor="aircraft-discontinued-filter">是否停产</label>
+                    <select
+                        id="aircraft-discontinued-filter"
+                        value={discontinuedFilter}
+                        onChange={(event): void => {
+                            const nextFilter = event.target.value;
+
+                            if (isAircraftDiscontinuedFilter(nextFilter)) {
+                                setDiscontinuedFilter(nextFilter);
+                            }
+                        }}
+                    >
+                        {AIRCRAFT_DISCONTINUED_FILTER_OPTIONS.map(
+                            (
+                                option: AircraftDiscontinuedFilterOption,
+                            ): ReactElement => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ),
+                        )}
+                    </select>
+                </div>
+                <div className="aircraft-model-wiki__control">
+                    <label htmlFor="aircraft-engine-supplier-filter">
+                        引擎供应商
+                    </label>
+                    <select
+                        id="aircraft-engine-supplier-filter"
+                        value={engineSupplierFilter}
+                        onChange={(event): void => {
+                            const nextFilter = event.target.value;
+
+                            if (isEngineSupplierFilter(nextFilter)) {
+                                setEngineSupplierFilter(nextFilter);
+                            }
+                        }}
+                    >
+                        <option value={ALL_FILTER_VALUE}>全部供应商</option>
+                        {engineSupplierOptions.map(
+                            (supplier: EngineSupplier): ReactElement => (
+                                <option key={supplier} value={supplier}>
+                                    {supplier}
+                                </option>
+                            ),
+                        )}
+                    </select>
+                </div>
+                <span
+                    className="aircraft-model-wiki__result"
+                    aria-live="polite"
+                >
                     {isLoading
                         ? "正在整理目录..."
                         : `显示 ${formatInteger(visibleModelCount)} / ${formatInteger(totalModelCount)} 个型号`}
@@ -272,7 +532,7 @@ const AircraftWikiPage = (): ReactElement => {
             </div>
 
             <p className="aircraft-model-wiki__source">
-                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产状态：生产中或停产，数据来源互联网，仅供参考。
+                每张卡片对应 aircraft.json 中的一条机型记录，状态只表示生产生命周期：生产中、研发中或停产，数据来源互联网，仅供参考。
             </p>
 
             {errorMessage ? (
@@ -284,7 +544,9 @@ const AircraftWikiPage = (): ReactElement => {
             ) : null}
 
             {!isLoading && !errorMessage && visibleModelCount === 0 ? (
-                <p className="data-state">没有匹配的机型，请尝试其他搜索词。</p>
+                <p className="data-state">
+                    没有符合当前条件的机型，请调整搜索词或筛选项。
+                </p>
             ) : null}
 
             {!isLoading && !errorMessage && visibleModelCount > 0 ? (
