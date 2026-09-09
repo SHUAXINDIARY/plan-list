@@ -8,6 +8,8 @@ node_modules
 dist/
 
 # Build-generated photo preview assets
+public/Preview/
+# Legacy preview output kept ignored during the directory migration.
 public/generated/aircraft-photo-previews/
 
 # Profile

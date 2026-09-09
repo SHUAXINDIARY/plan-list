@@ -42,9 +42,9 @@ const PHOTO_PREVIEWS_MODULE_PATH = join(
 );
 const PHOTO_PREVIEW_ASSET_DIRECTORY = join(
     PROJECT_ROOT,
-    "public/generated/aircraft-photo-previews",
+    "public/Preview",
 );
-const PHOTO_PREVIEW_PUBLIC_PREFIX = "/generated/aircraft-photo-previews";
+const PHOTO_PREVIEW_PUBLIC_PREFIX = "/Preview";
 const PHOTO_URL_LIST_EXPORT = "AIRCRAFT_PHOTO_ORIGINAL_URLS";
 const PREVIEW_BATCH_SIZE = 4;
 /** 单张下载超时；大体积原图在弱网下需要更长窗口。 */

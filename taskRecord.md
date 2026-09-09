@@ -8806,3 +8806,26 @@
 - `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：移除冷却与总时长截断，改为每次全量请求。
 - `src/pages/personal/photoPreviews.generated.ts`：去掉失败冷却导出。
 - `taskRecord.md`：追加本次调整记录。
+
+---
+
+## 日期
+
+2026-09-09
+
+## 任务目的
+
+将构建期下载的飞机照片预览图统一存放到 `public/Preview/`，并让页面通过 `/Preview` 公开路径读取。
+
+## 完成过程
+
+1. 将预览图落盘目录由 `public/generated/aircraft-photo-previews/` 调整为 `public/Preview/`。
+2. 将生成映射中的公开访问前缀同步调整为 `/Preview`，并更新 Git 忽略规则，同时保留旧目录的忽略项以免遗留缓存进入版本控制。
+3. 运行项目级类型检查；检查被既有的 `ViewportNavigationControls.tsx:33` 未使用参数错误拦截，与本次改动无关。
+4. 运行 `pnpm run build`，生产构建成功并创建新目录；远程图片服务请求全部失败，因此本次未生成本地预览文件，页面继续按现有容错逻辑回退原图。
+
+## 修改具体文件
+
+- `rsbuild_plugins/pluginAircraftPhotoPreviews.ts`：将预览图存储目录和公开访问前缀改为 `Preview`。
+- `.gitignore`：忽略新的 `public/Preview/` 构建产物目录，并保留旧目录忽略规则。
+- `taskRecord.md`：追加本次目录迁移与验证记录。
